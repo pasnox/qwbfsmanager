@@ -1,0 +1,6 @@
+- handle errors more gracefully
+	- if an instance of wbfs is accessing a block device we currently wait forever
+- time estimates are sometimes off by a margin
+	- especially if the image in wbfs is very small and we have to write a lot of filler date to get the extracted iso
+- there should be a way to determine the space an iso is going to take up in wbfs before writing it there
+- We should check if there is enough space available before adding!
