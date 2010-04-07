@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>663</width>
-    <height>377</height>
+    <width>661</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,12 +37,12 @@
      <item>
       <widget class="QTabWidget" name="twPages">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="movable">
         <bool>true</bool>
        </property>
-       <widget class="QWidget" name="wFS" native="true">
+       <widget class="QWidget" name="wFS">
         <attribute name="title">
          <string>File System</string>
         </attribute>
@@ -94,7 +94,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="wExport" native="true">
+       <widget class="QWidget" name="wExport">
         <attribute name="title">
          <string>Export</string>
         </attribute>
