@@ -5,7 +5,7 @@
 int main( int argc, char** argv )
 {
 	QApplication app( argc, argv );
-	app.setApplicationName( "Qt WBFS Manager" );
+	app.setApplicationName( "QWBFS Manager" );
 	
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 	

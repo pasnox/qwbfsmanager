@@ -53,7 +53,8 @@ CONFIG(debug, debug|release) {
 }
 
 FORMS	+= src/UIMain.ui \
-	src/PartitionWidget.ui
+	src/PartitionWidget.ui \
+	src/ProgressDialog.ui
 
 HEADERS	+= src/UIMain.h \
 	src/qWBFS.h \
@@ -61,7 +62,9 @@ HEADERS	+= src/UIMain.h \
 	src/Gauge.h \
 	src/DiscDelegate.h \
 	src/PartitionWidget.h \
-	src/Disc.h
+	src/Disc.h \
+	src/ProgressDialog.h \
+	src/ExportThread.h
 
 SOURCES	+= src/main.cpp \
 	src/UIMain.cpp \
@@ -70,4 +73,6 @@ SOURCES	+= src/main.cpp \
 	src/Gauge.cpp \
 	src/DiscDelegate.cpp \
 	src/PartitionWidget.cpp \
-	src/Disc.cpp
+	src/Disc.cpp \
+	src/ProgressDialog.cpp \
+	src/ExportThread.cpp

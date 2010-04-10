@@ -1,8 +1,10 @@
 #include "UIMain.h"
 #include "DiscModel.h"
 #include "DiscDelegate.h"
+#include "ProgressDialog.h"
 
 #include <QFileSystemModel>
+#include <QFileDialog>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -32,7 +34,7 @@ UIMain::UIMain( QWidget* parent )
 	lvExport->setItemDelegate( new DiscDelegate( mExportModel ) );
 	
 	pwMainView->setMainView( true );
-	pwMainView->importGroupBox()->setChecked( false );
+	pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
 	
 #ifdef Q_OS_UNIX
@@ -74,7 +76,7 @@ void UIMain::openViewRequested()
 	PartitionWidget* pw = new PartitionWidget( this );
 	pw->setMainView( false );
 	pw->setPartitions( mPartitions );
-	pw->importGroupBox()->setChecked( false );
+	pw->showHideImportViewButton()->setChecked( false );
 	connectView( pw );
 	sViews->addWidget( pw );
 }
@@ -103,5 +105,12 @@ void UIMain::on_tbRemoveExport_clicked()
 
 void UIMain::on_tbExport_clicked()
 {
-	//
+	const QString path = QFileDialog::getExistingDirectory( this, tr( "Choose a folder to export the discs" ), QString::null );
+	
+	if ( path.isEmpty() ) {
+		return;
+	}
+	
+	ProgressDialog* dlg = new ProgressDialog( this );
+	dlg->exportDiscs( mExportModel->discs(), path );
 }

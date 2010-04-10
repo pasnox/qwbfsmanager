@@ -17,7 +17,7 @@ public:
 	const qWBFS* handle() const;
 	DiscModel* discModel() const;
 	DiscModel* importModel() const;
-	QGroupBox* importGroupBox() const;
+	QToolButton* showHideImportViewButton() const;
 	QString currentPartition() const;
 	
 	void setMainView( bool main );
@@ -32,12 +32,13 @@ protected:
 	DiscModel* mImportModel;
 
 protected slots:
+	void models_countChanged();
 	void on_cbPartitions_currentIndexChanged( int index );
 	void on_tbLoad_clicked();
 	void on_tbOpen_clicked();
 	void on_tbClose_clicked();
-	void on_tbClear_clicked();
-	void on_tbRemove_clicked();
+	void on_tbClearImport_clicked();
+	void on_tbRemoveImport_clicked();
 	void on_tbImport_clicked();
 
 signals:

@@ -20,6 +20,8 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	lvImport->setModel( mImportModel );
 	lvImport->setItemDelegate( new DiscDelegate( mImportModel ) );
 	
+	connect( mDiscModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+	connect( mImportModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( textChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( returnPressed() ), tbLoad, SLOT( click() ) );
 }
@@ -43,9 +45,9 @@ DiscModel* PartitionWidget::importModel() const
 	return mImportModel;
 }
 
-QGroupBox* PartitionWidget::importGroupBox() const
+QToolButton* PartitionWidget::showHideImportViewButton() const
 {
-	return gbImport;
+	return tbShowHideImportView;
 }
 
 QString PartitionWidget::currentPartition() const
@@ -76,6 +78,17 @@ void PartitionWidget::setCurrentPartition( const QString& partition )
 	cbPartitions->setEditText( partition );
 }
 
+void PartitionWidget::models_countChanged()
+{
+	const qWBFS::PartitionStatus status = mWBFS->partitionStatus();
+	
+	gStatus->setSize( status.size );
+	gStatus->setUsedSize( status.used );
+	gStatus->setFreeSize( status.free );
+	gStatus->setTemporarySize( mImportModel->size() );
+	lInformations->setText( tr( "%1 games - %2 to import" ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
+}
+
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 {
 	setCurrentPartition( cbPartitions->itemText( index ) );
@@ -83,14 +96,7 @@ void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 
 void PartitionWidget::on_tbLoad_clicked()
 {
-	const DiscList discs = mWBFS->discs();
-	const qWBFS::PartitionStatus status = mWBFS->partitionStatus();
-	
-	mDiscModel->setDiscs( discs );
-	gStatus->setSize( status.size );
-	gStatus->setUsedSize( status.used );
-	gStatus->setFreeSize( status.free );
-	lInformations->setText( tr( "%1 games" ).arg( discs.count() ) );
+	mDiscModel->setDiscs( mWBFS->discs() );
 }
 
 void PartitionWidget::on_tbOpen_clicked()
@@ -103,12 +109,12 @@ void PartitionWidget::on_tbClose_clicked()
 	emit closeViewRequested();
 }
 
-void PartitionWidget::on_tbClear_clicked()
+void PartitionWidget::on_tbClearImport_clicked()
 {
 	mImportModel->clear();
 }
 
-void PartitionWidget::on_tbRemove_clicked()
+void PartitionWidget::on_tbRemoveImport_clicked()
 {
 	mImportModel->removeSelection( lvImport->selectionModel()->selection() );
 }

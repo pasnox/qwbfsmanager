@@ -112,7 +112,7 @@ Qt::ItemFlags DiscModel::flags( const QModelIndex& index ) const
 
 bool DiscModel::removeRows( int row, int count, const QModelIndex& parent )
 {
-	count = qBound( count, count, mDiscs.count() -row -1 );
+	count = qBound( count, count, mDiscs.count() -row ); // -1
 	
 	if ( parent.isValid() || row >= mDiscs.count() || count <= 0 ) {
 		return false;
@@ -123,6 +123,8 @@ bool DiscModel::removeRows( int row, int count, const QModelIndex& parent )
 		mDiscs.removeAt( row );
 	}
 	endRemoveRows();
+	
+	emit countChanged( mDiscs.count() );
 	
 	return true;
 }
@@ -162,13 +164,7 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 			return false;
 		}
 		
-		const int from = rowCount();
-		const int to = from +discs.count() -1;
-		
-		beginInsertRows( QModelIndex(), from, to );
-		mDiscs << discs.toList();
-		endInsertRows();
-		
+		addDiscs( discs.toList() );
 		return true;
 	}
 	
@@ -199,22 +195,48 @@ QStringList DiscModel::mimeTypes() const
 	return mMimeTypes;
 }
 
-void DiscModel::setDiscs( const DiscList& discs )
+void DiscModel::insertDiscs( int index, const DiscList& discs )
 {
-	clear();
+	index = qBound( 0, index, rowCount() );
 	
 	if ( discs.isEmpty() ) {
 		return;
 	}
 	
-	beginInsertRows( QModelIndex(), 0, discs.count() -1 );
-	mDiscs = discs;
+	beginInsertRows( QModelIndex(), index, discs.count() -1 );
+	for ( int i = 0; i < discs.count(); i++ ) {
+		mDiscs.insert( i +index, discs.at( i ) );
+	}
 	endInsertRows();
+	
+	emit countChanged( mDiscs.count() );
+}
+
+void DiscModel::addDiscs( const DiscList& discs )
+{
+	insertDiscs( rowCount(), discs );
+}
+
+void DiscModel::setDiscs( const DiscList& discs )
+{
+	clear();
+	addDiscs( discs );
 }
 
 DiscList DiscModel::discs() const
 {
 	return mDiscs;
+}
+
+qint64 DiscModel::size() const
+{
+	qint64 size = 0;
+	
+	foreach ( const Disc& disc, mDiscs ) {
+		size += disc.size;
+	}
+	
+	return size;
 }
 
 Disc DiscModel::disc( const QModelIndex& index ) const
@@ -250,4 +272,6 @@ void DiscModel::clear()
 	beginRemoveRows( QModelIndex(), 0, mDiscs.count() -1 );
 	mDiscs.clear();
 	endRemoveRows();
+	
+	emit countChanged( mDiscs.count() );
 }

@@ -14,20 +14,19 @@ public:
 	virtual QSize sizeHint() const;
 	virtual QSize minimumSizeHint() const;
 	
-	void setSize( qint64 value );
 	qint64 size() const;
-	
-	void setUsedSize( qint64 value );
 	qint64 usedSize() const;
-	
-	void setFreeSize( qint64 value );
 	qint64 freeSize() const;
-	
-	void setTemporarySize( qint64 value );
 	qint64 temporarySize() const;
 	
 	static QString fileSizeAdaptString( double nb );
 	static QString fileSizeToString( double size );
+
+public slots:
+	void setSize( qint64 value );
+	void setUsedSize( qint64 value );
+	void setFreeSize( qint64 value );
+	void setTemporarySize( qint64 value );
 	
 protected:
 	qint64 mSize;

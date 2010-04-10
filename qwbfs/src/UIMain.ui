@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>661</width>
-    <height>375</height>
+    <width>659</width>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@
      <item>
       <widget class="QTabWidget" name="twPages">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="movable">
         <bool>true</bool>
@@ -117,7 +117,7 @@
            <item>
             <widget class="QToolButton" name="tbClearExport">
              <property name="toolTip">
-              <string>Clear the export list</string>
+              <string>Clear the list</string>
              </property>
              <property name="text">
               <string>C</string>
@@ -127,7 +127,7 @@
            <item>
             <widget class="QToolButton" name="tbRemoveExport">
              <property name="toolTip">
-              <string>Remove the selected items</string>
+              <string>Remove the selected items from the list</string>
              </property>
              <property name="text">
               <string>-</string>

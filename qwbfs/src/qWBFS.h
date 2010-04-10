@@ -29,20 +29,33 @@ public:
 		qWBFS::Error lastError;
 	};
 	
-	struct qWBFSHandle
+	struct Handle
 	{
-		qWBFSHandle( const qWBFS::Properties& properties );
-		~qWBFSHandle();
+		Handle( const qWBFS::Properties& properties );
+		~Handle();
 		
 		bool isValid() const;
 		wbfs_t* ptr() const;
 		
 		wbfs_t* mHandle;
+		qWBFS::Properties properties;
+	};
+	
+	struct DiscHandle
+	{
+		DiscHandle( const qWBFS::Handle& handle, const QString& id );
+		~DiscHandle();
+		
+		QString isoName() const;
+		bool isValid() const;
+		wbfs_disc_t* ptr() const;
+		
+		wbfs_disc_t* mHandle;
 	};
 	
 	struct PartitionStatus
 	{
-		PartitionStatus( const qWBFS::qWBFSHandle& handle );
+		PartitionStatus( const qWBFS::Handle& handle );
 		
 		qint64 size;
 		qint64 used;

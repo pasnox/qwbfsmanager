@@ -31,8 +31,11 @@ public:
 	virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
 	virtual QStringList mimeTypes() const;
 	
+	void insertDiscs( int index, const DiscList& discs );
+	void addDiscs( const DiscList& discs );
 	void setDiscs( const DiscList& discs );
 	DiscList discs() const;
+	qint64 size() const;
 	Disc disc( const QModelIndex& index ) const;
 	void removeSelection( const QItemSelection& selection );
 
@@ -42,6 +45,9 @@ public slots:
 protected:
 	DiscList mDiscs;
 	QStringList mMimeTypes;
+
+signals:
+	void countChanged( int count );
 };
 
 struct SelectionRangePairLessThanSorter
