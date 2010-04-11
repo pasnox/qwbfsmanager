@@ -15,9 +15,12 @@ ExportThread::ExportThread( QObject* parent )
 ExportThread::~ExportThread()
 {
 	if ( isRunning() ) {
+		qWarning() << "Waiting...";
 		stop();
 		wait();
 	}
+	
+	qWarning() << Q_FUNC_INFO;
 }
 
 bool ExportThread::exportDiscs( const DiscList& discs, const QString& path )
@@ -27,8 +30,26 @@ bool ExportThread::exportDiscs( const DiscList& discs, const QString& path )
 		return false;
 	}
 	
+	mTask = ExportThread::Export;
 	mDiscs = discs;
 	mPath = path;
+	mStop = false;
+	
+	start();
+	
+	return true;
+}
+
+bool ExportThread::importDiscs( const DiscList& discs, const QString& partition )
+{
+	if ( isRunning() ) {
+		Q_ASSERT( 0 );
+		return false;
+	}
+	
+	mTask = ExportThread::Import;
+	mDiscs = discs;
+	mPartition = partition;
 	mStop = false;
 	
 	start();
@@ -41,6 +62,16 @@ void ExportThread::emitCurrentProgressChanged( int value, int maximum, const QTi
 	emit currentProgressChanged( value, maximum, remaining );
 }
 
+void ExportThread::emitMessage( const QString& text )
+{
+	emit message( text );
+}
+
+void ExportThread::emitError( const QString& text )
+{
+	emit error( text );
+}
+
 void ExportThread::stop()
 {
 	QMutexLocker locker( &mMutex );
@@ -51,6 +82,21 @@ void ExportThread::stop()
 void ExportThread::run()
 {
 	mCurrentExportThread = this;
+	
+	switch ( mTask ) {
+		case ExportThread::Export:
+			exportWorker();
+			break;
+		case ExportThread::Import:
+			importWorker();
+			break;
+	}
+	
+	mCurrentExportThread = 0;
+}
+
+void ExportThread::exportWorker()
+{
 	qWBFS::Handle* handle = 0;
 	
 	emit globalProgressChanged( 0 );
@@ -112,7 +158,127 @@ void ExportThread::run()
 	}
 	
 	delete handle;
-	mCurrentExportThread = 0;
+}
+
+void ExportThread::importWorker()
+{
+	// target partition handle
+	qWBFS::Properties tpp;
+	tpp.partition = mPartition;
+	qWBFS::Handle tph( tpp );
+	
+	if ( !tph.isValid() ) {
+		emit error( tr( "Invalid target handle, can't open partition '%1'." ).arg( tpp.partition ) );
+		return;
+	}
+	
+	// source partition handle
+	qWBFS::Handle* sph = 0;
+	
+	emit globalProgressChanged( 0 );
+	
+	for ( int i = 0; i < mDiscs.count(); i++ ) {
+		const Disc& disc = mDiscs[ i ];
+		
+		emit message( tr( "Importing '%1'..." ).arg( disc.title ) );
+		
+		// delete handle if different partition
+		if ( sph && sph->properties.partition != disc.origin ) {
+			delete sph;
+			sph = 0;
+		}
+		
+		void* fileHandle = wbfs_open_file_for_read( disc.origin.toLocal8Bit().data() );
+		
+        if ( !fileHandle ) {
+			emit error( tr( "Unable to open disc file '%1'." ).arg( disc.origin ) );
+		}
+        else {
+			u8 discInfo[7];
+			wbfs_read_file( fileHandle, 6, discInfo );
+			
+			const bool haveDisc = qWBFS::DiscHandle( tph, disc.id ).isValid();
+			
+			// source is WBFS partition
+			if ( memcmp( discInfo, "WBFS", 4 ) == 0 ) {
+				wbfs_close_file( fileHandle );
+				
+				if ( !haveDisc ) {
+					// get source partition handle
+					if ( !sph ) {
+						qWBFS::Properties spp;
+						spp.partition = disc.origin;
+						sph = new qWBFS::Handle( spp );
+						
+						if ( !sph->isValid() ) {
+							emit error( tr( "Invalid source handle, can't open partition '%1'." ).arg( spp.partition ) );
+							break;
+						}
+					}
+					
+					// get source disc handle
+					const qWBFS::DiscHandle sdh( *sph, disc.id );
+					
+					if ( sdh.isValid() ) {
+						if ( wbfs_add_disc( tph.ptr(), discRead_callback, sdh.ptr(), progress_callback, ONLY_GAME_PARTITION, 0 ) != 0 ) {
+							emit error( tr( "Can't add disc '%1' in partition '%2'." ).arg( disc.title ).arg( tpp.partition ) );
+						}
+					}
+					else {
+						emit error( tr( "Invalid source handle, can't open the disc '%1'." ).arg( disc.title ) );
+					}
+				}
+				else {
+					emit error( tr( "Skipping add of existing disc '%1'." ).arg( disc.title ) );
+				}
+			}
+			// source is file
+			else
+			{
+				if ( !haveDisc ) {
+					if ( wbfs_add_disc( tph.ptr(), wbfs_read_wii_file, fileHandle, progress_callback, ONLY_GAME_PARTITION, 0 ) != 0 ) {
+						emit error( tr( "Can't add disc '%1' in partition '%2'." ).arg( disc.title ).arg( tpp.partition ) );
+					}
+				}
+				else {
+					emit error( tr( "Skipping add of existing disc '%1'." ).arg( disc.title ) );
+				}
+			}
+        }
+		
+		emit globalProgressChanged( i +1 );
+		
+		{
+			QMutexLocker locker( &mMutex );
+			if ( mStop ) {
+				break;
+			}
+		}
+	}
+	
+	delete sph;
+}
+
+int ExportThread::discRead_callback( void* fp, u32 lba, u32 count, void* iobuf )
+{
+	int ret = wbfs_disc_read( (wbfs_disc_t*)fp, lba, (u8*)iobuf, count );
+	static int num_fail = 0;
+	
+	if ( ret ) {
+		if ( num_fail == 0 ) {
+			mCurrentExportThread->emitError( "error reading lba probably the two wbfs don't have the same granularity. Ignoring...\n" );
+		}
+		
+		if ( num_fail++ > 0x100 ) {
+			mCurrentExportThread->emitError( "too many error giving up...\n" );
+			return 1;
+		}
+	}
+	else {
+		num_fail = 0;
+	}
+	
+	return 0;
 }
 
 void ExportThread::progress_callback( int x, int max )

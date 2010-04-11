@@ -18,6 +18,7 @@ ProgressDialog::ProgressDialog( QWidget* parent )
 
 ProgressDialog::~ProgressDialog()
 {
+	qWarning() << Q_FUNC_INFO;
 }
 
 void ProgressDialog::closeEvent( QCloseEvent* event )
@@ -49,6 +50,28 @@ void ProgressDialog::exportDiscs( const DiscList& discs, const QString& path )
 	open();
 	
 	if ( !mThread->exportDiscs( discs, path ) ) {
+		deleteLater();
+	}
+}
+
+void ProgressDialog::importDiscs( const DiscList& discs, const QString& partition )
+{
+	mThread = new ExportThread( this );
+	
+	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
+	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
+	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
+	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
+	connect( mThread, SIGNAL( error( const QString& ) ), pteErrors, SLOT( appendPlainText( const QString& ) ) );
+	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
+	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
+	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
+	
+	setWindowTitle( tr( "Importing discs..." ) );
+	pbGlobal->setMaximum( discs.count() );
+	open();
+	
+	if ( !mThread->importDiscs( discs, partition ) ) {
 		deleteLater();
 	}
 }

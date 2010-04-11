@@ -129,6 +129,25 @@ bool DiscModel::removeRows( int row, int count, const QModelIndex& parent )
 	return true;
 }
 
+bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int role )
+{
+	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() != 0 ) {
+		return false;
+	}
+	
+	switch ( role )
+	{
+		case Qt::DisplayRole:
+			mDiscs[ index.row() ].title = value.toString();
+			break;
+		default:
+			return false;
+	}
+	
+	emit dataChanged( index, index );
+	return true;
+}
+
 bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent )
 {
 	Q_UNUSED( action );

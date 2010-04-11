@@ -18,6 +18,7 @@ public:
 	virtual ~ProgressDialog();
 	
 	void exportDiscs( const DiscList& discs, const QString& path );
+	void importDiscs( const DiscList& discs, const QString& partition );
 
 protected:
 	QPointer<ExportThread> mThread;

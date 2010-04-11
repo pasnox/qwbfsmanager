@@ -50,13 +50,14 @@ UIMain::UIMain( QWidget* parent )
 
 UIMain::~UIMain()
 {
+	qWarning() << Q_FUNC_INFO;
 }
 
 void UIMain::updatePartitions()
 {
 	mPartitions.clear();
 	
-	mPartitions << "/dev/sdg1";
+	mPartitions << "/dev/sda4" << "/dev/sdg1" << "/dev/sdh1";
 	
 	const QList<PartitionWidget*> widgets = sViews->findChildren<PartitionWidget*>();
 	

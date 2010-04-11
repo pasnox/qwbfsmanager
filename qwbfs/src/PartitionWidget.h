@@ -34,9 +34,15 @@ protected:
 protected slots:
 	void models_countChanged();
 	void on_cbPartitions_currentIndexChanged( int index );
+	
 	void on_tbLoad_clicked();
+	void on_tbFormat_clicked();
 	void on_tbOpen_clicked();
 	void on_tbClose_clicked();
+	
+	void on_tbRemoveDiscs_clicked();
+	void on_tbRenameDisc_clicked();
+	
 	void on_tbClearImport_clicked();
 	void on_tbRemoveImport_clicked();
 	void on_tbImport_clicked();

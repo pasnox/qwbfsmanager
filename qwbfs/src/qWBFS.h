@@ -11,13 +11,6 @@ class qWBFS : public QObject
 	Q_OBJECT
 	
 public:
-	enum Error
-	{
-		NoError,
-		UnknownError,
-		InvalidPartition
-	};
-	
 	struct Properties
 	{
 		Properties();
@@ -26,7 +19,6 @@ public:
 		bool reset;
 		QString disk;
 		QString partition;
-		qWBFS::Error lastError;
 	};
 	
 	struct Handle
@@ -74,11 +66,15 @@ public:
 	void setPartition( const QString& partition );
 	QString partition() const;
 	
+	QString lastError() const;
 	DiscList discs() const;
 	qWBFS::PartitionStatus partitionStatus() const;
+	bool renameDisc( const QString& id, const QString& name );
+	bool format();
 
 protected:
 	mutable qWBFS::Properties mProperties;
+	mutable QString mLastError;
 };
 
 #endif // QWBFS_H

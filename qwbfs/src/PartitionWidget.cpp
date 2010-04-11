@@ -1,10 +1,12 @@
 #include "PartitionWidget.h"
-
 #include "qWBFS.h"
 #include "DiscModel.h"
 #include "DiscDelegate.h"
+#include "ProgressDialog.h"
 
 #include <QLineEdit>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QDebug>
 
 PartitionWidget::PartitionWidget( QWidget* parent )
@@ -86,17 +88,44 @@ void PartitionWidget::models_countChanged()
 	gStatus->setUsedSize( status.used );
 	gStatus->setFreeSize( status.free );
 	gStatus->setTemporarySize( mImportModel->size() );
-	lInformations->setText( tr( "%1 games - %2 to import" ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
+	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
 }
 
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 {
 	setCurrentPartition( cbPartitions->itemText( index ) );
-}
+}	
 
 void PartitionWidget::on_tbLoad_clicked()
 {
 	mDiscModel->setDiscs( mWBFS->discs() );
+	
+	if ( mWBFS->lastError().isEmpty() ) {
+		if ( mDiscModel->rowCount() == 0 ) {
+			models_countChanged();
+		}
+	}
+	else {
+		QMessageBox::information( this, QString::null, mWBFS->lastError() );
+	}
+}
+
+void PartitionWidget::on_tbFormat_clicked()
+{
+	const QString text = tr( "The partition '%1' will be formatted,\nall data will be erased permanently, are you sure?" ).arg( mWBFS->partition() );
+	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
+	const QMessageBox::StandardButton button = QMessageBox::No;
+	
+	if ( QMessageBox::question( this, QString::null, text, buttons, button ) == button ) {
+		return;
+	}
+	
+	if ( mWBFS->format() ) {
+		models_countChanged();
+	}
+	else {
+		QMessageBox::information( this, QString::null, tr( "Can't format the partition:\n%1" ).arg( mWBFS->lastError() ) );
+	}
 }
 
 void PartitionWidget::on_tbOpen_clicked()
@@ -107,6 +136,29 @@ void PartitionWidget::on_tbOpen_clicked()
 void PartitionWidget::on_tbClose_clicked()
 {
 	emit closeViewRequested();
+}
+
+void PartitionWidget::on_tbRemoveDiscs_clicked()
+{
+}
+
+void PartitionWidget::on_tbRenameDisc_clicked()
+{
+	const QModelIndex index = lvDiscs->selectionModel()->selectedIndexes().value( 0 );
+	const Disc disc = mDiscModel->disc( index );
+	
+	if ( !index.isValid() ) {
+		return;
+	}
+	
+	const QString name = QInputDialog::getText( this, QString::null, tr( "Choose a new name for the disc" ), QLineEdit::Normal, disc.title );
+	
+	if ( mWBFS->renameDisc( disc.id, name ) ) {
+		mDiscModel->setData( index, name, Qt::DisplayRole );
+	}
+	else {
+		QMessageBox::information( this, QString::null, tr( "Can't rename disc id #%1 (%2) to '%3'" ).arg( disc.id ).arg( disc.title ).arg( name ) );
+	}
 }
 
 void PartitionWidget::on_tbClearImport_clicked()
@@ -121,5 +173,6 @@ void PartitionWidget::on_tbRemoveImport_clicked()
 
 void PartitionWidget::on_tbImport_clicked()
 {
-	//
+	ProgressDialog* dlg = new ProgressDialog( this );
+	dlg->importDiscs( mImportModel->discs(), mWBFS->partition() );
 }

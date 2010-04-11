@@ -12,7 +12,6 @@ qWBFS::Properties::Properties()
 	reset = false;
 	disk = QString::null;
 	partition = QString::null;
-	lastError = qWBFS::NoError;
 }
 
 // qWBFSHandle
@@ -34,6 +33,7 @@ qWBFS::Handle::~Handle()
 {
 	if ( mHandle ) {
 		wbfs_close( mHandle );
+		//qWarning() << Q_FUNC_INFO;
 	}
 }
 
@@ -58,6 +58,7 @@ qWBFS::DiscHandle::~DiscHandle()
 {
 	if ( mHandle ) {
 		wbfs_close_disc( mHandle );
+		//qWarning() << Q_FUNC_INFO;
 	}
 }
 
@@ -149,13 +150,18 @@ QString qWBFS::partition() const
 	return mProperties.partition;
 }
 
+QString qWBFS::lastError() const
+{
+	return mLastError;
+}
+
 DiscList qWBFS::discs() const
 {
+	mLastError.clear();
 	const qWBFS::Handle handle( mProperties );
 	DiscList discs;
 	
 	if ( handle.isValid() ) {
-		mProperties.lastError = qWBFS::NoError;
 		const int count = wbfs_count_discs( handle.ptr() );
 		const int header_size = 0x100;
 		u8* header = (u8*)wbfs_ioalloc( header_size );
@@ -170,7 +176,7 @@ DiscList qWBFS::discs() const
 		wbfs_iofree( header );
 	}
 	else {
-		mProperties.lastError = qWBFS::InvalidPartition;
+		mLastError = tr( "Invalid partition handle, can't open '%1'." ).arg( mProperties.partition );
 	}
 	
 	return discs;
@@ -179,4 +185,36 @@ DiscList qWBFS::discs() const
 qWBFS::PartitionStatus qWBFS::partitionStatus() const
 {
 	return qWBFS::PartitionStatus( qWBFS::Handle( mProperties ) );
+}
+
+bool qWBFS::renameDisc( const QString& id, const QString& name )
+{
+	const qWBFS::Handle handle( mProperties );
+	mLastError.clear();
+	
+	if ( !handle.isValid() ) {
+		mLastError = tr( "Invalid partition handle, can't rename the disc #%1 to '%2' on '%3'." ).arg( id ).arg( name ).arg( mProperties.partition );
+		return false;
+	}
+	
+	const bool ok = wbfs_ren_disc( handle.ptr(), (u8*)id.toLocal8Bit().constData(), (u8*)name.toLocal8Bit().constData() ) == 0;
+	
+	if ( !ok ) {
+		mLastError = tr( "Can't rename disc #%1 to '%2' on '%3'." ).arg( id ).arg( name ).arg( mProperties.partition );
+	}
+	
+	return ok;
+}
+
+bool qWBFS::format()
+{
+	mLastError.clear();
+	mProperties.reset = true;
+	{
+		if ( !qWBFS::Handle( mProperties ).isValid() ) {
+			mLastError = tr( "Invalid partition handle, can't open '%1'." ).arg( mProperties.partition );
+		}
+	}
+	mProperties.reset = false;
+	return partitionStatus().size > 0;
 }

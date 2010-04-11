@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>475</height>
+    <width>296</width>
+    <height>471</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -33,6 +33,16 @@
        </property>
        <property name="text">
         <string>R</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="tbFormat">
+       <property name="toolTip">
+        <string>Format the partition</string>
+       </property>
+       <property name="text">
+        <string>F</string>
        </property>
       </widget>
      </item>
@@ -97,17 +107,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QToolButton" name="tbClearWBFS">
-           <property name="toolTip">
-            <string>Clear the discs</string>
-           </property>
-           <property name="text">
-            <string>C</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="tbRemoveWBFS">
+          <widget class="QToolButton" name="tbRemoveDiscs">
            <property name="toolTip">
             <string>Remove the selected discs</string>
            </property>
@@ -117,19 +117,12 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="tbRenameWBFS">
+          <widget class="QToolButton" name="tbRenameDisc">
+           <property name="toolTip">
+            <string>Rename the selected disc</string>
+           </property>
            <property name="text">
             <string>R</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="tbFormat">
-           <property name="toolTip">
-            <string>Format the partition</string>
-           </property>
-           <property name="text">
-            <string>F</string>
            </property>
           </widget>
          </item>
