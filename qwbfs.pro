@@ -6,5 +6,8 @@ XUPProjectSettings {
 }
 
 TEMPLATE	= subdirs
-CONFIG	+= ordered debug_and_release
-SUBDIRS	= libqwbfs qwbfs
+CONFIG	+= ordered
+SUBDIRS	= libwbfs qwbfs
+BUILD_PATH	= build
+
+include(shared.pri)

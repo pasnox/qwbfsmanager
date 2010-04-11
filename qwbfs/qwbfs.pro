@@ -17,40 +17,15 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
-CONFIG	+= qt resources debug_and_release warn_on thread x11 windows console embed_manifest_exe x86 ppc app_bundle
+CONFIG	+= qt resources warn_on thread x11 windows embed_manifest_exe x86 ppc app_bundle
 QT	= core gui xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
-INCLUDEPATH	+= ../libqwbfs/libwbfs \
-	../libqwbfs \
-	src
+include(../shared.pri)
+include(../libwbfs/libwbfs.pri)
 
-LIBS	+= -L$${BUILD_PATH} -lcrypto
-
-CONFIG(debug, debug|release) {
-	#Debug
-	CONFIG	+= console
-	unix:TARGET	= $$join(TARGET,,,_debug)
-	else:TARGET	= $$join(TARGET,,,d)
-	unix:OBJECTS_DIR	= $${BUILD_PATH}/debug/.obj/unix
-	win32:OBJECTS_DIR	= $${BUILD_PATH}/debug/.obj/win32
-	mac:OBJECTS_DIR	= $${BUILD_PATH}/debug/.obj/mac
-	UI_DIR	= $${BUILD_PATH}/debug/.ui
-	MOC_DIR	= $${BUILD_PATH}/debug/.moc
-	RCC_DIR	= $${BUILD_PATH}/debug/.rcc
-	unix:LIBS	*= -lqwbfs_debug
-	else:LIBS	*= -lqwbfsd
-} else {
-	#Release
-	unix:OBJECTS_DIR	= $${BUILD_PATH}/release/.obj/unix
-	win32:OBJECTS_DIR	= $${BUILD_PATH}/release/.obj/win32
-	mac:OBJECTS_DIR	= $${BUILD_PATH}/release/.obj/mac
-	UI_DIR	= $${BUILD_PATH}/release/.ui
-	MOC_DIR	= $${BUILD_PATH}/release/.moc
-	RCC_DIR	= $${BUILD_PATH}/release/.rcc
-	LIBS	+= -lqwbfs
-}
+INCLUDEPATH	+= src
 
 FORMS	+= src/UIMain.ui \
 	src/PartitionWidget.ui \
