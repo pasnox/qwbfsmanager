@@ -51,7 +51,7 @@ wbfs_t* qWBFS::Handle::ptr() const
 
 qWBFS::DiscHandle::DiscHandle( const qWBFS::Handle& _handle, const QString& id )
 {
-	mHandle = wbfs_open_disc( _handle.ptr(), (u8*)( id.toLocal8Bit().constData() ) );
+	mHandle = wbfs_open_disc( _handle.ptr(), (u8*)( id.toLocal8Bit().data() ) );
 }
 
 qWBFS::DiscHandle::~DiscHandle()
@@ -197,7 +197,7 @@ bool qWBFS::renameDisc( const QString& id, const QString& name )
 		return false;
 	}
 	
-	const bool ok = wbfs_ren_disc( handle.ptr(), (u8*)id.toLocal8Bit().constData(), (u8*)name.toLocal8Bit().constData() ) == 0;
+	const bool ok = wbfs_ren_disc( handle.ptr(), (u8*)id.toLocal8Bit().data(), (u8*)name.toLocal8Bit().data() ) == 0;
 	
 	if ( !ok ) {
 		mLastError = tr( "Can't rename disc #%1 to '%2' on '%3'." ).arg( id ).arg( name ).arg( mProperties.partition );
