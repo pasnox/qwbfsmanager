@@ -82,7 +82,7 @@ void PartitionWidget::setCurrentPartition( const QString& partition )
 
 void PartitionWidget::models_countChanged()
 {
-	const qWBFS::PartitionStatus status = mWBFS->partitionStatus();
+	const QWBFS::Partition::Status status = mWBFS->partitionStatus();
 	
 	gStatus->setSize( status.size );
 	gStatus->setUsedSize( status.used );

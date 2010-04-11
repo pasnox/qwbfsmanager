@@ -1,4 +1,5 @@
 #include "ExportThread.h"
+#include "qwbfsdriver/PartitionDiscHandle.h"
 #include "qWBFS.h"
 
 #include <QTime>
@@ -97,7 +98,7 @@ void ExportThread::run()
 
 void ExportThread::exportWorker()
 {
-	qWBFS::Handle* handle = 0;
+	QWBFS::Partition::Handle* handle = 0;
 	
 	emit globalProgressChanged( 0 );
 	
@@ -107,17 +108,17 @@ void ExportThread::exportWorker()
 		emit message( tr( "Exporting '%1'..." ).arg( disc.title ) );
 		
 		// delete handle if different partition
-		if ( handle && handle->properties.partition != disc.origin ) {
+		if ( handle && handle->partition() != disc.origin ) {
 			delete handle;
 			handle = 0;
 		}
 		
 		// get partition handle
 		if ( !handle ) {
-			qWBFS::Properties properties;
+			QWBFS::Partition::Properties properties;
 			properties.partition = disc.origin;
 			
-			handle = new qWBFS::Handle( properties );
+			handle = new QWBFS::Partition::Handle( properties );
 			
 			if ( !handle->isValid() ) {
 				emit error( tr( "Can't initialize partition '%1'." ).arg( properties.partition ) );
@@ -126,7 +127,7 @@ void ExportThread::exportWorker()
 		}
 		
 		// get disc handle
-		qWBFS::DiscHandle discHandle( *handle, disc.id );
+		QWBFS::Partition::DiscHandle discHandle( *handle, disc.id );
 		
 		if ( !discHandle.isValid() ) {
 			emit error( tr( "Invalid handle for '%1', can't export the disc." ).arg( disc.title ) );
@@ -163,9 +164,9 @@ void ExportThread::exportWorker()
 void ExportThread::importWorker()
 {
 	// target partition handle
-	qWBFS::Properties tpp;
+	QWBFS::Partition::Properties tpp;
 	tpp.partition = mPartition;
-	qWBFS::Handle tph( tpp );
+	QWBFS::Partition::Handle tph( tpp );
 	
 	if ( !tph.isValid() ) {
 		emit error( tr( "Invalid target handle, can't open partition '%1'." ).arg( tpp.partition ) );
@@ -173,7 +174,7 @@ void ExportThread::importWorker()
 	}
 	
 	// source partition handle
-	qWBFS::Handle* sph = 0;
+	QWBFS::Partition::Handle* sph = 0;
 	
 	emit globalProgressChanged( 0 );
 	
@@ -183,7 +184,7 @@ void ExportThread::importWorker()
 		emit message( tr( "Importing '%1'..." ).arg( disc.title ) );
 		
 		// delete handle if different partition
-		if ( sph && sph->properties.partition != disc.origin ) {
+		if ( sph && sph->partition() != disc.origin ) {
 			delete sph;
 			sph = 0;
 		}
@@ -197,7 +198,7 @@ void ExportThread::importWorker()
 			u8 discInfo[7];
 			wbfs_read_file( fileHandle, 6, discInfo );
 			
-			const bool haveDisc = qWBFS::DiscHandle( tph, disc.id ).isValid();
+			const bool haveDisc = QWBFS::Partition::DiscHandle( tph, disc.id ).isValid();
 			
 			// source is WBFS partition
 			if ( memcmp( discInfo, "WBFS", 4 ) == 0 ) {
@@ -206,9 +207,9 @@ void ExportThread::importWorker()
 				if ( !haveDisc ) {
 					// get source partition handle
 					if ( !sph ) {
-						qWBFS::Properties spp;
+						QWBFS::Partition::Properties spp;
 						spp.partition = disc.origin;
-						sph = new qWBFS::Handle( spp );
+						sph = new QWBFS::Partition::Handle( spp );
 						
 						if ( !sph->isValid() ) {
 							emit error( tr( "Invalid source handle, can't open partition '%1'." ).arg( spp.partition ) );
@@ -217,7 +218,7 @@ void ExportThread::importWorker()
 					}
 					
 					// get source disc handle
-					const qWBFS::DiscHandle sdh( *sph, disc.id );
+					const QWBFS::Partition::DiscHandle sdh( *sph, disc.id );
 					
 					if ( sdh.isValid() ) {
 						if ( wbfs_add_disc( tph.ptr(), discRead_callback, sdh.ptr(), progress_callback, ONLY_GAME_PARTITION, 0 ) != 0 ) {

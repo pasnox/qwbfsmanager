@@ -22,8 +22,8 @@ QT	= core gui xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
-include(../shared.pri)
-include(../libwbfs/libwbfs.pri)
+include( ../shared.pri )
+include( ../libwbfs/libwbfs.pri )
 
 INCLUDEPATH	+= src
 
@@ -39,7 +39,11 @@ HEADERS	+= src/UIMain.h \
 	src/PartitionWidget.h \
 	src/Disc.h \
 	src/ProgressDialog.h \
-	src/ExportThread.h
+	src/ExportThread.h \
+	src/qwbfsdriver/PartitionDiscHandle.h \
+	src/qwbfsdriver/PartitionHandle.h \
+	src/qwbfsdriver/PartitionProperties.h \
+	src/qwbfsdriver/PartitionStatus.h
 
 SOURCES	+= src/main.cpp \
 	src/UIMain.cpp \
@@ -50,4 +54,8 @@ SOURCES	+= src/main.cpp \
 	src/PartitionWidget.cpp \
 	src/Disc.cpp \
 	src/ProgressDialog.cpp \
-	src/ExportThread.cpp
+	src/ExportThread.cpp \
+	src/qwbfsdriver/PartitionDiscHandle.cpp \
+	src/qwbfsdriver/PartitionHandle.cpp \
+	src/qwbfsdriver/PartitionProperties.cpp \
+	src/qwbfsdriver/PartitionStatus.cpp

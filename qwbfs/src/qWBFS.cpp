@@ -3,104 +3,6 @@
 #include <libwbfs.h>
 
 #include <QDebug>
-
-// Properties
-
-qWBFS::Properties::Properties()
-{
-	force = false;
-	reset = false;
-	disk = QString::null;
-	partition = QString::null;
-}
-
-// qWBFSHandle
-
-qWBFS::Handle::Handle( const qWBFS::Properties& _properties )
-{
-	properties = _properties;
-	
-#ifdef Q_OS_WIN
-	if ( properties.partition.length() != 1 ) {
-		properties.lastError = qWBFS::InvalidPartition;
-	}
-#endif
-	
-	mHandle = wbfs_try_open( properties.disk.toLocal8Bit().data(), properties.partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
-}
-
-qWBFS::Handle::~Handle()
-{
-	if ( mHandle ) {
-		wbfs_close( mHandle );
-		//qWarning() << Q_FUNC_INFO;
-	}
-}
-
-bool qWBFS::Handle::isValid() const
-{
-	return mHandle;
-}
-
-wbfs_t* qWBFS::Handle::ptr() const
-{
-	return mHandle;
-}
-
-// DiscHandle
-
-qWBFS::DiscHandle::DiscHandle( const qWBFS::Handle& _handle, const QString& id )
-{
-	mHandle = wbfs_open_disc( _handle.ptr(), (u8*)( id.toLocal8Bit().data() ) );
-}
-
-qWBFS::DiscHandle::~DiscHandle()
-{
-	if ( mHandle ) {
-		wbfs_close_disc( mHandle );
-		//qWarning() << Q_FUNC_INFO;
-	}
-}
-
-QString qWBFS::DiscHandle::isoName() const
-{
-	if ( !mHandle ) {
-		return QString::null;
-	}
-	
-	QString isoname = QString::fromLocal8Bit( QString::fromLocal8Bit( (char*)mHandle->header->disc_header_copy +0x20, 0x100 )
-		.replace( ' ', '_' )
-		.replace( '/', '_' )
-		.replace( ':', '_' ).trimmed().toLocal8Bit().constData() );
-	
-	if ( isoname.length() >= 0x100 ) {
-		isoname.chop( ( isoname.length() -0x100 ) +4 );
-	}
-	
-	isoname.append( ".iso" );
-	
-	return isoname;
-}
-
-bool qWBFS::DiscHandle::isValid() const
-{
-	return mHandle;
-}
-
-wbfs_disc_t* qWBFS::DiscHandle::ptr() const
-{
-	return mHandle;
-}
-
-// PartitionStatus
-
-qWBFS::PartitionStatus::PartitionStatus( const qWBFS::Handle& handle )
-{
-	const u32 blockCount = handle.isValid() ? wbfs_count_usedblocks( handle.ptr() ) : 0;
-	size = handle.isValid() ? (double)handle.ptr()->n_wbfs_sec *handle.ptr()->wbfs_sec_sz : 0;
-	used = handle.isValid() ? (double)( handle.ptr()->n_wbfs_sec -blockCount ) *handle.ptr()->wbfs_sec_sz : 0;
-	free = handle.isValid() ? (double)(blockCount) *handle.ptr()->wbfs_sec_sz : 0;
-}
 	
 // qWBFS
 
@@ -158,7 +60,7 @@ QString qWBFS::lastError() const
 DiscList qWBFS::discs() const
 {
 	mLastError.clear();
-	const qWBFS::Handle handle( mProperties );
+	const QWBFS::Partition::Handle handle( mProperties );
 	DiscList discs;
 	
 	if ( handle.isValid() ) {
@@ -182,14 +84,14 @@ DiscList qWBFS::discs() const
 	return discs;
 }
 
-qWBFS::PartitionStatus qWBFS::partitionStatus() const
+QWBFS::Partition::Status qWBFS::partitionStatus() const
 {
-	return qWBFS::PartitionStatus( qWBFS::Handle( mProperties ) );
+	return QWBFS::Partition::Status( QWBFS::Partition::Handle( mProperties ) );
 }
 
 bool qWBFS::renameDisc( const QString& id, const QString& name )
 {
-	const qWBFS::Handle handle( mProperties );
+	const QWBFS::Partition::Handle handle( mProperties );
 	mLastError.clear();
 	
 	if ( !handle.isValid() ) {
@@ -211,7 +113,7 @@ bool qWBFS::format()
 	mLastError.clear();
 	mProperties.reset = true;
 	{
-		if ( !qWBFS::Handle( mProperties ).isValid() ) {
+		if ( !QWBFS::Partition::Handle( mProperties ).isValid() ) {
 			mLastError = tr( "Invalid partition handle, can't open '%1'." ).arg( mProperties.partition );
 		}
 	}
