@@ -7,6 +7,9 @@
 
 #include "qWBFS.h"
 
+namespace QWBFS {
+namespace Model {
+
 class DiscModel : public QAbstractItemModel
 {
 	Q_OBJECT
@@ -32,19 +35,22 @@ public:
 	virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
 	virtual QStringList mimeTypes() const;
 	
-	void insertDiscs( int index, const DiscList& discs );
-	void addDiscs( const DiscList& discs );
-	void setDiscs( const DiscList& discs );
-	DiscList discs() const;
-	qint64 size() const;
-	Disc disc( const QModelIndex& index ) const;
+	void insertDiscs( int index, const QWBFS::Model::DiscList& discs );
+	void addDiscs( const QWBFS::Model::DiscList& discs );
+	void setDiscs( const QWBFS::Model::DiscList& discs );
+	QWBFS::Model::DiscList discs() const;
+	QWBFS::Model::DiscList discs( const QModelIndexList& indexes );
+	QWBFS::Model::DiscList discs( const QItemSelection& selection );
+	QWBFS::Model::Disc disc( const QModelIndex& index ) const;
+	QString discId( const QModelIndex& index ) const;
 	void removeSelection( const QItemSelection& selection );
+	qint64 size() const;
 
 public slots:
 	void clear();
 
 protected:
-	DiscList mDiscs;
+	QWBFS::Model::DiscList mDiscs;
 	QStringList mMimeTypes;
 
 signals:
@@ -60,5 +66,8 @@ struct SelectionRangePairGreaterThanSorter
 {
 	bool operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const;
 };
+
+}; // Models
+}; // QWBFS
 
 #endif // DISCMODEL_H

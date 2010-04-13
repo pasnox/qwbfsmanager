@@ -8,7 +8,20 @@
 namespace QWBFS {
 namespace Partition {
 
-struct DiscHandleData;
+namespace Internal {
+
+class DiscHandleData : public QSharedData
+{
+public:
+	DiscHandleData( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle(), const QString& id = QString::null );
+	DiscHandleData( const DiscHandleData& other );
+	~DiscHandleData();
+	
+	wbfs_disc_t* handle;
+	QString id;
+};
+
+}; // Internal
 
 struct DiscHandle
 {
@@ -22,7 +35,7 @@ struct DiscHandle
 	QString isoName() const;
 	
 protected:
-	QSharedDataPointer<DiscHandleData> d;
+	QSharedDataPointer<Internal::DiscHandleData> d;
 };
 
 }; // Partition

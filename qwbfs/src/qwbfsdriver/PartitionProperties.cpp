@@ -2,10 +2,8 @@
 
 using namespace QWBFS::Partition;
 
-Properties::Properties()
+Properties::Properties( const QString& _partition )
 {
-	force = false;
 	reset = false;
-	disk = QString::null;
-	partition = QString::null;
+	partition = _partition;
 }

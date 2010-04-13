@@ -4,7 +4,12 @@
 #include "ui_UIMain.h"
 
 class QFileSystemModel;
-class DiscModel;
+
+namespace QWBFS {
+namespace Model {
+	class DiscModel;
+}; // Model
+}; // QWBFS
 
 class UIMain : public QMainWindow, public Ui::UIMain
 {
@@ -21,7 +26,7 @@ protected:
 	QStringList mPartitions;
 	QFileSystemModel* mFoldersModel;
 	QFileSystemModel* mFilesModel;
-	DiscModel* mExportModel;
+	QWBFS::Model::DiscModel* mExportModel;
 	
 	void connectView( PartitionWidget* widget );
 

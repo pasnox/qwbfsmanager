@@ -5,7 +5,9 @@
 #include <QPainter>
 #include <QTextDocument>
 
-DiscDelegate::DiscDelegate( DiscModel* parent )
+using namespace QWBFS::Model;
+
+DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent )
 	: QStyledItemDelegate( parent )
 {
 	Q_ASSERT( parent );
@@ -27,7 +29,7 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	path.addRoundedRect( option.rect.adjusted( 2, 2, -2, -2 ), 8, 8 );
 	
 	const bool selected = option.state & QStyle::State_Selected;
-	const Disc disc = mModel->disc( index );
+	const QWBFS::Model::Disc disc = mModel->disc( index );
 	
 	// selection
 	if ( selected ) {

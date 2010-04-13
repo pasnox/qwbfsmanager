@@ -1,6 +1,6 @@
 #include "UIMain.h"
-#include "DiscModel.h"
-#include "DiscDelegate.h"
+#include "models/DiscModel.h"
+#include "models/DiscDelegate.h"
 #include "ProgressDialog.h"
 
 #include <QFileSystemModel>
@@ -29,9 +29,9 @@ UIMain::UIMain( QWidget* parent )
 	
 	lvFiles->setModel( mFilesModel );
 	
-	mExportModel = new DiscModel( this );
+	mExportModel = new QWBFS::Model::DiscModel( this );
 	lvExport->setModel( mExportModel );
-	lvExport->setItemDelegate( new DiscDelegate( mExportModel ) );
+	lvExport->setItemDelegate( new QWBFS::Model::DiscDelegate( mExportModel ) );
 	
 	pwMainView->setMainView( true );
 	pwMainView->showHideImportViewButton()->setChecked( false );
@@ -50,7 +50,7 @@ UIMain::UIMain( QWidget* parent )
 
 UIMain::~UIMain()
 {
-	qWarning() << Q_FUNC_INFO;
+	//qWarning() << Q_FUNC_INFO;
 }
 
 void UIMain::updatePartitions()

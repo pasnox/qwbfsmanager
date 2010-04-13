@@ -4,11 +4,13 @@
 
 #define WBFS_DISC_XML_NAME "WBFS-Discs"
 
+using namespace QWBFS::Model;
+
 Disc::Disc( u8* header, u32* _size, const QString& _origin )
 {
 	if ( header && _size ) {
-		id = QString::fromAscii( (char*)header, 6 );
-		title = QString::fromAscii( (char*)header +0x20 );
+		id = QString::fromLocal8Bit( (char*)header, 6 );
+		title = QString::fromLocal8Bit( QString::fromLocal8Bit( (char*)header +0x20 ).toLocal8Bit().constData() );
 		size = *_size;
 		origin = _origin;
 	}

@@ -8,7 +8,7 @@ namespace Partition {
 
 struct Status
 {
-	Status( const QWBFS::Partition::Handle& handle );
+	Status( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle() );
 	
 	qint64 size;
 	qint64 used;

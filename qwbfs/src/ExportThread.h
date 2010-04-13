@@ -5,7 +5,9 @@
 #include <QMutex>
 #include <QTime>
 
-#include "Disc.h"
+#include "models/Disc.h"
+#include "qwbfsdriver/PartitionHandle.h"
+#include "qwbfsdriver/Driver.h"
 
 class ExportThread : public QThread
 {
@@ -21,32 +23,25 @@ public:
 	ExportThread( QObject* parent = 0 );
 	virtual ~ExportThread();
 	
-	bool exportDiscs( const DiscList& discs, const QString& path );
-	bool importDiscs( const DiscList& discs, const QString& partition );
-	
-	void emitCurrentProgressChanged( int value, int maximum, const QTime& remaining );
-	void emitMessage( const QString& text );
-	void emitError( const QString& text );
+	bool exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
+	bool importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
 
 public slots:
 	void stop();
 
 protected:
 	ExportThread::Task mTask;
-	DiscList mDiscs;
+	QWBFS::Model::DiscList mDiscs;
 	QString mPath;
-	QString mPartition;
+	QWBFS::Partition::Handle mImportPartitionHandle;
 	bool mStop;
 	QMutex mMutex;
-	static ExportThread* mCurrentExportThread;
 	
 	virtual void run();
 	
+	void connectDriver( const QWBFS::Driver& driver );
 	void exportWorker();
 	void importWorker();
-	
-	static int discRead_callback( void* fp, u32 lba, u32 count, void* iobuf );
-	static void progress_callback( int value, int maximum );
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );

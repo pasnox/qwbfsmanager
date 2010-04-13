@@ -8,7 +8,10 @@
 #define URLS_FORMAT "text/uri-list"
 #define WBFS_DISCS_FORMAT "xml/wbfs-discs"
 
+using namespace QWBFS::Model;
+
 // Sorter
+
 bool SelectionRangePairLessThanSorter::operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const
 {
 	return left.first < right.first;
@@ -42,7 +45,7 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 		return QVariant();
 	}
 	
-	const Disc disc = mDiscs.value( index.row() );
+	const QWBFS::Model::Disc disc = mDiscs.value( index.row() );
 	
 	switch ( role )
 	{
@@ -155,10 +158,10 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 	Q_UNUSED( column );
 	Q_UNUSED( parent );
 	
-	QSet<Disc> discs;
+	QSet<QWBFS::Model::Disc> discs;
 	
 	if ( data->formats().contains( WBFS_DISCS_FORMAT ) ) {
-		discs = Disc::fromByteArray( data->data( WBFS_DISCS_FORMAT ) ).toSet();
+		discs = QWBFS::Model::Disc::fromByteArray( data->data( WBFS_DISCS_FORMAT ) ).toSet();
 	}
 	else if ( data->formats().contains( URLS_FORMAT ) ) {
 		foreach ( const QUrl& url, data->urls() ) {
@@ -166,14 +169,14 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 			
 			if ( !file.isDir() && file.exists() ) {
 				QString fileName = file.isSymLink() ? file.symLinkTarget() : file.absoluteFilePath();
-				discs << Disc( QFileInfo( fileName ).canonicalFilePath() );
+				discs << QWBFS::Model::Disc( QFileInfo( fileName ).canonicalFilePath() );
 			}
 		}
 	}
 	
 	if ( !discs.isEmpty() ) {
 		// remove clones
-		foreach ( const Disc& disc, mDiscs ) {
+		foreach ( const QWBFS::Model::Disc& disc, mDiscs ) {
 			if ( discs.contains( disc ) ) {
 				discs.remove( disc );
 			}
@@ -197,14 +200,14 @@ QMimeData* DiscModel::mimeData( const QModelIndexList& indexes ) const
 		return 0;
 	}
 	
-	DiscList discs;
+	QWBFS::Model::DiscList discs;
 	
 	foreach ( const QModelIndex& index, indexes ) {
 		discs << disc( index );
 	}
 	
 	QMimeData* data = new QMimeData;
-	data->setData( WBFS_DISCS_FORMAT, Disc::toByteArray( discs ) );
+	data->setData( WBFS_DISCS_FORMAT, QWBFS::Model::Disc::toByteArray( discs ) );
 	
 	return data;
 }
@@ -214,7 +217,7 @@ QStringList DiscModel::mimeTypes() const
 	return mMimeTypes;
 }
 
-void DiscModel::insertDiscs( int index, const DiscList& discs )
+void DiscModel::insertDiscs( int index, const QWBFS::Model::DiscList& discs )
 {
 	index = qBound( 0, index, rowCount() );
 	
@@ -231,36 +234,46 @@ void DiscModel::insertDiscs( int index, const DiscList& discs )
 	emit countChanged( mDiscs.count() );
 }
 
-void DiscModel::addDiscs( const DiscList& discs )
+void DiscModel::addDiscs( const QWBFS::Model::DiscList& discs )
 {
 	insertDiscs( rowCount(), discs );
 }
 
-void DiscModel::setDiscs( const DiscList& discs )
+void DiscModel::setDiscs( const QWBFS::Model::DiscList& discs )
 {
 	clear();
 	addDiscs( discs );
 }
 
-DiscList DiscModel::discs() const
+QWBFS::Model::DiscList DiscModel::discs() const
 {
 	return mDiscs;
 }
 
-qint64 DiscModel::size() const
+QWBFS::Model::DiscList DiscModel::discs( const QModelIndexList& indexes )
 {
-	qint64 size = 0;
+	QWBFS::Model::DiscList discs;
 	
-	foreach ( const Disc& disc, mDiscs ) {
-		size += disc.size;
+	foreach ( const QModelIndex& index, indexes ) {
+		discs << disc( index );
 	}
 	
-	return size;
+	return discs;
 }
 
-Disc DiscModel::disc( const QModelIndex& index ) const
+QWBFS::Model::DiscList DiscModel::discs( const QItemSelection& selection )
+{
+	return discs( selection.indexes() );
+}
+
+QWBFS::Model::Disc DiscModel::disc( const QModelIndex& index ) const
 {
 	return mDiscs.value( index.row() );
+}
+
+QString DiscModel::discId( const QModelIndex& index ) const
+{
+	return disc( index ).id;
 }
 
 void DiscModel::removeSelection( const QItemSelection& _selection )
@@ -280,6 +293,17 @@ void DiscModel::removeSelection( const QItemSelection& _selection )
 	foreach ( const DiscModel::PairIntInt& pair, selection ) {
 		removeRows( pair.first, pair.second, QModelIndex() );
 	}
+}
+
+qint64 DiscModel::size() const
+{
+	qint64 size = 0;
+	
+	foreach ( const QWBFS::Model::Disc& disc, mDiscs ) {
+		size += disc.size;
+	}
+	
+	return size;
 }
 
 void DiscModel::clear()

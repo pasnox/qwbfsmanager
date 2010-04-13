@@ -2,7 +2,8 @@
 #define PROGRESSDIALOG_H
 
 #include "ui_ProgressDialog.h"
-#include "Disc.h"
+#include "models/Disc.h"
+#include "qwbfsdriver/PartitionHandle.h"
 
 #include <QPointer>
 #include <QTime>
@@ -17,8 +18,8 @@ public:
 	ProgressDialog( QWidget* parent = 0 );
 	virtual ~ProgressDialog();
 	
-	void exportDiscs( const DiscList& discs, const QString& path );
-	void importDiscs( const DiscList& discs, const QString& partition );
+	void exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
+	void importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
 
 protected:
 	QPointer<ExportThread> mThread;

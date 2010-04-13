@@ -10,7 +10,8 @@ int main( int argc, char** argv )
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 	
 	UIMain w;
-	w.showMaximized();
+	w.resize( 800, 600 );
+	w.show();
 	
 	return app.exec();
 }

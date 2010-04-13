@@ -8,11 +8,9 @@ namespace Partition {
 
 struct Properties
 {
-	Properties();
+	Properties( const QString& partition = QString::null );
 	
-	bool force;
 	bool reset;
-	QString disk;
 	QString partition;
 };
 

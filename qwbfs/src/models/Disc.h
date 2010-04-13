@@ -1,18 +1,20 @@
 #ifndef DISC_H
 #define DISC_H
 
-#include <QString>
 #include <QList>
 #include <QDomDocument>
 
-#include <libwbfs.h>
+#include <tools.h>
+
+namespace QWBFS {
+namespace Model {
 
 typedef QList<struct Disc> DiscList;
 
 struct Disc
 {
-	Disc( u8* header = 0, u32* _size = 0, const QString& _origin = QString::null );
-	Disc( const QString& _origin );
+	Disc( u8* header = 0, u32* size = 0, const QString& origin = QString::null );
+	Disc( const QString& origin );
 	Disc( const QDomElement& element );
 	
 	bool operator==( const Disc& other ) const;
@@ -36,5 +38,8 @@ inline uint qHash( const Disc& disc )
 {
 	return qHash( QString( "%1 - %2" ).arg( disc.id ).arg( disc.origin ) );
 }
+
+}; // Model
+}; // QWBFS
 
 #endif // DISC_H

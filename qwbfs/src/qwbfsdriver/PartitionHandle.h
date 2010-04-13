@@ -10,24 +10,38 @@
 namespace QWBFS {
 namespace Partition {
 
-struct HandleData;
+namespace Internal {
+
+class HandleData : public QSharedData
+{
+public:
+	HandleData( const QWBFS::Partition::Properties& properties = QWBFS::Partition::Properties() );
+	HandleData( const HandleData& other );
+	~HandleData();
+	
+	QWBFS::Partition::Properties properties;
+	wbfs_t* handle;
+};
+
+}; // Internal
 
 class Handle
 {
 public:
 	Handle( const QWBFS::Partition::Properties& properties = QWBFS::Partition::Properties() );
+	Handle( const QString& partition );
 	~Handle();
 	
 	bool isValid() const;
 	wbfs_t* ptr() const;
 	
-	bool force() const;
+	QWBFS::Partition::Properties properties() const;
+	
 	bool reset() const;
-	QString disk() const;
 	QString partition() const;
 	
 protected:
-	QSharedDataPointer<HandleData> d;
+	QSharedDataPointer<Internal::HandleData> d;
 };
 
 }; // Partition

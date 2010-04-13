@@ -32,30 +32,30 @@ FORMS	+= src/UIMain.ui \
 	src/ProgressDialog.ui
 
 HEADERS	+= src/UIMain.h \
-	src/qWBFS.h \
-	src/DiscModel.h \
 	src/Gauge.h \
-	src/DiscDelegate.h \
 	src/PartitionWidget.h \
-	src/Disc.h \
 	src/ProgressDialog.h \
 	src/ExportThread.h \
 	src/qwbfsdriver/PartitionDiscHandle.h \
 	src/qwbfsdriver/PartitionHandle.h \
 	src/qwbfsdriver/PartitionProperties.h \
-	src/qwbfsdriver/PartitionStatus.h
+	src/qwbfsdriver/PartitionStatus.h \
+	src/models/Disc.h \
+	src/models/DiscDelegate.h \
+	src/models/DiscModel.h \
+	src/qwbfsdriver/Driver.h
 
 SOURCES	+= src/main.cpp \
 	src/UIMain.cpp \
-	src/qWBFS.cpp \
-	src/DiscModel.cpp \
 	src/Gauge.cpp \
-	src/DiscDelegate.cpp \
 	src/PartitionWidget.cpp \
-	src/Disc.cpp \
 	src/ProgressDialog.cpp \
 	src/ExportThread.cpp \
 	src/qwbfsdriver/PartitionDiscHandle.cpp \
 	src/qwbfsdriver/PartitionHandle.cpp \
 	src/qwbfsdriver/PartitionProperties.cpp \
-	src/qwbfsdriver/PartitionStatus.cpp
+	src/qwbfsdriver/PartitionStatus.cpp \
+	src/models/Disc.cpp \
+	src/models/DiscDelegate.cpp \
+	src/models/DiscModel.cpp \
+	src/qwbfsdriver/Driver.cpp

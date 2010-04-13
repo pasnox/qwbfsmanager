@@ -3,54 +3,52 @@
 #include <QDebug>
 
 using namespace QWBFS::Partition;
+using namespace QWBFS::Partition::Internal;
 
 // HandleData
 
-namespace QWBFS {
-namespace Partition {
-
-struct HandleData : public QSharedData
+HandleData::HandleData( const QWBFS::Partition::Properties& _properties )
 {
-	HandleData()
-	{
-		handle = 0;
-	}
+	properties = _properties;
+	handle = wbfs_try_open_partition( properties.partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
 	
-	HandleData( const HandleData& other )
-		: QSharedData( other )
-	{
-		properties = other.properties;
-		handle = other.handle;
+	if ( handle ) {
+		qWarning() << QString( "*** Opened partition: %1" ).arg( properties.partition ).toLocal8Bit().constData();
 	}
-	
-	~HandleData()
-	{
-		if ( handle ) {
-			wbfs_close( handle );
-		}
-		
-		qWarning() << Q_FUNC_INFO;
-	}
-	
-	QWBFS::Partition::Properties properties;
-	wbfs_t* handle;
-};
+}
 
-}; // Partition
-}; // QWBFS
+HandleData::HandleData( const HandleData& other )
+	: QSharedData( other )
+{
+	properties = other.properties;
+	handle = other.handle;
+}
+
+HandleData::~HandleData()
+{	
+	if ( handle ) {
+		wbfs_close( handle );
+		qWarning() << QString( "*** Closed partition: %1" ).arg( properties.partition ).toLocal8Bit().constData();
+	}
+	
+	//qWarning() << Q_FUNC_INFO;
+}
 
 // Handle
 
 Handle::Handle( const QWBFS::Partition::Properties& properties )
 {
-	d = new HandleData;
-	d->properties = properties;
-	d->handle = wbfs_try_open( properties.disk.toLocal8Bit().data(), properties.partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
+	d = new HandleData( properties );
+}
+
+Handle::Handle( const QString& partition )
+{
+	d = new HandleData( QWBFS::Partition::Properties( partition ) );
 }
 
 Handle::~Handle()
 {
-	qWarning() << Q_FUNC_INFO;
+	//qWarning() << Q_FUNC_INFO;
 }
 
 bool Handle::isValid() const
@@ -63,19 +61,14 @@ wbfs_t* Handle::ptr() const
 	return d->handle;
 }
 
-bool Handle::force() const
+QWBFS::Partition::Properties Handle::properties() const
 {
-	return d->properties.force;
+	return d->properties;
 }
 
 bool Handle::reset() const
 {
 	return d->properties.reset;
-}
-
-QString Handle::disk() const
-{
-	return d->properties.disk;
 }
 
 QString Handle::partition() const

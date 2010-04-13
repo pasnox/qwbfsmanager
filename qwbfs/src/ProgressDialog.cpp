@@ -18,13 +18,12 @@ ProgressDialog::ProgressDialog( QWidget* parent )
 
 ProgressDialog::~ProgressDialog()
 {
-	qWarning() << Q_FUNC_INFO;
+	//qWarning() << Q_FUNC_INFO;
 }
 
 void ProgressDialog::closeEvent( QCloseEvent* event )
 {
 	if ( mThread && mThread->isRunning() ) {
-		//mThread->stop();
 		event->ignore();
 		return;
 	}
@@ -32,7 +31,7 @@ void ProgressDialog::closeEvent( QCloseEvent* event )
 	QDialog::closeEvent( event );
 }
 
-void ProgressDialog::exportDiscs( const DiscList& discs, const QString& path )
+void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )
 {
 	mThread = new ExportThread( this );
 	
@@ -54,7 +53,7 @@ void ProgressDialog::exportDiscs( const DiscList& discs, const QString& path )
 	}
 }
 
-void ProgressDialog::importDiscs( const DiscList& discs, const QString& partition )
+void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle )
 {
 	mThread = new ExportThread( this );
 	
@@ -71,7 +70,7 @@ void ProgressDialog::importDiscs( const DiscList& discs, const QString& partitio
 	pbGlobal->setMaximum( discs.count() );
 	open();
 	
-	if ( !mThread->importDiscs( discs, partition ) ) {
+	if ( !mThread->importDiscs( discs, partitionHandle ) ) {
 		deleteLater();
 	}
 }
@@ -94,7 +93,7 @@ void ProgressDialog::thread_finished()
 	QTime time( 0, 0, 0, 0 );
 	time = time.addMSecs( mElapsed.elapsed() );
 	
-	lCurrentInformations->setText( "Export finished." );
+	lCurrentInformations->setText( "Tasks finished." );
 	lCurrentRemaining->clear();
 	lGlobalInformations->setText( tr( "The thread finished in %1" ).arg( time.toString() ) );
 	delete mThread;

@@ -4,7 +4,13 @@
 #include "ui_PartitionWidget.h"
 
 class qWBFS;
-class DiscModel;
+
+namespace QWBFS {
+	class Driver;
+namespace Model {
+	class DiscModel;
+}; // Model
+}; // QWBFS
 
 class PartitionWidget : public QWidget, public Ui::PartitionWidget
 {
@@ -14,9 +20,9 @@ public:
 	PartitionWidget( QWidget* parent = 0 );
 	virtual ~PartitionWidget();
 	
-	const qWBFS* handle() const;
-	DiscModel* discModel() const;
-	DiscModel* importModel() const;
+	const QWBFS::Driver* driver() const;
+	QWBFS::Model::DiscModel* discModel() const;
+	QWBFS::Model::DiscModel* importModel() const;
 	QToolButton* showHideImportViewButton() const;
 	QString currentPartition() const;
 	
@@ -25,11 +31,12 @@ public:
 public slots:
 	void setPartitions( const QStringList& partitions );
 	void setCurrentPartition( const QString& partition );
+	void showDriverErrors();
 
 protected:
-	qWBFS* mWBFS;
-	DiscModel* mDiscModel;
-	DiscModel* mImportModel;
+	QWBFS::Driver* mDriver;
+	QWBFS::Model::DiscModel* mDiscModel;
+	QWBFS::Model::DiscModel* mImportModel;
 
 protected slots:
 	void models_countChanged();

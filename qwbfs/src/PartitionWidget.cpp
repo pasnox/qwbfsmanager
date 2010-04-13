@@ -1,7 +1,7 @@
 #include "PartitionWidget.h"
-#include "qWBFS.h"
-#include "DiscModel.h"
-#include "DiscDelegate.h"
+#include "qwbfsdriver/Driver.h"
+#include "models/DiscModel.h"
+#include "models/DiscDelegate.h"
 #include "ProgressDialog.h"
 
 #include <QLineEdit>
@@ -12,15 +12,15 @@
 PartitionWidget::PartitionWidget( QWidget* parent )
 	: QWidget( parent )
 {
-	mWBFS = new qWBFS( this );
-	mDiscModel = new DiscModel( this );
-	mImportModel = new DiscModel( this );
+	mDriver = new QWBFS::Driver( this );
+	mDiscModel = new QWBFS::Model::DiscModel( this );
+	mImportModel = new QWBFS::Model::DiscModel( this );
 	
 	setupUi( this );
 	lvDiscs->setModel( mDiscModel );
-	lvDiscs->setItemDelegate( new DiscDelegate( mDiscModel ) );
+	lvDiscs->setItemDelegate( new QWBFS::Model::DiscDelegate( mDiscModel ) );
 	lvImport->setModel( mImportModel );
-	lvImport->setItemDelegate( new DiscDelegate( mImportModel ) );
+	lvImport->setItemDelegate( new QWBFS::Model::DiscDelegate( mImportModel ) );
 	
 	connect( mDiscModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( mImportModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
@@ -30,19 +30,20 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 
 PartitionWidget::~PartitionWidget()
 {
+	mDriver->close();
 }
 
-const qWBFS* PartitionWidget::handle() const
+const QWBFS::Driver* PartitionWidget::driver() const
 {
-	return mWBFS;
+	return mDriver;
 }
 
-DiscModel* PartitionWidget::discModel() const
+QWBFS::Model::DiscModel* PartitionWidget::discModel() const
 {
 	return mDiscModel;
 }
 
-DiscModel* PartitionWidget::importModel() const
+QWBFS::Model::DiscModel* PartitionWidget::importModel() const
 {
 	return mImportModel;
 }
@@ -76,13 +77,20 @@ void PartitionWidget::setPartitions( const QStringList& partitions )
 
 void PartitionWidget::setCurrentPartition( const QString& partition )
 {
-	mWBFS->setPartition( partition );
+	mDriver->setPartition( partition );
 	cbPartitions->setEditText( partition );
+}
+
+void PartitionWidget::showDriverErrors()
+{
+	if ( !mDriver->lastErrors().isEmpty() ) {
+		QMessageBox::information( this, QString::null, mDriver->lastErrors().join( "\n" ) );
+	}
 }
 
 void PartitionWidget::models_countChanged()
 {
-	const QWBFS::Partition::Status status = mWBFS->partitionStatus();
+	const QWBFS::Partition::Status status = mDriver->partitionStatus();
 	
 	gStatus->setSize( status.size );
 	gStatus->setUsedSize( status.used );
@@ -98,21 +106,25 @@ void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 
 void PartitionWidget::on_tbLoad_clicked()
 {
-	mDiscModel->setDiscs( mWBFS->discs() );
+	mDiscModel->clear();
 	
-	if ( mWBFS->lastError().isEmpty() ) {
-		if ( mDiscModel->rowCount() == 0 ) {
-			models_countChanged();
-		}
+	if ( !mDriver->open() && !mDriver->partition().isEmpty() ) {
+		showDriverErrors();
+		return;
 	}
-	else {
-		QMessageBox::information( this, QString::null, mWBFS->lastError() );
+	
+	mDiscModel->setDiscs( mDriver->partitionDiscList() );
+	
+	if ( mDiscModel->rowCount() == 0 ) {
+		models_countChanged();
 	}
+	
+	showDriverErrors();
 }
 
 void PartitionWidget::on_tbFormat_clicked()
 {
-	const QString text = tr( "The partition '%1' will be formatted,\nall data will be erased permanently, are you sure?" ).arg( mWBFS->partition() );
+	const QString text = tr( "The partition '%1' will be formatted,\nall data will be erased permanently, are you sure?" ).arg( mDriver->partition() );
 	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
 	const QMessageBox::StandardButton button = QMessageBox::No;
 	
@@ -120,11 +132,11 @@ void PartitionWidget::on_tbFormat_clicked()
 		return;
 	}
 	
-	if ( mWBFS->format() ) {
-		models_countChanged();
+	if ( mDriver->format() ) {
+		tbLoad->click();
 	}
 	else {
-		QMessageBox::information( this, QString::null, tr( "Can't format the partition:\n%1" ).arg( mWBFS->lastError() ) );
+		showDriverErrors();
 	}
 }
 
@@ -140,12 +152,39 @@ void PartitionWidget::on_tbClose_clicked()
 
 void PartitionWidget::on_tbRemoveDiscs_clicked()
 {
+	const QModelIndexList indexes = lvDiscs->selectionModel()->selectedIndexes();
+	
+	const QString text = tr( "You are about to permanently delete %1 disc(s) on partition '%2', are you sure?" ).arg( indexes.count() ).arg( mDriver->partition() );
+	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
+	const QMessageBox::StandardButton button = QMessageBox::No;
+	
+	if ( indexes.isEmpty() || QMessageBox::question( this, QString::null, text, buttons, button ) == button ) {
+		return;
+	}
+	
+	int errors = 0;
+	
+	for ( int i = indexes.count() -1; i >= 0; i-- ) {
+		const QModelIndex& index = indexes[ i ];
+		const QString id = mDiscModel->discId( index );
+		
+		if ( mDriver->removeDisc( id ) ) {
+			mDiscModel->removeRow( index.row() );
+		}
+		else {
+			errors++;
+		}
+	}
+	
+	if ( errors > 0 ) {
+		QMessageBox::information( this, QString::null, tr( "One or more discs have failed to be removed." ) );
+	}
 }
 
 void PartitionWidget::on_tbRenameDisc_clicked()
 {
 	const QModelIndex index = lvDiscs->selectionModel()->selectedIndexes().value( 0 );
-	const Disc disc = mDiscModel->disc( index );
+	const QWBFS::Model::Disc disc = mDiscModel->disc( index );
 	
 	if ( !index.isValid() ) {
 		return;
@@ -153,7 +192,7 @@ void PartitionWidget::on_tbRenameDisc_clicked()
 	
 	const QString name = QInputDialog::getText( this, QString::null, tr( "Choose a new name for the disc" ), QLineEdit::Normal, disc.title );
 	
-	if ( mWBFS->renameDisc( disc.id, name ) ) {
+	if ( mDriver->renameDisc( disc.id, name ) ) {
 		mDiscModel->setData( index, name, Qt::DisplayRole );
 	}
 	else {
@@ -174,5 +213,5 @@ void PartitionWidget::on_tbRemoveImport_clicked()
 void PartitionWidget::on_tbImport_clicked()
 {
 	ProgressDialog* dlg = new ProgressDialog( this );
-	dlg->importDiscs( mImportModel->discs(), mWBFS->partition() );
+	dlg->importDiscs( mImportModel->discs(), mDriver->handle() );
 }
