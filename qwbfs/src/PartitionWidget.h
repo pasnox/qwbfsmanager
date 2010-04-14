@@ -31,7 +31,8 @@ public:
 public slots:
 	void setPartitions( const QStringList& partitions );
 	void setCurrentPartition( const QString& partition );
-	void showDriverErrors();
+	void showError( const QString& error );
+	void showError( int error );
 
 protected:
 	QWBFS::Driver* mDriver;

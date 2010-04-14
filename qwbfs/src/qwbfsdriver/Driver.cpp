@@ -18,10 +18,12 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 {
 	mProperties = partitionHandle.properties();
 	mHandle = partitionHandle;
+	mHasCreatedHandle = false;
 }
 
 Driver::~Driver()
 {
+	close();
 }
 
 void Driver::setPartition( const QString& partition )
@@ -34,9 +36,9 @@ QString Driver::partition() const
 	return mHandle.isValid() ? mHandle.partition() : mProperties.partition;
 }
 
-QStringList Driver::lastErrors() const
+QWBFS::Partition::Handle Driver::handle() const
 {
-	return mLastErrors;
+	return mHandle;
 }
 
 bool Driver::open()
@@ -45,7 +47,7 @@ bool Driver::open()
 		close();
 	}
 	
-	mHandle = getHandle( mProperties.partition );
+	mHandle = getHandle( mProperties.partition, &mHasCreatedHandle );
 	return isOpen();
 }
 
@@ -55,7 +57,11 @@ void Driver::close()
 		return;
 	}
 	
-	closeHandle( mHandle );
+	if ( mHasCreatedHandle ) {
+		mHasCreatedHandle = false;
+		closeHandle( mHandle );
+	}
+	
 	mHandle = QWBFS::Partition::Handle();
 }
 
@@ -64,13 +70,311 @@ bool Driver::isOpen() const
 	return mHandle.isValid();
 }
 
-bool Driver::isWBFSPartition( const QString& fileName ) const
+bool Driver::format()
 {
-	QFile file( fileName );
+	if ( isOpen() ) {
+		close();
+	}
 	
-	if ( !file.exists() ) {
+	QWBFS::Partition::Properties properties = mProperties;
+	properties.reset = true;
+	
+	const QWBFS::Partition::Handle handle( properties );
+	const QWBFS::Partition::Status status( handle );
+	
+	return handle.isValid() && status.size > 0;
+}
+
+int Driver::discCount() const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	return wbfs_count_discs( mHandle.ptr() );
+}
+
+int Driver::discInfo( int index, QWBFS::Model::Disc& disc ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	if ( index < 0 || index >= discCount() ) {
+		return Driver::InvalidDiscIndex;
+	}
+	
+	const int headerSize = 0x100;
+	u8* header = (u8*)wbfs_ioalloc( headerSize );
+	
+	disc.origin = mHandle.partition();
+
+	if ( wbfs_get_disc_info( mHandle.ptr(), index, header, headerSize, &disc.size ) != 0 ) {
+		wbfs_iofree( header );
+		return Driver::DiscReadFailed;
+	}
+	
+	discInfo( header, disc );
+	wbfs_iofree( header );
+	
+	return Driver::Ok;
+}
+
+int Driver::discInfo( const QString& discId, QWBFS::Model::Disc& disc ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	const QWBFS::Partition::DiscHandle discHandle( mHandle, discId );
+	
+	if ( discHandle.isValid() ) {
+		return discInfo( discHandle.index(), disc );
+	}
+	
+	return Driver::InvalidDiscID;
+}
+
+int Driver::usedBlocksCount() const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	return wbfs_count_usedblocks( mHandle.ptr() );
+}
+
+int Driver::discImageInfo( const QString& fileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
+
+	if ( !fileHandle ) {
+		return Driver::DiscReadFailed;
+	}
+	
+	disc.origin = fileName;
+	
+	// *** temp test filipe
+	u8 buffer[ 7 ];
+	qWarning() << Q_FUNC_INFO << wbfs_read_file( fileHandle, 6, &buffer );
+	disc.id = QString::fromLocal8Bit( (const char*)buffer, 6 );
+	// ***
+	
+	//u8* header = (u8*)wbfs_ioalloc( 0x100 );
+	disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection/*, header*/ );
+	
+	//discInfo( header, disc );
+	//wbfs_iofree( header );
+	wbfs_close_file( fileHandle );
+	
+	return Driver::Ok;
+}
+
+int Driver::addDiscImage( const QString& fileName, progress_callback_t progressCallback, partition_selector_t partitionSelection, bool copy1to1, const QString& newName ) const
+{
+	mCurrentDriver = const_cast<Driver*>( this );
+#ifndef Q_OS_WIN
+	Q_UNUSED( newName );
+#endif
+
+	if ( !QFile::exists( fileName ) ) {
+		return Driver::DiscNotFound;
+	}
+
+	QWBFS::Model::Disc disc;
+	const int result1 = discImageInfo( fileName, disc );
+	
+	if ( result1 != Driver::Ok ) {
+		return result1;
+	}
+	
+	if ( hasDisc( disc.id ) == Driver::DiscFound ) {
+		return Driver::DiscFound;
+	}
+	
+	void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
+
+	if ( !fileHandle ) {
+		return Driver::DiscReadFailed;
+	}
+	
+	const u32 result2 = wbfs_add_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, progressCallback, partitionSelection, copy1to1 ? 1 : 0
+#ifdef Q_OS_WIN
+	, newName.isEmpty() ? 0 : newName.toLocal8Bit().data()
+#endif
+		);
+
+	wbfs_close_file( fileHandle );
+	return result2 == 0 ? Driver::Ok : Driver::DiscAddFailed;
+}
+
+int Driver::removeDisc( const QString& discId ) const
+{
+	if ( isOpen() ) {
+		if ( wbfs_rm_disc( mHandle.ptr(), (u8*)discId.toLocal8Bit().data() ) == 0 ) {
+			return Driver::Ok;
+		}
+		
+		return Driver::DiscNotFound;
+	}
+	
+	return Driver::PartitionNotOpened;
+}
+
+int Driver::extractDisc( const QString& discId, const QString& path, const QString& _name, progress_callback_t progressCallback ) const
+{
+	mCurrentDriver = const_cast<Driver*>( this );
+	
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	// get disc handle
+	const QWBFS::Partition::DiscHandle discHandle( mHandle, discId );
+	
+	if ( !discHandle.isValid() ) {
+		return Driver::DiscNotFound;
+	}
+	
+	const QString name = _name.isEmpty() ? discHandle.isoName() : _name;
+	const QString filePath = QDir::toNativeSeparators( QString( "%1/%2" ).arg( path ).arg( name ) );
+	void* fileHandle = wbfs_open_file_for_write( filePath.toLocal8Bit().data() );
+
+	if ( fileHandle ) {
+		// write a zero at the end of the iso to ensure the correct size
+		// XXX should check if the game is DVD9..
+		wbfs_file_reserve_space( fileHandle, ( discHandle.ptr()->p->n_wii_sec_per_disc /2 ) *0x8000ULL );
+		const int result = wbfs_extract_disc( discHandle.ptr(), wbfs_write_wii_file, fileHandle, progressCallback );
+		wbfs_close_file( fileHandle );
+		
+		if ( result == 0 ) {
+			return Driver::Ok;
+		}
+		else {
+			return Driver::DiscExtractFailed;
+		}
+	}
+	
+	return Driver::DiscWriteFailed;
+}
+
+int Driver::renameDisc( const QString& discId, const QString& name ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	if ( wbfs_ren_disc( mHandle.ptr(), (u8*)discId.toLocal8Bit().data(), (u8*)name.toLocal8Bit().data() ) == 0 ) {
+		return Driver::Ok;
+	}
+	
+	return Driver::DiscNotFound;
+}
+
+int Driver::status( QWBFS::Partition::Status& status ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	status = QWBFS::Partition::Status( mHandle );
+	return Driver::Ok;
+}
+
+int Driver::addDisc( const QString& discId, const QWBFS::Partition::Handle& sourcePartitionHandle, progress_callback_t progressCallback, partition_selector_t partitionSelection ) const
+{
+	mCurrentDriver = const_cast<Driver*>( this );
+	
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	if ( !sourcePartitionHandle.isValid() ) {
+		return Driver::SourcePartitionNotOpened;
+	}
+	
+	const QWBFS::Partition::DiscHandle discHandle( sourcePartitionHandle, discId );
+	
+	if ( !discHandle.isValid() ) {
+		return Driver::DiscNotFound;
+	}
+	
+	if ( hasDisc( discId ) == Driver::DiscFound ) {
+		return Driver::DiscFound;
+	}
+	
+	if ( wbfs_add_disc( mHandle.ptr(), discRead_callback/*wbfs_disc_read*/, discHandle.ptr(), progressCallback, partitionSelection, 0 ) == 0 ) {
+		return Driver::Ok;
+	}
+	
+	return Driver::DiscAddFailed;
+}
+
+int Driver::canDrive2Drive( const QWBFS::Partition::Handle& sourcePartitionHandle ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	if ( !sourcePartitionHandle.isValid() ) {
+		return Driver::SourcePartitionNotOpened;
+	}
+	
+	if ( ( sourcePartitionHandle.ptr()->wbfs_sec_sz /sourcePartitionHandle.ptr()->hd_sec_sz ) == ( mHandle.ptr()->wbfs_sec_sz /mHandle.ptr()->hd_sec_sz ) ) {
+		return Driver::Ok;
+	}
+	
+	return Driver::CantDrive2Drive;
+}
+
+int Driver::hasDisc( const QString& discId ) const
+{
+	if ( !isOpen() ) {
+		return Driver::PartitionNotOpened;
+	}
+	
+	const QWBFS::Partition::DiscHandle discHandle( mHandle, discId );
+	
+	if ( discHandle.isValid() ) {
+		return Driver::DiscFound;
+	}
+	
+	return Driver::DiscNotFound;
+}
+
+int Driver::discList( QWBFS::Model::DiscList& list ) const
+{
+	const int count = discCount();
+	
+	if ( count < 0 ) {
+		return count; // error
+	}
+	
+	for ( int index = 0; index < count; index++ ) {
+		QWBFS::Model::Disc disc;
+		const int result = discInfo( index, disc );
+		
+		if ( result != Driver::Ok ) {
+			return result;
+		}
+		
+		list << disc;
+	}
+	
+	return Driver::Ok;
+}
+
+bool Driver::isWBFSPartition( const QString& fileName )
+{
+	if ( !QFile::exists( fileName ) ) {
 		return false;
 	}
+	
+	QFile file( fileName );
 	
 	if ( file.open( QIODevice::ReadOnly ) ) {
 		return file.read( 4 ).toLower() == "wbfs";
@@ -79,212 +383,49 @@ bool Driver::isWBFSPartition( const QString& fileName ) const
 	return false;
 }
 
-QWBFS::Partition::Handle Driver::handle() const
+QString Driver::errorToString( QWBFS::Driver::Error error )
 {
-	return mHandle;
-}
-
-QWBFS::Partition::Status Driver::partitionStatus() const
-{
-	mLastErrors.clear();
-	return QWBFS::Partition::Status( mHandle );
-}
-
-QWBFS::Model::DiscList Driver::partitionDiscList() const
-{
-	mLastErrors.clear();
-	QWBFS::Model::DiscList discs;
-	
-	if ( isOpen() ) {
-		const int count = wbfs_count_discs( mHandle.ptr() );
-		const int header_size = 0x100;
-		u8* header = (u8*)wbfs_ioalloc( header_size );
-		u32 size;
-		
-		for ( int index = 0; index < count; index++ ) {
-			if ( wbfs_get_disc_info( mHandle.ptr(), index, header, header_size, &size ) == 0 ) {
-				discs << QWBFS::Model::Disc( header, &size, mHandle.partition() );
-			}
-			else {
-				mLastErrors << tr( "Can't get disc informations for disc #%1." ).arg( index );
-			}
-		}
-
-		wbfs_iofree( header );
-	}
-	else {
-		mLastErrors << tr( "Can't get discs, partition '%1' not opened." ).arg( partition() );
-	}
-	
-	return discs;
-}
-
-bool Driver::format()
-{
-	mLastErrors.clear();
-	
-	if ( isOpen() ) {
-		close();
-	}
-	
-	bool ok = false;
-	
+	switch ( error )
 	{
-		QWBFS::Partition::Properties properties = mProperties;
-		properties.reset = true;
-		
-		const QWBFS::Partition::Handle handle( properties );
-		const QWBFS::Partition::Status status( handle );
-		
-		qWarning() << status.size << status.used << status.free;
-		
-		ok = handle.isValid() && status.size > 0;
-		
-		if ( !ok ) {
-			mLastErrors << tr( "Can't format partition '%1'." ).arg( properties.partition );
-		}
+		case Driver::Ok:
+			return tr( "No error." );
+			break;
+		case Driver::PartitionNotOpened:
+			return tr( "Partition not opened." );
+			break;
+		case Driver::SourcePartitionNotOpened:
+			return tr( "Source partition not opened." );
+			break;
+		case Driver::DiscReadFailed:
+			return tr( "Disc read failed." );
+			break;
+		case Driver::DiscWriteFailed:
+			return tr( "Disc write failed." );
+			break;
+		case Driver::DiscExtractFailed:
+			return tr( "Disc extract failed." );
+			break;
+		case Driver::DiscAddFailed:
+			return tr( "Disc add failed." );
+			break;
+		case Driver::DiscFound:
+			return tr( "Disc found." );
+			break;
+		case Driver::DiscNotFound:
+			return tr( "Disc not found (or not exists)." );
+			break;
+		case Driver::InvalidDiscIndex:
+			return tr( "Invalid disc index." );
+			break;
+		case Driver::InvalidDiscID:
+			return tr( "Invalid disc id." );
+			break;
+		case Driver::CantDrive2Drive:
+			return tr( "Can't drive to drive copy." );
+			break;
 	}
 	
-	return ok;
-}
-
-bool Driver::haveDisc( const QString& id ) const
-{
-	mLastErrors.clear();
-	return QWBFS::Partition::DiscHandle( mHandle, id ).isValid();
-}
-
-bool Driver::renameDisc( const QString& id, const QString& name ) const
-{
-	mLastErrors.clear();
-	
-	if ( !isOpen() ) {
-		mLastErrors << tr( "Can't rename disc #%1 to '%2' on partition '%3', partition not opened." ).arg( id ).arg( name ).arg( partition() );
-		return false;
-	}
-	
-	const bool ok = wbfs_ren_disc( mHandle.ptr(), (u8*)id.toLocal8Bit().data(), (u8*)name.toLocal8Bit().data() ) == 0;
-	
-	if ( !ok ) {
-		mLastErrors << tr( "Can't rename disc #%1 to '%2'." ).arg( id ).arg( name );
-	}
-	
-	return ok;
-}
-
-bool Driver::removeDisc( const QString& id ) const
-{
-	mLastErrors.clear();
-	
-	if ( isOpen() ) {
-		if ( wbfs_rm_disc( mHandle.ptr(), (u8*)id.toLocal8Bit().data() ) == 0 ) {
-			return true;
-		}
-	}
-	
-	mLastErrors << tr( "Can't delete disc #%1" ).arg( id );
-	return false;
-}
-
-bool Driver::addDisc( const QWBFS::Model::Disc& disc, const QWBFS::Partition::Handle& sourcePartitionHandle ) const
-{
-	mLastErrors.clear();
-	mCurrentDriver = const_cast<QWBFS::Driver*>( this );
-	
-	if ( !isOpen() ) {
-		mLastErrors << tr( "Partition '%1' not opened." ).arg( partition() );
-		return false;
-	}
-	
-	// check if disc already exists
-	if ( !disc.id.isEmpty() && haveDisc( disc.id ) ) {
-		mLastErrors << tr( "The disc '%1' is already on partition '%1'." ).arg( disc.title ).arg( partition() );
-		return false;
-	}
-	
-	// source is WBFS partition
-	if ( isWBFSPartition( disc.origin ) ) {
-		if ( !sourcePartitionHandle.isValid() ) {
-			mLastErrors << tr( "Invalid source handle, can't open partition '%1'." ).arg( sourcePartitionHandle.partition() );
-			return false;
-		}
-		
-		// get source disc handle
-		const QWBFS::Partition::DiscHandle sdh( sourcePartitionHandle, disc.id );
-		
-		if ( sdh.isValid() ) {
-			if ( wbfs_add_disc( mHandle.ptr(), discRead_callback, sdh.ptr(), progress_callback, ONLY_GAME_PARTITION, 0 ) == 0 ) {
-				return true;
-			}
-			else {
-				mLastErrors << tr( "Can't add disc '%1' in partition '%2'." ).arg( disc.title ).arg( sourcePartitionHandle.partition() );
-			}
-		}
-		else {
-			mLastErrors << tr( "Invalid source disc handle, can't open the disc '%1'." ).arg( disc.title );
-		}
-	}
-	// source if a local file
-	else {
-		void* file = wbfs_open_file_for_read( disc.origin.toLocal8Bit().data() );
-	
-		if ( file ) {
-			const bool ok = wbfs_add_disc( mHandle.ptr(), wbfs_read_wii_file, file, progress_callback, ONLY_GAME_PARTITION, 0 ) == 0;
-			wbfs_close_file( file );
-			
-			if ( ok ) {
-				return true;
-			}
-			else {
-				mLastErrors << tr( "Can't add disc '%1'." ).arg( disc.origin );
-			}
-		}
-		else {
-			mLastErrors << tr( "Can't open disc '%1'." ).arg( disc.origin );
-		}
-	}
-	
-	return false;
-}
-
-bool Driver::extractDisc( const QString& id, const QString& path ) const
-{
-	mLastErrors.clear();
-	mCurrentDriver = const_cast<QWBFS::Driver*>( this );
-	
-	if ( !isOpen() ) {
-		mLastErrors << tr( "Partition '%1' not opened." ).arg( partition() );
-		return false;
-	}
-	
-	// get disc handle
-	const QWBFS::Partition::DiscHandle discHandle( mHandle, id );
-	
-	if ( !discHandle.isValid() ) {
-		mLastErrors << tr( "Can't extract the disc #%1, invalid handle." ).arg( id );
-		return false;
-	}
-	
-	const QString filePath = QDir::toNativeSeparators( QString( "%1/%2" ).arg( path ).arg( discHandle.isoName() ) );
-	void* fileHandle = wbfs_open_file_for_write( filePath.toLocal8Bit().data() );
-	bool ok = false;
-
-	if ( fileHandle ) {
-		// write a zero at the end of the iso to ensure the correct size
-		// XXX should check if the game is DVD9..
-		wbfs_file_reserve_space( fileHandle, ( discHandle.ptr()->p->n_wii_sec_per_disc /2 ) *0x8000ULL );
-		const int ok = wbfs_extract_disc( discHandle.ptr(), wbfs_write_wii_file, fileHandle, progress_callback ) == 0;
-		wbfs_close_file( fileHandle );
-		
-		if ( !ok ) {
-			mLastErrors << tr( "Disc export failed '%1'." ).arg( id );
-		}
-	}
-	else {
-		mLastErrors << tr( "Can't open file for writing disc '%1'." ).arg( id );
-	}
-	
-	return ok;
+	return QString::null;
 }
 
 void Driver::setForceMode( bool force )
@@ -341,6 +482,64 @@ void Driver::closeHandle( const QWBFS::Partition::Handle& handle )
 	mHandles.remove( handle.partition() );
 }
 
+int Driver::u8StrLength( u8* str )
+{
+	int counter = 0;
+	int length = 0;
+	
+	while ( str[ counter++ ] != '\0' ) {
+		length++;
+	}
+	
+	return length;
+}
+
+void Driver::discInfo( u8* header, QWBFS::Model::Disc& disc )
+{
+	/*
+		ASCII Hex Region
+		A 41 All regions. System channels like the Mii channel use it.
+		D 44 German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past
+		E 45 USA and other NTSC regions except Japan
+		F 46 French-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
+		J 4A Japan
+		K 4B Korea
+		L 4C PAL/World?
+		P 50 Europe, Australia and other PAL regions
+		Q 51 Korea with Japanese language.
+		T 54 Korea with English language.
+		X 58 Not a real region code. Homebrew Channel uses it, though. 
+	*/
+	
+	switch ( header[ 0x3 ] ) {
+		case 'E':
+			disc.region = Driver::NTSC;
+			break;
+		case 'P':
+		case 'F':
+		case 'L':
+		case 'D':
+			disc.region = Driver::PAL;
+			break;
+		case 'J':
+			disc.region = Driver::NTSCJ;
+			break;
+		case 'K':
+		case 'Q':
+		case 'T':
+			disc.region = Driver::KOR;
+			break;
+		default:
+			disc.region = Driver::NOREGION;
+	}
+
+	const int offset = 0x20;
+	const int length = u8StrLength( header +offset );
+	
+	disc.id = QString::fromLocal8Bit( (const char*)header, 6 );
+	disc.title = QString::fromLocal8Bit( (const char*)header +offset, length );
+}
+
 int Driver::discRead_callback( void* fp, u32 lba, u32 count, void* iobuf )
 {
 	int ret = wbfs_disc_read( (wbfs_disc_t*)fp, lba, (u8*)iobuf, count );
@@ -348,11 +547,11 @@ int Driver::discRead_callback( void* fp, u32 lba, u32 count, void* iobuf )
 	
 	if ( ret ) {
 		if ( num_fail == 0 ) {
-			mCurrentDriver->mLastErrors << tr( "error reading lba probably the two wbfs don't have the same granularity. Ignoring..." );
+			qWarning() << "Error reading lba probably the two wbfs don't have the same granularity. Ignoring...";
 		}
 		
 		if ( num_fail++ > 0x100 ) {
-			mCurrentDriver->mLastErrors << tr( "too many error giving up..." );
+			qWarning() << "Too many error giving up...";
 			return 1;
 		}
 	}

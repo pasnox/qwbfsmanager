@@ -6,13 +6,14 @@
 
 using namespace QWBFS::Model;
 
-Disc::Disc( u8* header, u32* _size, const QString& _origin )
+Disc::Disc( u8* header, u32 _size, const QString& _origin )
 {
 	if ( header && _size ) {
 		id = QString::fromLocal8Bit( (char*)header, 6 );
 		title = QString::fromLocal8Bit( QString::fromLocal8Bit( (char*)header +0x20 ).toLocal8Bit().constData() );
-		size = *_size;
+		size = _size;
 		origin = _origin;
+		region = 0;
 	}
 }
 

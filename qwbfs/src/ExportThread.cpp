@@ -108,17 +108,11 @@ void ExportThread::exportWorker()
 		
 		// create driver
 		QWBFS::Driver driver( 0, handle );
+		connectDriver( driver );
+		const int result = driver.extractDisc( disc.id, mPath );
 		
-		if ( driver.isOpen() ) {
-			connectDriver( driver );
-			
-			if ( !driver.extractDisc( disc.id, mPath ) ) {
-				emit error( driver.lastErrors().join( "\n" ) );
-			}
-		}
-		else {
-			emit error( tr( "Invalid handle, can't open partition '%1' for copying game '%2'." ).arg( driver.partition() ).arg( disc.title ) );
-			return;
+		if ( result != QWBFS::Driver::Ok ) {
+			emit error( tr( "Error while exporting disc '%1': %2" ).arg( disc.title ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) ) );
 		}
 		
 		emit globalProgressChanged( i +1 );
@@ -142,7 +136,7 @@ void ExportThread::importWorker()
 	QWBFS::Driver td( 0, mImportPartitionHandle );
 	
 	if ( !td.isOpen() ) {
-		emit error( tr( "Invalid target handle, can't open partition '%1'." ).arg( td.partition() ) );
+		emit error( tr( "Can't open partition '%1'." ).arg( td.partition() ) );
 		return;
 	}
 	
@@ -156,6 +150,7 @@ void ExportThread::importWorker()
 	
 	for ( int i = 0; i < mDiscs.count(); i++ ) {
 		const QWBFS::Model::Disc& disc = mDiscs[ i ];
+		int result;
 		
 		emit message( tr( "Importing '%1'..." ).arg( disc.title ) );
 		
@@ -169,17 +164,16 @@ void ExportThread::importWorker()
 		}
 		
 		// create handle if needed
-		if ( td.isWBFSPartition( disc.origin ) ) {
+		if ( QWBFS::Driver::isWBFSPartition( disc.origin ) ) {
 			sph = QWBFS::Driver::getHandle( disc.origin, &hc );
-			
-			if ( !sph.isValid() ) {
-				emit error( tr( "Invalid source partition handle, can't open partition '%1'." ).arg( sph.partition() ) );
-				break;
-			}
+			result = td.addDisc( disc.id, sph );
+		}
+		else {
+			result = td.addDiscImage( disc.origin );
 		}
 		
-		if ( !td.addDisc( disc, sph ) ) {
-			emit error( td.lastErrors().join( "\n" ) );
+		if ( result != QWBFS::Driver::Ok ) {
+			emit error( tr( "Error while importing disc '%1': %2" ).arg( disc.title ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) ) );
 		}
 		
 		emit globalProgressChanged( i +1 );

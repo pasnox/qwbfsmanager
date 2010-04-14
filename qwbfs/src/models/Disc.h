@@ -13,7 +13,7 @@ typedef QList<struct Disc> DiscList;
 
 struct Disc
 {
-	Disc( u8* header = 0, u32* size = 0, const QString& origin = QString::null );
+	Disc( u8* header = 0, u32 size = 0, const QString& origin = QString::null );
 	Disc( const QString& origin );
 	Disc( const QDomElement& element );
 	
@@ -31,6 +31,7 @@ struct Disc
 	QString id;
 	QString title;
 	quint32 size;
+	int region;
 	QString origin;
 };
 

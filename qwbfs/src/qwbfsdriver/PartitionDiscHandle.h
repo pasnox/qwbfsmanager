@@ -13,25 +13,27 @@ namespace Internal {
 class DiscHandleData : public QSharedData
 {
 public:
-	DiscHandleData( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle(), const QString& id = QString::null );
+	DiscHandleData( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle(), const QString& discId = QString::null );
 	DiscHandleData( const DiscHandleData& other );
 	~DiscHandleData();
 	
 	wbfs_disc_t* handle;
-	QString id;
+	QString discId;
+	int index;
 };
 
 }; // Internal
 
 struct DiscHandle
 {
-	DiscHandle( const QWBFS::Partition::Handle& handle, const QString& id );
+	DiscHandle( const QWBFS::Partition::Handle& handle, const QString& discId );
 	~DiscHandle();
 	
 	bool isValid() const;
 	wbfs_disc_t* ptr() const;
 	
-	QString id() const;
+	QString discId() const;
+	int index() const;
 	QString isoName() const;
 	
 protected:

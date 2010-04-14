@@ -265,7 +265,7 @@ int wbfs_read_file(void*handle, int len, void *buf);
 void wbfs_close_file(void *handle);
 void wbfs_file_reserve_space(void*handle,long long size);
 void wbfs_file_truncate(void *handle,long long size);
-int wbfs_read_wii_file(void *handle, u32 lba, u32 count, void *buf);
+int wbfs_read_wii_file(void *handle, u32 offset, u32 count, void *buf);
 int wbfs_write_wii_file(void *handle, u32 lba, u32 count, void *buf);
 
 

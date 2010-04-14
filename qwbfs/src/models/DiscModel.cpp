@@ -3,6 +3,7 @@
 
 #include <QMimeData>
 #include <QUrl>
+#include <QFileInfo>
 #include <QDebug>
 
 #define URLS_FORMAT "text/uri-list"
@@ -150,7 +151,8 @@ bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int ro
 	emit dataChanged( index, index );
 	return true;
 }
-
+#include "qwbfsdriver/Driver.h"
+#include "Gauge.h"
 bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent )
 {
 	Q_UNUSED( action );
@@ -168,8 +170,16 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 			const QFileInfo file( url.toLocalFile() );
 			
 			if ( !file.isDir() && file.exists() ) {
-				QString fileName = file.isSymLink() ? file.symLinkTarget() : file.absoluteFilePath();
+				const QString fileName = file.isSymLink() ? file.symLinkTarget() : file.absoluteFilePath();
 				discs << QWBFS::Model::Disc( QFileInfo( fileName ).canonicalFilePath() );
+				
+				void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
+				u32 size = 0;
+				if ( fileHandle ) {
+					size = wbfs_estimate_disc( QWBFS::Driver::getHandle( "/dev/sdg1" ).ptr(), wbfs_read_wii_file, fileHandle, ONLY_GAME_PARTITION );
+					wbfs_close_file( fileHandle );
+				}
+				qWarning() << "size:" << Gauge::fileSizeToString( size );
 			}
 		}
 	}

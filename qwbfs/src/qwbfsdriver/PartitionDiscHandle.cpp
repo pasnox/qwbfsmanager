@@ -7,13 +7,14 @@ using namespace QWBFS::Partition::Internal;
 
 // DiscHandleData
 
-DiscHandleData::DiscHandleData( const QWBFS::Partition::Handle& _handle, const QString& _id )
+DiscHandleData::DiscHandleData( const QWBFS::Partition::Handle& _handle, const QString& _discId )
 {
-	handle = wbfs_open_disc( _handle.ptr(), (u8*)( _id.toLocal8Bit().data() ) );
-	id = _id;
+	handle = wbfs_open_disc( _handle.ptr(), (u8*)( _discId.toLocal8Bit().data() ) );
+	discId = _discId;
+	index = handle ? handle->i : -1;
 	
 	if ( handle ) {
-		QString( "*** Opened disc: %1" ).arg( id ).toLocal8Bit().constData();
+		QString( "*** Opened disc: %1" ).arg( discId ).toLocal8Bit().constData();
 	}
 }
 
@@ -21,14 +22,15 @@ DiscHandleData::DiscHandleData( const DiscHandleData& other )
 	: QSharedData( other )
 {
 	handle = other.handle;
-	id = other.id;
+	discId = other.discId;
+	index = other.index;
 }
 
 DiscHandleData::~DiscHandleData()
 {
 	if ( handle ) {
 		wbfs_close_disc( handle );
-		QString( "*** Closed disc: %1" ).arg( id ).toLocal8Bit().constData();
+		QString( "*** Closed disc: %1" ).arg( discId ).toLocal8Bit().constData();
 	}
 	
 	//qWarning() << Q_FUNC_INFO;
@@ -36,9 +38,9 @@ DiscHandleData::~DiscHandleData()
 
 // DiscHandleData
 
-DiscHandle::DiscHandle( const QWBFS::Partition::Handle& handle, const QString& id )
+DiscHandle::DiscHandle( const QWBFS::Partition::Handle& handle, const QString& discId )
 {
-	d = new DiscHandleData( handle, id );
+	d = new DiscHandleData( handle, discId );
 }
 
 DiscHandle::~DiscHandle()
@@ -46,9 +48,14 @@ DiscHandle::~DiscHandle()
 	//qWarning() << Q_FUNC_INFO;
 }
 
-QString DiscHandle::id() const
+QString DiscHandle::discId() const
 {
-	return d->id;
+	return d->discId;
+}
+
+int DiscHandle::index() const
+{
+	return d->index;
 }
 
 QString DiscHandle::isoName() const

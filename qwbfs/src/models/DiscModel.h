@@ -5,7 +5,7 @@
 #include <QStringList>
 #include <QItemSelection>
 
-#include "qWBFS.h"
+#include "Disc.h"
 
 namespace QWBFS {
 namespace Model {

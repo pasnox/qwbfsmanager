@@ -81,22 +81,29 @@ void PartitionWidget::setCurrentPartition( const QString& partition )
 	cbPartitions->setEditText( partition );
 }
 
-void PartitionWidget::showDriverErrors()
+void PartitionWidget::showError( const QString& error )
 {
-	if ( !mDriver->lastErrors().isEmpty() ) {
-		QMessageBox::information( this, QString::null, mDriver->lastErrors().join( "\n" ) );
-	}
+	QMessageBox::information( this, QString::null, error );
 }
 
+void PartitionWidget::showError( int error )
+{
+	showError( QWBFS::Driver::errorToString( QWBFS::Driver::Error( error ) ) );
+}
 void PartitionWidget::models_countChanged()
 {
-	const QWBFS::Partition::Status status = mDriver->partitionStatus();
+	QWBFS::Partition::Status status;
+	const int result = mDriver->status( status );
 	
 	gStatus->setSize( status.size );
 	gStatus->setUsedSize( status.used );
 	gStatus->setFreeSize( status.free );
 	gStatus->setTemporarySize( mImportModel->size() );
 	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
+	
+	if ( result != QWBFS::Driver::Ok ) {
+		showError( result );
+	}
 }
 
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
@@ -109,17 +116,22 @@ void PartitionWidget::on_tbLoad_clicked()
 	mDiscModel->clear();
 	
 	if ( !mDriver->open() && !mDriver->partition().isEmpty() ) {
-		showDriverErrors();
-		return;
+		showError( tr( "Can't open partition." ) );
 	}
 	
-	mDiscModel->setDiscs( mDriver->partitionDiscList() );
+	QWBFS::Model::DiscList discs;
+	const int result = mDriver->discList( discs );
 	
-	if ( mDiscModel->rowCount() == 0 ) {
-		models_countChanged();
+	if ( result == QWBFS::Driver::Ok ) {
+		mDiscModel->setDiscs( discs );
+		
+		if ( mDiscModel->rowCount() == 0 ) {
+			models_countChanged();
+		}
 	}
-	
-	showDriverErrors();
+	else {
+		showError( result );
+	}
 }
 
 void PartitionWidget::on_tbFormat_clicked()
@@ -136,7 +148,7 @@ void PartitionWidget::on_tbFormat_clicked()
 		tbLoad->click();
 	}
 	else {
-		showDriverErrors();
+		showError( tr( "Can't format partition." ) );
 	}
 }
 
@@ -166,9 +178,9 @@ void PartitionWidget::on_tbRemoveDiscs_clicked()
 	
 	for ( int i = indexes.count() -1; i >= 0; i-- ) {
 		const QModelIndex& index = indexes[ i ];
-		const QString id = mDiscModel->discId( index );
+		const QString discId = mDiscModel->discId( index );
 		
-		if ( mDriver->removeDisc( id ) ) {
+		if ( mDriver->removeDisc( discId ) == QWBFS::Driver::Ok ) {
 			mDiscModel->removeRow( index.row() );
 		}
 		else {
@@ -177,7 +189,7 @@ void PartitionWidget::on_tbRemoveDiscs_clicked()
 	}
 	
 	if ( errors > 0 ) {
-		QMessageBox::information( this, QString::null, tr( "One or more discs have failed to be removed." ) );
+		showError( tr( "One or more discs have failed to be removed." ) );
 	}
 }
 
@@ -192,11 +204,11 @@ void PartitionWidget::on_tbRenameDisc_clicked()
 	
 	const QString name = QInputDialog::getText( this, QString::null, tr( "Choose a new name for the disc" ), QLineEdit::Normal, disc.title );
 	
-	if ( mDriver->renameDisc( disc.id, name ) ) {
+	if ( mDriver->renameDisc( disc.id, name ) == QWBFS::Driver::Ok ) {
 		mDiscModel->setData( index, name, Qt::DisplayRole );
 	}
 	else {
-		QMessageBox::information( this, QString::null, tr( "Can't rename disc id #%1 (%2) to '%3'" ).arg( disc.id ).arg( disc.title ).arg( name ) );
+		showError( tr( "Can't rename disc id #%1 (%2) to '%3'" ).arg( disc.id ).arg( disc.title ).arg( name ) );
 	}
 }
 

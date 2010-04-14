@@ -47,10 +47,10 @@ void wbfs_file_truncate(void *handle,long long size)
 {
         ftruncate(fileno((FILE*)handle),size);
 }
-int wbfs_read_wii_file(void*handle,u32 lba,u32 count,void*iobuf)
+int wbfs_read_wii_file(void*handle,u32 offset,u32 count,void*iobuf)
 {
 	FILE*fp =handle;
-	u64 off = lba;
+	u64 off = offset;
 	off<<=2;
 
 	if (fseeko(fp, off, SEEK_SET))
