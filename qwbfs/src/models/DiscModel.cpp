@@ -1,4 +1,5 @@
 #include "DiscModel.h"
+#include "qwbfsdriver/Driver.h"
 #include "Gauge.h"
 
 #include <QMimeData>
@@ -7,7 +8,7 @@
 #include <QDebug>
 
 #define URLS_FORMAT "text/uri-list"
-#define WBFS_DISCS_FORMAT "xml/wbfs-discs"
+#define WBFS_DISCS_FORMAT "xml/wbfs-disc-list"
 
 using namespace QWBFS::Model;
 
@@ -25,10 +26,12 @@ bool SelectionRangePairGreaterThanSorter::operator()( const DiscModel::PairIntIn
 
 // DiscModel
 
-DiscModel::DiscModel( QObject* parent )
+QStringList DiscModel::mMimeTypes = QStringList() << URLS_FORMAT << WBFS_DISCS_FORMAT;
+
+DiscModel::DiscModel( QObject* parent, QWBFS::Driver* driver )
 	: QAbstractItemModel( parent )
 {
-	mMimeTypes << URLS_FORMAT << WBFS_DISCS_FORMAT;
+	mDriver = driver;
 }
 
 DiscModel::~DiscModel()
@@ -104,11 +107,13 @@ Qt::ItemFlags DiscModel::flags( const QModelIndex& index ) const
 {
 	Qt::ItemFlags f = QAbstractItemModel::flags( index );
 	
-	if ( index.isValid() ) {
-		f |= Qt::ItemIsDragEnabled;
-	}
-	else {
-		f |= Qt::ItemIsDropEnabled;
+	if ( mDriver && mDriver->isOpen() ) {
+		if ( index.isValid() ) {
+			f |= Qt::ItemIsDragEnabled;
+		}
+		else {
+			f |= Qt::ItemIsDropEnabled;
+		}
 	}
 	
 	return f;
@@ -151,8 +156,7 @@ bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int ro
 	emit dataChanged( index, index );
 	return true;
 }
-#include "qwbfsdriver/Driver.h"
-#include "Gauge.h"
+
 bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent )
 {
 	Q_UNUSED( action );
@@ -170,16 +174,15 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 			const QFileInfo file( url.toLocalFile() );
 			
 			if ( !file.isDir() && file.exists() ) {
-				const QString fileName = file.isSymLink() ? file.symLinkTarget() : file.absoluteFilePath();
-				discs << QWBFS::Model::Disc( QFileInfo( fileName ).canonicalFilePath() );
+				const QString fileName = QFileInfo( file.isSymLink() ? file.symLinkTarget() : file.absoluteFilePath() ).canonicalFilePath();
+				QWBFS::Model::Disc disc;
+				const int result = mDriver->discImageInfo( fileName, disc );
 				
-				void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
-				u32 size = 0;
-				if ( fileHandle ) {
-					size = wbfs_estimate_disc( QWBFS::Driver::getHandle( "/dev/sdg1" ).ptr(), wbfs_read_wii_file, fileHandle, ONLY_GAME_PARTITION );
-					wbfs_close_file( fileHandle );
+				if ( result != Driver::Ok ) {
+					continue;
 				}
-				qWarning() << "size:" << Gauge::fileSizeToString( size );
+				
+				discs << disc;
 			}
 		}
 	}
@@ -188,6 +191,13 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 		// remove clones
 		foreach ( const QWBFS::Model::Disc& disc, mDiscs ) {
 			if ( discs.contains( disc ) ) {
+				discs.remove( disc );
+			}
+		}
+		
+		// remove drop from same view
+		foreach ( const QWBFS::Model::Disc& disc, discs ) {
+			if ( disc.origin == mDriver->partition() ) {
 				discs.remove( disc );
 			}
 		}
@@ -205,8 +215,7 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 
 QMimeData* DiscModel::mimeData( const QModelIndexList& indexes ) const
 {
-	if ( indexes.isEmpty() )
-	{
+	if ( indexes.isEmpty() || !mDriver || ( mDriver && !mDriver->isOpen() ) ) {
 		return 0;
 	}
 	

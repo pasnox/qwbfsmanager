@@ -157,21 +157,14 @@ int Driver::discImageInfo( const QString& fileName, QWBFS::Model::Disc& disc, pa
 	}
 	
 	disc.origin = fileName;
+	u8* header = (u8*)wbfs_ioalloc( 0x100 );
+	disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection, header );
 	
-	// *** temp test filipe
-	u8 buffer[ 7 ];
-	qWarning() << Q_FUNC_INFO << wbfs_read_file( fileHandle, 6, &buffer );
-	disc.id = QString::fromLocal8Bit( (const char*)buffer, 6 );
-	// ***
-	
-	//u8* header = (u8*)wbfs_ioalloc( 0x100 );
-	disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection/*, header*/ );
-	
-	//discInfo( header, disc );
-	//wbfs_iofree( header );
+	discInfo( header, disc );
+	wbfs_iofree( header );
 	wbfs_close_file( fileHandle );
 	
-	return Driver::Ok;
+	return disc.size != 0 ? Driver::Ok : Driver::InvalidDisc;
 }
 
 int Driver::addDiscImage( const QString& fileName, progress_callback_t progressCallback, partition_selector_t partitionSelection, bool copy1to1, const QString& newName ) const
@@ -420,8 +413,35 @@ QString Driver::errorToString( QWBFS::Driver::Error error )
 		case Driver::InvalidDiscID:
 			return tr( "Invalid disc id." );
 			break;
+		case Driver::InvalidDisc:
+			return tr( "Invalid disc." );
+			break;
 		case Driver::CantDrive2Drive:
 			return tr( "Can't drive to drive copy." );
+			break;
+	}
+	
+	return QString::null;
+}
+
+QString Driver::regionToString( QWBFS::Driver::Region region )
+{
+	switch ( region )
+	{
+		case Driver::NTSC:
+			return tr( "NTSC" );
+			break;
+		case Driver::NTSCJ:
+			return tr( "NTSC JAPAN" );
+			break;
+		case Driver::PAL:
+			return tr( "PAL" );
+			break;
+		case Driver::KOR:
+			return tr( "KOREAN" );
+			break;
+		case Driver::NOREGION:
+			return tr( "WORLD" );
 			break;
 	}
 	

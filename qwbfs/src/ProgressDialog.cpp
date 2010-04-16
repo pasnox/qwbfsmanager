@@ -2,6 +2,8 @@
 #include "ExportThread.h"
 
 #include <QPushButton>
+#include <QTimer>
+#include <QDesktopWidget>
 #include <QDebug>
 
 ProgressDialog::ProgressDialog( QWidget* parent )
@@ -39,7 +41,7 @@ void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QSt
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
 	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
-	connect( mThread, SIGNAL( error( const QString& ) ), pteErrors, SLOT( appendPlainText( const QString& ) ) );
+	connect( mThread, SIGNAL( error( const QString& ) ), this, SLOT( thread_error( const QString& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
@@ -61,7 +63,7 @@ void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWB
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
 	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
-	connect( mThread, SIGNAL( error( const QString& ) ), pteErrors, SLOT( appendPlainText( const QString& ) ) );
+	connect( mThread, SIGNAL( error( const QString& ) ), this, SLOT( thread_error( const QString& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
@@ -79,6 +81,15 @@ void ProgressDialog::thread_started()
 {
 	mElapsed.restart();
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( true );
+}
+
+void ProgressDialog::thread_error( const QString& error )
+{
+	pteErrors->appendPlainText( error );
+	
+	if ( !cbDetails->isChecked() ) {
+		cbDetails->toggle();
+	}
 }
 
 void ProgressDialog::thread_currentProgressChanged( int value, int maximum, const QTime& remaining )
@@ -99,4 +110,29 @@ void ProgressDialog::thread_finished()
 	delete mThread;
 	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( true );
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
+}
+
+void ProgressDialog::on_cbDetails_toggled()
+{
+	QTimer::singleShot( 0, this, SLOT( updateSpace() ) );
+}
+
+void ProgressDialog::updateSpace()
+{
+	QWidget* widget = parentWidget();
+	QRect rect = geometry();
+	
+	if ( !widget ) {
+		widget = QApplication::desktop();
+	}
+	
+	widget = widget->window();
+	
+	if ( !cbDetails->isChecked() ) {
+		rect.setHeight( minimumSizeHint().height() );
+	}
+	
+	rect.moveCenter( widget->mapToGlobal( widget->rect().center() ) );
+	resize( rect.size() );
+	move( rect.topLeft() );
 }

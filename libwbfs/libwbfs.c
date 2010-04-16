@@ -663,7 +663,7 @@ u32 wbfs_estimate_disc
 	(
 		wbfs_t *p, read_wiidisc_callback_t read_src_wii_disc,
 		void *callback_data,
-		partition_selector_t sel
+		partition_selector_t sel, u8* header
                 )
 {
 	u8 *b;
@@ -688,7 +688,7 @@ u32 wbfs_estimate_disc
 		ERROR("unable to open wii disc");
 	}
 	
-	wd_build_disc_usage(d,sel,used);
+	int result = wd_build_disc_usage(d,sel,used);
 	wd_close_disc(d);
 	d = 0;
 	
@@ -704,6 +704,11 @@ u32 wbfs_estimate_disc
 			tot++;
 		}
 	}
+	
+	if(result)
+	{
+		memcpy(header, b,0x100);
+	}
 
 error:
 	if (d)
@@ -715,7 +720,7 @@ error:
 	if (info)
 		wbfs_iofree(info);
 	
-	return tot * ((p->wbfs_sec_sz / p->hd_sec_sz) * 512);
+	return !result ? 0 : tot * ((p->wbfs_sec_sz / p->hd_sec_sz) * 512);
 }
 
 u32 wbfs_rm_disc(wbfs_t*p, u8* discid)

@@ -231,7 +231,7 @@ static int test_parition_skip(u32 partition_type,partition_selector_t part_sel)
         }
 } 
 
-static void do_disc(wiidisc_t*d)
+static int do_disc(wiidisc_t*d)
 {
 	u8 *b = wbfs_ioalloc(0x100);
 	u64 partition_offset[32]; // XXX: don't know the real maximum
@@ -242,8 +242,9 @@ static void do_disc(wiidisc_t*d)
 	disc_read(d,0, b, 0x100);
         magic=_be32(b+24);
         if(magic!=0x5D1C9EA3){
+				wbfs_iofree(b);
                 wbfs_error("not a wii disc");
-                return ;
+                return 0;
         }
 	disc_read(d,0x40000>>2, b, 0x100);
 	n_partitions = _be32(b);
@@ -258,6 +259,7 @@ static void do_disc(wiidisc_t*d)
                         do_partition(d);
 	}
         wbfs_iofree(b);
+	return 1;
 }
 
 wiidisc_t *wd_open_disc(read_wiidisc_callback_t read,void*fp)
@@ -289,22 +291,23 @@ u8 * wd_extract_file(wiidisc_t *d, partition_selector_t partition_type, char *pa
         d->extract_pathname = pathname;
         d->extracted_buffer = 0;
         d->part_sel = partition_type;
-        do_disc(d);
-        d->extract_pathname = 0;
-        d->part_sel = ALL_PARTITIONS;
-        retval = d->extracted_buffer;
-        d->extracted_buffer = 0;
+        int result = do_disc(d);
+		d->extract_pathname = 0;
+		d->part_sel = ALL_PARTITIONS;
+		retval = result == 0 ? 0 : d->extracted_buffer;
+		d->extracted_buffer = 0;
         return retval;
 }
 
-void wd_build_disc_usage(wiidisc_t *d, partition_selector_t selector, u8* usage_table)
+int wd_build_disc_usage(wiidisc_t *d, partition_selector_t selector, u8* usage_table)
 {
         d->sector_usage_table = usage_table;
         wbfs_memset(usage_table,0,143432*2);
         d->part_sel = selector;
-        do_disc(d);
-        d->part_sel = ALL_PARTITIONS;
-        d->sector_usage_table = 0;
+        int result = do_disc(d);
+		d->part_sel = ALL_PARTITIONS;
+		d->sector_usage_table = 0;
+		return result;
 }
 
 void wd_fix_partition_table(wiidisc_t *d, partition_selector_t selector, u8* partition_table)

@@ -29,8 +29,11 @@ protected:
 
 protected slots:
 	void thread_started();
+	void thread_error( const QString& error );
 	void thread_currentProgressChanged( int value, int maximum, const QTime& remaining );
 	void thread_finished();
+	void on_cbDetails_toggled();
+	void updateSpace();
 };
 
 #endif // PROGRESSDIALOG_H

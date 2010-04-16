@@ -53,7 +53,7 @@ void wd_close_disc(wiidisc_t *);
 // returns a buffer allocated with wbfs_ioalloc() or NULL if not found of alloc error
 u8 * wd_extract_file(wiidisc_t *d, partition_selector_t partition_type, char *pathname);
 
-void wd_build_disc_usage(wiidisc_t *d, partition_selector_t selector, u8* usage_table);
+int wd_build_disc_usage(wiidisc_t *d, partition_selector_t selector, u8* usage_table);
 
 // effectively remove not copied partition from the partition table.
 void wd_fix_partition_table(wiidisc_t *d, partition_selector_t selector, u8* partition_table);

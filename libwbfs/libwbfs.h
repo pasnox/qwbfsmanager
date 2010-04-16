@@ -224,7 +224,7 @@ u32 wbfs_add_disc(wbfs_t*p,read_wiidisc_callback_t read_src_wii_disc,
 					);
 
 u32 wbfs_estimate_disc(wbfs_t*p,read_wiidisc_callback_t read_src_wii_disc, void *callback_data,
-                  partition_selector_t sel);
+                  partition_selector_t sel, u8* header);
 
 /*! remove a wiidvd inside a partition */
 u32 wbfs_rm_disc(wbfs_t*p, u8* discid);

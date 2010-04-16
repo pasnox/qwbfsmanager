@@ -41,7 +41,8 @@ public:
 		DiscNotFound = -8,
 		InvalidDiscIndex = -9,
 		InvalidDiscID = -10,
-		CantDrive2Drive = -11
+		InvalidDisc = -11,
+		CantDrive2Drive = -12
 	};
 	
 	Driver( QObject* parent = 0, const QWBFS::Partition::Handle& partitionHandle = QWBFS::Partition::Handle() );
@@ -180,6 +181,12 @@ public:
 		\return return a QString representing the textual error message.
 	*/
 	static QString errorToString( QWBFS::Driver::Error error );
+	/*!
+		\details return a string representation of the region.
+		\param region the region to represent.
+		\return return a QString representing the textual region.
+	*/
+	static QString regionToString( QWBFS::Driver::Region region );
 	/*!
 		\details set the force mode of the libwbfs.
 		\param force true to force, else false.

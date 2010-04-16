@@ -8,6 +8,7 @@
 #include "Disc.h"
 
 namespace QWBFS {
+class Driver;
 namespace Model {
 
 class DiscModel : public QAbstractItemModel
@@ -17,7 +18,7 @@ class DiscModel : public QAbstractItemModel
 public:
 	typedef QPair<int, int> PairIntInt;
 	
-	DiscModel( QObject* parent = 0 );
+	DiscModel( QObject* parent = 0, QWBFS::Driver* driver = 0 );
 	virtual ~DiscModel();
 	
 	virtual int columnCount( const QModelIndex& parent = QModelIndex() ) const;
@@ -50,8 +51,10 @@ public slots:
 	void clear();
 
 protected:
+	Driver* mDriver;
 	QWBFS::Model::DiscList mDiscs;
-	QStringList mMimeTypes;
+	
+	static QStringList mMimeTypes;
 
 signals:
 	void countChanged( int count );

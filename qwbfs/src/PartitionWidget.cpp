@@ -13,10 +13,11 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	: QWidget( parent )
 {
 	mDriver = new QWBFS::Driver( this );
-	mDiscModel = new QWBFS::Model::DiscModel( this );
-	mImportModel = new QWBFS::Model::DiscModel( this );
+	mDiscModel = new QWBFS::Model::DiscModel( this, mDriver );
+	mImportModel = new QWBFS::Model::DiscModel( this, mDriver );
 	
 	setupUi( this );
+	setAcceptDrops( true );
 	lvDiscs->setModel( mDiscModel );
 	lvDiscs->setItemDelegate( new QWBFS::Model::DiscDelegate( mDiscModel ) );
 	lvImport->setModel( mImportModel );
@@ -90,6 +91,30 @@ void PartitionWidget::showError( int error )
 {
 	showError( QWBFS::Driver::errorToString( QWBFS::Driver::Error( error ) ) );
 }
+
+void PartitionWidget::dragEnterEvent( QDragEnterEvent* event )
+{
+	if ( mDriver->isOpen() ) {
+		foreach ( const QString& mimeType, mImportModel->mimeTypes() ) {
+			if ( event->mimeData()->hasFormat( mimeType ) ) {
+				event->setDropAction( Qt::CopyAction );
+				event->accept();
+				return;
+			}
+		}
+	}
+}
+
+void PartitionWidget::dropEvent( QDropEvent* event )
+{
+	if ( !fImport->isVisible() ) {
+		tbShowHideImportView->toggle();
+	}
+	
+	mImportModel->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
+	event->acceptProposedAction();
+}
+
 void PartitionWidget::models_countChanged()
 {
 	QWBFS::Partition::Status status;
@@ -224,6 +249,10 @@ void PartitionWidget::on_tbRemoveImport_clicked()
 
 void PartitionWidget::on_tbImport_clicked()
 {
+	if ( mImportModel->rowCount() == 0 ) {
+		return;
+	}
+	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	dlg->importDiscs( mImportModel->discs(), mDriver->handle() );
 }

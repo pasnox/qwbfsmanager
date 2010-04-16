@@ -1,5 +1,6 @@
 #include "DiscDelegate.h"
 #include "DiscModel.h"
+#include "qwbfsdriver/Driver.h"
 #include "Gauge.h"
 
 #include <QPainter>
@@ -50,7 +51,7 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	
 	// text
 	QStringList texts;
-	texts << QString( "<b>%1</b>" ).arg( disc.title );
+	texts << QString( "<b>%1 (%2)</b>" ).arg( disc.title ).arg( QWBFS::Driver::regionToString( QWBFS::Driver::Region( disc.region ) ) );
 	
 	if ( disc.id.isEmpty() ) {
 		texts << QString( "<b>%1</b>" ).arg( Gauge::fileSizeToString( disc.size ) );
