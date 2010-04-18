@@ -66,6 +66,9 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 			values << tr( "Title: %1" ).arg( disc.title );
 			values << tr( "Size: %1" ).arg( Gauge::fileSizeToString( disc.size ) );
 			values << tr( "Origin: %1" ).arg( disc.origin );
+			values << tr( "Region: %1" ).arg( QWBFS::Driver::regionToString( QWBFS::Driver::Region( disc.region ) ) );
+			values << tr( "State: %1" ).arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) );
+			values << tr( "Error: %1" ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
 			
 			return values.join( "\n" );
 			
@@ -107,13 +110,11 @@ Qt::ItemFlags DiscModel::flags( const QModelIndex& index ) const
 {
 	Qt::ItemFlags f = QAbstractItemModel::flags( index );
 	
-	if ( mDriver && mDriver->isOpen() ) {
-		if ( index.isValid() ) {
-			f |= Qt::ItemIsDragEnabled;
-		}
-		else {
-			f |= Qt::ItemIsDropEnabled;
-		}
+	if ( index.isValid() ) {
+		f |= Qt::ItemIsDragEnabled;
+	}
+	else {
+		f |= Qt::ItemIsDropEnabled;
 	}
 	
 	return f;
@@ -187,30 +188,28 @@ bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int 
 		}
 	}
 	
-	if ( !discs.isEmpty() ) {
-		// remove clones
-		foreach ( const QWBFS::Model::Disc& disc, mDiscs ) {
-			if ( discs.contains( disc ) ) {
-				discs.remove( disc );
-			}
+	// remove clones
+	foreach ( const QWBFS::Model::Disc& disc, mDiscs ) {
+		if ( discs.contains( disc ) ) {
+			discs.remove( disc );
 		}
-		
-		// remove drop from same view
+	}
+	
+	// remove drop from same view
+	if ( mDriver ) {
 		foreach ( const QWBFS::Model::Disc& disc, discs ) {
 			if ( disc.origin == mDriver->partition() ) {
 				discs.remove( disc );
 			}
 		}
-		
-		if ( discs.isEmpty() ) {
-			return false;
-		}
-		
-		addDiscs( discs.toList() );
-		return true;
 	}
 	
-	return false;
+	if ( discs.isEmpty() ) {
+		return false;
+	}
+	
+	addDiscs( discs.toList() );
+	return true;
 }
 
 QMimeData* DiscModel::mimeData( const QModelIndexList& indexes ) const
@@ -264,6 +263,16 @@ void DiscModel::setDiscs( const QWBFS::Model::DiscList& discs )
 	addDiscs( discs );
 }
 
+void DiscModel::setDisc( const QModelIndex& index, const QWBFS::Model::Disc& disc )
+{
+	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() != 0 ) {
+		return;
+	}
+	
+	mDiscs[ index.row() ] = disc;
+	emit dataChanged( index, index );
+}
+
 QWBFS::Model::DiscList DiscModel::discs() const
 {
 	return mDiscs;
@@ -290,6 +299,12 @@ QWBFS::Model::Disc DiscModel::disc( const QModelIndex& index ) const
 	return mDiscs.value( index.row() );
 }
 
+QModelIndex DiscModel::index( const QWBFS::Model::Disc& disc ) const
+{
+	const int index = mDiscs.indexOf( disc );
+	return index == -1 ? QModelIndex() : createIndex( index, 0, index );
+}
+
 QString DiscModel::discId( const QModelIndex& index ) const
 {
 	return disc( index ).id;
@@ -311,6 +326,17 @@ void DiscModel::removeSelection( const QItemSelection& _selection )
 	// remove items
 	foreach ( const DiscModel::PairIntInt& pair, selection ) {
 		removeRows( pair.first, pair.second, QModelIndex() );
+	}
+}
+
+void DiscModel::updateDisc( const QWBFS::Model::Disc& disc )
+{
+	const int row = mDiscs.indexOf( disc );
+	
+	if ( row != -1 ) {
+		const QModelIndex index = this->index( disc );
+		mDiscs[ row ] = disc;
+		emit dataChanged( index, index );
 	}
 }
 

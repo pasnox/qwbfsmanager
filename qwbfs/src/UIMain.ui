@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
-    <height>371</height>
+    <width>653</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,6 +43,10 @@
         <bool>true</bool>
        </property>
        <widget class="QWidget" name="wFS">
+        <attribute name="icon">
+         <iconset resource="../resources/resources.qrc">
+          <normaloff>:/icons/view-list-tree.png</normaloff>:/icons/view-list-tree.png</iconset>
+        </attribute>
         <attribute name="title">
          <string>File System</string>
         </attribute>
@@ -52,8 +56,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QToolButton" name="tbReloadDrives">
-           <property name="text">
-            <string>...</string>
+           <property name="icon">
+            <iconset resource="../resources/resources.qrc">
+             <normaloff>:/icons/view-refresh.png</normaloff>:/icons/view-refresh.png</iconset>
            </property>
           </widget>
          </item>
@@ -95,6 +100,10 @@
         </layout>
        </widget>
        <widget class="QWidget" name="wExport">
+        <attribute name="icon">
+         <iconset resource="../resources/resources.qrc">
+          <normaloff>:/icons/document-export.png</normaloff>:/icons/document-export.png</iconset>
+        </attribute>
         <attribute name="title">
          <string>Export</string>
         </attribute>
@@ -119,8 +128,9 @@
              <property name="toolTip">
               <string>Clear the list</string>
              </property>
-             <property name="text">
-              <string>C</string>
+             <property name="icon">
+              <iconset resource="../resources/resources.qrc">
+               <normaloff>:/icons/edit-clear-list.png</normaloff>:/icons/edit-clear-list.png</iconset>
              </property>
             </widget>
            </item>
@@ -129,8 +139,9 @@
              <property name="toolTip">
               <string>Remove the selected items from the list</string>
              </property>
-             <property name="text">
-              <string>-</string>
+             <property name="icon">
+              <iconset resource="../resources/resources.qrc">
+               <normaloff>:/icons/list-remove.png</normaloff>:/icons/list-remove.png</iconset>
              </property>
             </widget>
            </item>
@@ -139,8 +150,9 @@
              <property name="toolTip">
               <string>Process the export list</string>
              </property>
-             <property name="text">
-              <string>E</string>
+             <property name="icon">
+              <iconset resource="../resources/resources.qrc">
+               <normaloff>:/icons/document-export.png</normaloff>:/icons/document-export.png</iconset>
              </property>
             </widget>
            </item>
@@ -172,6 +184,28 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>653</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuModule">
+    <property name="title">
+     <string>Module</string>
+    </property>
+    <addaction name="aReloadPartitions"/>
+   </widget>
+   <addaction name="menuModule"/>
+  </widget>
+  <action name="aReloadPartitions">
+   <property name="text">
+    <string>Reload partitions</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -181,6 +215,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

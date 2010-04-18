@@ -46,8 +46,8 @@ protected:
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
 	void globalProgressChanged( int value );
+	void jobFinished( const QWBFS::Model::Disc& disc );
 	void message( const QString& text );
-	void error( const QString& text );
 };
 
 #endif // EXPORTTHREAD_H

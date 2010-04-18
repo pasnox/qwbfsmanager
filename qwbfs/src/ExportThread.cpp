@@ -3,11 +3,13 @@
 
 #include <QTime>
 #include <QDir>
+#include <QMetaType>
 #include <QDebug>
 
 ExportThread::ExportThread( QObject* parent )
 	: QThread( parent )
 {
+	qRegisterMetaType<QWBFS::Model::Disc>( "QWBFS::Model::Disc" );
 }
 
 ExportThread::~ExportThread()
@@ -59,7 +61,7 @@ void ExportThread::stop()
 {
 	QMutexLocker locker( &mMutex );
 	mStop = true;
-	emit error( tr( "Cancel requested, the process will stop after the current operation." ) );
+	emit message( tr( "Cancel requested, the process will stop after the current operation." ) );
 }
 
 void ExportThread::run()
@@ -88,7 +90,7 @@ void ExportThread::exportWorker()
 	emit globalProgressChanged( 0 );
 	
 	for ( int i = 0; i < mDiscs.count(); i++ ) {
-		const QWBFS::Model::Disc& disc = mDiscs[ i ];
+		QWBFS::Model::Disc disc = mDiscs.at( i );
 		
 		emit message( tr( "Exporting '%1'..." ).arg( disc.title ) );
 		
@@ -111,11 +113,11 @@ void ExportThread::exportWorker()
 		connectDriver( driver );
 		const int result = driver.extractDisc( disc.id, mPath );
 		
-		if ( result != QWBFS::Driver::Ok ) {
-			emit error( tr( "Error while exporting disc '%1': %2" ).arg( disc.title ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) ) );
-		}
+		disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
+		disc.error = result;
 		
 		emit globalProgressChanged( i +1 );
+		emit jobFinished( disc );
 		
 		{
 			QMutexLocker locker( &mMutex );
@@ -136,7 +138,7 @@ void ExportThread::importWorker()
 	QWBFS::Driver td( 0, mImportPartitionHandle );
 	
 	if ( !td.isOpen() ) {
-		emit error( tr( "Can't open partition '%1'." ).arg( td.partition() ) );
+		emit message( tr( "Can't open partition '%1'." ).arg( td.partition() ) );
 		return;
 	}
 	
@@ -149,7 +151,7 @@ void ExportThread::importWorker()
 	emit globalProgressChanged( 0 );
 	
 	for ( int i = 0; i < mDiscs.count(); i++ ) {
-		const QWBFS::Model::Disc& disc = mDiscs[ i ];
+		QWBFS::Model::Disc disc = mDiscs.at( i );
 		int result;
 		
 		emit message( tr( "Importing '%1'..." ).arg( disc.title ) );
@@ -172,11 +174,11 @@ void ExportThread::importWorker()
 			result = td.addDiscImage( disc.origin );
 		}
 		
-		if ( result != QWBFS::Driver::Ok ) {
-			emit error( tr( "Error while importing disc '%1': %2" ).arg( disc.title ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) ) );
-		}
+		disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
+		disc.error = result;
 		
 		emit globalProgressChanged( i +1 );
+		emit jobFinished( disc );
 		
 		{
 			QMutexLocker locker( &mMutex );

@@ -3,12 +3,11 @@
 
 #include "ui_PartitionWidget.h"
 
-class qWBFS;
-
 namespace QWBFS {
-	class Driver;
+class Driver;
 namespace Model {
-	class DiscModel;
+struct Disc;
+class DiscModel;
 }; // Model
 }; // QWBFS
 
@@ -44,6 +43,9 @@ protected:
 
 protected slots:
 	void models_countChanged();
+	void progress_jobFinished( const QWBFS::Model::Disc& disc );
+	void progress_finished();
+	
 	void on_cbPartitions_currentIndexChanged( int index );
 	
 	void on_tbLoad_clicked();

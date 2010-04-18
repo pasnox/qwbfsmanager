@@ -29,11 +29,15 @@ protected:
 
 protected slots:
 	void thread_started();
-	void thread_error( const QString& error );
+	void thread_jobFinished( const QWBFS::Model::Disc& disc );
 	void thread_currentProgressChanged( int value, int maximum, const QTime& remaining );
 	void thread_finished();
 	void on_cbDetails_toggled();
 	void updateSpace();
+
+signals:
+	void jobFinished( const QWBFS::Model::Disc& disc );
+	void finished();
 };
 
 #endif // PROGRESSDIALOG_H

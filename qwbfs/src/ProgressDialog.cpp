@@ -41,7 +41,7 @@ void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QSt
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
 	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
-	connect( mThread, SIGNAL( error( const QString& ) ), this, SLOT( thread_error( const QString& ) ) );
+	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
@@ -63,7 +63,7 @@ void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWB
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
 	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
-	connect( mThread, SIGNAL( error( const QString& ) ), this, SLOT( thread_error( const QString& ) ) );
+	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
@@ -83,13 +83,20 @@ void ProgressDialog::thread_started()
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( true );
 }
 
-void ProgressDialog::thread_error( const QString& error )
+void ProgressDialog::thread_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	pteErrors->appendPlainText( error );
+	QString text = QString( "Adding '%1': %2 (%3)" )
+		.arg( disc.title )
+		.arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) )
+		.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
 	
-	if ( !cbDetails->isChecked() ) {
+	pteErrors->appendPlainText( text );
+	
+	if ( !cbDetails->isChecked() && disc.state == QWBFS::Driver::Failed ) {
 		cbDetails->toggle();
 	}
+	
+	emit jobFinished( disc );
 }
 
 void ProgressDialog::thread_currentProgressChanged( int value, int maximum, const QTime& remaining )
@@ -110,6 +117,8 @@ void ProgressDialog::thread_finished()
 	delete mThread;
 	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( true );
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
+	
+	emit finished();
 }
 
 void ProgressDialog::on_cbDetails_toggled()

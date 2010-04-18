@@ -4,7 +4,7 @@
 #include "Gauge.h"
 
 #include <QPainter>
-#include <QTextDocument>
+#include <QDebug>
 
 using namespace QWBFS::Model;
 
@@ -24,7 +24,7 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	QStyleOptionViewItemV4 option = _option;
     initStyleOption( &option, index );
 	
-	painter->setRenderHint( QPainter::Antialiasing, true );
+	painter->setRenderHint( QPainter::Antialiasing );
 	
 	QPainterPath path;
 	path.addRoundedRect( option.rect.adjusted( 2, 2, -2, -2 ), 8, 8 );
@@ -49,25 +49,63 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		painter->restore();
 	}
 	
-	// text
-	QStringList texts;
-	texts << QString( "<b>%1 (%2)</b>" ).arg( disc.title ).arg( QWBFS::Driver::regionToString( QWBFS::Driver::Region( disc.region ) ) );
+	QRect rect;
+	QString text;
 	
-	if ( disc.id.isEmpty() ) {
-		texts << QString( "<b>%1</b>" ).arg( Gauge::fileSizeToString( disc.size ) );
+	// title/region
+	{
+		QFont font = painter->font();
+		font.setPixelSize( 13 );
+		font.setBold( true );
+		
+		QFontMetricsF metrics( font );
+		rect = option.rect.adjusted( 40, 2, -10, -( metrics.height() -2 ) );
+		
+		text = QString( "%1 - %2 (%3)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( QWBFS::Driver::Region( disc.region ) ) );
+		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
+		
+		painter->save();
+		painter->setFont( font );
+		painter->drawText( rect, Qt::AlignLeft | Qt::AlignVCenter, text );
+		painter->restore();
 	}
-	else {
-		texts << QString( "%1 - <b>%2</b>" ).arg( disc.id ).arg( Gauge::fileSizeToString( disc.size ) );
+	
+	// size/origin
+	{
+		QFont font = painter->font();
+		font.setPixelSize( 9 );
+		
+		QFontMetricsF metrics( font );
+		rect = option.rect.adjusted( 40, rect.height(), -10, -2 );
+		
+		text = QString( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
+		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
+		
+		painter->save();
+		painter->setFont( font );
+		painter->drawText( rect, Qt::AlignLeft | Qt::AlignVCenter, text );
+		painter->restore();
 	}
 	
-	QTextDocument document;
+	if ( disc.state == QWBFS::Driver::None ) {
+		return;
+	}
 	
-	document.setHtml( texts.join( "<br />" ) );
-	
-	painter->save();
-	painter->translate( path.boundingRect().topLeft() );
-	document.drawContents( painter );
-	painter->restore();
+	// status/error
+	{
+		QPixmap pixmap( disc.state == QWBFS::Driver::Success ? ":/icons/dialog-ok-apply.png" : ":/icons/dialog-close.png" );
+		
+		rect = option.rect;
+		rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
+		
+		QRectF r( QPointF(), pixmap.size() );
+		r.moveCenter( rect.center() );
+		
+		painter->save();
+		painter->setClipRect( rect );
+		painter->drawPixmap( r.topLeft(), pixmap );
+		painter->restore();
+	}
 }
 
 QSize DiscDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const

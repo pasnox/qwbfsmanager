@@ -9,10 +9,12 @@
 #include "qwbfsdriver/PartitionProperties.h"
 #include "qwbfsdriver/PartitionHandle.h"
 #include "qwbfsdriver/PartitionStatus.h"
-#include "models/Disc.h"
-#include "models/DiscModel.h"
 
 namespace QWBFS {
+namespace Model {
+struct Disc;
+typedef QList<struct Disc> DiscList;
+}; // Model
 
 class Driver : public QObject
 {
@@ -21,11 +23,18 @@ class Driver : public QObject
 public:
 	enum Region
 	{
-		NTSC,
-		NTSCJ,
+		NTSC = 0,
+		NTSCJapan,
 		PAL,
-		KOR,
-		NOREGION
+		Korean,
+		NoRegion
+	};
+	
+	enum State
+	{
+		None = 0,
+		Success,
+		Failed
 	};
 	
 	enum Error
@@ -187,6 +196,12 @@ public:
 		\return return a QString representing the textual region.
 	*/
 	static QString regionToString( QWBFS::Driver::Region region );
+	/*!
+		\details return a string representation of the state.
+		\param state the state to represent.
+		\return return a QString representing the textual state.
+	*/
+	static QString stateToString( QWBFS::Driver::State state );
 	/*!
 		\details set the force mode of the libwbfs.
 		\param force true to force, else false.

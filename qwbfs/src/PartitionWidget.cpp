@@ -23,6 +23,8 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	lvImport->setModel( mImportModel );
 	lvImport->setItemDelegate( new QWBFS::Model::DiscDelegate( mImportModel ) );
 	
+	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
+	
 	connect( mDiscModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( mImportModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( textChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
@@ -118,7 +120,7 @@ void PartitionWidget::dropEvent( QDropEvent* event )
 void PartitionWidget::models_countChanged()
 {
 	QWBFS::Partition::Status status;
-	const int result = mDriver->status( status );
+	/*const int result = */mDriver->status( status );
 	
 	gStatus->setSize( status.size );
 	gStatus->setUsedSize( status.used );
@@ -126,9 +128,19 @@ void PartitionWidget::models_countChanged()
 	gStatus->setTemporarySize( mImportModel->size() );
 	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
 	
-	if ( result != QWBFS::Driver::Ok ) {
+	/*if ( result != QWBFS::Driver::Ok ) {
 		showError( result );
-	}
+	}*/
+}
+
+void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )
+{
+	mImportModel->updateDisc( disc );
+}
+
+void PartitionWidget::progress_finished()
+{
+	tbLoad->click();
 }
 
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
@@ -138,24 +150,31 @@ void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 
 void PartitionWidget::on_tbLoad_clicked()
 {
-	mDiscModel->clear();
-	
 	if ( !mDriver->open() && !mDriver->partition().isEmpty() ) {
 		showError( tr( "Can't open partition." ) );
 	}
 	
-	QWBFS::Model::DiscList discs;
-	const int result = mDriver->discList( discs );
-	
-	if ( result == QWBFS::Driver::Ok ) {
-		mDiscModel->setDiscs( discs );
-		
-		if ( mDiscModel->rowCount() == 0 ) {
-			models_countChanged();
-		}
+	if ( mDiscModel->rowCount() == 0 ) {
+		models_countChanged();
 	}
 	else {
-		showError( result );
+		mDiscModel->clear();
+	}
+	
+	if ( mDriver->isOpen() ) {
+		QWBFS::Model::DiscList discs;
+		const int result = mDriver->discList( discs );
+		
+		if ( result == QWBFS::Driver::Ok ) {
+			mDiscModel->setDiscs( discs );
+			
+			if ( mDiscModel->rowCount() == 0 ) {
+				models_countChanged();
+			}
+		}
+		else {
+			showError( result );
+		}
 	}
 }
 
@@ -254,5 +273,8 @@ void PartitionWidget::on_tbImport_clicked()
 	}
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
+	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
+	connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
+	
 	dlg->importDiscs( mImportModel->discs(), mDriver->handle() );
 }

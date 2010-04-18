@@ -59,3 +59,4 @@ SOURCES	+= src/main.cpp \
 	src/models/DiscDelegate.cpp \
 	src/models/DiscModel.cpp \
 	src/qwbfsdriver/Driver.cpp
+RESOURCES	+= resources/resources.qrc

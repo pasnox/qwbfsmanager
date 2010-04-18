@@ -1,32 +1,9 @@
 #include "Disc.h"
-
-#include <QFileInfo>
+#include "qwbfsdriver/Driver.h"
 
 #define WBFS_DISC_XML_NAME "WBFS-Discs"
 
 using namespace QWBFS::Model;
-
-Disc::Disc( u8* header, u32 _size, const QString& _origin )
-{
-	if ( header && _size ) {
-		id = QString::fromLocal8Bit( (char*)header, 6 );
-		title = QString::fromLocal8Bit( QString::fromLocal8Bit( (char*)header +0x20 ).toLocal8Bit().constData() );
-		size = _size;
-		origin = _origin;
-		region = 0;
-	}
-}
-
-Disc::Disc( const QString& _origin )
-{
-	QFileInfo file( _origin );
-	
-	if ( file.exists() ) {
-		title = file.baseName();
-		size = file.size();
-		origin = _origin;
-	}
-}
 
 Disc::Disc( const QDomElement& element )
 {
@@ -38,7 +15,10 @@ bool Disc::operator==( const Disc& other ) const
 	return id == other.id &&
 		title == other.title &&
 		size == other.size &&
-		origin == other.origin;
+		origin == other.origin &&
+		region == other.region /*&&
+		state == other.state &&
+		error == other.error*/;
 }
 
 void Disc::addToDocument( QDomDocument& document ) const
@@ -48,15 +28,21 @@ void Disc::addToDocument( QDomDocument& document ) const
 	element.setAttribute( "title", title );
 	element.setAttribute( "size", size );
 	element.setAttribute( "origin", origin );
+	element.setAttribute( "region", region );
+	element.setAttribute( "state", state );
+	element.setAttribute( "error", error );
 	document.documentElement().appendChild( element );
 }
 
 void Disc::readFromElement( const QDomElement& element )
 {
-	id = element.attribute( "id" );
-	title = element.attribute( "title" );
-	size = element.attribute( "size" ).toUInt();
-	origin = element.attribute( "origin" );
+	id = element.attribute( "id", QString::null );
+	title = element.attribute( "title", QString::null );
+	size = element.attribute( "size", QString::number( 0 ) ).toUInt();
+	origin = element.attribute( "origin", QString::null );
+	region = element.attribute( "region", QString::number( QWBFS::Driver::NoRegion ) ).toInt();
+	state = element.attribute( "state", QString::number( QWBFS::Driver::None ) ).toInt();
+	error = element.attribute( "error", QString::number( QWBFS::Driver::Ok ) ).toInt();
 }
 
 QDomDocument Disc::toDocument( const DiscList& discs )

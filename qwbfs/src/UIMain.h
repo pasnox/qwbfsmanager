@@ -18,9 +18,6 @@ class UIMain : public QMainWindow, public Ui::UIMain
 public:
 	UIMain( QWidget* parent = 0 );
 	virtual ~UIMain();
-	
-public slots:
-	void updatePartitions();
 
 protected:
 	QStringList mPartitions;
@@ -33,6 +30,7 @@ protected:
 protected slots:
 	void openViewRequested();
 	void closeViewRequested();
+	void on_aReloadPartitions_triggered();
 	void on_tvFolders_activated( const QModelIndex& index );
 	void on_tbClearExport_clicked();
 	void on_tbRemoveExport_clicked();

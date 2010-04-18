@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file>dialog-close.png</file>
+    <file>dialog-ok-apply.png</file>
+    <file>view-list-tree.png</file>
+    <file>document-export.png</file>
+    <file>document-import.png</file>
+    <file>edit-clear-list.png</file>
+    <file>edit-rename.png</file>
+    <file>list-add.png</file>
+    <file>list-remove.png</file>
+    <file>tools-media-optical-erase.png</file>
+    <file>view-list-details.png</file>
+    <file>view-refresh.png</file>
+  </qresource>
+</RCC>

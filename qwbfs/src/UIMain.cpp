@@ -5,6 +5,7 @@
 
 #include <QFileSystemModel>
 #include <QFileDialog>
+#include <QProcess>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -37,33 +38,20 @@ UIMain::UIMain( QWidget* parent )
 	pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
 	
-#ifdef Q_OS_UNIX
-	mFoldersModel->setRootPath( "/" );
-#else
+#ifdef Q_OS_WIN
 	mFoldersModel->setRootPath( "C:\\" );
+#else
+	mFoldersModel->setRootPath( "/" );
 #endif
 
 	on_tvFolders_activated( mFoldersModel->index( 0, 0 ) );
 	
-	updatePartitions();
+	aReloadPartitions->trigger();
 }
 
 UIMain::~UIMain()
 {
 	//qWarning() << Q_FUNC_INFO;
-}
-
-void UIMain::updatePartitions()
-{
-	mPartitions.clear();
-	
-	mPartitions << "/dev/sda4" << "/dev/sdg1" << "/dev/sdh1";
-	
-	const QList<PartitionWidget*> widgets = sViews->findChildren<PartitionWidget*>();
-	
-	foreach ( PartitionWidget* widget, widgets ) {
-		widget->setPartitions( mPartitions );
-	}
 }
 
 void UIMain::connectView( PartitionWidget* widget )
@@ -85,6 +73,40 @@ void UIMain::openViewRequested()
 void UIMain::closeViewRequested()
 {
 	sender()->deleteLater();
+}
+
+void UIMain::on_aReloadPartitions_triggered()
+{
+	mPartitions.clear();
+
+#ifdef Q_OS_UNIX
+	QProcess process;
+	process.start( "cat /proc/partitions" );
+	process.waitForFinished();
+	
+	const QStringList partitions = QString::fromLocal8Bit( process.readAll() ).split( "\n" );
+	
+	foreach ( QString partition, partitions ) {
+		if ( partition.startsWith( "major" ) || partition.isEmpty() ) {
+			continue;
+		}
+		
+		partition = partition.simplified().section( ' ', -1 );
+		
+		// skip disks
+		if ( !partition[ partition.size() -1 ].isDigit() ) {
+			continue;
+		}
+		
+		mPartitions << QString( "/dev/%1" ).arg( partition );
+	}
+#endif
+	
+	const QList<PartitionWidget*> widgets = sViews->findChildren<PartitionWidget*>();
+	
+	foreach ( PartitionWidget* widget, widgets ) {
+		widget->setPartitions( mPartitions );
+	}
 }
 
 void UIMain::on_tvFolders_activated( const QModelIndex& index )

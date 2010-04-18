@@ -39,12 +39,15 @@ public:
 	void insertDiscs( int index, const QWBFS::Model::DiscList& discs );
 	void addDiscs( const QWBFS::Model::DiscList& discs );
 	void setDiscs( const QWBFS::Model::DiscList& discs );
+	void setDisc( const QModelIndex& index, const QWBFS::Model::Disc& disc );
 	QWBFS::Model::DiscList discs() const;
 	QWBFS::Model::DiscList discs( const QModelIndexList& indexes );
 	QWBFS::Model::DiscList discs( const QItemSelection& selection );
 	QWBFS::Model::Disc disc( const QModelIndex& index ) const;
+	QModelIndex index( const QWBFS::Model::Disc& disc ) const;
 	QString discId( const QModelIndex& index ) const;
 	void removeSelection( const QItemSelection& selection );
+	void updateDisc( const QWBFS::Model::Disc& disc );
 	qint64 size() const;
 
 public slots:

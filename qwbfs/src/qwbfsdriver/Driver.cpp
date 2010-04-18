@@ -1,5 +1,6 @@
 #include "Driver.h"
-#include "qwbfsdriver/PartitionDiscHandle.h"
+#include "PartitionDiscHandle.h"
+#include "models/Disc.h"
 
 #include <libwbfs.h>
 
@@ -382,43 +383,30 @@ QString Driver::errorToString( QWBFS::Driver::Error error )
 	{
 		case Driver::Ok:
 			return tr( "No error." );
-			break;
 		case Driver::PartitionNotOpened:
 			return tr( "Partition not opened." );
-			break;
 		case Driver::SourcePartitionNotOpened:
 			return tr( "Source partition not opened." );
-			break;
 		case Driver::DiscReadFailed:
 			return tr( "Disc read failed." );
-			break;
 		case Driver::DiscWriteFailed:
 			return tr( "Disc write failed." );
-			break;
 		case Driver::DiscExtractFailed:
 			return tr( "Disc extract failed." );
-			break;
 		case Driver::DiscAddFailed:
 			return tr( "Disc add failed." );
-			break;
 		case Driver::DiscFound:
 			return tr( "Disc found." );
-			break;
 		case Driver::DiscNotFound:
 			return tr( "Disc not found (or not exists)." );
-			break;
 		case Driver::InvalidDiscIndex:
 			return tr( "Invalid disc index." );
-			break;
 		case Driver::InvalidDiscID:
 			return tr( "Invalid disc id." );
-			break;
 		case Driver::InvalidDisc:
 			return tr( "Invalid disc." );
-			break;
 		case Driver::CantDrive2Drive:
 			return tr( "Can't drive to drive copy." );
-			break;
 	}
 	
 	return QString::null;
@@ -430,19 +418,29 @@ QString Driver::regionToString( QWBFS::Driver::Region region )
 	{
 		case Driver::NTSC:
 			return tr( "NTSC" );
-			break;
-		case Driver::NTSCJ:
-			return tr( "NTSC JAPAN" );
-			break;
+		case Driver::NTSCJapan:
+			return tr( "NTSC Japan" );
 		case Driver::PAL:
 			return tr( "PAL" );
-			break;
-		case Driver::KOR:
-			return tr( "KOREAN" );
-			break;
-		case Driver::NOREGION:
-			return tr( "WORLD" );
-			break;
+		case Driver::Korean:
+			return tr( "Korean" );
+		case Driver::NoRegion:
+			return tr( "World" );
+	}
+	
+	return QString::null;
+}
+
+QString Driver::stateToString( QWBFS::Driver::State state )
+{
+	switch ( state )
+	{
+		case Driver::None:
+			return tr( "None" );
+		case Driver::Success:
+			return tr( "Success" );
+		case Driver::Failed:
+			return tr( "Failed" );
 	}
 	
 	return QString::null;
@@ -542,15 +540,15 @@ void Driver::discInfo( u8* header, QWBFS::Model::Disc& disc )
 			disc.region = Driver::PAL;
 			break;
 		case 'J':
-			disc.region = Driver::NTSCJ;
+			disc.region = Driver::NTSCJapan;
 			break;
 		case 'K':
 		case 'Q':
 		case 'T':
-			disc.region = Driver::KOR;
+			disc.region = Driver::Korean;
 			break;
 		default:
-			disc.region = Driver::NOREGION;
+			disc.region = Driver::NoRegion;
 	}
 
 	const int offset = 0x20;
