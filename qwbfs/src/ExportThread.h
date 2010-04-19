@@ -23,8 +23,12 @@ public:
 	ExportThread( QObject* parent = 0 );
 	virtual ~ExportThread();
 	
+	ExportThread::Task task() const;
+	
 	bool exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
 	bool importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
+	
+	static QString taskToString( ExportThread::Task task );
 
 public slots:
 	void stop();

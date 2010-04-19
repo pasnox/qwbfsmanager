@@ -75,6 +75,11 @@ void UIMain::closeViewRequested()
 	sender()->deleteLater();
 }
 
+void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
+{
+	mExportModel->updateDisc( disc );
+}
+
 void UIMain::on_aReloadPartitions_triggered()
 {
 	mPartitions.clear();
@@ -128,6 +133,10 @@ void UIMain::on_tbRemoveExport_clicked()
 
 void UIMain::on_tbExport_clicked()
 {
+	if ( mExportModel->rowCount() == 0 ) {
+		return;
+	}
+	
 	const QString path = QFileDialog::getExistingDirectory( this, tr( "Choose a folder to export the discs" ), QString::null );
 	
 	if ( path.isEmpty() ) {
@@ -135,5 +144,8 @@ void UIMain::on_tbExport_clicked()
 	}
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
+	
+	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
+	
 	dlg->exportDiscs( mExportModel->discs(), path );
 }

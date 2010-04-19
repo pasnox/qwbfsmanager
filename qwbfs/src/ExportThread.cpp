@@ -23,6 +23,12 @@ ExportThread::~ExportThread()
 	//qWarning() << Q_FUNC_INFO;
 }
 
+ExportThread::Task ExportThread::task() const
+{
+	QMutexLocker locker( &const_cast<ExportThread*>( this )->mMutex );
+	return mTask;
+}
+
 bool ExportThread::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )
 {
 	if ( isRunning() ) {
@@ -191,4 +197,17 @@ void ExportThread::importWorker()
 	if ( hc ) {
 		QWBFS::Driver::closeHandle( sph );
 	}
+}
+
+QString ExportThread::taskToString( ExportThread::Task task )
+{
+	switch ( task )
+	{
+		case ExportThread::Export:
+			return tr( "Extracting" );
+		case ExportThread::Import:
+			return tr( "Adding" );
+	}
+	
+	return QString::null;
 }

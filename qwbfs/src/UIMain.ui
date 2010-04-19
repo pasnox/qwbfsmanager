@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>653</width>
-    <height>367</height>
+    <width>651</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -172,6 +172,12 @@
            <property name="selectionMode">
             <enum>QAbstractItemView::ExtendedSelection</enum>
            </property>
+           <property name="verticalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <property name="horizontalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
            <property name="uniformItemSizes">
             <bool>true</bool>
            </property>
@@ -189,7 +195,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>653</width>
+     <width>651</width>
      <height>20</height>
     </rect>
    </property>

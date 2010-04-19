@@ -30,6 +30,7 @@ protected:
 protected slots:
 	void openViewRequested();
 	void closeViewRequested();
+	void progress_jobFinished( const QWBFS::Model::Disc& disc );
 	void on_aReloadPartitions_triggered();
 	void on_tvFolders_activated( const QModelIndex& index );
 	void on_tbClearExport_clicked();

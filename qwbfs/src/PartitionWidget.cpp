@@ -273,6 +273,7 @@ void PartitionWidget::on_tbImport_clicked()
 	}
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
+	
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
 	

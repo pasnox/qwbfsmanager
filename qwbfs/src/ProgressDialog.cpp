@@ -85,7 +85,9 @@ void ProgressDialog::thread_started()
 
 void ProgressDialog::thread_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	QString text = QString( "Adding '%1': %2 (%3)" )
+	
+	const QString text = QString( "%1 '%2': %3 (%4)" )
+		.arg( ExportThread::taskToString( mThread->task() ) )
 		.arg( disc.title )
 		.arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) )
 		.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
