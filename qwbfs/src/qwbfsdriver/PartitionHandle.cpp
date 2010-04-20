@@ -10,7 +10,7 @@ using namespace QWBFS::Partition::Internal;
 HandleData::HandleData( const QWBFS::Partition::Properties& _properties )
 {
 	properties = _properties;
-	handle = wbfs_try_open_partition( properties.partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
+	handle = _properties.partition.isEmpty() ? 0 : wbfs_try_open_partition( properties.partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
 	
 	if ( handle ) {
 		qWarning() << QString( "*** Opened partition: %1" ).arg( properties.partition ).toLocal8Bit().constData();

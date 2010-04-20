@@ -21,6 +21,9 @@
        <property name="toolTip">
         <string>Set the current partition</string>
        </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
