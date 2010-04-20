@@ -17,7 +17,7 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
-CONFIG	+= qt resources warn_on thread x11 windows embed_manifest_exe x86 ppc app_bundle
+CONFIG	+= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
 QT	= core gui xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
@@ -26,6 +26,8 @@ include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
 INCLUDEPATH	+= . src
+
+RESOURCES	+= resources/resources.qrc
 
 FORMS	+= src/UIMain.ui \
 	src/PartitionWidget.ui \
@@ -59,4 +61,3 @@ SOURCES	+= src/main.cpp \
 	src/models/DiscDelegate.cpp \
 	src/models/DiscModel.cpp \
 	src/qwbfsdriver/Driver.cpp
-RESOURCES	+= resources/resources.qrc

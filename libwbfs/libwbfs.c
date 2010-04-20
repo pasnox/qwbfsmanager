@@ -254,7 +254,7 @@ wbfs_disc_t *wbfs_open_disc(wbfs_t* p, u8 *discid)
 	}
 
 #ifdef WIN32
-		_set_errno(ENOENT);
+		//_set_errno(ENOENT);
 #endif
 	return 0;
 error:
@@ -262,7 +262,7 @@ error:
 			wbfs_iofree(d);
 		}
 #ifdef WIN32
-		_set_errno(ENOENT);
+		//_set_errno(ENOENT);
 #endif
 	return 0;
 	

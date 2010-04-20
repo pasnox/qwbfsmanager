@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <fcntl.h>
-#include <WinIoCtl.h>
+#include <winioctl.h>
 
 #include "libwbfs.h"
 
