@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include <fcntl.h>
+#include <WinIoCtl.h>
 
 #include "libwbfs.h"
 
@@ -80,7 +81,7 @@ int wbfs_read_wii_file(void *_handle, u32 _offset, u32 count, void *buf)
 	return 0;
 }
 
-int wbfs_write_wii_sector_file(void *_handle, u32 lba, u32 count, void *buf)
+int wbfs_write_wii_file(void *_handle, u32 lba, u32 count, void *buf)
 {
 	HANDLE *handle = (HANDLE *)_handle;
 	LARGE_INTEGER large;

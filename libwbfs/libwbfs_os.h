@@ -5,11 +5,7 @@
 // libwbfs_glue.h for segher tools env.
 
 // standard u8, u32 and co types, + fatal
-#ifdef WIN32
-#include <tools.h>
-#else
 #include "tools.h"
-#endif
 #include <stdio.h>
 
 #ifdef WIN32
@@ -31,7 +27,7 @@
 #define wbfs_iofree(x) free(x)
 
 #ifdef WIN32
-#include <winsock.h>
+#include <winsock2.h>
 #else
 #include <arpa/inet.h>
 #endif

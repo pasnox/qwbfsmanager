@@ -25,7 +25,7 @@ DESTDIR	= ../bin
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
-INCLUDEPATH	+= src
+INCLUDEPATH	+= . src
 
 FORMS	+= src/UIMain.ui \
 	src/PartitionWidget.ui \

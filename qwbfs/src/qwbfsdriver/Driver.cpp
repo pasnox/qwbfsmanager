@@ -301,7 +301,11 @@ int Driver::addDisc( const QString& discId, const QWBFS::Partition::Handle& sour
 		return Driver::DiscFound;
 	}
 	
-	if ( wbfs_add_disc( mHandle.ptr(), discRead_callback/*wbfs_disc_read*/, discHandle.ptr(), progressCallback, partitionSelection, 0 ) == 0 ) {
+	if ( wbfs_add_disc( mHandle.ptr(), discRead_callback/*wbfs_disc_read*/, discHandle.ptr(), progressCallback, partitionSelection, 0
+#ifdef Q_OS_WIN
+		, 0
+#endif
+		) == 0 ) {
 		return Driver::Ok;
 	}
 	
