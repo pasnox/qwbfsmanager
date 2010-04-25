@@ -17,7 +17,7 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
-CONFIG	+= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
+CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
 QT	= core gui xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
@@ -25,15 +25,15 @@ DESTDIR	= ../bin
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
-INCLUDEPATH	+= . src
+INCLUDEPATH	*= . src
 
-RESOURCES	+= resources/resources.qrc
+RESOURCES	*= resources/resources.qrc
 
-FORMS	+= src/UIMain.ui \
+FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
 	src/ProgressDialog.ui
 
-HEADERS	+= src/UIMain.h \
+HEADERS	*= src/UIMain.h \
 	src/Gauge.h \
 	src/PartitionWidget.h \
 	src/ProgressDialog.h \
@@ -47,7 +47,7 @@ HEADERS	+= src/UIMain.h \
 	src/models/DiscModel.h \
 	src/qwbfsdriver/Driver.h
 
-SOURCES	+= src/main.cpp \
+SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
 	src/Gauge.cpp \
 	src/PartitionWidget.cpp \

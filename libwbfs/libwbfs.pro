@@ -17,21 +17,21 @@
 TEMPLATE	= lib
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(wbfs)
-CONFIG	+= staticlib
+CONFIG	*= staticlib
 include(shared.pri)
 BUILD_PATH	= $${LIB_WBFS_BUILD_PATH}
 DESTDIR	= $${BUILD_PATH}
 
 include(../shared.pri)
 
-INCLUDEPATH	+= libwbfs
+INCLUDEPATH	*= libwbfs
 
-HEADERS	+= tools.h \
+HEADERS	*= tools.h \
 	wiidisc.h \
 	libwbfs_os.h \
 	libwbfs.h
 
-SOURCES	+= tools.c \
+SOURCES	*= tools.c \
 	ec.c \
 	bn.c \
 	rijndael.c \

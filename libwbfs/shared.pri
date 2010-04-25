@@ -14,15 +14,15 @@
 ##
 ###########################################################################################
 
-DEFINES += LARGE_FILES _FILE_OFFSET_BITS=64
+DEFINES *= LARGE_FILES _FILE_OFFSET_BITS=64
 LIB_WBFS_PWD	= $$PWD
 LIB_WBFS_BUILD_PATH	= $${LIB_WBFS_PWD}/../build
 
-INCLUDEPATH	+= $${LIB_WBFS_PWD}
-DEPENDPATH	+= $${LIB_WBFS_PWD}
+INCLUDEPATH	*= $${LIB_WBFS_PWD}
+DEPENDPATH	*= $${LIB_WBFS_PWD}
 
 win32 {
-	#DRIVE_DIR	= D: #$(HOME)/.wine/drive_c
+	#DRIVE_DIR	= $(HOME)/.wine/drive_c
 	DRIVE_DIR	= D:
 	#OPENSSL_INSTALL_DIR = $${DRIVE_DIR}/Development/OpenSSL
 	OPENSSL_INSTALL_DIR = $${DRIVE_DIR}/Developpement/OpenSSL

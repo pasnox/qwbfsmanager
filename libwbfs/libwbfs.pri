@@ -15,7 +15,7 @@
 ###########################################################################################
 
 include($$PWD/shared.pri)
-LIBS	*= -L$${LIB_WBFS_BUILD_PATH} #-lcrypto
+LIBS	*= -L$${LIB_WBFS_BUILD_PATH}
 
 CONFIG(debug, debug|release) {
 	#Debug
@@ -26,4 +26,5 @@ CONFIG(debug, debug|release) {
 	LIBS	*= -lwbfs
 }
 
-win32:LIBS	+= -lws2_32 -leay32
+win32:LIBS	*= -lws2_32 -leay32
+else:LIBS	*=	-lcrypto

@@ -14,11 +14,11 @@
 ##
 ###########################################################################################
 
-CONFIG	+= debug_and_release
+CONFIG	*= debug_and_release
 
 CONFIG(debug, debug|release) {
 	#Debug
-	CONFIG	+= console
+	CONFIG	*= console
 	unix:TARGET	= $$join(TARGET,,,_debug)
 	else:TARGET	= $$join(TARGET,,,d)
 	unix:OBJECTS_DIR	= $${BUILD_PATH}/debug/obj/unix
