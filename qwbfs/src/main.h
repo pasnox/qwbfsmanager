@@ -18,7 +18,6 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-
 #define APPLICATION_NAME "QWBFS Manager"
 #define APPLICATION_VERSION "1.0.0"
 #define APPLICATION_COPYRIGHTS "(C) 2010 Filipe AZEVEDO"
