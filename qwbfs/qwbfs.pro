@@ -17,6 +17,7 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
+mac:TARGET = $$quote(QWBFS Manager)
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
 QT	= core gui xml
 BUILD_PATH	= ../build
@@ -28,6 +29,7 @@ include( ../libwbfs/libwbfs.pri )
 INCLUDEPATH	*= . src
 
 RESOURCES	*= resources/resources.qrc
+mac:ICON = resources/qwbfs.icns
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \

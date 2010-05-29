@@ -12,5 +12,7 @@
     <file>tools-media-optical-erase.png</file>
     <file>view-list-details.png</file>
     <file>view-refresh.png</file>
+    <file>qwbfs.png</file>
+    <file>splashscreen.png</file>
   </qresource>
 </RCC>

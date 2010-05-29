@@ -18,20 +18,58 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-#include <QApplication>
+#include <QApplication>#include <QSplashScreen>
+#include <QWeakPointer>#include <QTimer>
 
-#include "src/UIMain.h"
+#include "src/UIMain.h"#define TIMEOUT 3000
+
+class SplashScreen : public QSplashScreen
+{
+	Q_OBJECT
+
+public:
+	SplashScreen( const QPixmap& pixmap )
+		: QSplashScreen( pixmap )
+	{
+		QFont font = this->font();		font.setPixelSize( 9 );
+		setFont( font );
+				showMessage( tr( "Version %1" ).arg( "1.0.0" ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
+		
+		show();
+		raise();
+	}
+	
+	void handle( QWidget* widget )
+	{
+		mWidget = widget;		QTimer::singleShot( TIMEOUT, this, SLOT( close() ) );
+	}
+
+protected:
+	QWeakPointer<QWidget> mWidget;
+	
+	virtual void hideEvent( QHideEvent* event )
+	{
+		QSplashScreen::hideEvent( event );
+		
+		if ( mWidget && !mWidget.data()->isVisible() )
+		{
+			mWidget.data()->showMaximized();
+			mWidget.data()->raise();
+		}
+	}
+};
 
 int main( int argc, char** argv )
 {
 	QApplication app( argc, argv );
 	app.setApplicationName( "QWBFS Manager" );
+	app.setWindowIcon( QIcon( ":/icons/qwbfs.png" ) );
 	
-	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
-	
+	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );		SplashScreen splash( QPixmap( ":/icons/splashscreen.png" ) );
 	UIMain w;
-	w.resize( 800, 600 );
-	w.show();
 	
+	splash.handle( &w );	
 	return app.exec();
 }
+
+#include "main.moc"
