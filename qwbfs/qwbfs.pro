@@ -17,7 +17,7 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
-mac:TARGET = $$quote(QWBFS Manager)
+mac:TARGET	= $$quote(QWBFS Manager)
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
 QT	= core gui xml
 BUILD_PATH	= ../build
@@ -29,13 +29,15 @@ include( ../libwbfs/libwbfs.pri )
 INCLUDEPATH	*= . src
 
 RESOURCES	*= resources/resources.qrc
-mac:ICON = resources/qwbfs.icns
+mac:ICON	= resources/qwbfs.icns
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
-	src/ProgressDialog.ui
+	src/ProgressDialog.ui \
+	src/UIAbout.ui
 
-HEADERS	*= src/UIMain.h \
+HEADERS	*= src/main.h \
+	src/UIMain.h \
 	src/Gauge.h \
 	src/PartitionWidget.h \
 	src/ProgressDialog.h \
@@ -47,7 +49,8 @@ HEADERS	*= src/UIMain.h \
 	src/models/Disc.h \
 	src/models/DiscDelegate.h \
 	src/models/DiscModel.h \
-	src/qwbfsdriver/Driver.h
+	src/qwbfsdriver/Driver.h \
+	src/UIAbout.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -62,4 +65,5 @@ SOURCES	*= src/main.cpp \
 	src/models/Disc.cpp \
 	src/models/DiscDelegate.cpp \
 	src/models/DiscModel.cpp \
-	src/qwbfsdriver/Driver.cpp
+	src/qwbfsdriver/Driver.cpp \
+	src/UIAbout.cpp

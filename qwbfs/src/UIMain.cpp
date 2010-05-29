@@ -19,6 +19,7 @@
 **
 ****************************************************************************/
 #include "UIMain.h"
+#include "UIAbout.h"
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
 #include "ProgressDialog.h"
@@ -132,6 +133,12 @@ void UIMain::on_aReloadPartitions_triggered()
 	foreach ( PartitionWidget* widget, widgets ) {
 		widget->setPartitions( mPartitions );
 	}
+}
+
+void UIMain::on_aAbout_triggered()
+{
+	UIAbout* about = new UIAbout( this );
+	about->open();
 }
 
 void UIMain::on_tvFolders_activated( const QModelIndex& index )

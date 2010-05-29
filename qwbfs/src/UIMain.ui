@@ -196,7 +196,7 @@
      <x>0</x>
      <y>0</y>
      <width>651</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuModule">
@@ -205,11 +205,26 @@
     </property>
     <addaction name="aReloadPartitions"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="aAbout"/>
+   </widget>
    <addaction name="menuModule"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="aReloadPartitions">
    <property name="text">
     <string>Reload partitions</string>
+   </property>
+  </action>
+  <action name="aAbout">
+   <property name="text">
+    <string>About...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
    </property>
   </action>
  </widget>

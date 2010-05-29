@@ -3,7 +3,7 @@
 ** 		Created using Monkey Studio v1.8.4.0b2 (1.8.4.0b2)
 ** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : qwbfs
-** FileName  : UIMain.h
+** FileName  : main.h
 ** Date      : 2010-04-25T13:05:33
 ** License   : GPL
 ** Home Page : http://code.google.com/p/qwbfs
@@ -18,45 +18,9 @@
 ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 ****************************************************************************/
-#ifndef UIMAIN_H
-#define UIMAIN_H
 
-#include "ui_UIMain.h"
-
-class QFileSystemModel;
-
-namespace QWBFS {
-namespace Model {
-	class DiscModel;
-}; // Model
-}; // QWBFS
-
-class UIMain : public QMainWindow, public Ui::UIMain
-{
-	Q_OBJECT
-
-public:
-	UIMain( QWidget* parent = 0 );
-	virtual ~UIMain();
-
-protected:
-	QStringList mPartitions;
-	QFileSystemModel* mFoldersModel;
-	QFileSystemModel* mFilesModel;
-	QWBFS::Model::DiscModel* mExportModel;
-	
-	void connectView( PartitionWidget* widget );
-
-protected slots:
-	void openViewRequested();
-	void closeViewRequested();
-	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void on_aReloadPartitions_triggered();
-	void on_aAbout_triggered();
-	void on_tvFolders_activated( const QModelIndex& index );
-	void on_tbClearExport_clicked();
-	void on_tbRemoveExport_clicked();
-	void on_tbExport_clicked();
-};
-
-#endif // UIMAIN_H
+#define APPLICATION_NAME "QWBFS Manager"
+#define APPLICATION_VERSION "1.0.0"
+#define APPLICATION_COPYRIGHTS "(C) 2010 Filipe AZEVEDO"
+#define APPLICATION_DESCRIPTION "The Free, Fast and Powerfull cross platform Wii Backup File System manager"
+#define APPLICATION_DOMAIN "http://code.google.com/p/qwbfs"

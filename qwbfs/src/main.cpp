@@ -21,7 +21,8 @@
 #include <QApplication>#include <QSplashScreen>
 #include <QWeakPointer>#include <QTimer>
 
-#include "src/UIMain.h"#define TIMEOUT 3000
+#include "main.h"
+#include "UIMain.h"#define TIMEOUT 3000
 
 class SplashScreen : public QSplashScreen
 {
@@ -33,7 +34,7 @@ public:
 	{
 		QFont font = this->font();		font.setPixelSize( 9 );
 		setFont( font );
-				showMessage( tr( "Version %1" ).arg( "1.0.0" ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
+				showMessage( tr( "Version %1" ).arg( APPLICATION_VERSION ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
 		
 		show();
 		raise();
