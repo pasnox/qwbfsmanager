@@ -215,6 +215,7 @@
    <addaction name="menuModule"/>
    <addaction name="menuHelp"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="aReloadPartitions">
    <property name="text">
     <string>Reload partitions</string>

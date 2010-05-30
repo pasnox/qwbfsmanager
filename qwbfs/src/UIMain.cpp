@@ -32,6 +32,7 @@
 UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
+	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
 	
 	mFoldersModel = new QFileSystemModel( this );
