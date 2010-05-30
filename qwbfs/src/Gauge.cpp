@@ -20,16 +20,25 @@
 ****************************************************************************/
 #include "Gauge.h"
 
+#include <QStyleFactory>
+#include <QStyleOptionProgressBarV2>
 #include <QPainter>
 #include <QDebug>
 
 Gauge::Gauge( QWidget* parent )
 	: QWidget( parent )
 {
+	setStyle( QStyleFactory::create( "plastique" ) );
+	
 	mSize = 0;
 	mUsedSize = 0;
 	mFreeSize = 0;
 	mTemporarySize = 0;
+	
+	mSize = 100;
+	mUsedSize = 40;
+	mFreeSize = 60;
+	mTemporarySize = 62;
 }
 
 Gauge::~Gauge()
@@ -108,62 +117,90 @@ void Gauge::paintEvent( QPaintEvent* event )
 		workingRect.setWidth( workingRect.width() -1 );
 	}
 	
-	// border
-	QRect borderRect = workingRect.adjusted( 0, 0, -1, -1 );
-	borderRect.setWidth( borderRect.width() /maxPercent *100.00 );
-	
-	painter.save();
-	painter.setPen( QColor( 0, 0, 0, 255 ) );
-	painter.setBrush( QColor( 255, 255, 255, 255 ) );
-	painter.drawRect( borderRect );
-	painter.restore();
+	// groove space
+	QRect grooveRect = workingRect;
+	grooveRect.setWidth( grooveRect.width() /maxPercent *100.00 );
 	
 	// used space
-	QRect usedRect = workingRect.adjusted( 1, 1, 0, -1 );
+	QRect usedRect = workingRect;
 	usedRect.setWidth( usedRect.width() /maxPercent *usedPercent );
 	
-	painter.save();
-	painter.setPen( Qt::NoPen );
-	painter.setBrush( QColor( 38, 125, 255, 180 ) );
-	painter.drawRect( usedRect );
-	painter.restore();
+	// overflow space
+	QRect overflowRect = workingRect;
+	overflowRect.moveLeft( usedRect.width() );
+	overflowRect.setWidth( overflowRect.width() /maxPercent *temporaryPercent );
 	
 	// extra space
-	QRect extraRect = workingRect.adjusted( 1, 1, 0, -1 );
-	extraRect.moveLeft( usedRect.width() +1 );
-	extraRect.setWidth( extraRect.width() /maxPercent *temporaryPercent );
+	QRect extraRect = workingRect;
+	extraRect.moveLeft( usedRect.width() );
+	extraRect.setWidth( extraRect.width() /maxPercent *qBound( 0.00, temporaryPercent, 100.00 -usedPercent ) );
 	
-	painter.save();
-	painter.setPen( Qt::NoPen );
-	painter.setBrush( QColor( 255, 46, 43, 180 ) );
-	painter.drawRect( extraRect );
-	painter.restore();
+	// painting
+	QStyleOptionProgressBarV2 option;
+	option.bottomToTop = false;
+	option.invertedAppearance = false;
+	option.orientation = Qt::Horizontal;
+	option.maximum = 100;
+	option.minimum = 0;
+	option.progress = 0;
+	option.text = QString::null;
+	option.textAlignment = Qt::AlignCenter;
+	option.textVisible = true;
+	option.direction = layoutDirection();
+	option.fontMetrics = QFontMetrics( font() );
+	option.palette = palette();
+	option.rect = grooveRect;
+	option.state = QStyle::State_None;
 	
-	// temporary space
-	QRect temporaryRect = workingRect.adjusted( 1, 1, 0, -1 );
-	temporaryRect.moveLeft( usedRect.width() +1 );
-	temporaryRect.setWidth( temporaryRect.width() /maxPercent *qBound( 0.00, temporaryPercent, 100.00 -usedPercent ) );
+	if ( isEnabled() ) {
+		option.state |= QStyle::State_Active;
+		option.state |= QStyle::State_Enabled;
+	}
 	
-	painter.save();
-	painter.setPen( Qt::NoPen );
-	painter.setBrush( QColor( 168, 255, 87, 255 ) );
-	painter.drawRect( temporaryRect );
-	painter.restore();
+	if ( hasFocus() ) {
+		option.state |= QStyle::State_HasFocus;
+	}
 	
-	// used space
-	const QString text = tr( "%1 (%2%) / %3 Used - %4 (%5%) Free" )
+	if ( option.orientation == Qt::Horizontal ) {
+		option.state |= QStyle::State_Horizontal;
+	}
+	
+	// overflow contents
+	option.progress = 100;
+	option.palette.setColor( QPalette::Highlight, QColor( 255, 181, 213, 255 ) );
+	option.rect = overflowRect;
+	
+	style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	
+	// progressbar groove
+	option.rect = grooveRect;
+	
+	style()->drawControl( QStyle::CE_ProgressBarGroove, &option, &painter, this );
+	
+	// extra space
+	option.progress = 100;
+	option.palette.setColor( QPalette::Highlight, QColor( 213, 255, 181, 255 ) );
+	option.rect = extraRect;
+	
+	style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	
+	// progressbar content
+	option.progress = usedPercent;
+	option.palette.setColor( QPalette::Highlight, palette().color( QPalette::Highlight ) );
+	option.rect = grooveRect;
+	
+	style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	
+	// progressbar text
+	option.rect = grooveRect;
+	option.text = tr( "%1 (%2%) / %3 Used - %4 (%5%) Free" )
 		.arg( fileSizeToString( used ) )
 		.arg( fileSizeAdaptString( available != 0 ? (double)used /available *100.00 : 0 ) )
 		.arg( fileSizeToString( available ) )
 		.arg( fileSizeToString( free ) )
 		.arg( fileSizeAdaptString( available != 0 ? (double)free /available *100.00 : 0 ) );
-	const int flags = Qt::AlignCenter | Qt::TextWordWrap;
 	
-	painter.save();
-	painter.setPen( QColor( 0, 0, 0, 255 ) );
-	painter.setBrush( Qt::NoBrush );
-	painter.drawText( borderRect, flags, text );
-	painter.restore();
+	style()->drawControl( QStyle::CE_ProgressBarLabel, &option, &painter, this );
 }
 
 QString Gauge::fileSizeAdaptString( double nb )
