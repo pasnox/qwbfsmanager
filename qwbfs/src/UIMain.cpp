@@ -36,10 +36,6 @@ UIMain::UIMain( QWidget* parent )
 	
 	mFoldersModel = new QFileSystemModel( this );
 	mFoldersModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
-	// OS X has buggy filesystemmodel - no mounted drives can be viewed, so let show hidden folders ( /Volumes ) so mount points are visible.
-#ifdef Q_OS_MAC
-	mFoldersModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden );
-#endif
 	
 	mFilesModel = new QFileSystemModel( this );
 	mFilesModel->setFilter( QDir::Files );
@@ -58,15 +54,7 @@ UIMain::UIMain( QWidget* parent )
 	pwMainView->setMainView( true );
 	pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
-	
-#ifdef Q_OS_WIN
-	mFoldersModel->setRootPath( "C:\\" );
-#else
-	mFoldersModel->setRootPath( "/" );
-#endif
-
-	on_tvFolders_activated( mFoldersModel->index( 0, 0 ) );
-	
+		tbReloadDrives->click();
 	aReloadPartitions->trigger();
 }
 
@@ -104,8 +92,25 @@ void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 void UIMain::on_aReloadPartitions_triggered()
 {
 	mPartitions.clear();
-
-#ifdef Q_OS_UNIX
+#if defined( Q_OS_MAC )	QProcess process;
+	process.start( "diskutil list" );
+	process.waitForFinished();
+	
+	const QStringList partitions = QString::fromLocal8Bit( process.readAll() ).split( "\n" );		foreach ( QString partition, partitions ) {		partition = partition.trimmed();		
+		if ( partition.startsWith( "/" ) || partition.startsWith( "#" ) || partition.isEmpty() ) {
+			continue;
+		}
+		
+		partition = partition.simplified().section( ' ', -1 );
+		
+		// skip disks
+		if ( partition[ partition.size() -2 ].toLower() != 's' ) {
+			continue;
+		}
+		
+		mPartitions << QString( "/dev/%1" ).arg( partition );
+	}
+#elif defined( Q_OS_UNIX )
 	QProcess process;
 	process.start( "cat /proc/partitions" );
 	process.waitForFinished();
@@ -133,7 +138,7 @@ void UIMain::on_aReloadPartitions_triggered()
 	foreach ( PartitionWidget* widget, widgets ) {
 		widget->setPartitions( mPartitions );
 	}
-}
+}void UIMain::on_aQuit_triggered(){	close();}
 
 void UIMain::on_aAbout_triggered()
 {
@@ -146,7 +151,9 @@ void UIMain::on_tvFolders_activated( const QModelIndex& index )
 	const QString filePath = mFoldersModel->filePath( index );
 	mFilesModel->setRootPath( filePath );
 	lvFiles->setRootIndex( mFilesModel->index( filePath ) );
-}
+}void UIMain::on_tbReloadDrives_clicked(){	const QString drive = cbDrives->currentText();	QFileInfoList drives = QDir::drives();		cbDrives->clear();	#if defined( Q_OS_WIN )#elif defined( Q_OS_MAC )	foreach ( const QFileInfo& fi, QDir( "/Volumes" ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {		if ( !drives.contains( fi ) ) {			drives << fi;		}	}#else#endif	foreach ( const QFileInfo& fi, drives ) {		cbDrives->addItem( fi.absoluteFilePath() );	}		if ( !drive.isEmpty() ) {		cbDrives->setCurrentIndex( cbDrives->findText( drive ) );	}}void UIMain::on_cbDrives_currentIndexChanged( const QString& text ){
+	mFoldersModel->setRootPath( text );	tvFolders->setRootIndex( mFoldersModel->index( text ) );
+	on_tvFolders_activated( tvFolders->rootIndex() );}
 
 void UIMain::on_tbClearExport_clicked()
 {

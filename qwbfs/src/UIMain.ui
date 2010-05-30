@@ -204,6 +204,7 @@
      <string>Module</string>
     </property>
     <addaction name="aReloadPartitions"/>
+    <addaction name="aQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -225,6 +226,14 @@
    </property>
    <property name="menuRole">
     <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="aQuit">
+   <property name="text">
+    <string>Quit...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
    </property>
   </action>
  </widget>
