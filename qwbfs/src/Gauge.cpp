@@ -34,11 +34,6 @@ Gauge::Gauge( QWidget* parent )
 	mUsedSize = 0;
 	mFreeSize = 0;
 	mTemporarySize = 0;
-	
-	mSize = 100;
-	mUsedSize = 40;
-	mFreeSize = 60;
-	mTemporarySize = 62;
 }
 
 Gauge::~Gauge()
@@ -57,7 +52,7 @@ QSize Gauge::minimumSizeHint() const
 
 void Gauge::setSize( qint64 value )
 {
-	mSize = value;
+	mSize = qMax( Q_INT64_C( 0 ), value );
 	update();
 }
 
@@ -68,7 +63,7 @@ qint64 Gauge::size() const
 
 void Gauge::setUsedSize( qint64 value )
 {
-	mUsedSize = value;
+	mUsedSize = qMax( Q_INT64_C( 0 ), value );
 	update();
 }
 
@@ -79,7 +74,7 @@ qint64 Gauge::usedSize() const
 
 void Gauge::setFreeSize( qint64 value )
 {
-	mFreeSize = value;
+	mFreeSize = qMax( Q_INT64_C( 0 ), value );
 	update();
 }
 
@@ -90,7 +85,7 @@ qint64 Gauge::freeSize() const
 
 void Gauge::setTemporarySize( qint64 value )
 {
-	mTemporarySize = value;
+	mTemporarySize = qMax( Q_INT64_C( 0 ), value );
 	update();
 }
 
@@ -102,55 +97,38 @@ qint64 Gauge::temporarySize() const
 void Gauge::paintEvent( QPaintEvent* event )
 {
 	Q_UNUSED( event );
-	QPainter painter( this );
-	const qint64 available = mSize;
-	const qint64 used = mUsedSize;
-	const qint64 free = mFreeSize;
-	const qint64 total = used +mTemporarySize;
-	const double usedPercent = available != 0 ? ( (double)used /available ) *100.00 : 0;
-	const double temporaryPercent = available != 0 ? ( (double)mTemporarySize /available ) *100.00 : 0;
-	const double neededPercent = available != 0 ? ( (double)total /available ) *100.00 : 0;
-	const double maxPercent = qMax( 100.00, neededPercent );
-	QRect workingRect = rect();
+	QPainter painter( this );	const qreal available = mSize;
+	const qreal used = mUsedSize;
+	const qreal free = mFreeSize;
+	const qreal max = used +mTemporarySize;
+	const qreal total = qMax( available, max );
+	const qreal cent = 100;
+	const int totalPercent = available != 0 ? total /available *cent : 0;
+	const int usedPercent = available != 0 ? used /available *cent : 0;
+	const int extraPercent = max != used && available != 0 ? qBound( (double)usedPercent, max /available *cent, cent ) : 0;
+	const int overflowPercent = max > available ? ( available != 0 ? max /available *cent : 0 ) : 0;
+	const int flags = Qt::AlignCenter | Qt::TextWordWrap;
 	
-	if ( workingRect.width() %2 != 0 ) {
-		workingRect.setWidth( workingRect.width() -1 );
-	}
-	
-	// groove space
-	QRect grooveRect = workingRect;
-	grooveRect.setWidth( grooveRect.width() /maxPercent *100.00 );
-	
-	// used space
-	QRect usedRect = workingRect;
-	usedRect.setWidth( usedRect.width() /maxPercent *usedPercent );
-	
-	// overflow space
-	QRect overflowRect = workingRect;
-	overflowRect.moveLeft( usedRect.width() );
-	overflowRect.setWidth( overflowRect.width() /maxPercent *temporaryPercent );
-	
-	// extra space
-	QRect extraRect = workingRect;
-	extraRect.moveLeft( usedRect.width() );
-	extraRect.setWidth( extraRect.width() /maxPercent *qBound( 0.00, temporaryPercent, 100.00 -usedPercent ) );
-	
-	// painting
 	QStyleOptionProgressBarV2 option;
 	option.bottomToTop = false;
 	option.invertedAppearance = false;
 	option.orientation = Qt::Horizontal;
-	option.maximum = 100;
+	option.maximum = totalPercent;
 	option.minimum = 0;
 	option.progress = 0;
-	option.text = QString::null;
+	option.text = option.text = tr( "Usage %1 (%2%) / %3 - Free %4 (%5%)" )
+		.arg( fileSizeToString( used ) )
+		.arg( fileSizeAdaptString( available != 0 ? used /available *cent : 0 ) )
+		.arg( fileSizeToString( available ) )
+		.arg( fileSizeToString( free ) )
+		.arg( fileSizeAdaptString( available != 0 ? free /available *cent : 0 ) );
 	option.textAlignment = Qt::AlignCenter;
 	option.textVisible = true;
 	option.direction = layoutDirection();
 	option.fontMetrics = QFontMetrics( font() );
 	option.palette = palette();
-	option.rect = grooveRect;
-	option.state = QStyle::State_None;
+	option.rect = rect();
+	option.state = QStyle::State_Horizontal;
 	
 	if ( isEnabled() ) {
 		option.state |= QStyle::State_Active;
@@ -161,46 +139,32 @@ void Gauge::paintEvent( QPaintEvent* event )
 		option.state |= QStyle::State_HasFocus;
 	}
 	
-	if ( option.orientation == Qt::Horizontal ) {
-		option.state |= QStyle::State_Horizontal;
-	}
-	
-	// overflow contents
-	option.progress = 100;
-	option.palette.setColor( QPalette::Highlight, QColor( 255, 181, 213, 255 ) );
-	option.rect = overflowRect;
-	
-	style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
-	
-	// progressbar groove
-	option.rect = grooveRect;
-	
+	// groove
 	style()->drawControl( QStyle::CE_ProgressBarGroove, &option, &painter, this );
 	
-	// extra space
-	option.progress = 100;
-	option.palette.setColor( QPalette::Highlight, QColor( 213, 255, 181, 255 ) );
-	option.rect = extraRect;
+	// overflow
+	if ( overflowPercent != 0 ) {
+		option.progress = overflowPercent;
+		option.palette.setColor( QPalette::Highlight, QColor( 255, 181, 213, 255 ) );
+		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	}
 	
-	style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	// extra
+	if ( extraPercent != 0 ) {
+		option.progress = extraPercent;
+		option.palette.setColor( QPalette::Highlight, QColor( 213, 255, 181, 255 ) );
+		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	}
 	
-	// progressbar content
-	option.progress = usedPercent;
-	option.palette.setColor( QPalette::Highlight, palette().color( QPalette::Highlight ) );
-	option.rect = grooveRect;
+	// used
+	if ( usedPercent != 0 ) {
+		option.progress = usedPercent;
+		option.palette.setColor( QPalette::Highlight, palette().color( QPalette::Highlight ) );
+		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
+	}
 	
-	style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
-	
-	// progressbar text
-	option.rect = grooveRect;
-	option.text = tr( "%1 (%2%) / %3 Used - %4 (%5%) Free" )
-		.arg( fileSizeToString( used ) )
-		.arg( fileSizeAdaptString( available != 0 ? (double)used /available *100.00 : 0 ) )
-		.arg( fileSizeToString( available ) )
-		.arg( fileSizeToString( free ) )
-		.arg( fileSizeAdaptString( available != 0 ? (double)free /available *100.00 : 0 ) );
-	
-	style()->drawControl( QStyle::CE_ProgressBarLabel, &option, &painter, this );
+	// text	painter.setPen( option.palette.color( QPalette::Text ) );	painter.setBrush( Qt::NoBrush );	painter.drawText( rect(), flags, option.text );
+	//style()->drawControl( QStyle::CE_ProgressBarLabel, &option, &painter, this );
 }
 
 QString Gauge::fileSizeAdaptString( double nb )
