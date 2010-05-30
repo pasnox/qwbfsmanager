@@ -80,13 +80,7 @@
      <property name="childrenCollapsible">
       <bool>false</bool>
      </property>
-     <widget class="QFrame" name="fWBFS">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
+     <widget class="QGroupBox" name="fWBFS">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -178,13 +172,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QFrame" name="fImport">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
+     <widget class="QGroupBox" name="fImport">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -300,12 +288,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>606</x>
-     <y>55</y>
+     <x>258</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>618</x>
-     <y>235</y>
+     <x>73</x>
+     <y>241</y>
     </hint>
    </hints>
   </connection>
