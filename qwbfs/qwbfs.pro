@@ -17,7 +17,7 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
-mac:TARGET	= $$quote(QWBFS Manager)
+mac:TARGET	= $$quote(QWBFSManager)
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
 QT	= core gui xml
 BUILD_PATH	= ../build

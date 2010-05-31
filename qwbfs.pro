@@ -4,7 +4,7 @@ XUPProjectSettings {
 	OTHERS_PLATFORM_TARGET_RELEASE	= bin/qwbfs
 	OTHERS_PLATFORM_TARGET_DEBUG	= bin/qwbfs_debug
 	WINDOWS_PLATFORM_TARGET_DEBUG	= bin/qwbfsd.exe
-	MAC_PLATFORM_TARGET_RELEASE	= bin/QWBFS Manager.app
+	MAC_PLATFORM_TARGET_RELEASE	= bin/QWBFSManager.app
 }
 
 TEMPLATE	= subdirs
