@@ -24,6 +24,8 @@
 
 #include <libwbfs.h>
 
+#include <ctime>
+
 #include <QDir>
 #include <QDebug>
 
