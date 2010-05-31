@@ -512,7 +512,7 @@ QWBFS::Partition::Handle Driver::getHandle( const QString& partition, bool* crea
 			handle = _handle;
 			
 			if ( created ) {
-				*created = false;
+				*created = true;
 			}
 		}
 	}
