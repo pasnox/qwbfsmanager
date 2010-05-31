@@ -23,10 +23,11 @@ DEPENDPATH	*= $${LIB_WBFS_PWD}
 
 win32 {
 	#DRIVE_DIR	= $(HOME)/.wine/drive_c
-	DRIVE_DIR	= D:
+	#DRIVE_DIR	= D:
 	#OPENSSL_INSTALL_DIR = $${DRIVE_DIR}/Development/OpenSSL
-	OPENSSL_INSTALL_DIR = $${DRIVE_DIR}/Developpement/OpenSSL
-	*-g++:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib/MinGW
-	*-msvc*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib/VC
+	#OPENSSL_INSTALL_DIR = $${DRIVE_DIR}/Developpement/OpenSSL
+	OPENSSL_INSTALL_DIR = $(HOME)/Win32Libraries
+	*-g++:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/MinGW
+	*-msvc*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/VC
 	INCLUDEPATH	*= $${OPENSSL_INSTALL_DIR}/include
 }
