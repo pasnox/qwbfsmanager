@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/icons">
+    <file>about-48.png</file>
+    <file>exit-48.png</file>
+    <file>reload-48.png</file>
     <file>dialog-close.png</file>
     <file>dialog-ok-apply.png</file>
     <file>view-list-tree.png</file>

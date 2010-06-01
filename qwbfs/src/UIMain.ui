@@ -7,11 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>651</width>
-    <height>365</height>
+    <height>369</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Qt WBFS Manager</string>
+   <string>QWBFS Manager</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -190,38 +199,35 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>651</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuModule">
-    <property name="title">
-     <string>Module</string>
-    </property>
-    <addaction name="aReloadPartitions"/>
-    <addaction name="aQuit"/>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="aAbout"/>
-   </widget>
-   <addaction name="menuModule"/>
-   <addaction name="menuHelp"/>
-  </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="aReloadPartitions"/>
+   <addaction name="aAbout"/>
+   <addaction name="aQuit"/>
+  </widget>
   <action name="aReloadPartitions">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icons/reload-48.png</normaloff>:/icons/reload-48.png</iconset>
+   </property>
    <property name="text">
     <string>Reload partitions</string>
    </property>
   </action>
   <action name="aAbout">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icons/about-48.png</normaloff>:/icons/about-48.png</iconset>
+   </property>
    <property name="text">
     <string>About...</string>
    </property>
@@ -230,6 +236,10 @@
    </property>
   </action>
   <action name="aQuit">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icons/exit-48.png</normaloff>:/icons/exit-48.png</iconset>
+   </property>
    <property name="text">
     <string>Quit...</string>
    </property>
