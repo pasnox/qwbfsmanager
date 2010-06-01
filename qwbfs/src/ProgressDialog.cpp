@@ -164,6 +164,9 @@ void ProgressDialog::updateSpace()
 	}
 	
 	rect.moveCenter( widget->mapToGlobal( widget->rect().center() ) );
+#if defined( Q_OS_MAC )
+	rect.moveTop( widget->mapToGlobal( widget->rect().topLeft() ).y() );
+#endif
 	resize( rect.size() );
 	move( rect.topLeft() );
 }
