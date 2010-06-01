@@ -93,7 +93,11 @@ void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 void UIMain::on_aReloadPartitions_triggered()
 {
 	mPartitions.clear();
-#if defined( Q_OS_MAC )	QProcess process;
+
+#if defined( Q_OS_WIN )
+	foreach ( const QFileInfo& drive, QDir::drives() ) {
+		mPartitions << drive.absoluteFilePath().remove( ":" ).remove( "/" ).remove( "\\" );
+	}#elif defined( Q_OS_MAC )	QProcess process;
 	process.start( "diskutil list" );
 	process.waitForFinished();
 	
@@ -111,7 +115,7 @@ void UIMain::on_aReloadPartitions_triggered()
 		
 		mPartitions << QString( "/dev/%1" ).arg( partition );
 	}
-#elif defined( Q_OS_UNIX )
+#else
 	QProcess process;
 	process.start( "cat /proc/partitions" );
 	process.waitForFinished();
