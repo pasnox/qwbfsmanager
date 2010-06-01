@@ -9,11 +9,11 @@
 #include <stdio.h>
 
 #ifdef WIN32
-#define wbfs_fatal fatal
+#define wbfs_fatal non_fatal
 #define wbfs_error non_fatal
 #define wbfs_warning non_fatal
 #else
-#define wbfs_fatal fatal
+#define wbfs_fatal non_fatal
 #define wbfs_error non_fatal
 #define wbfs_warning non_fatal
 #endif
