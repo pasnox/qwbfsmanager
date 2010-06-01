@@ -1,6 +1,6 @@
 XUPProjectSettings {
 	EDITOR	= QMake
-	QT_VERSION	= Windows cross-build
+	QT_VERSION	= Qt System (4.6.0)
 	OTHERS_PLATFORM_TARGET_RELEASE	= bin/qwbfs
 	OTHERS_PLATFORM_TARGET_DEBUG	= bin/qwbfs_debug
 	WINDOWS_PLATFORM_TARGET_DEBUG	= bin/qwbfsd.exe
