@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>430</width>
-    <height>490</height>
+    <width>424</width>
+    <height>482</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>424</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>About...</string>
@@ -47,12 +53,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
+     <property name="styleSheet">
+      <string notr="true">font: 14px;
+font-weight: bold;</string>
      </property>
     </widget>
    </item>
@@ -64,12 +67,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
+     <property name="styleSheet">
+      <string notr="true">font: 13px;
+font-weight: bold;</string>
      </property>
     </widget>
    </item>
@@ -81,10 +81,8 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
+     <property name="styleSheet">
+      <string notr="true">font: 11px;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -103,6 +101,9 @@
    </item>
    <item row="4" column="0" colspan="2">
     <widget class="QLabel" name="lCopyrights">
+     <property name="styleSheet">
+      <string notr="true">font: 11px;</string>
+     </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
@@ -117,6 +118,9 @@
    </item>
    <item row="5" column="0" colspan="2">
     <widget class="QLabel" name="lDomain">
+     <property name="styleSheet">
+      <string notr="true">font: 11px;</string>
+     </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
