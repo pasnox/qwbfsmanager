@@ -11,56 +11,58 @@
 
 #include "libwbfs.h"
 
-WCHAR* toLPCTSTR( const char* in )
+WCHAR* char2WCHAR( const char* in )
 {
-#ifdef UNICODE
-	const int needed = mbstowcs( 0, in, strlen( in ) +1 );
-	WCHAR* out = malloc( sizeof( wchar_t ) *needed +1 );
-	mbstowcs( out, in, strlen( in ) +1 );
+	const int length = strlen( in ) +1;
+	const int needed = mbstowcs( 0, in, length );
+	wchar_t out[ needed +1 ];
+	mbstowcs( out, in, length );
 	return out;
-#else
-	return in;
-#endif
 }
 
 void *wbfs_open_file_for_read(char*filename)
 {
-	HANDLE *handle = CreateFile(toLPCTSTR( filename ), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE *handle = CreateFile(char2WCHAR( filename ), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
 
 	if (handle == INVALID_HANDLE_VALUE)
-        {
+	{
 		fprintf(stderr, "unable to open disc file\n");
-                return 0;
-        }
-        return (void*)handle;
+		return 0;
+	}
+	return (void*)handle;
 }
+
 void *wbfs_open_file_for_write(char*filename)
 {
-	HANDLE *handle = CreateFile(toLPCTSTR( filename ), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW, 0, NULL);
+	HANDLE *handle = CreateFile(char2WCHAR( filename ), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW, 0, NULL);
 	if (handle == INVALID_HANDLE_VALUE)
-        {
+	{
 		fprintf(stderr, "unable to open file\n");
-                return 0;
-        }
-        return (void*)handle;
+		return 0;
+	}
+	return (void*)handle;
 }
+
 int wbfs_read_file(void*handle, int len, void *buf)
 {
-        DWORD read;
-        ReadFile((HANDLE)handle, buf, len, &read, NULL);
-        return read;
+	DWORD read;
+	ReadFile((HANDLE)handle, buf, len, &read, NULL);
+	return read;
 }
+
 void wbfs_close_file(void *handle)
 {
-        CloseHandle((HANDLE)handle);
+	CloseHandle((HANDLE)handle);
 }
+
 void wbfs_file_reserve_space(void*handle,long long size)
 {
-        LARGE_INTEGER large;
-        large.QuadPart = size;
-        SetFilePointerEx((HANDLE)handle, large, NULL, FILE_BEGIN);
-        SetEndOfFile((HANDLE)handle);
+	LARGE_INTEGER large;
+	large.QuadPart = size;
+	SetFilePointerEx((HANDLE)handle, large, NULL, FILE_BEGIN);
+	SetEndOfFile((HANDLE)handle);
 }
+
 int wbfs_read_wii_file(void *_handle, u32 _offset, u32 count, void *buf)
 {
 	HANDLE *handle = (HANDLE *)_handle;
@@ -191,7 +193,7 @@ static int get_capacity(char *fileName, u32 *sector_size, u32 *sector_count)
 	PARTITION_INFORMATION pi;
 
 	DWORD bytes;
-	HANDLE *handle = CreateFile(toLPCTSTR( fileName ), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+	HANDLE *handle = CreateFile(char2WCHAR( fileName ), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 
 	if (handle == INVALID_HANDLE_VALUE)
 	{
@@ -247,7 +249,7 @@ wbfs_t *wbfs_try_open_partition(char *partitionLetter, int reset)
 		return NULL;
 	}
 	
-	handle = CreateFile(toLPCTSTR( drivePath ), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+	handle = CreateFile(char2WCHAR( drivePath ), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 	
 	if (handle == INVALID_HANDLE_VALUE)
 	{
