@@ -103,10 +103,10 @@ void Gauge::paintEvent( QPaintEvent* event )
 	const qreal max = used +mTemporarySize;
 	const qreal total = qMax( available, max );
 	const qreal cent = 100;
-	const int totalPercent = available != 0 ? total /available *cent : 0;
-	const int usedPercent = available != 0 ? used /available *cent : 0;
-	const int extraPercent = max != used && available != 0 ? qBound( (double)usedPercent, max /available *cent, cent ) : 0;
-	const int overflowPercent = max > available ? ( available != 0 ? max /available *cent : 0 ) : 0;
+	const int totalPercent = available != 0 ? int( total /available *cent ) : 0;
+	const int usedPercent = available != 0 ? int( used /available *cent ) : 0;
+	const int extraPercent = max != used && available != 0 ? int( qBound( (double)usedPercent, max /available *cent, cent ) ) : 0;
+	const int overflowPercent = max > available ? int( available != 0 ? max /available *cent : 0 ) : 0;
 	const int flags = Qt::AlignCenter | Qt::TextWordWrap;
 	
 	QStyleOptionProgressBarV2 option;
