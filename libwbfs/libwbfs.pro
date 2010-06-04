@@ -21,6 +21,7 @@ CONFIG	*= staticlib
 include(shared.pri)
 BUILD_PATH	= $${LIB_WBFS_BUILD_PATH}
 DESTDIR	= $${BUILD_PATH}
+win32:DEFINES -= UNICODE
 
 include(../shared.pri)
 

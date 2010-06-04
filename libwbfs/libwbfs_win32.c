@@ -11,18 +11,9 @@
 
 #include "libwbfs.h"
 
-WCHAR* char2WCHAR( const char* in )
-{
-	const int length = strlen( in ) +1;
-	const int needed = mbstowcs( 0, in, length );
-	wchar_t out[ needed +1 ];
-	mbstowcs( out, in, length );
-	return out;
-}
-
 void *wbfs_open_file_for_read(char*filename)
 {
-	HANDLE *handle = CreateFile(char2WCHAR( filename ), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE *handle = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
 
 	if (handle == INVALID_HANDLE_VALUE)
 	{
@@ -34,7 +25,7 @@ void *wbfs_open_file_for_read(char*filename)
 
 void *wbfs_open_file_for_write(char*filename)
 {
-	HANDLE *handle = CreateFile(char2WCHAR( filename ), GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW, 0, NULL);
+	HANDLE *handle = CreateFile(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_NEW, 0, NULL);
 	if (handle == INVALID_HANDLE_VALUE)
 	{
 		fprintf(stderr, "unable to open file\n");
@@ -193,7 +184,7 @@ static int get_capacity(char *fileName, u32 *sector_size, u32 *sector_count)
 	PARTITION_INFORMATION pi;
 
 	DWORD bytes;
-	HANDLE *handle = CreateFile(char2WCHAR( fileName ), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+	HANDLE *handle = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 
 	if (handle == INVALID_HANDLE_VALUE)
 	{
@@ -249,7 +240,7 @@ wbfs_t *wbfs_try_open_partition(char *partitionLetter, int reset)
 		return NULL;
 	}
 	
-	handle = CreateFile(char2WCHAR( drivePath ), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+	handle = CreateFile(drivePath, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 	
 	if (handle == INVALID_HANDLE_VALUE)
 	{
