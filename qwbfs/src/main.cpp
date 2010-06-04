@@ -54,6 +54,7 @@ protected:
 		
 		if ( mWidget && !mWidget.data()->isVisible() )
 		{
+			mWidget.data()->show();
 			mWidget.data()->showMaximized();
 			mWidget.data()->raise();
 		}
