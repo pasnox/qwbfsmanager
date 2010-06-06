@@ -81,7 +81,7 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		QFontMetrics metrics( font );
 		rect = option.rect.adjusted( 40, 2, -10, -( metrics.height() -2 ) );
 		
-		text = QString( "%1 - %2 (%3)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( QWBFS::Driver::Region( disc.region ) ) );
+		text = QString( "%1 - %2 (%3 - %4)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( disc.region ) ).arg( QWBFS::Driver::regionToLanguageString( disc.region ) );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
 		painter->save();

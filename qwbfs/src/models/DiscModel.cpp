@@ -86,7 +86,7 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 			values << tr( "Title: %1" ).arg( disc.title );
 			values << tr( "Size: %1" ).arg( Gauge::fileSizeToString( disc.size ) );
 			values << tr( "Origin: %1" ).arg( disc.origin );
-			values << tr( "Region: %1" ).arg( QWBFS::Driver::regionToString( QWBFS::Driver::Region( disc.region ) ) );
+			values << tr( "Region: %1" ).arg( QWBFS::Driver::regionToString( disc.region ) );
 			values << tr( "State: %1" ).arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) );
 			values << tr( "Error: %1" ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
 			

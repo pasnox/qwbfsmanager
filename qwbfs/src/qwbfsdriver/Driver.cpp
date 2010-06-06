@@ -34,6 +34,8 @@ using namespace QWBFS;
 QMutex Driver::mMutex;
 bool Driver::mForce = false;
 QHash<QString, QWBFS::Partition::Handle> Driver::mHandles;
+QHash<int, QString> Driver::mLanguages;
+QHash<int, QString> Driver::mRegions;
 QWBFS::Driver* Driver::mCurrentDriver = 0;
 
 Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle )
@@ -42,6 +44,68 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 	mProperties = partitionHandle.properties();
 	mHandle = partitionHandle;
 	mHasCreatedHandle = false;
+	
+	if ( mRegions.isEmpty() && mLanguages.isEmpty() )
+	{
+		/*
+			ASCII Hex Region
+			A 41 All regions. System channels like the Mii channel use it.
+			D 44 German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past
+			E 45 USA and other NTSC regions except Japan
+			F 46 French-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
+			J 4A Japan
+			K 4B Korea
+			L 4C PAL/World?
+			P 50 Europe, Australia and other PAL regions
+			Q 51 Korea with Japanese language.
+			T 54 Korea with English language.
+			X 58 Not a real region code. Homebrew Channel uses it, though. 
+		*/
+		
+		// channel regions:
+		mRegions[ 'A' ] = QLatin1String( "World" );
+		mRegions[ 'D' ] = QLatin1String( "PAL" );
+		mRegions[ 'E' ] = QLatin1String( "NTSC-U" );
+		mRegions[ 'F' ] = QLatin1String( "PAL" );
+		mRegions[ 'J' ] = QLatin1String( "NTSC-J" );
+		mRegions[ 'K' ] = QLatin1String( "NTSC-K" );
+		mRegions[ 'L' ] = QLatin1String( "PAL-R" );
+		mRegions[ 'M' ] = QLatin1String( "PAL-R" );
+		mRegions[ 'N' ] = QLatin1String( "NTSC-T" );
+		mRegions[ 'P' ] = QLatin1String( "PAL" );
+		mRegions[ 'Q' ] = QLatin1String( "NTSC-T" );
+		mRegions[ 'T' ] = QLatin1String( "NTSC-T" );
+		// game regions:
+		mRegions[ 'H' ] = QLatin1String( "PAL" );
+		mRegions[ 'I' ] = QLatin1String( "PAL" );
+		mRegions[ 'S' ] = QLatin1String( "PAL" );
+		mRegions[ 'X' ] = QLatin1String( "PAL" );
+		mRegions[ 'Y' ] = QLatin1String( "PAL" );
+		mRegions[ 'W' ] = QLatin1String( "NTSC-J" );
+		mRegions[ 0 ] = QLatin1String( "NTSC-U" );
+		
+		// channel regions:
+		mLanguages[ 'A' ] = QLatin1String( "EN" ); // All regions. System channels like the Mii channel use it.
+		mLanguages[ 'D' ] = QLatin1String( "DE" ); // German-speaking regions.
+		mLanguages[ 'E' ] = QLatin1String( "US" ); // USA and other NTSC regions except Japan
+		mLanguages[ 'F' ] = QLatin1String( "FR" ); // French-speaking regions.
+		mLanguages[ 'J' ] = QLatin1String( "JA" ); // Japan
+		mLanguages[ 'K' ] = QLatin1String( "KO" ); // Korea
+		mLanguages[ 'L' ] = QLatin1String( "EN" ); // Japanese Import to Europe, Australia and other PAL regions
+		mLanguages[ 'M' ] = QLatin1String( "EN" ); // American Import to Europe, Australia and other PAL regions
+		mLanguages[ 'N' ] = QLatin1String( "JA" ); // Japanese Import to USA and other NTSC regions
+		mLanguages[ 'P' ] = QLatin1String( "EN" ); // Europe, Australia and other PAL regions
+		mLanguages[ 'Q' ] = QLatin1String( "KO" ); // Korea with Japanese language.
+		mLanguages[ 'T' ] = QLatin1String( "KO" ); // Korea with English language.
+		// game regions:
+		mLanguages[ 'H' ] = QLatin1String( "NL" ); // Netherlands
+		mLanguages[ 'I' ] = QLatin1String( "IT" ); // Italy
+		mLanguages[ 'S' ] = QLatin1String( "ES" ); // Spain
+		mLanguages[ 'X' ] = QLatin1String( "EN" );
+		mLanguages[ 'Y' ] = QLatin1String( "EN" );
+		mLanguages[ 'W' ] = QLatin1String( "ZH" );
+		mLanguages[ 0 ] = QLatin1String( "US" ); // Taiwan
+	}
 }
 
 Driver::~Driver()
@@ -405,8 +469,7 @@ bool Driver::isWBFSPartition( const QString& fileName )
 
 QString Driver::errorToString( QWBFS::Driver::Error error )
 {
-	switch ( error )
-	{
+	switch ( error ) {
 		case Driver::Ok:
 			return tr( "No error." );
 		case Driver::PartitionNotOpened:
@@ -438,29 +501,19 @@ QString Driver::errorToString( QWBFS::Driver::Error error )
 	return QString::null;
 }
 
-QString Driver::regionToString( QWBFS::Driver::Region region )
+QString Driver::regionToString( int region )
 {
-	switch ( region )
-	{
-		case Driver::NTSC:
-			return tr( "NTSC" );
-		case Driver::NTSCJapan:
-			return tr( "NTSC Japan" );
-		case Driver::PAL:
-			return tr( "PAL" );
-		case Driver::Korean:
-			return tr( "Korean" );
-		case Driver::NoRegion:
-			return tr( "World" );
-	}
-	
-	return QString::null;
+	return mRegions.value( region, mRegions.value( 0 ) );
+}
+
+QString Driver::regionToLanguageString( int region )
+{
+	return mLanguages.value( region, mLanguages.value( 0 ) );
 }
 
 QString Driver::stateToString( QWBFS::Driver::State state )
 {
-	switch ( state )
-	{
+	switch ( state ) {
 		case Driver::None:
 			return tr( "None" );
 		case Driver::Success:
@@ -540,48 +593,12 @@ int Driver::u8StrLength( u8* str )
 
 void Driver::discInfo( u8* header, QWBFS::Model::Disc& disc )
 {
-	/*
-		ASCII Hex Region
-		A 41 All regions. System channels like the Mii channel use it.
-		D 44 German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past
-		E 45 USA and other NTSC regions except Japan
-		F 46 French-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
-		J 4A Japan
-		K 4B Korea
-		L 4C PAL/World?
-		P 50 Europe, Australia and other PAL regions
-		Q 51 Korea with Japanese language.
-		T 54 Korea with English language.
-		X 58 Not a real region code. Homebrew Channel uses it, though. 
-	*/
-	
-	switch ( header[ 0x3 ] ) {
-		case 'E':
-			disc.region = Driver::NTSC;
-			break;
-		case 'P':
-		case 'F':
-		case 'L':
-		case 'D':
-			disc.region = Driver::PAL;
-			break;
-		case 'J':
-			disc.region = Driver::NTSCJapan;
-			break;
-		case 'K':
-		case 'Q':
-		case 'T':
-			disc.region = Driver::Korean;
-			break;
-		default:
-			disc.region = Driver::NoRegion;
-	}
-
 	const int offset = 0x20;
 	const int length = u8StrLength( header +offset );
 	
 	disc.id = QString::fromLocal8Bit( (const char*)header, 6 );
 	disc.title = QString::fromLocal8Bit( (const char*)header +offset, length );
+	disc.region = QChar( header[ 0x3 ] ).unicode();
 }
 
 int Driver::discRead_callback( void* fp, u32 lba, u32 count, void* iobuf )

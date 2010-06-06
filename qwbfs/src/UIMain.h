@@ -50,6 +50,7 @@ protected:
 protected slots:
 	void openViewRequested();
 	void closeViewRequested();
+	void coverRequested( const QString& id );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
 	void on_aReloadPartitions_triggered();
 	void on_aQuit_triggered();

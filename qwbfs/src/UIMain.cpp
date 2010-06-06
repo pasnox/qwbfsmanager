@@ -22,6 +22,7 @@
 #include "UIAbout.h"
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
+#include "wiitdb/Covers.h"
 #include "ProgressDialog.h"
 
 #include <QFileSystemModel>
@@ -68,6 +69,7 @@ void UIMain::connectView( PartitionWidget* widget )
 {
 	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
 	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
+	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
 }
 
 void UIMain::openViewRequested()
@@ -83,6 +85,35 @@ void UIMain::openViewRequested()
 void UIMain::closeViewRequested()
 {
 	sender()->deleteLater();
+}
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+void UIMain::coverRequested( const QString& id )
+{
+	QUrl url = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, id );
+	static QNetworkAccessManager* manager = new QNetworkAccessManager( this );
+	QNetworkReply* reply = manager->get( QNetworkRequest( url ) );
+	QPixmap pixmap;
+	
+	while ( !reply->isFinished() ) {
+		QApplication::processEvents();
+	}
+	
+	pixmap.loadFromData( reply->readAll() );
+	
+	if ( pixmap.isNull() ) {
+		url = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, id );
+		reply = manager->get( QNetworkRequest( url ) );
+		
+		while ( !reply->isFinished() ) {
+			QApplication::processEvents();
+		}
+	}
+	
+	pixmap.loadFromData( reply->readAll() );
+	
+	lCover->setPixmap( pixmap );
 }
 
 void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )

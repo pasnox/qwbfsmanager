@@ -47,6 +47,8 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	
 	connect( mDiscModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( mImportModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
+	connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( textChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( returnPressed() ), tbLoad, SLOT( click() ) );
 }
@@ -151,6 +153,17 @@ void PartitionWidget::models_countChanged()
 	/*if ( result != QWBFS::Driver::Ok ) {
 		showError( result );
 	}*/
+}
+
+void PartitionWidget::views_selectionChanged()
+{
+	const QItemSelectionModel* sm = qobject_cast<const QItemSelectionModel*>( sender() );
+	const QWBFS::Model::DiscModel* model = qobject_cast<const QWBFS::Model::DiscModel*>( sm->model() );
+	
+	foreach ( const QModelIndex& index, sm->selectedIndexes() ) {
+		const QString discId = model->discId( index );
+		emit coverRequested( discId );
+	}
 }
 
 void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )

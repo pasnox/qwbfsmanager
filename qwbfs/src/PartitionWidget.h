@@ -63,6 +63,7 @@ protected:
 
 protected slots:
 	void models_countChanged();
+	void views_selectionChanged();
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
 	void progress_finished();
 	
@@ -83,6 +84,7 @@ protected slots:
 signals:
 	void openViewRequested();
 	void closeViewRequested();
+	void coverRequested( const QString& id );
 };
 
 #endif // PARTITIONWIDGET_H

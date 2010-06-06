@@ -41,15 +41,6 @@ class Driver : public QObject
 	Q_OBJECT
 	
 public:
-	enum Region
-	{
-		NTSC = 0,
-		NTSCJapan,
-		PAL,
-		Korean,
-		NoRegion
-	};
-	
 	enum State
 	{
 		None = 0,
@@ -215,7 +206,13 @@ public:
 		\param region the region to represent.
 		\return return a QString representing the textual region.
 	*/
-	static QString regionToString( QWBFS::Driver::Region region );
+	static QString regionToString( int region );
+	/*!
+		\details return a string representation of the region language.
+		\param region the region language to represent.
+		\return return a QString representing the textual region language.
+	*/
+	static QString regionToLanguageString( int region );
 	/*!
 		\details return a string representation of the state.
 		\param state the state to represent.
@@ -248,6 +245,8 @@ protected:
 	static bool mForce;
 	static QWBFS::Driver* mCurrentDriver;
 	static QHash<QString, QWBFS::Partition::Handle> mHandles;
+	static QHash<int, QString> mLanguages;
+	static QHash<int, QString> mRegions;
 	
 	static int u8StrLength( u8* str );
 	static void discInfo( u8* header, QWBFS::Model::Disc& disc );

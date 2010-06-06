@@ -19,14 +19,20 @@ LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfs)
 mac:TARGET	= $$quote(QWBFSManager)
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
-QT	= core gui xml
+QT	= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
-INCLUDEPATH	*= . src
+INCLUDEPATH	+= . \
+	src
+DEPENDPATH	+= . \
+	src \
+	src/qwbfsdriver \
+	src/models \
+	src/WiiTDB
 
 RESOURCES	*= resources/resources.qrc
 mac:ICON	= resources/qwbfs.icns
@@ -50,7 +56,8 @@ HEADERS	*= src/main.h \
 	src/models/DiscDelegate.h \
 	src/models/DiscModel.h \
 	src/qwbfsdriver/Driver.h \
-	src/UIAbout.h
+	src/UIAbout.h \
+	src/wiitdb/Covers.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -66,4 +73,5 @@ SOURCES	*= src/main.cpp \
 	src/models/DiscDelegate.cpp \
 	src/models/DiscModel.cpp \
 	src/qwbfsdriver/Driver.cpp \
-	src/UIAbout.cpp
+	src/UIAbout.cpp \
+	src/wiitdb/Covers.cpp

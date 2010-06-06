@@ -60,7 +60,7 @@ void Disc::readFromElement( const QDomElement& element )
 	title = element.attribute( "title", QString::null );
 	size = element.attribute( "size", QString::number( 0 ) ).toUInt();
 	origin = element.attribute( "origin", QString::null );
-	region = element.attribute( "region", QString::number( QWBFS::Driver::NoRegion ) ).toInt();
+	region = element.attribute( "region", 0 ).toInt();
 	state = element.attribute( "state", QString::number( QWBFS::Driver::None ) ).toInt();
 	error = element.attribute( "error", QString::number( QWBFS::Driver::Ok ) ).toInt();
 }
