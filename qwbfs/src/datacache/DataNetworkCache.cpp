@@ -5,6 +5,12 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDebug>
+#include <QHash>
+
+uint qHash( const QUrl& url )
+{
+	return qHash( url.toString() );
+}
 
 DataNetworkCache::DataNetworkCache( QObject* parent )
 	: QObject( parent )
@@ -12,7 +18,7 @@ DataNetworkCache::DataNetworkCache( QObject* parent )
 	mManager = new QNetworkAccessManager( this );
 	mWorkingPath = QDir::tempPath();
 	mDiskCacheSize = 1024 *50; // 50 MB
-	mMemoryCacheSize = 1024 *50; // 50 MB
+	mMemoryCacheSize = 1024 *5; // 50 MB
 	mCache.setMaxCost( mMemoryCacheSize *1024 );
 	
 	connect( mManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( networkManager_finished( QNetworkReply* ) ) );

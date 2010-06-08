@@ -54,4 +54,6 @@ signals:
 	void invalidated();
 };
 
+uint qHash( const QUrl& url );
+
 #endif // DATANETWORKCACHE_H
