@@ -221,6 +221,12 @@
    <addaction name="aQuit"/>
   </widget>
   <widget class="QDockWidget" name="dwCovers">
+   <property name="minimumSize">
+    <size>
+     <width>184</width>
+     <height>107</height>
+    </size>
+   </property>
    <property name="windowTitle">
     <string>Covers</string>
    </property>
@@ -230,22 +236,7 @@
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QLabel" name="lCover">
-       <property name="minimumSize">
-        <size>
-         <width>180</width>
-         <height>180</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>180</width>
-         <height>180</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
+      <widget class="QLabel" name="lCDCover">
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
@@ -262,15 +253,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lInfos">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
+      <widget class="QLabel" name="lCover">
        <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
+        <set>Qt::AlignCenter</set>
        </property>
        <property name="openExternalLinks">
         <bool>true</bool>

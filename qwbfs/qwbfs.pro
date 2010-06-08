@@ -57,7 +57,8 @@ HEADERS	*= src/main.h \
 	src/models/DiscModel.h \
 	src/qwbfsdriver/Driver.h \
 	src/UIAbout.h \
-	src/wiitdb/Covers.h
+	src/wiitdb/Covers.h \
+	src/datacache/DataNetworkCache.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -74,4 +75,5 @@ SOURCES	*= src/main.cpp \
 	src/models/DiscModel.cpp \
 	src/qwbfsdriver/Driver.cpp \
 	src/UIAbout.cpp \
-	src/wiitdb/Covers.cpp
+	src/wiitdb/Covers.cpp \
+	src/datacache/DataNetworkCache.cpp

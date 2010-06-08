@@ -24,6 +24,7 @@
 #include "ui_UIMain.h"
 
 class QFileSystemModel;
+class DataNetworkCache;
 
 namespace QWBFS {
 namespace Model {
@@ -44,14 +45,20 @@ protected:
 	QFileSystemModel* mFoldersModel;
 	QFileSystemModel* mFilesModel;
 	QWBFS::Model::DiscModel* mExportModel;
+	DataNetworkCache* mCache;
+	QString mLastDiscId;
 	
 	void connectView( PartitionWidget* widget );
+	QPixmap cachedPixmap( const QUrl& url ) const;
 
 protected slots:
 	void openViewRequested();
 	void closeViewRequested();
 	void coverRequested( const QString& id );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
+	void dataNetworkCache_dataCached( const QUrl& url );
+	void dataNetworkCache_error( const QString& message );
+	void dataNetworkCache_invalidated();
 	void on_aReloadPartitions_triggered();
 	void on_aQuit_triggered();
 	void on_aAbout_triggered();

@@ -23,6 +23,7 @@
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
 #include "wiitdb/Covers.h"
+#include "datacache/DataNetworkCache.h"
 #include "ProgressDialog.h"
 
 #include <QFileSystemModel>
@@ -53,11 +54,19 @@ UIMain::UIMain( QWidget* parent )
 	lvExport->setModel( mExportModel );
 	lvExport->setItemDelegate( new QWBFS::Model::DiscDelegate( mExportModel ) );
 	
+	mCache = new DataNetworkCache( this );
+	
+	mLastDiscId = -1;
+	
 	pwMainView->setMainView( true );
 	pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
 		tbReloadDrives->click();
 	aReloadPartitions->trigger();
+	
+	connect( mCache, SIGNAL( dataCached( const QUrl& ) ), this, SLOT( dataNetworkCache_dataCached( const QUrl& ) ) );
+	connect( mCache, SIGNAL( error( const QString& ) ), this, SLOT( dataNetworkCache_error( const QString& ) ) );
+	connect( mCache, SIGNAL( invalidated() ), this, SLOT( dataNetworkCache_invalidated() ) );
 }
 
 UIMain::~UIMain()
@@ -70,6 +79,20 @@ void UIMain::connectView( PartitionWidget* widget )
 	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
 	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
 	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
+}
+
+QPixmap UIMain::cachedPixmap( const QUrl& url ) const
+{
+	const QByteArray* data = mCache->cachedData( url );
+	QPixmap pixmap;
+	
+	if ( !data ) {
+		return pixmap;
+	}
+	
+	pixmap.loadFromData( *data );
+	
+	return pixmap;
 }
 
 void UIMain::openViewRequested()
@@ -86,12 +109,30 @@ void UIMain::closeViewRequested()
 {
 	sender()->deleteLater();
 }
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
+
 void UIMain::coverRequested( const QString& id )
 {
-	QUrl url = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, id );
+	mLastDiscId = id;
+	
+	const QUrl urlCD = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, id );
+	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, id );
+	
+	lCDCover->clear();
+	lCover->clear();
+	
+	if ( mCache->hasCachedData( urlCD ) || mCache->hasCachedData( urlCover ) ) {
+		dataNetworkCache_dataCached( QUrl() );
+	}
+	
+	if ( !lCDCover->pixmap() ) {
+		mCache->cacheData( urlCD );
+	}
+	
+	if ( !lCover->pixmap() ) {
+		mCache->cacheData( urlCover );
+	}
+	
+	/*
 	static QNetworkAccessManager* manager = new QNetworkAccessManager( this );
 	QNetworkReply* reply = manager->get( QNetworkRequest( url ) );
 	QPixmap pixmap;
@@ -113,12 +154,42 @@ void UIMain::coverRequested( const QString& id )
 	
 	pixmap.loadFromData( reply->readAll() );
 	
-	lCover->setPixmap( pixmap );
+	lCover->setPixmap( pixmap );*/
 }
 
 void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 {
 	mExportModel->updateDisc( disc );
+}
+
+void UIMain::dataNetworkCache_dataCached( const QUrl& url )
+{
+	Q_UNUSED( url );
+	
+	if ( mLastDiscId.isEmpty() ) {
+		return;
+	}
+	
+	const QUrl urlCD = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, mLastDiscId );
+	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, mLastDiscId );
+	
+	if ( mCache->hasCachedData( urlCD ) ) {
+		lCDCover->setPixmap( cachedPixmap( urlCD ) );
+	}
+	
+	if ( mCache->hasCachedData( urlCover ) ) {
+		lCover->setPixmap( cachedPixmap( urlCover ) );
+	}
+}
+
+void UIMain::dataNetworkCache_error( const QString& message )
+{
+	qWarning() << message;
+}
+
+void UIMain::dataNetworkCache_invalidated()
+{
+	dataNetworkCache_dataCached( QUrl() );
 }
 
 void UIMain::on_aReloadPartitions_triggered()
