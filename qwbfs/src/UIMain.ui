@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>651</width>
-    <height>369</height>
+    <width>649</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -219,6 +219,7 @@
    <addaction name="aReloadPartitions"/>
    <addaction name="aAbout"/>
    <addaction name="aQuit"/>
+   <addaction name="aProperties"/>
   </widget>
   <widget class="QDockWidget" name="dwCovers">
    <property name="minimumSize">
@@ -296,6 +297,15 @@
    </property>
    <property name="menuRole">
     <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="aProperties">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icons/edit-rename.png</normaloff>:/icons/edit-rename.png</iconset>
+   </property>
+   <property name="text">
+    <string>Properties</string>
    </property>
   </action>
  </widget>

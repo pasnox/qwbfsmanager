@@ -23,3 +23,4 @@
 #define APPLICATION_COPYRIGHTS "(C) 2010 Filipe AZEVEDO"
 #define APPLICATION_DESCRIPTION "The Free, Fast and Powerfull cross platform Wii Backup File System manager"
 #define APPLICATION_DOMAIN "http://code.google.com/p/qwbfs"
+#define APPLICATION_ORGANIZATION "QWBFS Team"

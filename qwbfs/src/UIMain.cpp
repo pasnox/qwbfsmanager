@@ -25,6 +25,7 @@
 #include "wiitdb/Covers.h"
 #include "datacache/DataNetworkCache.h"
 #include "ProgressDialog.h"
+#include "PropertiesDialog.h"
 
 #include <QFileSystemModel>
 #include <QFileDialog>
@@ -251,6 +252,12 @@ void UIMain::on_aAbout_triggered()
 {
 	UIAbout* about = new UIAbout( this );
 	about->open();
+}
+
+void UIMain::on_aProperties_triggered()
+{
+	PropertiesDialog* dlg = new PropertiesDialog( this );
+	dlg->open();
 }
 
 void UIMain::on_tvFolders_activated( const QModelIndex& index )

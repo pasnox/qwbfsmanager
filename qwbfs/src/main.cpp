@@ -64,7 +64,9 @@ protected:
 int main( int argc, char** argv )
 {
 	QApplication app( argc, argv );
-	app.setApplicationName( "QWBFS Manager" );
+	app.setApplicationName( APPLICATION_NAME );
+	app.setOrganizationName( APPLICATION_ORGANIZATION );
+	app.setOrganizationDomain( APPLICATION_DOMAIN );
 	app.setWindowIcon( QIcon( ":/icons/qwbfs.png" ) );
 	
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );		SplashScreen splash( QPixmap( ":/icons/splashscreen.png" ) );

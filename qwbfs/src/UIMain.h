@@ -62,6 +62,7 @@ protected slots:
 	void on_aReloadPartitions_triggered();
 	void on_aQuit_triggered();
 	void on_aAbout_triggered();
+	void on_aProperties_triggered();
 	void on_tvFolders_activated( const QModelIndex& index );	void on_tbReloadDrives_clicked();	void on_cbDrives_currentIndexChanged( const QString& text );
 	void on_tbClearExport_clicked();
 	void on_tbRemoveExport_clicked();

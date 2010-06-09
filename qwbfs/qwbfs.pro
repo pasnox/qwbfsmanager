@@ -40,7 +40,8 @@ mac:ICON	= resources/qwbfs.icns
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
 	src/ProgressDialog.ui \
-	src/UIAbout.ui
+	src/UIAbout.ui \
+	src/PropertiesDialog.ui
 
 HEADERS	*= src/main.h \
 	src/UIMain.h \
@@ -58,7 +59,9 @@ HEADERS	*= src/main.h \
 	src/qwbfsdriver/Driver.h \
 	src/UIAbout.h \
 	src/wiitdb/Covers.h \
-	src/datacache/DataNetworkCache.h
+	src/datacache/DataNetworkCache.h \
+	src/PropertiesDialog.h \
+	src/Properties.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -76,4 +79,6 @@ SOURCES	*= src/main.cpp \
 	src/qwbfsdriver/Driver.cpp \
 	src/UIAbout.cpp \
 	src/wiitdb/Covers.cpp \
-	src/datacache/DataNetworkCache.cpp
+	src/datacache/DataNetworkCache.cpp \
+	src/PropertiesDialog.cpp \
+	src/Properties.cpp
