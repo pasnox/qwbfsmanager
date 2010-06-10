@@ -66,6 +66,8 @@ UIMain::UIMain( QWidget* parent )
 		tbReloadDrives->click();
 	aReloadPartitions->trigger();
 	
+	propertiesChanged();
+	
 	connect( mCache, SIGNAL( dataCached( const QUrl& ) ), this, SLOT( dataNetworkCache_dataCached( const QUrl& ) ) );
 	connect( mCache, SIGNAL( error( const QString& ) ), this, SLOT( dataNetworkCache_error( const QString& ) ) );
 	connect( mCache, SIGNAL( invalidated() ), this, SLOT( dataNetworkCache_invalidated() ) );

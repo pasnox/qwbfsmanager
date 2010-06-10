@@ -1,4 +1,5 @@
 #include "Properties.h"
+#include "datacache/DataNetworkCache.h"
 
 #include <QSettings>
 #include <QDir>
@@ -33,22 +34,22 @@ void Properties::setCacheWorkingPath( const QString& path )
 	mSettings->setValue( SETTINGS_CACHE_WORKING_PATH, path );
 }
 
-int Properties::cacheDiskSize() const
+qint64 Properties::cacheDiskSize() const
 {
-	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, 1024 *50 ).toInt();
+	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE ).value<qint64>();
 }
 
-void Properties::setCacheDiskSize( int sizeKb )
+void Properties::setCacheDiskSize( qint64 sizeKb )
 {
 	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeKb );
 }
 
-int Properties::cacheMemorySize() const
+qint64 Properties::cacheMemorySize() const
 {
-	return mSettings->value( SETTINGS_CACHE_MEMORY_SIZE, 1024 *5 ).toInt();
+	return mSettings->value( SETTINGS_CACHE_MEMORY_SIZE, DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE ).value<qint64>();
 }
 
-void Properties::setCacheMemorySize( int sizeKb )
+void Properties::setCacheMemorySize( qint64 sizeKb )
 {
 	mSettings->setValue( SETTINGS_CACHE_MEMORY_SIZE, sizeKb );
 }

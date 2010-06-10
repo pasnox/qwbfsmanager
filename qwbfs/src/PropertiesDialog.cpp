@@ -34,8 +34,8 @@ void PropertiesDialog::on_tbCachePath_clicked()
 void PropertiesDialog::accept()
 {
 	mProperties->setCacheWorkingPath( leCachePath->text() );
-	mProperties->setCacheDiskSize( sbCacheDiskSize->value() *1024 );
-	mProperties->setCacheMemorySize( sbCacheMemorySize->value() *1024 );
+	mProperties->setCacheDiskSize( Q_INT64_C( sbCacheDiskSize->value() *1024 ) );
+	mProperties->setCacheMemorySize( Q_INT64_C( sbCacheMemorySize->value() *1024 ) );
 	mProperties->setCacheUseTemporaryPath( cbCacheUseTemporary->isChecked() );
 	
 	QDialog::accept();

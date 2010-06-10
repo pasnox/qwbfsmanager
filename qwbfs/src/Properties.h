@@ -18,11 +18,11 @@ public:
 	QString cacheWorkingPath() const;
 	void setCacheWorkingPath( const QString& path );
 	
-	int cacheDiskSize() const;
-	void setCacheDiskSize( int sizeKb );
+	qint64 cacheDiskSize() const;
+	void setCacheDiskSize( qint64 sizeKb );
 	
-	int cacheMemorySize() const;
-	void setCacheMemorySize( int sizeKb );
+	qint64 cacheMemorySize() const;
+	void setCacheMemorySize( qint64 sizeKb );
 	
 	bool cacheUseTemporaryPath() const;
 	void setCacheUseTemporaryPath( bool useTemporary );

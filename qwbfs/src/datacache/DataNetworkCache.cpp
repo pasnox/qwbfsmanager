@@ -19,9 +19,11 @@ DataNetworkCache::DataNetworkCache( QObject* parent )
 {
 	mManager = new QNetworkAccessManager( this );
 	mWorkingPath = QDir::tempPath();
-	mDiskCacheSize = 1024 *50; // 50 MB
-	mMemoryCacheSize = 1024 *5; // 50 MB
-	mCache.setMaxCost( mMemoryCacheSize *1024 );
+	mDiskCacheSize = 0;
+	mMemoryCacheSize = 0;
+	
+	setDiskCacheSize( DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE );
+	setMemoryCacheSize( DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE );
 	
 	connect( mManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( networkManager_finished( QNetworkReply* ) ) );
 }
@@ -76,6 +78,8 @@ void DataNetworkCache::networkManager_finished( QNetworkReply* reply )
 
 void DataNetworkCache::clearMemory( bool emitSignal )
 {
+	mCache.clear();
+	
 	if ( emitSignal ) {
 		emit invalidated();
 	}
@@ -93,12 +97,12 @@ QString DataNetworkCache::workingPath() const
 	return mWorkingPath;
 }
 
-int DataNetworkCache::diskCacheSize() const
+qint64 DataNetworkCache::diskCacheSize() const
 {
 	return mDiskCacheSize;
 }
 
-int DataNetworkCache::memoryCacheSize() const
+qint64 DataNetworkCache::memoryCacheSize() const
 {
 	return mMemoryCacheSize;
 }
@@ -192,15 +196,15 @@ void DataNetworkCache::setWorkingPath( const QString& path )
 	mWorkingPath = path;
 }
 
-void DataNetworkCache::setDiskCacheSize( int sizeKb )
+void DataNetworkCache::setDiskCacheSize( qint64 sizeKb )
 {
 	mDiskCacheSize = sizeKb;
 	updateCacheRestrictions();
 }
 
-void DataNetworkCache::setMemoryCacheSize( int sizeKb )
+void DataNetworkCache::setMemoryCacheSize( qint64 sizeKb )
 {
-	mMemoryCacheSize = sizeKb;
+	mMemoryCacheSize = 0 ? DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE : sizeKb;
 	mCache.setMaxCost( mMemoryCacheSize *1024 );
 }
 

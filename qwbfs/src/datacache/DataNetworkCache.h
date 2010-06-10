@@ -7,6 +7,9 @@
 #include <QNetworkAccessManager>
 #include <QCache>
 
+#define DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE 1024 *50 // 50 MB
+#define DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE 1024 *5 // 5 MB
+
 class DataNetworkCache : public QObject
 {
 	Q_OBJECT
@@ -16,16 +19,16 @@ public:
 	virtual ~DataNetworkCache();
 	
 	QString workingPath() const;
-	int diskCacheSize() const;
-	int memoryCacheSize() const;
+	qint64 diskCacheSize() const;
+	qint64 memoryCacheSize() const;
 	bool hasCachedData( const QUrl& url ) const;
 	QByteArray* cachedData( const QUrl& url ) const;
 	QIODevice* cachedDataDevice( const QUrl& url ) const;
 
 public slots:
 	void setWorkingPath( const QString& path );
-	void setDiskCacheSize( int sizeKb );
-	void setMemoryCacheSize( int sizeKb );
+	void setDiskCacheSize( qint64 sizeKb );
+	void setMemoryCacheSize( qint64 sizeKb );
 	void cacheData( const QUrl& url );
 	void clear();
 	void clearMemory();
@@ -36,8 +39,8 @@ protected:
 	mutable QCache<uint, QByteArray> mCache;
 	QHash<uint,QNetworkReply*> mRequests;
 	QString mWorkingPath;
-	int mDiskCacheSize;
-	int mMemoryCacheSize;
+	qint64 mDiskCacheSize;
+	qint64 mMemoryCacheSize;
 	
 	QString localFilePath( uint key ) const;
 	QString localFilePath( const QUrl& url ) const;
