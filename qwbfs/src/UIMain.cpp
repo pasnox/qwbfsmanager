@@ -26,6 +26,7 @@
 #include "datacache/DataNetworkCache.h"
 #include "ProgressDialog.h"
 #include "PropertiesDialog.h"
+#include "Properties.h"
 
 #include <QFileSystemModel>
 #include <QFileDialog>
@@ -94,6 +95,15 @@ QPixmap UIMain::cachedPixmap( const QUrl& url ) const
 	pixmap.loadFromData( *data );
 	
 	return pixmap;
+}
+
+void UIMain::propertiesChanged()
+{
+	Properties properties( this );
+	
+	mCache->setDiskCacheSize( properties.cacheDiskSize() );
+	mCache->setMemoryCacheSize( properties.cacheMemorySize() );
+	mCache->setWorkingPath( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
 }
 
 void UIMain::openViewRequested()
@@ -257,6 +267,7 @@ void UIMain::on_aAbout_triggered()
 void UIMain::on_aProperties_triggered()
 {
 	PropertiesDialog* dlg = new PropertiesDialog( this );
+	connect( dlg, SIGNAL( propertiesChanged() ), this, SLOT( propertiesChanged() ) );
 	dlg->open();
 }
 

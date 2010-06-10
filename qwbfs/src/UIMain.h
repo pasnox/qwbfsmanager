@@ -52,6 +52,7 @@ protected:
 	QPixmap cachedPixmap( const QUrl& url ) const;
 
 protected slots:
+	void propertiesChanged();
 	void openViewRequested();
 	void closeViewRequested();
 	void coverRequested( const QString& id );

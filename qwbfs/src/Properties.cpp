@@ -18,14 +18,14 @@ Properties::~Properties()
 {
 }
 
-QString Properties::temporaryDirectory() const
+QString Properties::temporaryPath() const
 {
 	return QDir::tempPath();
 }
 
-QString Properties::workingPath() const
+QString Properties::cacheWorkingPath() const
 {
-	return mSettings->value( SETTINGS_CACHE_WORKING_PATH, temporaryDirectory() ).toString();
+	return mSettings->value( SETTINGS_CACHE_WORKING_PATH, temporaryPath() ).toString();
 }
 
 void Properties::setCacheWorkingPath( const QString& path )
@@ -33,32 +33,32 @@ void Properties::setCacheWorkingPath( const QString& path )
 	mSettings->setValue( SETTINGS_CACHE_WORKING_PATH, path );
 }
 
-int Properties::diskCacheSize() const
+int Properties::cacheDiskSize() const
 {
-	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, 1024 *50 ).toInt() *1024;
+	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, 1024 *50 ).toInt();
 }
 
-void Properties::setDiskCacheSize( int sizeKb )
+void Properties::setCacheDiskSize( int sizeKb )
 {
 	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeKb );
 }
 
-int Properties::memoryCacheSize() const
+int Properties::cacheMemorySize() const
 {
-	return mSettings->value( SETTINGS_CACHE_MEMORY_SIZE, 1024 *5 ).toInt() *1024;
+	return mSettings->value( SETTINGS_CACHE_MEMORY_SIZE, 1024 *5 ).toInt();
 }
 
-void Properties::setMemoryCacheSize( int sizeKb )
+void Properties::setCacheMemorySize( int sizeKb )
 {
 	mSettings->setValue( SETTINGS_CACHE_MEMORY_SIZE, sizeKb );
 }
 
-bool Properties::useTemporaryCachePath() const
+bool Properties::cacheUseTemporaryPath() const
 {
 	return mSettings->value( SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH, false ).toBool();
 }
 
-void Properties::setUseTemporaryCachePath( bool useTemporary )
+void Properties::setCacheUseTemporaryPath( bool useTemporary )
 {
 	mSettings->setValue( SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH, useTemporary );
 }

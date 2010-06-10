@@ -54,6 +54,8 @@ signals:
 	void invalidated();
 };
 
+#if QT_VERSION < 0x040700
 uint qHash( const QUrl& url );
+#endif
 
 #endif // DATANETWORKCACHE_H

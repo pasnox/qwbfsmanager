@@ -7,10 +7,12 @@
 #include <QDebug>
 #include <QHash>
 
+#if QT_VERSION < 0x040700
 uint qHash( const QUrl& url )
 {
 	return qHash( url.toString() );
 }
+#endif
 
 DataNetworkCache::DataNetworkCache( QObject* parent )
 	: QObject( parent )

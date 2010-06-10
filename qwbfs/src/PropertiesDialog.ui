@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>396</width>
+    <width>433</width>
     <height>296</height>
    </rect>
   </property>
@@ -88,6 +88,9 @@
          <property name="specialValueText">
           <string>Unlimited</string>
          </property>
+         <property name="suffix">
+          <string> MB</string>
+         </property>
          <property name="maximum">
           <number>999999999</number>
          </property>
@@ -121,6 +124,9 @@
          <property name="specialValueText">
           <string>Default</string>
          </property>
+         <property name="suffix">
+          <string> MB</string>
+         </property>
          <property name="maximum">
           <number>50</number>
          </property>
@@ -153,7 +159,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>283</x>
-     <y>364</y>
+     <y>295</y>
     </hint>
    </hints>
   </connection>
@@ -169,7 +175,23 @@
     </hint>
     <hint type="destinationlabel">
      <x>191</x>
-     <y>328</y>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbCacheUseTemporary</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>wCachePathContainer</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>81</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>367</x>
+     <y>57</y>
     </hint>
    </hints>
   </connection>

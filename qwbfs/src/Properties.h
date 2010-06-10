@@ -13,19 +13,19 @@ public:
 	Properties( QObject* parent = 0 );
 	virtual ~Properties();
 	
-	QString temporaryDirectory() const;
+	QString temporaryPath() const;
 	
-	QString workingPath() const;
+	QString cacheWorkingPath() const;
 	void setCacheWorkingPath( const QString& path );
 	
-	int diskCacheSize() const;
-	void setDiskCacheSize( int sizeKb );
+	int cacheDiskSize() const;
+	void setCacheDiskSize( int sizeKb );
 	
-	int memoryCacheSize() const;
-	void setMemoryCacheSize( int sizeKb );
+	int cacheMemorySize() const;
+	void setCacheMemorySize( int sizeKb );
 	
-	bool useTemporaryCachePath() const;
-	void setUseTemporaryCachePath( bool useTemporary );
+	bool cacheUseTemporaryPath() const;
+	void setCacheUseTemporaryPath( bool useTemporary );
 
 protected:
 	QSettings* mSettings;

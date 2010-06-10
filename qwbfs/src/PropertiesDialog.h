@@ -15,6 +15,13 @@ public:
 
 protected:
 	Properties* mProperties;
+
+protected slots:
+	void on_tbCachePath_clicked();
+	virtual void accept();
+
+signals:
+	void propertiesChanged();
 };
 
 #endif // PROPERTIESDIALOG_H
