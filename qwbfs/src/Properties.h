@@ -4,6 +4,7 @@
 #include <QObject>
 
 class QSettings;
+class UIMain;
 
 class Properties : public QObject
 {
@@ -26,6 +27,9 @@ public:
 	
 	bool cacheUseTemporaryPath() const;
 	void setCacheUseTemporaryPath( bool useTemporary );
+	
+	void restoreState( UIMain* window ) const;
+	void saveState( UIMain* window );
 
 protected:
 	QSettings* mSettings;

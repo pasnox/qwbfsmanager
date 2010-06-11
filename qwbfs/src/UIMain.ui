@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>649</width>
-    <height>367</height>
+    <width>647</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -202,10 +202,13 @@
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Main ToolBar</string>
    </property>
    <property name="movable">
     <bool>false</bool>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
    </property>
    <property name="floatable">
     <bool>false</bool>
@@ -216,16 +219,22 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="aProperties"/>
    <addaction name="aReloadPartitions"/>
    <addaction name="aAbout"/>
    <addaction name="aQuit"/>
-   <addaction name="aProperties"/>
   </widget>
   <widget class="QDockWidget" name="dwCovers">
    <property name="minimumSize">
     <size>
      <width>184</width>
      <height>107</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>184</width>
+     <height>16777215</height>
     </size>
    </property>
    <property name="windowTitle">

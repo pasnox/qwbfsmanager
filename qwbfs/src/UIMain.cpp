@@ -78,6 +78,27 @@ UIMain::~UIMain()
 	//qWarning() << Q_FUNC_INFO;
 }
 
+void UIMain::showEvent( QShowEvent* event )
+{
+	QMainWindow::showEvent( event );
+	
+	static bool shown = false;
+	
+	if ( !shown ) {
+		shown = true;
+		Properties properties;
+		properties.restoreState( this );
+	}
+}
+
+void UIMain::closeEvent( QCloseEvent* event )
+{
+	Properties properties;
+	properties.saveState( this );
+	
+	QMainWindow::closeEvent( event );
+}
+
 void UIMain::connectView( PartitionWidget* widget )
 {
 	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
@@ -144,30 +165,6 @@ void UIMain::coverRequested( const QString& id )
 	if ( !lCover->pixmap() ) {
 		mCache->cacheData( urlCover );
 	}
-	
-	/*
-	static QNetworkAccessManager* manager = new QNetworkAccessManager( this );
-	QNetworkReply* reply = manager->get( QNetworkRequest( url ) );
-	QPixmap pixmap;
-	
-	while ( !reply->isFinished() ) {
-		QApplication::processEvents();
-	}
-	
-	pixmap.loadFromData( reply->readAll() );
-	
-	if ( pixmap.isNull() ) {
-		url = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, id );
-		reply = manager->get( QNetworkRequest( url ) );
-		
-		while ( !reply->isFinished() ) {
-			QApplication::processEvents();
-		}
-	}
-	
-	pixmap.loadFromData( reply->readAll() );
-	
-	lCover->setPixmap( pixmap );*/
 }
 
 void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )

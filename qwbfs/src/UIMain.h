@@ -48,6 +48,9 @@ protected:
 	DataNetworkCache* mCache;
 	QString mLastDiscId;
 	
+	virtual void showEvent( QShowEvent* event );
+	virtual void closeEvent( QCloseEvent* event );
+	
 	void connectView( PartitionWidget* widget );
 	QPixmap cachedPixmap( const QUrl& url ) const;
 
