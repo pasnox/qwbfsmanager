@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>290</width>
-    <height>465</height>
+    <width>288</width>
+    <height>463</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -33,7 +33,16 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resources.qrc">
-         <normaloff>:/icons/view-refresh.png</normaloff>:/icons/view-refresh.png</iconset>
+         <normaloff>:/icons/256/read-partition.png</normaloff>:/icons/256/read-partition.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -44,7 +53,16 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resources.qrc">
-         <normaloff>:/icons/tools-media-optical-erase.png</normaloff>:/icons/tools-media-optical-erase.png</iconset>
+         <normaloff>:/icons/256/format.png</normaloff>:/icons/256/format.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -55,7 +73,16 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resources.qrc">
-         <normaloff>:/icons/list-add.png</normaloff>:/icons/list-add.png</iconset>
+         <normaloff>:/icons/256/add.png</normaloff>:/icons/256/add.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -66,7 +93,16 @@
        </property>
        <property name="icon">
         <iconset resource="../resources/resources.qrc">
-         <normaloff>:/icons/list-remove.png</normaloff>:/icons/list-remove.png</iconset>
+         <normaloff>:/icons/256/remove.png</normaloff>:/icons/256/remove.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -111,7 +147,16 @@
            </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/list-remove.png</normaloff>:/icons/list-remove.png</iconset>
+             <normaloff>:/icons/256/remove.png</normaloff>:/icons/256/remove.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -122,7 +167,16 @@
            </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/edit-rename.png</normaloff>:/icons/edit-rename.png</iconset>
+             <normaloff>:/icons/256/rename.png</normaloff>:/icons/256/rename.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -133,12 +187,21 @@
            </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/view-list-details.png</normaloff>:/icons/view-list-details.png</iconset>
+             <normaloff>:/icons/256/detailed.png</normaloff>:/icons/256/detailed.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
            </property>
            <property name="checkable">
             <bool>true</bool>
            </property>
            <property name="checked">
+            <bool>true</bool>
+           </property>
+           <property name="autoRaise">
             <bool>true</bool>
            </property>
           </widget>
@@ -203,7 +266,16 @@
            </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/edit-clear-list.png</normaloff>:/icons/edit-clear-list.png</iconset>
+             <normaloff>:/icons/256/clear.png</normaloff>:/icons/256/clear.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -214,7 +286,16 @@
            </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/list-remove.png</normaloff>:/icons/list-remove.png</iconset>
+             <normaloff>:/icons/256/remove.png</normaloff>:/icons/256/remove.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -225,7 +306,16 @@
            </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/document-import.png</normaloff>:/icons/document-import.png</iconset>
+             <normaloff>:/icons/256/import.png</normaloff>:/icons/256/import.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

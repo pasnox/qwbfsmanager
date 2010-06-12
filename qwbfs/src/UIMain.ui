@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>647</width>
-    <height>365</height>
+    <width>645</width>
+    <height>363</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,9 +15,15 @@
   </property>
   <property name="iconSize">
    <size>
-    <width>24</width>
-    <height>24</height>
+    <width>36</width>
+    <height>36</height>
    </size>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonTextUnderIcon</enum>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
   </property>
   <property name="unifiedTitleAndToolBarOnMac">
    <bool>true</bool>
@@ -35,6 +41,12 @@
    </layout>
   </widget>
   <widget class="QDockWidget" name="dwTools">
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
    <property name="windowTitle">
     <string>Tools</string>
    </property>
@@ -48,13 +60,16 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <property name="movable">
-        <bool>true</bool>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
        <widget class="QWidget" name="wFS">
         <attribute name="icon">
          <iconset resource="../resources/resources.qrc">
-          <normaloff>:/icons/view-list-tree.png</normaloff>:/icons/view-list-tree.png</iconset>
+          <normaloff>:/icons/256/tree.png</normaloff>:/icons/256/tree.png</iconset>
         </attribute>
         <attribute name="title">
          <string>File System</string>
@@ -65,9 +80,21 @@
          </item>
          <item row="0" column="1">
           <widget class="QToolButton" name="tbReloadDrives">
+           <property name="toolTip">
+            <string>Reload the mount points</string>
+           </property>
            <property name="icon">
             <iconset resource="../resources/resources.qrc">
-             <normaloff>:/icons/view-refresh.png</normaloff>:/icons/view-refresh.png</iconset>
+             <normaloff>:/icons/256/reload.png</normaloff>:/icons/256/reload.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>20</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -111,7 +138,7 @@
        <widget class="QWidget" name="wExport">
         <attribute name="icon">
          <iconset resource="../resources/resources.qrc">
-          <normaloff>:/icons/document-export.png</normaloff>:/icons/document-export.png</iconset>
+          <normaloff>:/icons/256/export.png</normaloff>:/icons/256/export.png</iconset>
         </attribute>
         <attribute name="title">
          <string>Export</string>
@@ -139,7 +166,16 @@
              </property>
              <property name="icon">
               <iconset resource="../resources/resources.qrc">
-               <normaloff>:/icons/edit-clear-list.png</normaloff>:/icons/edit-clear-list.png</iconset>
+               <normaloff>:/icons/256/clear.png</normaloff>:/icons/256/clear.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="autoRaise">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -150,7 +186,16 @@
              </property>
              <property name="icon">
               <iconset resource="../resources/resources.qrc">
-               <normaloff>:/icons/list-remove.png</normaloff>:/icons/list-remove.png</iconset>
+               <normaloff>:/icons/256/remove.png</normaloff>:/icons/256/remove.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="autoRaise">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -161,7 +206,16 @@
              </property>
              <property name="icon">
               <iconset resource="../resources/resources.qrc">
-               <normaloff>:/icons/document-export.png</normaloff>:/icons/document-export.png</iconset>
+               <normaloff>:/icons/256/export.png</normaloff>:/icons/256/export.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="autoRaise">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -207,9 +261,6 @@
    <property name="movable">
     <bool>false</bool>
    </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
-   </property>
    <property name="floatable">
     <bool>false</bool>
    </property>
@@ -234,8 +285,14 @@
    <property name="maximumSize">
     <size>
      <width>184</width>
-     <height>16777215</height>
+     <height>524287</height>
     </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Covers</string>
@@ -278,7 +335,7 @@
   <action name="aReloadPartitions">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/reload-48.png</normaloff>:/icons/reload-48.png</iconset>
+     <normaloff>:/icons/256/reload.png</normaloff>:/icons/256/reload.png</iconset>
    </property>
    <property name="text">
     <string>Reload partitions</string>
@@ -287,7 +344,7 @@
   <action name="aAbout">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/about-48.png</normaloff>:/icons/about-48.png</iconset>
+     <normaloff>:/icons/256/about.png</normaloff>:/icons/256/about.png</iconset>
    </property>
    <property name="text">
     <string>About...</string>
@@ -299,7 +356,7 @@
   <action name="aQuit">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/exit-48.png</normaloff>:/icons/exit-48.png</iconset>
+     <normaloff>:/icons/256/quit.png</normaloff>:/icons/256/quit.png</iconset>
    </property>
    <property name="text">
     <string>Quit...</string>
@@ -311,7 +368,7 @@
   <action name="aProperties">
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/edit-rename.png</normaloff>:/icons/edit-rename.png</iconset>
+     <normaloff>:/icons/256/properties.png</normaloff>:/icons/256/properties.png</iconset>
    </property>
    <property name="text">
     <string>Properties</string>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>431</width>
-    <height>294</height>
+    <width>429</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,13 +15,13 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="twPages">
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="wCache">
+     <widget class="QWidget" name="wCoversCache">
       <attribute name="title">
-       <string>Cache</string>
+       <string>Covers' Cache</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
@@ -42,8 +42,18 @@
           </item>
           <item>
            <widget class="QToolButton" name="tbCachePath">
-            <property name="text">
-             <string notr="true">...</string>
+            <property name="icon">
+             <iconset resource="../resources/resources.qrc">
+              <normaloff>:/icons/256/folder.png</normaloff>:/icons/256/folder.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="autoRaise">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -145,7 +155,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resources/resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>dbbButtons</sender>

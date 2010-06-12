@@ -275,7 +275,14 @@ void UIMain::on_tvFolders_activated( const QModelIndex& index )
 	const QString filePath = mFoldersModel->filePath( index );
 	mFilesModel->setRootPath( filePath );
 	lvFiles->setRootIndex( mFilesModel->index( filePath ) );
-}void UIMain::on_tbReloadDrives_clicked(){	const QString drive = cbDrives->currentText();	QFileInfoList drives = QDir::drives();		cbDrives->clear();	#if defined( Q_OS_WIN )#elif defined( Q_OS_MAC )	foreach ( const QFileInfo& fi, QDir( "/Volumes" ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {		if ( !drives.contains( fi ) ) {			drives << fi;		}	}#else#endif	foreach ( const QFileInfo& fi, drives ) {		cbDrives->addItem( fi.absoluteFilePath() );	}		if ( !drive.isEmpty() ) {		cbDrives->setCurrentIndex( cbDrives->findText( drive ) );	}}void UIMain::on_cbDrives_currentIndexChanged( const QString& text ){
+}void UIMain::on_tbReloadDrives_clicked(){	const QString drive = cbDrives->currentText();	QFileInfoList drives = QDir::drives();
+	QStringList pathsToScan;		cbDrives->clear();	#if defined( Q_OS_WIN )#elif defined( Q_OS_MAC )
+	pathsToScan << "/Volumes";#else
+	pathsToScan  << "/media" << "/mnt";#endif
+
+	foreach ( const QString& path, pathsToScan ) {
+		foreach ( const QFileInfo& fi, QDir( path ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {			if ( !drives.contains( fi ) ) {				drives << fi;			}		}
+	}	foreach ( const QFileInfo& fi, drives ) {		cbDrives->addItem( fi.absoluteFilePath() );	}		if ( !drive.isEmpty() ) {		cbDrives->setCurrentIndex( cbDrives->findText( drive ) );	}}void UIMain::on_cbDrives_currentIndexChanged( const QString& text ){
 	mFoldersModel->setRootPath( text );	tvFolders->setRootIndex( mFoldersModel->index( text ) );
 	on_tvFolders_activated( tvFolders->rootIndex() );}
 

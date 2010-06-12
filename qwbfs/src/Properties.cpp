@@ -72,16 +72,22 @@ void Properties::setCacheUseTemporaryPath( bool useTemporary )
 
 void Properties::restoreState( UIMain* window ) const
 {
-	const QByteArray geometry = mSettings->value( SETTINGS_WINDOW_GEOMETRY ).toByteArray();
+	const QRect geometry = mSettings->value( SETTINGS_WINDOW_GEOMETRY ).toRect();
 	const QByteArray state = mSettings->value( SETTINGS_WINDOW_STATE ).toByteArray();
 	
-	window->restoreGeometry( geometry );
+	if ( geometry.isNull() ) {
+		window->showMaximized();
+	}
+	else {
+		window->setGeometry( geometry );
+	}
+	
 	window->restoreState( state );
 }
 
 void Properties::saveState( UIMain* window )
 {
-	const QByteArray geometry = window->saveGeometry();
+	const QRect geometry = window->geometry();
 	const QByteArray state = window->saveState();
 	
 	mSettings->setValue( SETTINGS_WINDOW_GEOMETRY, geometry );

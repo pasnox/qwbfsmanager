@@ -281,6 +281,10 @@ void PartitionWidget::on_tbRenameDisc_clicked()
 	
 	const QString name = QInputDialog::getText( this, QString::null, tr( "Choose a new name for the disc" ), QLineEdit::Normal, disc.title );
 	
+	if ( name.isNull() ) {
+		return;
+	}
+	
 	if ( mDriver->renameDisc( disc.id, name ) == QWBFS::Driver::Ok ) {
 		mDiscModel->setData( index, name, Qt::DisplayRole );
 	}

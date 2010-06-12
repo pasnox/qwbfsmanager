@@ -1,21 +1,23 @@
 <RCC>
   <qresource prefix="/icons">
-    <file>about-48.png</file>
-    <file>exit-48.png</file>
-    <file>reload-48.png</file>
-    <file>dialog-close.png</file>
-    <file>dialog-ok-apply.png</file>
-    <file>view-list-tree.png</file>
-    <file>document-export.png</file>
-    <file>document-import.png</file>
-    <file>edit-clear-list.png</file>
-    <file>edit-rename.png</file>
-    <file>list-add.png</file>
-    <file>list-remove.png</file>
-    <file>tools-media-optical-erase.png</file>
-    <file>view-list-details.png</file>
-    <file>view-refresh.png</file>
+    <file>256/read-partition.png</file>
     <file>qwbfs.png</file>
     <file>splashscreen.png</file>
+    <file>256/folder.png</file>
+    <file>256/about.png</file>
+    <file>256/add.png</file>
+    <file>256/clear.png</file>
+    <file>256/detailed.png</file>
+    <file>256/error.png</file>
+    <file>256/export.png</file>
+    <file>256/format.png</file>
+    <file>256/import.png</file>
+    <file>256/properties.png</file>
+    <file>256/quit.png</file>
+    <file>256/reload.png</file>
+    <file>256/remove.png</file>
+    <file>256/rename.png</file>
+    <file>256/success.png</file>
+    <file>256/tree.png</file>
   </qresource>
 </RCC>
