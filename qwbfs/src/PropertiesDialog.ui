@@ -42,6 +42,9 @@
           </item>
           <item>
            <widget class="QToolButton" name="tbCachePath">
+            <property name="toolTip">
+             <string>Browse for a folder</string>
+            </property>
             <property name="icon">
              <iconset resource="../resources/resources.qrc">
               <normaloff>:/icons/256/folder.png</normaloff>:/icons/256/folder.png</iconset>

@@ -26,9 +26,9 @@ DESTDIR	= ../bin
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
-INCLUDEPATH	+= . \
+INCLUDEPATH	*= . \
 	src
-DEPENDPATH	+= . \
+DEPENDPATH	*= . \
 	src \
 	src/qwbfsdriver \
 	src/models \
@@ -36,6 +36,7 @@ DEPENDPATH	+= . \
 
 RESOURCES	*= resources/resources.qrc
 mac:ICON	= resources/qwbfs.icns
+win32:RC_FILE	*= resources/qwbfs.rc
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
