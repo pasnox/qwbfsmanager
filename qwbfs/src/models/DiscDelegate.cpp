@@ -113,7 +113,7 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	
 	// status/error
 	{
-		QPixmap pixmap( disc.state == QWBFS::Driver::Success ? ":/icons/dialog-ok-apply.png" : ":/icons/dialog-close.png" );
+		QPixmap pixmap( disc.state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png" );
 		
 		rect = option.rect;
 		rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );

@@ -227,7 +227,7 @@ void UIMain::on_aReloadPartitions_triggered()
 		
 		mPartitions << QString( "/dev/%1" ).arg( partition );
 	}
-#else
+#elif defined( __linux__ )
 	QProcess process;
 	process.start( "cat /proc/partitions" );
 	process.waitForFinished();
@@ -248,6 +248,9 @@ void UIMain::on_aReloadPartitions_triggered()
 		
 		mPartitions << QString( "/dev/%1" ).arg( partition );
 	}
+#else
+	Q_ASSERT( 0 );
+	qFatal( "Don't know how to list partitions for this platform." );
 #endif
 	
 	const QList<PartitionWidget*> widgets = sViews->findChildren<PartitionWidget*>();
