@@ -134,6 +134,14 @@ void UIMain::propertiesChanged()
 	mCache->setDiskCacheSize( properties.cacheDiskSize() );
 	mCache->setMemoryCacheSize( properties.cacheMemorySize() );
 	mCache->setWorkingPath( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
+	
+	QNetworkProxy proxy( properties.proxyType() );
+	proxy.setHostName( properties.proxyServer() );
+	proxy.setPort( properties.proxyPort() );
+	proxy.setUser( properties.proxyLogin() );
+	proxy.setPassword( properties.proxyPassword() );
+	
+	QNetworkProxy::setApplicationProxy( proxy );
 }
 
 void UIMain::openViewRequested()

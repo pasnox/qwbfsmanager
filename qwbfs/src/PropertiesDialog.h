@@ -18,6 +18,7 @@ protected:
 
 protected slots:
 	void on_tbCachePath_clicked();
+	void on_cbProxyType_currentIndexChanged( int index );
 	virtual void accept();
 
 signals:
