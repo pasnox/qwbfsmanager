@@ -12,6 +12,7 @@ class Covers
 public:
 	enum Type
 	{
+		Invalid,
 		HQ,
 		Cover,
 		_3D,
@@ -21,6 +22,7 @@ public:
 	};
 	
 	Covers( const QString& id );
+	Covers( const QUrl& url );
 	virtual ~Covers();
 
 	Covers( const Covers& other );
@@ -30,6 +32,7 @@ public:
 	
 	QUrl url( Type type ) const;
 	static QUrl url( Type type, const QString& id );
+	static Type type( const QUrl& url );
 
 protected:
 	QString mId;

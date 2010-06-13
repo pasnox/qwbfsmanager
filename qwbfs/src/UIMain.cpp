@@ -70,7 +70,7 @@ UIMain::UIMain( QWidget* parent )
 	propertiesChanged();
 	
 	connect( mCache, SIGNAL( dataCached( const QUrl& ) ), this, SLOT( dataNetworkCache_dataCached( const QUrl& ) ) );
-	connect( mCache, SIGNAL( error( const QString& ) ), this, SLOT( dataNetworkCache_error( const QString& ) ) );
+	connect( mCache, SIGNAL( error( const QString&, const QUrl& ) ), this, SLOT( dataNetworkCache_error( const QString&, const QUrl& ) ) );
 	connect( mCache, SIGNAL( invalidated() ), this, SLOT( dataNetworkCache_invalidated() ) );
 }
 
@@ -150,12 +150,13 @@ void UIMain::coverRequested( const QString& id )
 	mLastDiscId = id;
 	
 	const QUrl urlCD = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, id );
+	const QUrl urlCDCustom = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, id );
 	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, id );
 	
 	lCDCover->clear();
 	lCover->clear();
 	
-	if ( mCache->hasCachedData( urlCD ) || mCache->hasCachedData( urlCover ) ) {
+	if ( mCache->hasCachedData( urlCD ) || mCache->hasCachedData( urlCDCustom ) || mCache->hasCachedData( urlCover ) ) {
 		dataNetworkCache_dataCached( QUrl() );
 	}
 	
@@ -182,10 +183,15 @@ void UIMain::dataNetworkCache_dataCached( const QUrl& url )
 	}
 	
 	const QUrl urlCD = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, mLastDiscId );
+	const QUrl urlCDCustom = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, mLastDiscId );
 	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, mLastDiscId );
 	
 	if ( mCache->hasCachedData( urlCD ) ) {
 		lCDCover->setPixmap( cachedPixmap( urlCD ) );
+	}
+	
+	if ( mCache->hasCachedData( urlCDCustom ) ) {
+		lCDCover->setPixmap( cachedPixmap( urlCDCustom ) );
 	}
 	
 	if ( mCache->hasCachedData( urlCover ) ) {
@@ -193,9 +199,23 @@ void UIMain::dataNetworkCache_dataCached( const QUrl& url )
 	}
 }
 
-void UIMain::dataNetworkCache_error( const QString& message )
+void UIMain::dataNetworkCache_error( const QString& message, const QUrl& url )
 {
-	qWarning() << message;
+	switch ( QWBFS::WiiTDB::Covers::type( url ) )
+	{
+		case QWBFS::WiiTDB::Covers::Disc:
+			mCache->cacheData( QWBFS::WiiTDB::Covers( url ).url( QWBFS::WiiTDB::Covers::DiscCustom ) );
+			return;
+		case QWBFS::WiiTDB::Covers::HQ:
+		case QWBFS::WiiTDB::Covers::Cover:
+		case QWBFS::WiiTDB::Covers::_3D:
+		case QWBFS::WiiTDB::Covers::DiscCustom:
+		case QWBFS::WiiTDB::Covers::Full:
+		case QWBFS::WiiTDB::Covers::Invalid:
+			break;
+	}
+	
+	QMessageBox::information( this, QString::null, message );
 }
 
 void UIMain::dataNetworkCache_invalidated()

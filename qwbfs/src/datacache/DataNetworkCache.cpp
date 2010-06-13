@@ -25,7 +25,10 @@ DataNetworkCache::DataNetworkCache( QObject* parent )
 	setDiskCacheSize( DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE );
 	setMemoryCacheSize( DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE );
 	
+	connect( mManager, SIGNAL( authenticationRequired( QNetworkReply*, QAuthenticator* ) ), this, SLOT( networkManager_authenticationRequired( QNetworkReply*, QAuthenticator* ) ) );
 	connect( mManager, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( networkManager_finished( QNetworkReply* ) ) );
+	connect( mManager, SIGNAL( proxyAuthenticationRequired( const QNetworkProxy&, QAuthenticator* ) ), this, SLOT( networkManager_proxyAuthenticationRequired( const QNetworkProxy&, QAuthenticator* ) ) );
+	connect( mManager, SIGNAL( sslErrors( QNetworkReply*, const QList<QSslError>& ) ), this, SLOT( networkManager_sslErrors( QNetworkReply*, const QList<QSslError>& ) ) );
 }
 
 DataNetworkCache::~DataNetworkCache()
@@ -47,33 +50,50 @@ void DataNetworkCache::updateCacheRestrictions()
 	//
 }
 
+void DataNetworkCache::networkManager_authenticationRequired( QNetworkReply* reply, QAuthenticator* authenticator )
+{
+	qWarning() << Q_FUNC_INFO;
+}
+
 void DataNetworkCache::networkManager_finished( QNetworkReply* reply )
 {
 	const QUrl url = reply->url();
 	const uint key = qHash( url );
+	const int code = reply->attribute( QNetworkRequest::HttpStatusCodeAttribute ).toInt();
 	
 	mRequests.remove( key );
 	reply->deleteLater();
 	
-	if ( reply->error() != QNetworkReply::NoError ) {
-		emit error( tr( "Error when downloading the file '%1'." ).arg( url.toString() ) );
+	if ( reply->error() != QNetworkReply::NoError || code != 200 ) {
+		emit error( tr( "Error when downloading the file '%1'." ).arg( url.toString() ), url );
 		return;
 	}
 	
 	QFile file( localFilePath( key ) );
 	
 	if ( !file.open( QIODevice::WriteOnly ) ) {
-		emit error( tr( "Error when creating the cache for file '%1'" ).arg( url.toString() ) );
+		emit error( tr( "Error when creating the cache for file '%1'" ).arg( url.toString() ), url );
 		return;
 	}
 	
 	if ( file.write( reply->readAll() ) == -1 ) {
-		emit error( tr( "Error when writing the cache for file '%1'" ).arg( url.toString() ) );
+		emit error( tr( "Error when writing the cache for file '%1'" ).arg( url.toString() ), url );
 		return;
 	}
 	
 	file.close();
 	emit dataCached( url );
+}
+
+void DataNetworkCache::networkManager_proxyAuthenticationRequired( const QNetworkProxy& proxy, QAuthenticator* authenticator )
+{
+	qWarning() << Q_FUNC_INFO;
+}
+
+void DataNetworkCache::networkManager_sslErrors( QNetworkReply* reply, const QList<QSslError>& errors )
+{
+	qWarning() << Q_FUNC_INFO;
+	reply->ignoreSslErrors();
 }
 
 void DataNetworkCache::clearMemory( bool emitSignal )

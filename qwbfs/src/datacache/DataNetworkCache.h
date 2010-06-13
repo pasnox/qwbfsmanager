@@ -49,11 +49,14 @@ protected:
 	void clearDisk( bool emitSignal );
 
 protected slots:
+	void networkManager_authenticationRequired( QNetworkReply* reply, QAuthenticator* authenticator );
 	void networkManager_finished( QNetworkReply* reply );
+	void networkManager_proxyAuthenticationRequired( const QNetworkProxy& proxy, QAuthenticator* authenticator );
+	void networkManager_sslErrors( QNetworkReply* reply, const QList<QSslError>& errors );
 
 signals:
 	void dataCached( const QUrl& url );
-	void error( const QString& message );
+	void error( const QString& message, const QUrl& url = QUrl() );
 	void invalidated();
 };
 

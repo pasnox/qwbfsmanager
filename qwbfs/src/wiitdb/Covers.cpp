@@ -1,12 +1,23 @@
 #include "Covers.h"
 #include "../qwbfsdriver/Driver.h"
 
+#include <QFileInfo>
+#include <QDebug>
+
 using namespace QWBFS::WiiTDB;
 
 Covers::Covers( const QString& id )
 {
-	Q_ASSERT( id.isEmpty() );
 	mId = id;
+	Q_ASSERT( !id.isEmpty() );
+}
+
+Covers::Covers( const QUrl& url )
+{
+	Q_ASSERT( !url.isEmpty() );
+	Q_ASSERT( url.isValid() );
+	mId = QFileInfo( url.path() ).baseName();
+	Q_ASSERT( !mId.isEmpty() );
 }
 
 Covers::~Covers()
@@ -63,7 +74,39 @@ QUrl Covers::url( Type type, const QString& id )
 			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ) );
 		case Full:
 			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ) );
+		case Invalid:
+			break;
 	}
 	
 	return QUrl();
+}
+
+Covers::Type Covers::type( const QUrl& url )
+{
+	if ( Covers( url ).url( HQ ) == url )
+	{
+		return HQ;
+	}
+	else if ( Covers( url ).url( Cover ) == url )
+	{
+		return Cover;
+	}
+	else if ( Covers( url ).url( _3D ) == url )
+	{
+		return _3D;
+	}
+	else if ( Covers( url ).url( Disc ) == url )
+	{
+		return Disc;
+	}
+	else if ( Covers( url ).url( DiscCustom ) == url )
+	{
+		return DiscCustom;
+	}
+	else if ( Covers( url ).url( Full ) == url )
+	{
+		return Full;
+	}
+	
+	return Invalid;
 }

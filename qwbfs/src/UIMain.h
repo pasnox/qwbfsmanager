@@ -61,7 +61,7 @@ protected slots:
 	void coverRequested( const QString& id );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
 	void dataNetworkCache_dataCached( const QUrl& url );
-	void dataNetworkCache_error( const QString& message );
+	void dataNetworkCache_error( const QString& message, const QUrl& url );
 	void dataNetworkCache_invalidated();
 	void on_aReloadPartitions_triggered();
 	void on_aQuit_triggered();
