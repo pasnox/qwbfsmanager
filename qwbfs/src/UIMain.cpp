@@ -31,6 +31,7 @@
 #include <QFileSystemModel>
 #include <QFileDialog>
 #include <QProcess>
+#include <QMessageBox>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -249,8 +250,11 @@ void UIMain::on_aReloadPartitions_triggered()
 		mPartitions << QString( "/dev/%1" ).arg( partition );
 	}
 #else
-	Q_ASSERT( 0 );
-	qFatal( "Don't know how to list partitions for this platform." );
+	QMessageBox::information( this, QString::null,
+		tr(
+			"I don't know how to list partition for this platform.\n"
+			"You will have to set the correct partition path yourself for mounting partitions."
+		) );
 #endif
 	
 	const QList<PartitionWidget*> widgets = sViews->findChildren<PartitionWidget*>();
