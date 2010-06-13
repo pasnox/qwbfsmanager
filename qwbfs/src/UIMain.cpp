@@ -37,6 +37,8 @@
 UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
+	mCache = new DataNetworkCache( this );
+	
 	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
 	
@@ -54,10 +56,9 @@ UIMain::UIMain( QWidget* parent )
 	lvFiles->setModel( mFilesModel );
 	
 	mExportModel = new QWBFS::Model::DiscModel( this );
-	lvExport->setModel( mExportModel );
-	lvExport->setItemDelegate( new QWBFS::Model::DiscDelegate( mExportModel ) );
 	
-	mCache = new DataNetworkCache( this );
+	lvExport->setModel( mExportModel );
+	lvExport->setItemDelegate( new QWBFS::Model::DiscDelegate( mExportModel, mCache ) );
 	
 	mLastDiscId = -1;
 	
@@ -77,6 +78,25 @@ UIMain::UIMain( QWidget* parent )
 UIMain::~UIMain()
 {
 	//qWarning() << Q_FUNC_INFO;
+}
+
+DataNetworkCache* UIMain::cache() const
+{
+	return mCache;
+}
+
+QPixmap UIMain::cachedPixmap( const QUrl& url ) const
+{
+	const QByteArray* data = mCache->cachedData( url );
+	QPixmap pixmap;
+	
+	if ( !data ) {
+		return pixmap;
+	}
+	
+	pixmap.loadFromData( *data );
+	
+	return pixmap;
 }
 
 void UIMain::showEvent( QShowEvent* event )
@@ -105,20 +125,6 @@ void UIMain::connectView( PartitionWidget* widget )
 	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
 	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
 	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
-}
-
-QPixmap UIMain::cachedPixmap( const QUrl& url ) const
-{
-	const QByteArray* data = mCache->cachedData( url );
-	QPixmap pixmap;
-	
-	if ( !data ) {
-		return pixmap;
-	}
-	
-	pixmap.loadFromData( *data );
-	
-	return pixmap;
 }
 
 void UIMain::propertiesChanged()
@@ -178,6 +184,14 @@ void UIMain::dataNetworkCache_dataCached( const QUrl& url )
 {
 	Q_UNUSED( url );
 	
+	// update all views
+	const QList<QAbstractItemView*> views = findChildren<QAbstractItemView*>();
+	
+	foreach ( QAbstractItemView* view, views ) {
+		view->viewport()->update();
+	}
+	
+	// update preview dock
 	if ( mLastDiscId.isEmpty() ) {
 		return;
 	}

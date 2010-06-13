@@ -23,6 +23,8 @@
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
 #include "ProgressDialog.h"
+#include "UIMain.h"
+#include "datacache/DataNetworkCache.h"
 
 #include <QLineEdit>
 #include <QInputDialog>
@@ -32,6 +34,9 @@
 PartitionWidget::PartitionWidget( QWidget* parent )
 	: QWidget( parent )
 {
+	Q_ASSERT( parent );
+	const UIMain* window = qobject_cast<UIMain*>( parent->window() );
+	
 	mDriver = new QWBFS::Driver( this );
 	mDiscModel = new QWBFS::Model::DiscModel( this, mDriver );
 	mImportModel = new QWBFS::Model::DiscModel( this, mDriver );
@@ -39,9 +44,9 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	setupUi( this );
 	setAcceptDrops( true );
 	lvDiscs->setModel( mDiscModel );
-	lvDiscs->setItemDelegate( new QWBFS::Model::DiscDelegate( mDiscModel ) );
+	lvDiscs->setItemDelegate( new QWBFS::Model::DiscDelegate( mDiscModel, window->cache() ) );
 	lvImport->setModel( mImportModel );
-	lvImport->setItemDelegate( new QWBFS::Model::DiscDelegate( mImportModel ) );
+	lvImport->setItemDelegate( new QWBFS::Model::DiscDelegate( mImportModel, window->cache() ) );
 	
 	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
 	

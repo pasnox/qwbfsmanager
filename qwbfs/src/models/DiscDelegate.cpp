@@ -22,17 +22,21 @@
 #include "DiscModel.h"
 #include "qwbfsdriver/Driver.h"
 #include "Gauge.h"
+#include "datacache/DataNetworkCache.h"
+#include "wiitdb/Covers.h"
 
 #include <QPainter>
 #include <QDebug>
 
 using namespace QWBFS::Model;
 
-DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent )
+DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent, DataNetworkCache* cache )
 	: QStyledItemDelegate( parent )
 {
 	Q_ASSERT( parent );
+	Q_ASSERT( cache );
 	mModel = parent;
+	mCache = cache;
 }
 
 DiscDelegate::~DiscDelegate()
@@ -107,23 +111,42 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		painter->restore();
 	}
 	
+	QIcon icon;
+	
 	if ( disc.state == QWBFS::Driver::None ) {
-		return;
+		const QWBFS::WiiTDB::Covers cover( disc.id );
+		QByteArray data;
+		
+		if ( mCache->hasCachedData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
+			data = *mCache->cachedData( cover.url( QWBFS::WiiTDB::Covers::Disc ) );
+		}
+		else if ( mCache->hasCachedData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
+			data = *mCache->cachedData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) );
+		}
+		else {
+			mCache->cacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) );
+		}
+		
+		if ( !data.isNull() ) {
+			QPixmap pixmap;
+			
+			if ( pixmap.loadFromData( data ) ) {
+				icon.addPixmap( pixmap );
+			}
+		}
+	}
+	else {
+		icon.addPixmap( QPixmap( disc.state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png" ) );
 	}
 	
-	// status/error
-	{
-		QPixmap pixmap( disc.state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png" );
-		
+	// icon
+	if ( !icon.isNull() ) {
 		rect = option.rect;
 		rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
 		
-		QRectF r( QPointF(), pixmap.size() );
-		r.moveCenter( rect.center() );
-		
 		painter->save();
 		painter->setClipRect( rect );
-		painter->drawPixmap( r.topLeft(), pixmap );
+		icon.paint( painter, rect, Qt::AlignCenter );
 		painter->restore();
 	}
 }

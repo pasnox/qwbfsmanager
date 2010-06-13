@@ -56,7 +56,7 @@ QUrl Covers::url( Type type ) const
 
 QUrl Covers::url( Type type, const QString& id )
 {
-	Q_ASSERT( id.isEmpty() );
+	Q_ASSERT( !id.isEmpty() );
 	
 	const QString language = QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() );
 	

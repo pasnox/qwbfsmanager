@@ -39,6 +39,9 @@ class UIMain : public QMainWindow, public Ui::UIMain
 public:
 	UIMain( QWidget* parent = 0 );
 	virtual ~UIMain();
+	
+	DataNetworkCache* cache() const;
+	QPixmap cachedPixmap( const QUrl& url ) const;
 
 protected:
 	QStringList mPartitions;
@@ -52,7 +55,6 @@ protected:
 	virtual void closeEvent( QCloseEvent* event );
 	
 	void connectView( PartitionWidget* widget );
-	QPixmap cachedPixmap( const QUrl& url ) const;
 
 protected slots:
 	void propertiesChanged();
