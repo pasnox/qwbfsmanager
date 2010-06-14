@@ -27,6 +27,7 @@
 #include "ProgressDialog.h"
 #include "PropertiesDialog.h"
 #include "Properties.h"
+#include "main.h"
 
 #include <QFileSystemModel>
 #include <QFileDialog>
@@ -39,8 +40,15 @@ UIMain::UIMain( QWidget* parent )
 {
 	mCache = new DataNetworkCache( this );
 	
+	setWindowTitle( QString( "%1 v%2" ).arg( APPLICATION_NAME ).arg( APPLICATION_VERSION_STR ) );
 	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
+	
+	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
+	dwCovers->toggleViewAction()->setIcon( QIcon( ":/icons/256/covers.png" ) );
+	
+	toolBar->addAction( dwTools->toggleViewAction() );
+	toolBar->addAction( dwCovers->toggleViewAction() );
 	
 	mFoldersModel = new QFileSystemModel( this );
 	mFoldersModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot );

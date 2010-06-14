@@ -34,7 +34,7 @@ public:
 	{
 		QFont font = this->font();		font.setPixelSize( 9 );
 		setFont( font );
-				showMessage( tr( "Version %1" ).arg( APPLICATION_VERSION ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
+				showMessage( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
 		
 		show();
 		raise();

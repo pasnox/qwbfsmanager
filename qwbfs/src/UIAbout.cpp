@@ -27,7 +27,7 @@ UIAbout::UIAbout( QWidget* parent )
 	setAttribute( Qt::WA_DeleteOnClose );
 	setupUi( this );
 	lName->setText( APPLICATION_NAME );
-	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION ) );
+	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
 	lDescription->setText( APPLICATION_DESCRIPTION );
 	lCopyrights->setText( APPLICATION_COPYRIGHTS );
 	lDomain->setText( QString( "<a href=\"%1\">%1</a>" ).arg( APPLICATION_DOMAIN ) );

@@ -23,6 +23,32 @@ QT	= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
+# define some usefull values
+QMAKE_TARGET_COMPANY	= "QWBFS Team"
+QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
+QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerfull cross platform Wii Backup File System manager"
+QMAKE_TARGET_COPYRIGHT	= "(C) 2010 Filipe AZEVEDO"
+PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
+PACKAGE_VERSION	= 1.0.0
+SVN_REVISION	= $$system( export LANG="" && svnversion $$PWD/.. )
+
+system( touch $$PWD/src/main.h )
+
+CONFIG( debug, debug|release ) {
+	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION debug)
+} else {
+	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION release)
+}
+
+# define variable for source code
+DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
+	"_APPLICATION_VERSION=\"\\\"$${PACKAGE_VERSION}\\\"\"" \
+	"_APPLICATION_VERSION_STR=\"\\\"$${PACKAGE_VERSION_STR}\\\"\"" \
+	"_APPLICATION_DOMAIN=\"\\\"$${PACKAGE_DOMAIN}\\\"\"" \
+	"_APPLICATION_COPYRIGHTS=\"\\\"$${QMAKE_TARGET_COPYRIGHT}\\\"\"" \
+	"_APPLICATION_DESCRIPTION=\"\\\"$${QMAKE_TARGET_DESCRIPTION}\\\"\"" \
+	"_APPLICATION_ORGANIZATION=\"\\\"$${QMAKE_TARGET_COMPANY}\\\"\""
+
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 

@@ -6,12 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>363</height>
+    <width>643</width>
+    <height>361</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>QWBFS Manager</string>
   </property>
   <property name="iconSize">
    <size>
@@ -42,7 +39,7 @@
   </widget>
   <widget class="QDockWidget" name="dwTools">
    <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
@@ -265,6 +262,7 @@
    <addaction name="aReloadPartitions"/>
    <addaction name="aAbout"/>
    <addaction name="aQuit"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QDockWidget" name="dwCovers">
    <property name="minimumSize">
@@ -280,7 +278,7 @@
     </size>
    </property>
    <property name="features">
-    <set>QDockWidget::DockWidgetMovable</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>

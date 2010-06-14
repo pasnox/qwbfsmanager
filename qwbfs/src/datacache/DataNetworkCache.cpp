@@ -52,6 +52,8 @@ void DataNetworkCache::updateCacheRestrictions()
 
 void DataNetworkCache::networkManager_authenticationRequired( QNetworkReply* reply, QAuthenticator* authenticator )
 {
+	Q_UNUSED( reply );
+	Q_UNUSED( authenticator );
 	qWarning() << Q_FUNC_INFO;
 }
 
@@ -87,11 +89,15 @@ void DataNetworkCache::networkManager_finished( QNetworkReply* reply )
 
 void DataNetworkCache::networkManager_proxyAuthenticationRequired( const QNetworkProxy& proxy, QAuthenticator* authenticator )
 {
+	Q_UNUSED( proxy );
+	Q_UNUSED( authenticator );
 	qWarning() << Q_FUNC_INFO;
 }
 
 void DataNetworkCache::networkManager_sslErrors( QNetworkReply* reply, const QList<QSslError>& errors )
 {
+	Q_UNUSED( reply );
+	Q_UNUSED( errors );
 	qWarning() << Q_FUNC_INFO;
 	reply->ignoreSslErrors();
 }
