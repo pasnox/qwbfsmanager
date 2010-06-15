@@ -1,17 +1,17 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio v1.8.4.0b2 (1.8.4.0b2)
+** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
-** Project   : qwbfs
+** Project   : QWBFS Manager
 ** FileName  : UIMain.cpp
-** Date      : 2010-04-25T13:05:33
+** Date      : 2010-06-15T23:21:10
 ** License   : GPL
 ** Home Page : http://code.google.com/p/qwbfs
-** Comment   : QWBFS Manager is a crossplatform WBFS Manager developed using Qt4/C++.
-** It's currently working under Unix/Linux, Mac OS X, and build under windows (but not yet working).
-** 
+** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
+** It's currently working fine under Windows (XP to Seven, 32 & 64Bits), Mac OS X (10.4.x to 10.6.x), Linux & unix like.
+**
 ** DISCLAIMER: THIS APPLICATION COMES WITH NO WARRANTY AT ALL, NEITHER EXPRESS NOR IMPLIED.
-** I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE OR WII PARTITION
+** I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR HARDWARE OR YOUR DATA
 ** BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.
 **
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -73,7 +73,7 @@ UIMain::UIMain( QWidget* parent )
 	pwMainView->setMainView( true );
 	pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
-		tbReloadDrives->click();
+	tbReloadDrives->click();
 	aReloadPartitions->trigger();
 	
 	propertiesChanged();
@@ -260,11 +260,17 @@ void UIMain::on_aReloadPartitions_triggered()
 #if defined( Q_OS_WIN )
 	foreach ( const QFileInfo& drive, QDir::drives() ) {
 		mPartitions << drive.absoluteFilePath().remove( ":" ).remove( "/" ).remove( "\\" );
-	}#elif defined( Q_OS_MAC )	QProcess process;
+	}
+#elif defined( Q_OS_MAC )
+	QProcess process;
 	process.start( "diskutil list" );
 	process.waitForFinished();
 	
-	const QStringList partitions = QString::fromLocal8Bit( process.readAll() ).split( "\n" );		foreach ( QString partition, partitions ) {		partition = partition.trimmed();		
+	const QStringList partitions = QString::fromLocal8Bit( process.readAll() ).split( "\n" );
+	
+	foreach ( QString partition, partitions ) {
+		partition = partition.trimmed();
+		
 		if ( partition.startsWith( "/" ) || partition.startsWith( "#" ) || partition.isEmpty() ) {
 			continue;
 		}
@@ -312,7 +318,12 @@ void UIMain::on_aReloadPartitions_triggered()
 	foreach ( PartitionWidget* widget, widgets ) {
 		widget->setPartitions( mPartitions );
 	}
-}void UIMain::on_aQuit_triggered(){	close();}
+}
+
+void UIMain::on_aQuit_triggered()
+{
+	close();
+}
 
 void UIMain::on_aAbout_triggered()
 {
@@ -332,16 +343,45 @@ void UIMain::on_tvFolders_activated( const QModelIndex& index )
 	const QString filePath = mFoldersModel->filePath( index );
 	mFilesModel->setRootPath( filePath );
 	lvFiles->setRootIndex( mFilesModel->index( filePath ) );
-}void UIMain::on_tbReloadDrives_clicked(){	const QString drive = cbDrives->currentText();	QFileInfoList drives = QDir::drives();
-	QStringList pathsToScan;		cbDrives->clear();	#if defined( Q_OS_WIN )#elif defined( Q_OS_MAC )
-	pathsToScan << "/Volumes";#else
-	pathsToScan  << "/media" << "/mnt";#endif
+}
+
+void UIMain::on_tbReloadDrives_clicked()
+{
+	const QString drive = cbDrives->currentText();
+	QFileInfoList drives = QDir::drives();
+	QStringList pathsToScan;
+	
+	cbDrives->clear();
+#if defined( Q_OS_WIN )
+#elif defined( Q_OS_MAC )
+	pathsToScan << "/Volumes";
+#else
+	pathsToScan  << "/media" << "/mnt";
+#endif
 
 	foreach ( const QString& path, pathsToScan ) {
-		foreach ( const QFileInfo& fi, QDir( path ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {			if ( !drives.contains( fi ) ) {				drives << fi;			}		}
-	}	foreach ( const QFileInfo& fi, drives ) {		cbDrives->addItem( fi.absoluteFilePath() );	}		if ( !drive.isEmpty() ) {		cbDrives->setCurrentIndex( cbDrives->findText( drive ) );	}}void UIMain::on_cbDrives_currentIndexChanged( const QString& text ){
-	mFoldersModel->setRootPath( text );	tvFolders->setRootIndex( mFoldersModel->index( text ) );
-	on_tvFolders_activated( tvFolders->rootIndex() );}
+		foreach ( const QFileInfo& fi, QDir( path ).entryInfoList( QDir::Dirs | QDir::NoDotAndDotDot ) ) {
+			if ( !drives.contains( fi ) ) {
+				drives << fi;
+			}
+		}
+	}
+	
+	foreach ( const QFileInfo& fi, drives ) {
+		cbDrives->addItem( fi.absoluteFilePath() );
+	}
+	
+	if ( !drive.isEmpty() ) {
+		cbDrives->setCurrentIndex( cbDrives->findText( drive ) );
+	}
+}
+
+void UIMain::on_cbDrives_currentIndexChanged( const QString& text )
+{
+	mFoldersModel->setRootPath( text );
+	tvFolders->setRootIndex( mFoldersModel->index( text ) );
+	on_tvFolders_activated( tvFolders->rootIndex() );
+}
 
 void UIMain::on_tbClearExport_clicked()
 {

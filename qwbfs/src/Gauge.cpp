@@ -1,17 +1,17 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio v1.8.4.0b2 (1.8.4.0b2)
+** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
-** Project   : qwbfs
+** Project   : QWBFS Manager
 ** FileName  : Gauge.cpp
-** Date      : 2010-04-25T13:05:33
+** Date      : 2010-06-15T23:21:10
 ** License   : GPL
 ** Home Page : http://code.google.com/p/qwbfs
-** Comment   : QWBFS Manager is a crossplatform WBFS Manager developed using Qt4/C++.
-** It's currently working under Unix/Linux, Mac OS X, and build under windows (but not yet working).
-** 
+** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
+** It's currently working fine under Windows (XP to Seven, 32 & 64Bits), Mac OS X (10.4.x to 10.6.x), Linux & unix like.
+**
 ** DISCLAIMER: THIS APPLICATION COMES WITH NO WARRANTY AT ALL, NEITHER EXPRESS NOR IMPLIED.
-** I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE OR WII PARTITION
+** I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR HARDWARE OR YOUR DATA
 ** BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.
 **
 ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
@@ -97,7 +97,8 @@ qint64 Gauge::temporarySize() const
 void Gauge::paintEvent( QPaintEvent* event )
 {
 	Q_UNUSED( event );
-	QPainter painter( this );	const qreal available = mSize;
+	QPainter painter( this );
+	const qreal available = mSize;
 	const qreal used = mUsedSize;
 	const qreal free = mFreeSize;
 	const qreal max = used +mTemporarySize;
@@ -163,7 +164,9 @@ void Gauge::paintEvent( QPaintEvent* event )
 		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
 	}
 	
-	// text	painter.setPen( option.palette.color( QPalette::Text ) );	painter.setBrush( Qt::NoBrush );	painter.drawText( rect(), flags, option.text );
+	// text	painter.setPen( option.palette.color( QPalette::Text ) );
+	painter.setBrush( Qt::NoBrush );
+	painter.drawText( rect(), flags, option.text );
 	//style()->drawControl( QStyle::CE_ProgressBarLabel, &option, &painter, this );
 }
 
