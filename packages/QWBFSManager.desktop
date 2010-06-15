@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=Games;Qt;
+Exec=qwbfsmanager
+Name=QWBFS Manager
+GenericName=QWBFS Manager
+Comment=A cross platform WBFS manager
+Terminal=false
+Type=Application
+Icon=qwbfsmanager

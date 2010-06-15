@@ -1,0 +1,28 @@
+QWBFS Manager
+=============
+
+Home page: http://code.google.com/p/qwbfs
+
+QWBFS Manager is a cross platform WBFS manager running on Windows,
+Mac OS X, Linux & Unix like systems.
+
+Requirements
+============
+
+- Build tool chain (GCC...)
+- Qt >= 4.5.x
+- A computer
+- A chair
+- A brain
+- Some fingers
+
+Build instructions
+==================
+
+- unpack the sources archive
+- cd in the uncompress folder
+- qmake prefix=/usr/local
+- make
+- sudo make install
+
+Enjoy, P@sNox
