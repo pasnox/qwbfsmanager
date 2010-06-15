@@ -9,7 +9,7 @@ QT_WIN32_PATH=.
 MKSPEC="x-win32-g++"
 ISCC="ISCC.exe"
 WINE="wine"
-SVN_REVISION=`svn info .. | grep Revision: | awk '{ print $2 }'`
+SVN_REVISION=`svnversion ..`
 DLLS_PATH=.
 
 if [ '!' -z "$1" ]; then
@@ -32,13 +32,19 @@ fi
 
 # unix/linux
 if [ $PLATFORM = "Linux" ]; then
-	QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
-	MKSPEC="$HOME/mkspecs/4.6.x/win32-osx-g++"
-	QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
+	#QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
+	#MKSPEC="$HOME/mkspecs/4.6.x/win32-osx-g++"
+	#QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
+	QT_PATH=/usr
+	MKSPEC="$HOME/.qt/win32-x11-g++"
+	QT_WIN32_PATH="$HOME/Disk Wine/Development/Qt/$QT_WIN32_VERSION"
+	ISCC="$HOME/Disk Wine/Program Files/Inno Setup 5/ISCC.exe"
+	DLLS_PATH="$HOME/Disk Wine/Development/OpenSSL"
 fi
 
 export SVN_REVISION
 export QT_WIN32_PATH
+export QT_WIN32_VERSION
 export DLLS_PATH
 export CROSS_WIN32_QT_PATH="$QT_WIN32_PATH"
 

@@ -50,7 +50,7 @@ UseAbsolutePaths=false
 
 [Files]
 ; QWBFS Manager related files
-Source: qwbfs.exe; DestDir: {app}; Flags: confirmoverwrite promptifolder
+Source: qwbfsmanager.exe; DestDir: {app}; Flags: confirmoverwrite promptifolder
 Source: ..\packages\qt_windows.conf; DestDir: {app}; DestName: qt.conf; Flags: confirmoverwrite promptifolder
 Source: ..\GPL-3; DestDir: {app}; Flags: confirmoverwrite promptifolder
 ;Source: ..\datas\translations\*.*; DestDir: {app}\translations; Flags: promptifolder
@@ -69,8 +69,8 @@ Source: {#DLLS_PATH}\libeay32.dll; DestDir: {app}; Flags: confirmoverwrite promp
 Source: {#DLLS_PATH}\libssl32.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
 
 [Icons]
-Name: {group}\{cm:QWBFS_NAME}; Filename: {app}\qwbfs.exe; WorkingDir: {app}; IconFilename: {app}\qwbfs.exe; IconIndex: 0
-Name: {userdesktop}\{cm:QWBFS_NAME}; Filename: {app}\qwbfs.exe; WorkingDir: {app}; IconFilename: {app}\qwbfs.exe; IconIndex: 0
+Name: {group}\{cm:QWBFS_NAME}; Filename: {app}\qwbfsmanager.exe; WorkingDir: {app}; IconFilename: {app}\qwbfsmanager.exe; IconIndex: 0
+Name: {userdesktop}\{cm:QWBFS_NAME}; Filename: {app}\qwbfsmanager.exe; WorkingDir: {app}; IconFilename: {app}\qwbfsmanager.exe; IconIndex: 0
 Name: {group}\Home Page; Filename: {app}\Home Page.url; WorkingDir: {app}
 Name: {group}\Tracker; Filename: {app}\Tracker.url; WorkingDir: {app}
 
