@@ -16,12 +16,15 @@
 
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
-TARGET	= $$quote(qwbfs)
+TARGET	= $$quote(qwbfsmanager)
 mac:TARGET	= $$quote(QWBFSManager)
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
 QT	= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
+
+include( ../shared.pri )
+include( ../libwbfs/libwbfs.pri )
 
 # define some usefull values
 QMAKE_TARGET_COMPANY	= "QWBFS Team"
@@ -40,6 +43,8 @@ CONFIG( debug, debug|release ) {
 	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION release)
 }
 
+include( installs.pri )
+
 # define variable for source code
 DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
 	"_APPLICATION_VERSION=\"\\\"$${PACKAGE_VERSION}\\\"\"" \
@@ -48,9 +53,6 @@ DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
 	"_APPLICATION_COPYRIGHTS=\"\\\"$${QMAKE_TARGET_COPYRIGHT}\\\"\"" \
 	"_APPLICATION_DESCRIPTION=\"\\\"$${QMAKE_TARGET_DESCRIPTION}\\\"\"" \
 	"_APPLICATION_ORGANIZATION=\"\\\"$${QMAKE_TARGET_COMPANY}\\\"\""
-
-include( ../shared.pri )
-include( ../libwbfs/libwbfs.pri )
 
 INCLUDEPATH	*= . \
 	src
@@ -61,8 +63,8 @@ DEPENDPATH	*= . \
 	src/WiiTDB
 
 RESOURCES	*= resources/resources.qrc
-mac:ICON	= resources/qwbfs.icns
-win32:RC_FILE	*= resources/qwbfs.rc
+mac:ICON	= resources/qwbfsmanager.icns
+win32:RC_FILE	*= resources/qwbfsmanager.rc
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \

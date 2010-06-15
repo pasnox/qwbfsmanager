@@ -1,10 +1,10 @@
 <RCC>
   <qresource prefix="/icons">
+	<file>qwbfsmanager.png</file>
+    <file>splashscreen.png</file>
     <file>256/tools.png</file>
     <file>256/covers.png</file>
     <file>256/read-partition.png</file>
-    <file>qwbfs.png</file>
-    <file>splashscreen.png</file>
     <file>256/folder.png</file>
     <file>256/about.png</file>
     <file>256/add.png</file>

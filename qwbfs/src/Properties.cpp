@@ -151,10 +151,10 @@ void Properties::saveState( UIMain* window )
 
 QString Properties::decrypt( const QByteArray& data )
 {
-	return QString::fromUtf8( qUncompress( QByteArray::fromBase64( data ) ) );
+	return data.isEmpty() ? QString::null : QString::fromUtf8( qUncompress( QByteArray::fromBase64( data ) ) );
 }
 
 QByteArray Properties::crypt( const QString& string )
 {
-	return qCompress( string.toUtf8(), 9 ).toBase64();
+	return string.isEmpty() ? QByteArray() : qCompress( string.toUtf8(), 9 ).toBase64();
 }

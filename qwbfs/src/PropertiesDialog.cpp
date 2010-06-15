@@ -10,6 +10,12 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 	setupUi( this );
 	setAttribute( Qt::WA_DeleteOnClose );
 	mProperties = new Properties( this );
+
+#if defined( Q_OS_MAC )
+	QFont font = lProxyWarning->font();
+	font.setPointSize( 11 );
+	lProxyWarning->setFont( font );
+#endif
 	
 	cbProxyType->addItem( tr( "No Proxy" ), QNetworkProxy::NoProxy );
 	cbProxyType->addItem( tr( "Socks5" ), QNetworkProxy::Socks5Proxy );

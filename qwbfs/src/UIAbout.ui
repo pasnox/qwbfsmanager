@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
-    <height>482</height>
+    <width>422</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -35,7 +35,7 @@
       </size>
      </property>
      <property name="pixmap">
-      <pixmap resource="../resources/resources.qrc">:/icons/qwbfs.png</pixmap>
+      <pixmap resource="../resources/resources.qrc">:/icons/qwbfsmanager.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
