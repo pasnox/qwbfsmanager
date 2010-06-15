@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>440</width>
     <height>300</height>
    </rect>
   </property>
@@ -152,6 +152,9 @@
        <string>Proxy</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
+       <property name="bottomMargin">
+        <number>6</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="lProxyType">
          <property name="text">
@@ -278,6 +281,7 @@
          </property>
          <property name="font">
           <font>
+           <pointsize>11</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>

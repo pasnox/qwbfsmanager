@@ -30,7 +30,7 @@ UIAbout::UIAbout( QWidget* parent )
 	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
 	lDescription->setText( APPLICATION_DESCRIPTION );
 	lCopyrights->setText( APPLICATION_COPYRIGHTS );
-	lDomain->setText( QString( "<a href=\"%1\">%1</a>" ).arg( APPLICATION_DOMAIN ) );
+	lDomain->setText( QString( "<a href=\"http://%1\" style=\"text-decoration:none;\">http://%1</a>" ).arg( APPLICATION_DOMAIN ) );
 	adjustSize();
 }
 
