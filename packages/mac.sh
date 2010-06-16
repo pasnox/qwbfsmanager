@@ -1,8 +1,8 @@
 #!/bin/sh
 
 BUNDLE_VERSION="1.0.0"
-SVN_REVISION=`svn info .. | grep Revision: | awk '{ print $2 }'`
-QT_VERSION="4.6.2"
+SVN_REVISION=`svnversion ..'`
+QT_VERSION="4.6.2-universal"
 BUNDLE_NAME="QWBFSManager"
 CUR_PATH="$PWD"
 BUNDLE_PATH="$PWD/../bin"
