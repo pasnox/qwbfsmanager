@@ -1,16 +1,13 @@
 ###########################################################################################
-##		Created using Monkey Studio v1.8.4.0b2 (1.8.4.0b2)
+##		Created using Monkey Studio v1.8.4.0 (1.8.4.0)
 ##
-##	Author    : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
+##	Author    : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ##	Project   : qwbfs
 ##	FileName  : qwbfs.pro
-##	Date      : 2010-04-05T04:45:27
+##	Date      : 2010-04-04T11:04:05
 ##	License   : GPL3
 ##	Comment   : Creating using Monkey Studio RAD
 ##	Home Page   : http://code.google.com/p/qwbfs
-##
-##	This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
-##	WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 ##
 ###########################################################################################
 
@@ -29,11 +26,11 @@ include( ../libwbfs/libwbfs.pri )
 # define some usefull values
 QMAKE_TARGET_COMPANY	= "QWBFS Team"
 QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
-QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerfull cross platform Wii Backup File System manager"
-QMAKE_TARGET_COPYRIGHT	= "(C) 2010 Filipe AZEVEDO"
+QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerful cross platform Wii Backup File System manager"
+QMAKE_TARGET_COPYRIGHT	= "(C) 2010 Filipe Azevedo"
 PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
 PACKAGE_VERSION	= 1.0.0
-SVN_REVISION	= $$system( export LANG="" && svnversion $$PWD/.. )
+SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
 system( touch $$PWD/src/main.h )
 

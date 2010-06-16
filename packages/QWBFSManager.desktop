@@ -1,9 +1,9 @@
 [Desktop Entry]
-Categories=Games;Qt;
+Categories=Game;Qt;
 Exec=qwbfsmanager
 Name=QWBFS Manager
 GenericName=QWBFS Manager
-Comment=A cross platform WBFS manager
+Comment=QWBFS Manager is a graphical user interface (GUI) for working with WBFS filesystem formatted hard disk drive.
 Terminal=false
 Type=Application
 Icon=qwbfsmanager

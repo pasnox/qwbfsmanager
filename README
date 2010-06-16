@@ -6,11 +6,17 @@ Home page: http://code.google.com/p/qwbfs
 QWBFS Manager is a cross platform WBFS manager running on Windows,
 Mac OS X, Linux & Unix like systems.
 
+IMPORTANT NOTICE
+================
+
+I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.
+
 Requirements
 ============
 
 - Build tool chain (GCC...)
 - Qt >= 4.5.x
+- OpenSSL
 - A computer
 - A chair
 - A brain
@@ -21,7 +27,7 @@ Build instructions
 
 - unpack the sources archive
 - cd in the uncompress folder
-- qmake prefix=/usr/local
+- qmake PREFIX=/usr/local
 - make
 - sudo make install
 
