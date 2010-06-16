@@ -14,7 +14,7 @@
 XUPProjectSettings {
 	EDITOR	= QMake
 	QT_VERSION	= 4.6.2-universal
-	OTHERS_PLATFORM_TARGET_RELEASE	= bin/qwbfs
+	OTHERS_PLATFORM_TARGET_RELEASE	= bin/qwbfsmanager
 	OTHERS_PLATFORM_TARGET_DEBUG	= bin/qwbfs_debug
 	WINDOWS_PLATFORM_TARGET_DEBUG	= bin/qwbfsd.exe
 	MAC_PLATFORM_TARGET_RELEASE	= bin/QWBFSManager.app
