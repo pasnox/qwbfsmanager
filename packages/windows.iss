@@ -6,9 +6,9 @@ QWBFS_COPYRIGHTS=2010 Filipe AZEVEDO
 QWBFS_URL=http://code.google.com/p/qwbfs/
 QWBFS_ISSUES_URL=http://code.google.com/p/qwbfs/issues/list
 
-#define QWBFS_VERSION "1.0.0"
+#define QWBFS_VERSION "1.0.2"
 #define QWBFS_REVISION GetEnv("SVN_REVISION")
-#define QWBFS_SETUP_NAME "setup_qwbfs_manager_" +QWBFS_VERSION +"-svn" +QWBFS_REVISION +"-win32"
+#define QWBFS_SETUP_NAME "setup-qwbfsmanager-" +QWBFS_VERSION +"-svn" +QWBFS_REVISION +"-win32"
 #define QT_PATH "Z:\" +GetEnv("CROSS_WIN32_QT_PATH")
 #define DLLS_PATH "Z:\" +GetEnv("DLLS_PATH")
 
@@ -50,23 +50,25 @@ UseAbsolutePaths=false
 
 [Files]
 ; QWBFS Manager related files
-Source: qwbfsmanager.exe; DestDir: {app}; Flags: confirmoverwrite promptifolder
-Source: ..\packages\qt_windows.conf; DestDir: {app}; DestName: qt.conf; Flags: confirmoverwrite promptifolder
-Source: ..\GPL-3; DestDir: {app}; Flags: confirmoverwrite promptifolder
+Source: qwbfsmanager.exe; DestDir: {app}; Flags: promptifolder
+Source: ..\packages\qt_windows.conf; DestDir: {app}; DestName: qt.conf; Flags: promptifolder
+Source: ..\GPL-3; DestDir: {app}; Flags: promptifolder
 ;Source: ..\datas\translations\*.*; DestDir: {app}\translations; Flags: promptifolder
 ; Qt related files
-Source: {#QT_PATH}\bin\QtCore4.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
-Source: {#QT_PATH}\bin\QtGui4.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
-Source: {#QT_PATH}\bin\QtXml4.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
-Source: {#QT_PATH}\plugins\accessible\*.dll; DestDir: {app}\qt\plugins\accessible; Flags: confirmoverwrite promptifolder; Excludes: *d4.dll
-Source: {#QT_PATH}\plugins\codecs\*.dll; DestDir: {app}\qt\plugins\codecs; Flags: confirmoverwrite promptifolder; Excludes: *d4.dll
-Source: {#QT_PATH}\plugins\graphicssystems\*.dll; DestDir: {app}\qt\plugins\graphicssystems; Flags: confirmoverwrite promptifolder; Excludes: *d4.dll
-Source: {#QT_PATH}\plugins\imageformats\*.dll; DestDir: {app}\qt\plugins\imageformats; Flags: confirmoverwrite promptifolder; Excludes: *d4.dll
+Source: {#QT_PATH}\bin\QtCore4.dll; DestDir: {app}; Flags: promptifolder
+Source: {#QT_PATH}\bin\QtGui4.dll; DestDir: {app}; Flags: promptifolder
+Source: {#QT_PATH}\bin\QtXml4.dll; DestDir: {app}; Flags: promptifolder
+Source: {#QT_PATH}\bin\QtNetwork4.dll; DestDir: {app}; Flags: promptifolder
+Source: {#QT_PATH}\plugins\accessible\*.dll; DestDir: {app}\qt\plugins\accessible; Flags: promptifolder; Excludes: *d4.dll
+Source: {#QT_PATH}\plugins\codecs\*.dll; DestDir: {app}\qt\plugins\codecs; Flags: promptifolder; Excludes: *d4.dll
+Source: {#QT_PATH}\plugins\graphicssystems\*.dll; DestDir: {app}\qt\plugins\graphicssystems; Flags: promptifolder; Excludes: *d4.dll
+Source: {#QT_PATH}\plugins\imageformats\*.dll; DestDir: {app}\qt\plugins\imageformats; Flags: promptifolder; Excludes: *d4.dll
 Source: {#QT_PATH}\translations\qt*.qm; DestDir: {app}\qt\translations; Flags: promptifolder recursesubdirs; Excludes: qt_help*.qm,qtconfig*.qm
 ; MinGW related files
-Source: {#DLLS_PATH}\mingwm10.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
-Source: {#DLLS_PATH}\libeay32.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
-Source: {#DLLS_PATH}\libssl32.dll; DestDir: {app}; Flags: confirmoverwrite promptifolder
+Source: {#DLLS_PATH}\mingwm10.dll; DestDir: {app}; Flags: promptifolder
+Source: {#DLLS_PATH}\libgcc_s_dw2-1.dll; DestDir: {app}; Flags: promptifolder
+Source: {#DLLS_PATH}\libeay32.dll; DestDir: {app}; Flags: promptifolder
+Source: {#DLLS_PATH}\libssl32.dll; DestDir: {app}; Flags: promptifolder
 
 [Icons]
 Name: {group}\{cm:QWBFS_NAME}; Filename: {app}\qwbfsmanager.exe; WorkingDir: {app}; IconFilename: {app}\qwbfsmanager.exe; IconIndex: 0

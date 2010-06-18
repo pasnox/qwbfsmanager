@@ -3,7 +3,7 @@ echo "1st parameter = host Qt version / 2nd parameter = windows Qt version"
 
 PLATFORM=`uname -s`
 CUR_PATH="$PWD"
-QT_VERSION="4.6.2"
+QT_VERSION="4.6.2-universal"
 QT_WIN32_VERSION="4.6.0"
 QT_WIN32_PATH=.
 MKSPEC="x-win32-g++"
@@ -35,6 +35,8 @@ if [ $PLATFORM = "Linux" ]; then
 	#QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
 	#MKSPEC="$HOME/mkspecs/4.6.x/win32-osx-g++"
 	#QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
+	QT_VERSION="4.6.3"
+	QT_WIN32_VERSION="4.6.1"
 	QT_PATH=/usr
 	MKSPEC="$HOME/.qt/win32-x11-g++"
 	QT_WIN32_PATH="$HOME/Disk Wine/Development/Qt/$QT_WIN32_VERSION"
