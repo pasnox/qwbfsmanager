@@ -28,6 +28,18 @@ WIN_PACKAGE=$BASE_NAME-win32.zip
 MAC_PACKAGE=$BASE_NAME.dmg
 CUR_PATH=$PWD
 
+if [ $OS = "Linux" ]; then
+	WINE="wine"
+	WINE_DRIVE="$HOME/.wine/drive_c"
+	WINE_PROGRAM_FILES="$WINE_DRIVE/Program Files"
+fi
+
+if [ $OS = "Darwin" ]; then
+	WINE="/Applications/Wine.app/Contents/Resources/bin/wine"
+	WINE_DRIVE="$HOME/.wine/drive_c"
+	WINE_PROGRAM_FILES="$WINE_DRIVE/Program Files"
+fi
+
 export OS
 export VERSION
 export VERSION_STR
@@ -74,10 +86,9 @@ crossBuild()
 		QT_WIN32_VERSION="4.6.1"
 		QT_PATH="/usr"
 		MKSPEC="$HOME/.qt/win32-x11-g++"
-		QT_WIN32_PATH="$HOME/Disk Wine/Development/Qt/$QT_WIN32_VERSION"
-		WINE="wine"
-		ISCC="$HOME/Disk Wine/Program Files/Inno Setup 5/ISCC.exe"
-		DLLS_PATH="$HOME/Disk Wine/Development/OpenSSL"
+		QT_WIN32_PATH="$WINE_DRIVE/Development/Qt/$QT_WIN32_VERSION"
+		ISCC="$WINE_PROGRAM_FILES/Inno Setup 5/ISCC.exe"
+		DLLS_PATH="$WINE_DRIVE/Development/OpenSSL"
 	fi
 	
 	if [ $OS = "Darwin" ]; then
@@ -86,8 +97,7 @@ crossBuild()
 		QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
 		MKSPEC="$HOME/mkspecs/4.6.x/win32-osx-g++"
 		QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
-		WINE="/Applications/Wine.app/Contents/Resources/bin/wine"
-		ISCC="$HOME/Wine Files/drive_c/Program Files/Inno_Setup_5_gpl/ISCC.exe"
+		ISCC="$WINE_PROGRAM_FILES/Inno_Setup_5_gpl/ISCC.exe"
 		DLLS_PATH="$HOME/Win32Libraries/bin"
 		
 	fi
@@ -116,16 +126,6 @@ crossBuild()
 windowsZipPackage()
 {
 	echo "Creating windows zip package"
-	
-	if [ $OS = "Linux" ]; then
-		WINE="wine"
-		WINE_PROGRAM_FILES="$HOME/Disk Wine/Program Files"
-	fi
-	
-	if [ $OS = "Darwin" ]; then
-		WINE="/Applications/Wine.app/Contents/Resources/bin/wine"
-		WINE_PROGRAM_FILES="$HOME/Wine Files/drive_c/Program Files"
-	fi
 	
 	# uninstall previous package
 	find "$WINE_PROGRAM_FILES/QWBFS Manager" -name "unins*.exe" -print0 | xargs -0 -I {} $WINE {} /silent
@@ -161,8 +161,11 @@ macPackage()
 	"$QT_PATH/bin/qmake" -r
 	make -j4 release
 	"$QT_PATH/bin/macdeployqt" "$BUNDLE_APP_PATH" -dmg
-	mv "$BUNDLE_PATH/$BUNDLE_NAME.dmg" "$MAC_PACKAGE"
 	cd "$CUR_PATH"
+	
+	if [ -f "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
+		mv "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" "./$MAC_PACKAGE"
+	fi
 }
 
 # delete source folder
@@ -191,13 +194,18 @@ crossBuild
 # create windows zip package
 windowsZipPackage
 
-# delete exported repository
-deleteIfExists ./$FOLDER_NAME
-
 if [ $OS = "Darwin" ]; then
 	macPackage
+	killall wine
+	killall WineBottler
+	killall X11.bin
 fi
 
 if [ $OS = "Linux" ]; then
 	echo "Linux"
 fi
+
+# delete exported repository
+deleteIfExists ./$FOLDER_NAME
+
+echo "********** Processing release finished **********"
