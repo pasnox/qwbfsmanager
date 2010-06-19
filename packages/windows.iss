@@ -64,9 +64,9 @@ Source: {#QT_PATH}\plugins\codecs\*.dll; DestDir: {app}\qt\plugins\codecs; Flags
 Source: {#QT_PATH}\plugins\graphicssystems\*.dll; DestDir: {app}\qt\plugins\graphicssystems; Flags: promptifolder; Excludes: *d4.dll
 Source: {#QT_PATH}\plugins\imageformats\*.dll; DestDir: {app}\qt\plugins\imageformats; Flags: promptifolder; Excludes: *d4.dll
 Source: {#QT_PATH}\translations\qt*.qm; DestDir: {app}\qt\translations; Flags: promptifolder recursesubdirs; Excludes: qt_help*.qm,qtconfig*.qm
-; MinGW related files
-Source: {#DLLS_PATH}\mingwm10.dll; DestDir: {app}; Flags: promptifolder
-Source: {#DLLS_PATH}\libgcc_s_dw2-1.dll; DestDir: {app}; Flags: promptifolder
+; Dependencies related files
+Source: {#QT_PATH}\bin\mingwm10.dll; DestDir: {app}; Flags: promptifolder
+Source: {#QT_PATH}\bin\libgcc_s_dw2-1.dll; DestDir: {app}; Flags: promptifolder skipifsourcedoesntexist
 Source: {#DLLS_PATH}\libeay32.dll; DestDir: {app}; Flags: promptifolder
 Source: {#DLLS_PATH}\libssl32.dll; DestDir: {app}; Flags: promptifolder
 
