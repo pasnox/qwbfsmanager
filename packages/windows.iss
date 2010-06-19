@@ -85,16 +85,3 @@ Name: {app}\Home Page.url; Type: files
 Name: {app}\Tracker.url; Type: files
 Name: {app}\*.ini; Type: files
 Name: {app}; Type: dirifempty
-
-[Code]
-function trimVersion(param: String): String;
-begin
-	{Try
-		StrToInt( param );
-	except
-		Delete( param, param.length(), 1 );
-	end;
-	
-	Result := param;}
-	Result := '1.0.0';
-end;
