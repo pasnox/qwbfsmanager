@@ -80,7 +80,7 @@ createZip()
 crossBuild()
 {
 	echo "Crossbuilding for windows"
-	
+
 	if [ $OS = "Linux" ]; then
 		QT_VERSION="4.6.3"
 		QT_WIN32_VERSION="4.6.1"
@@ -90,7 +90,7 @@ crossBuild()
 		ISCC="$WINE_PROGRAM_FILES/Inno Setup 5/ISCC.exe"
 		DLLS_PATH="$WINE_DRIVE/Development/OpenSSL"
 	fi
-	
+
 	if [ $OS = "Darwin" ]; then
 		QT_VERSION="4.6.2-universal"
 		QT_WIN32_VERSION="4.6.0"
@@ -99,14 +99,14 @@ crossBuild()
 		QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
 		ISCC="$WINE_PROGRAM_FILES/Inno_Setup_5_gpl/ISCC.exe"
 		DLLS_PATH="$HOME/Win32Libraries/bin"
-		
+
 	fi
-	
+
 	export QT_WIN32_PATH
 	export QT_WIN32_VERSION
 	export DLLS_PATH
 	export CROSS_WIN32_QT_PATH="$QT_WIN32_PATH"
-	
+
 	cd "./$FOLDER_NAME"
 	make distclean
 	"$QT_PATH/bin/qmake" -spec "$MKSPEC" -win32 -r
@@ -116,7 +116,7 @@ crossBuild()
 	"$WINE" "$ISCC" "./packages/windows.iss"
 	make distclean
 	cd "$CUR_PATH"
-	
+
 	if [ -f "./$FOLDER_NAME/packages/releases/$WIN_SETUP" ]; then
 		mv "./$FOLDER_NAME/packages/releases/$WIN_SETUP" "./"
 	fi
@@ -126,34 +126,34 @@ crossBuild()
 windowsZipPackage()
 {
 	echo "Creating windows zip package"
-	
+
 	# uninstall previous package
-	find "$WINE_PROGRAM_FILES/QWBFS Manager" -name "unins*.exe" -print0 | xargs -0 -I {} $WINE {} /silent
-	
+	find "$WINE_PROGRAM_FILES/QWBFS Manager" -name "unins*.exe" -print0 | xargs -0 -I {} "$WINE" {} /silent
+
 	# install the current one
-	$WINE "./$WIN_SETUP" /silent
-	
+	"$WINE" "./$WIN_SETUP" /silent
+
 	# create zip
 	ZIP_FOLDER="./$BASE_NAME-win32"
 	cp -fr "$WINE_PROGRAM_FILES/QWBFS Manager" "$ZIP_FOLDER"
 	createZip "./$WIN_PACKAGE" "$ZIP_FOLDER" "" "-x *unins*.exe -x *unins*.dat"
 	rm -fr "$ZIP_FOLDER"
-	
+
 	# uninstall installed package
-	find "$WINE_PROGRAM_FILES/QWBFS Manager" -name "unins*.exe" -print0 | xargs -0 -I {} $WINE {} /silent
+	find "$WINE_PROGRAM_FILES/QWBFS Manager" -name "unins*.exe" -print0 | xargs -0 -I {} "$WINE" {} /silent
 }
 
 # create mac os x package
 macPackage()
 {
 	echo "Create Mac OS X package"
-	
+
 	QT_VERSION="4.6.2-universal"
 	BUNDLE_NAME="QWBFSManager"
 	BUNDLE_PATH="./bin"
 	BUNDLE_APP_PATH="$BUNDLE_PATH/$BUNDLE_NAME.app"
 	QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
-	
+
 	cd "./$FOLDER_NAME"
 	make distclean
 	"$QT_PATH/bin/qmake" -r
@@ -163,7 +163,7 @@ macPackage()
 	"$QT_PATH/bin/macdeployqt" "$BUNDLE_APP_PATH" -dmg
 	make distclean
 	cd "$CUR_PATH"
-	
+
 	if [ -f "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
 		mv "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" "./$MAC_PACKAGE"
 	fi
@@ -179,19 +179,14 @@ deleteIfExists ./$ZIP_FILE
 deleteIfExists ./$WIN_SETUP
 # delete win package
 deleteIfExists ./$WIN_PACKAGE
-
 # export the taggued version to release
 svnExport ./$SOURCE_FOLDER ./$FOLDER_NAME
-
 # create tar.gz source
 createTarGz ./$TAR_GZ_FILE ./$FOLDER_NAME
-
 # create zip source
 createZip ./$ZIP_FILE ./$FOLDER_NAME
-
 # create win setup
 crossBuild
-
 # create windows zip package
 windowsZipPackage
 
