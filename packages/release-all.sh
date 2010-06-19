@@ -161,6 +161,7 @@ macPackage()
 	"$QT_PATH/bin/qmake" -r
 	make -j4 release
 	"$QT_PATH/bin/macdeployqt" "$BUNDLE_APP_PATH" -dmg
+	make distclean
 	cd "$CUR_PATH"
 	
 	if [ -f "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
