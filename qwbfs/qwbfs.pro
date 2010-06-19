@@ -29,7 +29,7 @@ QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerful cross platform Wii Backup File System manager"
 QMAKE_TARGET_COPYRIGHT	= "(C) 2010 Filipe Azevedo"
 PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
-PACKAGE_VERSION	= 1.0.2
+PACKAGE_VERSION	= 1.0.3
 SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
 system( touch $$PWD/src/main.h )
