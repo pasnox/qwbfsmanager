@@ -6,9 +6,9 @@ QWBFS_COPYRIGHTS=2010 Filipe AZEVEDO
 QWBFS_URL=http://code.google.com/p/qwbfs/
 QWBFS_ISSUES_URL=http://code.google.com/p/qwbfs/issues/list
 
-#define QWBFS_VERSION "1.0.2"
-#define QWBFS_REVISION GetEnv("SVN_REVISION")
-#define QWBFS_SETUP_NAME "setup-qwbfsmanager-" +QWBFS_VERSION +"-svn" +QWBFS_REVISION +"-win32"
+#define QWBFS_VERSION GetEnv("VERSION")
+#define QWBFS_VERSION_STR GetEnv("VERSION_STR")
+#define QWBFS_SETUP_NAME "setup-qwbfsmanager-" +QWBFS_VERSION_STR +"-win32"
 #define QT_PATH "Z:\" +GetEnv("CROSS_WIN32_QT_PATH")
 #define DLLS_PATH "Z:\" +GetEnv("DLLS_PATH")
 
@@ -85,3 +85,16 @@ Name: {app}\Home Page.url; Type: files
 Name: {app}\Tracker.url; Type: files
 Name: {app}\*.ini; Type: files
 Name: {app}; Type: dirifempty
+
+[Code]
+function trimVersion(param: String): String;
+begin
+	{Try
+		StrToInt( param );
+	except
+		Delete( param, param.length(), 1 );
+	end;
+	
+	Result := param;}
+	Result := '1.0.0';
+end;
