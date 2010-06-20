@@ -87,7 +87,8 @@ HEADERS	*= src/main.h \
 	src/wiitdb/Covers.h \
 	src/datacache/DataNetworkCache.h \
 	src/PropertiesDialog.h \
-	src/Properties.h
+	src/Properties.h \
+	src/donation/PaypalDonationWidget.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -107,4 +108,5 @@ SOURCES	*= src/main.cpp \
 	src/wiitdb/Covers.cpp \
 	src/datacache/DataNetworkCache.cpp \
 	src/PropertiesDialog.cpp \
-	src/Properties.cpp
+	src/Properties.cpp \
+	src/donation/PaypalDonationWidget.cpp

@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="/icons">
-	<file>qwbfsmanager.png</file>
+    <file>donation.png</file>
+    <file>qwbfsmanager.png</file>
     <file>splashscreen.png</file>
     <file>256/tools.png</file>
     <file>256/covers.png</file>

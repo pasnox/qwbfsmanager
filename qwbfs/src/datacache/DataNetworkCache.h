@@ -41,6 +41,7 @@
 #include <QByteArray>
 #include <QNetworkAccessManager>
 #include <QCache>
+#include <QPixmap>
 
 #define DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE 1024 *50 // 50 MB
 #define DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE 1024 *5 // 5 MB
@@ -59,6 +60,7 @@ public:
 	bool hasCachedData( const QUrl& url ) const;
 	QByteArray* cachedData( const QUrl& url ) const;
 	QIODevice* cachedDataDevice( const QUrl& url ) const;
+	QPixmap cachedPixmap( const QUrl& url ) const;
 
 public slots:
 	void setWorkingPath( const QString& path );

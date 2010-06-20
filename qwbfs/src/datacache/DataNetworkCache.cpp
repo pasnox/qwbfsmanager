@@ -41,6 +41,7 @@
 #include <QNetworkReply>
 #include <QDebug>
 #include <QHash>
+#include <QPixmapCache>
 
 #if QT_VERSION < 0x040700
 uint qHash( const QUrl& url )
@@ -234,6 +235,25 @@ QIODevice* DataNetworkCache::cachedDataDevice( const QUrl& url ) const
 	}
 	
 	return 0;
+}
+
+QPixmap DataNetworkCache::cachedPixmap( const QUrl& url ) const
+{
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( url.toString(), &pixmap ) ) {
+		const QByteArray* data = cachedData( url );
+		
+		if ( data ) {
+			pixmap.loadFromData( *data );
+			
+			if ( !QPixmapCache::insert( url.toString(), pixmap ) ) {
+				qWarning() << QString( "%1: Can't cache pixmap: %2" ).arg( Q_FUNC_INFO ).arg( url.toString() );
+			}
+		}
+	}
+	
+	return pixmap;
 }
 
 void DataNetworkCache::setWorkingPath( const QString& path )

@@ -3,8 +3,8 @@
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
-** FileName  : UIMain.h
-** Date      : 2010-06-16T14:19:29
+** FileName  : PaypalDonationWidget.h
+** Date      : 2010-20-16T16:19:29
 ** License   : GPL
 ** Home Page : http://code.google.com/p/qwbfs
 ** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
@@ -33,64 +33,56 @@
 ** wish to do so, delete this exception statement from your version.
 **
 ****************************************************************************/
-#ifndef UIMAIN_H
-#define UIMAIN_H
+#ifndef PAYPALDONATIONWIDGET_H
+#define PAYPALDONATIONWIDGET_H
 
-#include "ui_UIMain.h"
+#include <QLabel>
+#include <QUrl>
+#include <QHash>
 
-class QFileSystemModel;
 class DataNetworkCache;
-class PaypalDonationWidget;
 
-namespace QWBFS {
-namespace Model {
-	class DiscModel;
-}; // Model
-}; // QWBFS
-
-class UIMain : public QMainWindow, public Ui::UIMain
+class PaypalDonationWidget : public QLabel
 {
 	Q_OBJECT
-
-public:
-	UIMain( QWidget* parent = 0 );
-	virtual ~UIMain();
 	
+public:
+	PaypalDonationWidget( QWidget* parent = 0 );
+	virtual ~PaypalDonationWidget();
+	
+	virtual bool event( QEvent* event );
+	
+	QString actionPost() const;
+	QString businessId() const;
+	QString itemName() const;
+	QString itemId() const;
+	QString currencyCode() const;
+	
+	QPixmap pixmap( const QUrl& url ) const;
 	DataNetworkCache* cache() const;
+	QUrl url() const;
+	
+	static QUrl pixmapUrl( const QString& locale );
+
+public slots:
+	void setActionPost( const QString& value );
+	void setBusinessId( const QString& value );
+	void setItemName( const QString& value );
+	void setItemId( const QString& value );
+	void setCurrencyCode( const QString& value );
 
 protected:
-	PaypalDonationWidget* mDonationWidget;
-	QStringList mPartitions;
-	QFileSystemModel* mFoldersModel;
-	QFileSystemModel* mFilesModel;
-	QWBFS::Model::DiscModel* mExportModel;
-	DataNetworkCache* mCache;
-	QString mLastDiscId;
+	QHash<QString, QString> mQueryItems;
 	
-	virtual void showEvent( QShowEvent* event );
-	virtual void closeEvent( QCloseEvent* event );
+	virtual void mousePressEvent( QMouseEvent* event );
 	
-	void connectView( PartitionWidget* widget );
+	void localeChanged();
+	void updatePixmap();
 
 protected slots:
-	void propertiesChanged();
-	void openViewRequested();
-	void closeViewRequested();
-	void coverRequested( const QString& id );
-	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void dataNetworkCache_dataCached( const QUrl& url );
-	void dataNetworkCache_error( const QString& message, const QUrl& url );
-	void dataNetworkCache_invalidated();
-	void on_aReloadPartitions_triggered();
-	void on_aQuit_triggered();
-	void on_aAbout_triggered();
-	void on_aProperties_triggered();
-	void on_tvFolders_activated( const QModelIndex& index );
-	void on_tbReloadDrives_clicked();
-	void on_cbDrives_currentIndexChanged( const QString& text );
-	void on_tbClearExport_clicked();
-	void on_tbRemoveExport_clicked();
-	void on_tbExport_clicked();
+	void networkCache_dataCached( const QUrl& url );
+	void networkCache_error( const QString& message, const QUrl& url = QUrl() );
+	void networkCache_invalidated();
 };
 
-#endif // UIMAIN_H
+#endif // PAYPALDONATIONWIDGET_H

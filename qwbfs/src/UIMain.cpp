@@ -43,11 +43,13 @@
 #include "PropertiesDialog.h"
 #include "Properties.h"
 #include "main.h"
+#include "donation/PaypalDonationWidget.h"
 
 #include <QFileSystemModel>
 #include <QFileDialog>
 #include <QProcess>
 #include <QMessageBox>
+#include <QSpacerItem>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -62,8 +64,18 @@ UIMain::UIMain( QWidget* parent )
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
 	dwCovers->toggleViewAction()->setIcon( QIcon( ":/icons/256/covers.png" ) );
 	
+	mDonationWidget = new PaypalDonationWidget( this );
+	mDonationWidget->setBusinessId( "5R924WYXJ6BAW" );
+	mDonationWidget->setItemName( "QWBFS Manager" );
+	mDonationWidget->setItemId( "QWBFS-DONATION" );
+	mDonationWidget->setCurrencyCode( "EUR" );
+	
 	toolBar->addAction( dwTools->toggleViewAction() );
 	toolBar->addAction( dwCovers->toggleViewAction() );
+	QWidget* spacerWidget = new QWidget( toolBar );
+	spacerWidget->setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Maximum ) );
+	toolBar->addWidget( spacerWidget );
+	toolBar->addWidget( mDonationWidget );
 	
 	mFoldersModel = new QFileSystemModel( this );
 	mFoldersModel->setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
@@ -106,20 +118,6 @@ UIMain::~UIMain()
 DataNetworkCache* UIMain::cache() const
 {
 	return mCache;
-}
-
-QPixmap UIMain::cachedPixmap( const QUrl& url ) const
-{
-	const QByteArray* data = mCache->cachedData( url );
-	QPixmap pixmap;
-	
-	if ( !data ) {
-		return pixmap;
-	}
-	
-	pixmap.loadFromData( *data );
-	
-	return pixmap;
 }
 
 void UIMain::showEvent( QShowEvent* event )
@@ -165,6 +163,10 @@ void UIMain::propertiesChanged()
 	proxy.setPassword( properties.proxyPassword() );
 	
 	QNetworkProxy::setApplicationProxy( proxy );
+	
+	mDonationWidget->cache()->setDiskCacheSize( mCache->diskCacheSize() );
+	mDonationWidget->cache()->setMemoryCacheSize( mCache->memoryCacheSize() );
+	mDonationWidget->cache()->setWorkingPath( mCache->workingPath() );
 }
 
 void UIMain::openViewRequested()
@@ -232,15 +234,15 @@ void UIMain::dataNetworkCache_dataCached( const QUrl& url )
 	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, mLastDiscId );
 	
 	if ( mCache->hasCachedData( urlCD ) ) {
-		lCDCover->setPixmap( cachedPixmap( urlCD ) );
+		lCDCover->setPixmap( mCache->cachedPixmap( urlCD ) );
 	}
 	
 	if ( mCache->hasCachedData( urlCDCustom ) ) {
-		lCDCover->setPixmap( cachedPixmap( urlCDCustom ) );
+		lCDCover->setPixmap( mCache->cachedPixmap( urlCDCustom ) );
 	}
 	
 	if ( mCache->hasCachedData( urlCover ) ) {
-		lCover->setPixmap( cachedPixmap( urlCover ) );
+		lCover->setPixmap( mCache->cachedPixmap( urlCover ) );
 	}
 }
 
