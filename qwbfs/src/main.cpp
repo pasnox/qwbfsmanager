@@ -37,11 +37,14 @@
 #include <QSplashScreen>
 #include <QWeakPointer>
 #include <QTimer>
+#include <QDebug>
+
+#include <pTranslationManager.h>
 
 #include "main.h"
 #include "UIMain.h"
 
-#define TIMEOUT 3000
+#define SPLASHSCREEN_TIMEOUT 3000
 
 class SplashScreen : public QSplashScreen
 {
@@ -63,7 +66,7 @@ public:
 	void handle( QWidget* widget )
 	{
 		mWidget = widget;
-		QTimer::singleShot( TIMEOUT, this, SLOT( close() ) );
+		QTimer::singleShot( SPLASHSCREEN_TIMEOUT, this, SLOT( close() ) );
 	}
 
 protected:
@@ -88,6 +91,14 @@ int main( int argc, char** argv )
 	app.setOrganizationName( APPLICATION_ORGANIZATION );
 	app.setOrganizationDomain( APPLICATION_DOMAIN );
 	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
+	
+	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
+	
+	pTranslationManager* translationManager = pTranslationManager::instance();
+	translationManager->setFakeCLocaleEnabled( true );
+	translationManager->addTranslationsMask( "qt*.qm" );
+	translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
+	translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
 	
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 	

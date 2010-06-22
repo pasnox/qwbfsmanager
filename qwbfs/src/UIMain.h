@@ -41,6 +41,7 @@
 class QFileSystemModel;
 class DataNetworkCache;
 class PaypalDonationWidget;
+class pUpdateChecker;
 
 namespace QWBFS {
 namespace Model {
@@ -56,6 +57,8 @@ public:
 	UIMain( QWidget* parent = 0 );
 	virtual ~UIMain();
 	
+	virtual bool event( QEvent* event );
+	
 	DataNetworkCache* cache() const;
 
 protected:
@@ -66,13 +69,18 @@ protected:
 	QWBFS::Model::DiscModel* mExportModel;
 	DataNetworkCache* mCache;
 	QString mLastDiscId;
+	pUpdateChecker* mUpdateChecker;
 	
 	virtual void showEvent( QShowEvent* event );
 	virtual void closeEvent( QCloseEvent* event );
 	
+	void localeChanged();
+	void loadProperties();
+	void saveProperties();
 	void connectView( PartitionWidget* widget );
 
 protected slots:
+	void changeLocaleRequested();
 	void propertiesChanged();
 	void openViewRequested();
 	void closeViewRequested();

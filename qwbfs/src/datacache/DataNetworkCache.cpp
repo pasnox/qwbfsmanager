@@ -248,7 +248,7 @@ QPixmap DataNetworkCache::cachedPixmap( const QUrl& url ) const
 			pixmap.loadFromData( *data );
 			
 			if ( !QPixmapCache::insert( url.toString(), pixmap ) ) {
-				qWarning() << QString( "%1: Can't cache pixmap: %2" ).arg( Q_FUNC_INFO ).arg( url.toString() );
+				emit const_cast<DataNetworkCache*>( this )->error( tr( "Can't cache pixmap" ), url );
 			}
 		}
 	}

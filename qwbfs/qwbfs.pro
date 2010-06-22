@@ -29,6 +29,9 @@ QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerful cross platform Wii Backup File System manager"
 QMAKE_TARGET_COPYRIGHT	= "(C) 2010 Filipe Azevedo"
 PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
+PACKAGE_DOWNLOADS_FEED	= "http://code.google.com/feeds/p/qwbfs/downloads/basic"
+PACKAGE_REPORT_BUG_URL	= "http://code.google.com/p/qwbfs/issues/list"
+PACKAGE_DISCUSS_URL	= "http://groups.google.com/group/qwbfs-discuss"
 PACKAGE_VERSION	= 1.0.3
 SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
@@ -49,25 +52,35 @@ DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
 	"_APPLICATION_DOMAIN=\"\\\"$${PACKAGE_DOMAIN}\\\"\"" \
 	"_APPLICATION_COPYRIGHTS=\"\\\"$${QMAKE_TARGET_COPYRIGHT}\\\"\"" \
 	"_APPLICATION_DESCRIPTION=\"\\\"$${QMAKE_TARGET_DESCRIPTION}\\\"\"" \
-	"_APPLICATION_ORGANIZATION=\"\\\"$${QMAKE_TARGET_COMPANY}\\\"\""
+	"_APPLICATION_ORGANIZATION=\"\\\"$${QMAKE_TARGET_COMPANY}\\\"\"" \
+	"_APPLICATION_DOWNLOADS_FEED=\"\\\"$${PACKAGE_DOWNLOADS_FEED}\\\"\"" \
+	"_APPLICATION_REPORT_BUG_URL=\"\\\"$${PACKAGE_REPORT_BUG_URL}\\\"\"" \
+	"_APPLICATION_DISCUSS_URL=\"\\\"$${PACKAGE_DISCUSS_URL}\\\"\""
 
 INCLUDEPATH	*= . \
-	src
+	src \
+	src/fresh
 DEPENDPATH	*= . \
 	src \
 	src/qwbfsdriver \
 	src/models \
-	src/WiiTDB
+	src/WiiTDB \
+	src/fresh
 
-RESOURCES	*= resources/resources.qrc
 mac:ICON	= resources/qwbfsmanager.icns
 win32:RC_FILE	*= resources/qwbfsmanager.rc
+
+RESOURCES	*= resources/resources.qrc \
+	src/fresh/resources/fresh.qrc
+
+TRANSLATIONS	*= ../translations/qwbfsmanager-fr_FR.ts
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
 	src/ProgressDialog.ui \
 	src/UIAbout.ui \
-	src/PropertiesDialog.ui
+	src/PropertiesDialog.ui \
+	src/fresh/pTranslationDialog.ui
 
 HEADERS	*= src/main.h \
 	src/UIMain.h \
@@ -88,7 +101,17 @@ HEADERS	*= src/main.h \
 	src/datacache/DataNetworkCache.h \
 	src/PropertiesDialog.h \
 	src/Properties.h \
-	src/donation/PaypalDonationWidget.h
+	src/donation/PaypalDonationWidget.h \
+	src/fresh/pVersion.h \
+	src/fresh/pTranslationDialog.h \
+	src/fresh/pTranslationManager.h \
+	src/fresh/MonkeyExport.h \
+	src/fresh/pIconManager.h \
+	src/fresh/pPathListEditor.h \
+	src/fresh/pStringListEditor.h \
+	src/fresh/pFileListEditor.h \
+	src/fresh/pQueuedMessageToolBar.h \
+	src/fresh/pQueuedMessageWidget.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -109,4 +132,15 @@ SOURCES	*= src/main.cpp \
 	src/datacache/DataNetworkCache.cpp \
 	src/PropertiesDialog.cpp \
 	src/Properties.cpp \
-	src/donation/PaypalDonationWidget.cpp
+	src/donation/PaypalDonationWidget.cpp \
+	src/fresh/pVersion.cpp \
+	src/fresh/pTranslationDialog.cpp \
+	src/fresh/pTranslationManager.cpp \
+	src/fresh/pIconManager.cpp \
+	src/fresh/pPathListEditor.cpp \
+	src/fresh/pStringListEditor.cpp \
+	src/fresh/pFileListEditor.cpp \
+	src/fresh/pQueuedMessageToolBar.cpp \
+	src/fresh/pQueuedMessageWidget.cpp
+
+include( src/UpdateChecker/pUpdateChecker.pri )

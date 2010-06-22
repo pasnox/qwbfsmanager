@@ -53,6 +53,8 @@ PaypalDonationWidget::PaypalDonationWidget( QWidget* parent )
 	mQueryItems[ "cmd" ] = "_donations";
 	mQueryItems[ "bn" ] = QUrl::fromPercentEncoding( "PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" );
 	
+	localeChanged();
+	
 	connect( networkCache(), SIGNAL( dataCached( const QUrl& ) ), this, SLOT( networkCache_dataCached( const QUrl& ) ) );
 	connect( networkCache(), SIGNAL( error( const QString&, const QUrl& ) ), this, SLOT( networkCache_error( const QString&, const QUrl& ) ) );
 	connect( networkCache(), SIGNAL( invalidated() ), this, SLOT( networkCache_invalidated() ) );

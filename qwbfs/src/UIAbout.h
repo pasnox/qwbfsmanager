@@ -44,6 +44,11 @@ class UIAbout : public QDialog, public Ui::UIAbout
 
 public:
 	UIAbout( QWidget* parent = 0 );
+	
+	virtual bool event( QEvent* event );
+
+protected:
+	void localeChanged();
 
 protected slots:
 	void on_dbbButtons_clicked( QAbstractButton* button );

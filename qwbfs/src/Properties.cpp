@@ -39,6 +39,7 @@
 
 #include <QSettings>
 #include <QDir>
+#include <QCoreApplication>
 #include <QDebug>
 
 #define SETTINGS_CACHE_WORKING_PATH "cache/workingPath"
@@ -50,6 +51,11 @@
 #define SETTINGS_PROXY_PORT "proxy/port"
 #define SETTINGS_PROXY_LOGIN "proxy/login"
 #define SETTINGS_PROXY_PASSWORD "proxy/password"
+#define SETTINGS_UPDATE_LAST_UPDATED "update/lastUpdated"
+#define SETTINGS_UPDATE_LAST_CHECKED "update/lastChecked"
+#define SETTINGS_TRANSLATIONS_PATHS "translations/paths"
+#define SETTINGS_LOCALE_ACCEPTED "locale/accepted"
+#define SETTINGS_LOCALE_CURRENT "locale/current"
 #define SETTINGS_WINDOW_GEOMETRY "window/geometry"
 #define SETTINGS_WINDOW_STATE "window/state"
 #define SETTINGS_PARTITION_WIDGET_STATE "partitionWidget"
@@ -158,6 +164,57 @@ QString Properties::proxyPassword() const
 void Properties::setProxyPassword( const QString& password )
 {
 	mSettings->setValue( SETTINGS_PROXY_PASSWORD, crypt( password ) );
+}
+
+QDateTime Properties::updateLastUpdated() const
+{
+	return mSettings->value( SETTINGS_UPDATE_LAST_UPDATED ).toDateTime();
+}
+
+void Properties::setUpdateLastUpdated( const QDateTime& dateTime )
+{
+	mSettings->setValue( SETTINGS_UPDATE_LAST_UPDATED, dateTime );
+}
+
+QDateTime Properties::updateLastChecked() const
+{
+	return mSettings->value( SETTINGS_UPDATE_LAST_CHECKED ).toDateTime();
+}
+
+void Properties::setUpdateLastChecked( const QDateTime& dateTime )
+{
+	mSettings->setValue( SETTINGS_UPDATE_LAST_CHECKED, dateTime );
+}
+
+QStringList Properties::translationsPaths() const
+{
+	const QString defaultTranslationsPath = QCoreApplication::applicationDirPath().append( "/../translations" );
+	return mSettings->value( SETTINGS_TRANSLATIONS_PATHS, QStringList( defaultTranslationsPath ) ).toStringList();
+}
+
+void Properties::setTranslationsPaths( const QStringList& translationsPaths )
+{
+	mSettings->setValue( SETTINGS_TRANSLATIONS_PATHS, translationsPaths );
+}
+
+bool Properties::localeAccepted() const
+{
+	return mSettings->value( SETTINGS_LOCALE_ACCEPTED ).toBool();
+}
+
+void Properties::setLocaleAccepted( bool accepted )
+{
+	mSettings->setValue( SETTINGS_LOCALE_ACCEPTED, accepted );
+}
+
+QLocale Properties::locale() const
+{
+	return QLocale( mSettings->value( SETTINGS_LOCALE_CURRENT, QLocale::system().name() ).toString() );
+}
+
+void Properties::setLocale( const QLocale& locale )
+{
+	mSettings->setValue( SETTINGS_LOCALE_CURRENT, locale.name() );
 }
 
 void Properties::restoreState( UIMain* window ) const

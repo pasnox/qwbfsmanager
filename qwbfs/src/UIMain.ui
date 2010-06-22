@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>643</width>
-    <height>361</height>
+    <width>637</width>
+    <height>355</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -26,7 +26,10 @@
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="centralVerticalLayout">
+    <item>
+     <widget class="pQueuedMessageToolBar" name="qmtbInfos"/>
+    </item>
     <item>
      <widget class="QSplitter" name="sViews">
       <property name="orientation">
@@ -327,7 +330,10 @@
      <normaloff>:/icons/256/reload.png</normaloff>:/icons/256/reload.png</iconset>
    </property>
    <property name="text">
-    <string>Reload partitions</string>
+    <string>Reload</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload the partitions</string>
    </property>
   </action>
   <action name="aAbout">
@@ -370,6 +376,11 @@
    <extends>QWidget</extends>
    <header>PartitionWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>pQueuedMessageToolBar</class>
+   <extends>QToolBar</extends>
+   <header location="global">pQueuedMessageToolBar.h</header>
   </customwidget>
  </customwidgets>
  <resources>

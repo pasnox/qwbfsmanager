@@ -117,7 +117,7 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		QFontMetricsF metrics( font );
 		rect = option.rect.adjusted( 40, rect.height(), -10, -2 );
 		
-		text = QString( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
+		text = tr( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
 		painter->save();

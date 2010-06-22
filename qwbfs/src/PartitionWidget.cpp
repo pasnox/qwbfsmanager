@@ -65,6 +65,8 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	
 	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
 	
+	localeChanged();
+	
 	connect( mDiscModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( mImportModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
@@ -76,6 +78,19 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 PartitionWidget::~PartitionWidget()
 {
 	mDriver->close();
+}
+
+bool PartitionWidget::event( QEvent* event )
+{
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
+	}
+	
+	return QWidget::event( event );
 }
 
 const QWBFS::Driver* PartitionWidget::driver() const
@@ -157,6 +172,12 @@ void PartitionWidget::dropEvent( QDropEvent* event )
 	
 	mImportModel->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
 	event->acceptProposedAction();
+}
+
+void PartitionWidget::localeChanged()
+{
+	retranslateUi( this );
+	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
 }
 
 void PartitionWidget::models_countChanged()

@@ -53,6 +53,8 @@ public:
 	ProgressDialog( QWidget* parent = 0 );
 	virtual ~ProgressDialog();
 	
+	virtual bool event( QEvent* event );
+	
 	void exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
 	void importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
 
@@ -61,6 +63,7 @@ protected:
 	QTime mElapsed;
 	
 	void closeEvent( QCloseEvent* event );
+	void localeChanged();
 
 protected slots:
 	void thread_started();

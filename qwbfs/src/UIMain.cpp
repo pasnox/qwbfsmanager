@@ -44,6 +44,10 @@
 #include "Properties.h"
 #include "main.h"
 #include "donation/PaypalDonationWidget.h"
+#include "UpdateChecker/pUpdateChecker.h"
+
+#include <pTranslationManager.h>
+#include <pTranslationDialog.h>
 
 #include <QFileSystemModel>
 #include <QFileDialog>
@@ -56,10 +60,18 @@ UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
 	mCache = new DataNetworkCache( this );
+	mUpdateChecker = new pUpdateChecker( this );
+	mUpdateChecker->setDownloadsFeedUrl( QUrl( APPLICATION_DOWNLOADS_FEED ) );
+	mUpdateChecker->setVersion( APPLICATION_VERSION );
+	mUpdateChecker->setVersionString( APPLICATION_VERSION_STR );
+	mUpdateChecker->setVersionDiscoveryPattern( ".*qwbfsmanager-([0-9\\.]+).*" );
 	
 	setWindowTitle( QString( "%1 v%2" ).arg( APPLICATION_NAME ).arg( APPLICATION_VERSION_STR ) );
 	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
+	
+	centralVerticalLayout->setMenuBar( qmtbInfos );
+	qmtbInfos->setVisible( false );
 	
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
 	dwCovers->toggleViewAction()->setIcon( QIcon( ":/icons/256/covers.png" ) );
@@ -70,6 +82,7 @@ UIMain::UIMain( QWidget* parent )
 	mDonationWidget->setItemId( "QWBFS-DONATION" );
 	mDonationWidget->setCurrencyCode( "EUR" );
 	
+	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
 	toolBar->addAction( dwTools->toggleViewAction() );
 	toolBar->addAction( dwCovers->toggleViewAction() );
 	QWidget* spacerWidget = new QWidget( toolBar );
@@ -103,7 +116,7 @@ UIMain::UIMain( QWidget* parent )
 	tbReloadDrives->click();
 	aReloadPartitions->trigger();
 	
-	propertiesChanged();
+	localeChanged();
 	
 	connect( mCache, SIGNAL( dataCached( const QUrl& ) ), this, SLOT( dataNetworkCache_dataCached( const QUrl& ) ) );
 	connect( mCache, SIGNAL( error( const QString&, const QUrl& ) ), this, SLOT( dataNetworkCache_error( const QString&, const QUrl& ) ) );
@@ -128,27 +141,40 @@ void UIMain::showEvent( QShowEvent* event )
 	
 	if ( !shown ) {
 		shown = true;
-		Properties properties;
-		properties.restoreState( this );
+		loadProperties();
+		mUpdateChecker->silentCheck();
+		qmtbInfos->appendMessage( tr(
+				"Welcome to %1, the cross-platform WBFS Manager. Report bugs <a href=\"%2\">here</a>, discuss <a href=\"%3\">here</a>."
+			).arg( APPLICATION_NAME ).arg( APPLICATION_REPORT_BUG_URL ).arg( APPLICATION_DISCUSS_URL ) );
 	}
 }
 
 void UIMain::closeEvent( QCloseEvent* event )
 {
-	Properties properties;
-	properties.saveState( this );
+	saveProperties();
 	
 	QMainWindow::closeEvent( event );
 }
 
-void UIMain::connectView( PartitionWidget* widget )
+bool UIMain::event( QEvent* event )
 {
-	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
-	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
-	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
+	}
+	
+	return QMainWindow::event( event );
 }
 
-void UIMain::propertiesChanged()
+void UIMain::localeChanged()
+{
+	retranslateUi( this );
+}
+
+void UIMain::loadProperties()
 {
 	Properties properties( this );
 	
@@ -167,6 +193,62 @@ void UIMain::propertiesChanged()
 	mDonationWidget->cache()->setDiskCacheSize( mCache->diskCacheSize() );
 	mDonationWidget->cache()->setMemoryCacheSize( mCache->memoryCacheSize() );
 	mDonationWidget->cache()->setWorkingPath( mCache->workingPath() );
+	
+	mUpdateChecker->setLastUpdated( properties.updateLastUpdated() );
+	mUpdateChecker->setLastChecked( properties.updateLastChecked() );
+	
+	pTranslationManager* translationManager = pTranslationManager::instance();
+	translationManager->setTranslationsPaths( properties.translationsPaths() );
+	translationManager->setCurrentLocale( properties.locale().name() );
+	
+	if ( !properties.localeAccepted() ) {
+		changeLocaleRequested();
+	}
+	
+	translationManager->reloadTranslations();
+	
+	foreach ( QWidget* widget, QApplication::topLevelWidgets() ) {
+		widget->setLocale( translationManager->currentLocale() );
+	}
+	
+	properties.restoreState( this );
+}
+
+void UIMain::saveProperties()
+{
+	Properties properties;
+	
+	properties.setUpdateLastUpdated( mUpdateChecker->lastUpdated() );
+	properties.setUpdateLastChecked( mUpdateChecker->lastChecked() );
+	properties.saveState( this );
+}
+
+void UIMain::connectView( PartitionWidget* widget )
+{
+	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
+	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
+	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
+}
+
+void UIMain::changeLocaleRequested()
+{
+	pTranslationManager* translationManager = pTranslationManager::instance();
+	const QString locale = pTranslationDialog::getLocale( translationManager );
+	
+	if ( !locale.isEmpty() )
+	{
+		Properties properties;
+		properties.setTranslationsPaths( translationManager->translationsPaths() );
+		properties.setLocaleAccepted( true );
+		properties.setLocale( QLocale( locale ) );
+		
+		translationManager->setCurrentLocale( locale );
+	}
+}
+
+void UIMain::propertiesChanged()
+{
+	loadProperties();
 }
 
 void UIMain::openViewRequested()
@@ -262,7 +344,7 @@ void UIMain::dataNetworkCache_error( const QString& message, const QUrl& url )
 			break;
 	}
 	
-	QMessageBox::information( this, QString::null, message );
+	qmtbInfos->appendMessage( message );
 }
 
 void UIMain::dataNetworkCache_invalidated()
@@ -350,8 +432,11 @@ void UIMain::on_aAbout_triggered()
 
 void UIMain::on_aProperties_triggered()
 {
+	saveProperties();
+	
 	PropertiesDialog* dlg = new PropertiesDialog( this );
 	connect( dlg, SIGNAL( propertiesChanged() ), this, SLOT( propertiesChanged() ) );
+	
 	dlg->open();
 }
 

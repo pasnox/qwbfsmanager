@@ -51,11 +51,25 @@ ProgressDialog::ProgressDialog( QWidget* parent )
 	cbDetails->setChecked( false );
 	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( false );
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
+	localeChanged();
 }
 
 ProgressDialog::~ProgressDialog()
 {
 	//qWarning() << Q_FUNC_INFO;
+}
+
+bool ProgressDialog::event( QEvent* event )
+{
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
+	}
+	
+	return QDialog::event( event );
 }
 
 void ProgressDialog::closeEvent( QCloseEvent* event )
@@ -66,6 +80,11 @@ void ProgressDialog::closeEvent( QCloseEvent* event )
 	}
 	
 	QDialog::closeEvent( event );
+}
+
+void ProgressDialog::localeChanged()
+{
+	retranslateUi( this );
 }
 
 void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )

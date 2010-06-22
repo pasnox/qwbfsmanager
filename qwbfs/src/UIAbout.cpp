@@ -42,10 +42,29 @@ UIAbout::UIAbout( QWidget* parent )
 	setAttribute( Qt::WA_DeleteOnClose );
 	setupUi( this );
 	lName->setText( APPLICATION_NAME );
-	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
-	lDescription->setText( APPLICATION_DESCRIPTION );
 	lCopyrights->setText( APPLICATION_COPYRIGHTS );
 	lDomain->setText( QString( "<a href=\"http://%1\" style=\"text-decoration:none;\">http://%1</a>" ).arg( APPLICATION_DOMAIN ) );
+	localeChanged();
+}
+
+bool UIAbout::event( QEvent* event )
+{
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
+	}
+	
+	return QDialog::event( event );
+}
+
+void UIAbout::localeChanged()
+{
+	retranslateUi( this );
+	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
+	lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ) );
 	adjustSize();
 }
 

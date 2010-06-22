@@ -38,6 +38,8 @@
 
 #include <QObject>
 #include <QNetworkProxy>
+#include <QDateTime>
+#include <QLocale>
 
 class QSettings;
 class UIMain;
@@ -78,6 +80,21 @@ public:
 	
 	QString proxyPassword() const;
 	void setProxyPassword( const QString& password );
+	
+	QDateTime updateLastUpdated() const;
+	void setUpdateLastUpdated( const QDateTime& dateTime );
+	
+	QDateTime updateLastChecked() const;
+	void setUpdateLastChecked( const QDateTime& dateTime );
+	
+	QStringList translationsPaths() const;
+	void setTranslationsPaths( const QStringList& translationsPaths );
+	
+	bool localeAccepted() const;
+	void setLocaleAccepted( bool accepted );
+	
+	QLocale locale() const;
+	void setLocale( const QLocale& locale );
 	
 	void restoreState( UIMain* window ) const;
 	void saveState( UIMain* window );

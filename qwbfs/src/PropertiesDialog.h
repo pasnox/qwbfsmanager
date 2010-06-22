@@ -47,11 +47,16 @@ class PropertiesDialog : public QDialog, public Ui::PropertiesDialog
 public:
 	PropertiesDialog( QWidget* parent = 0 );
 	virtual ~PropertiesDialog();
+	
+	virtual bool event( QEvent* event );
 
 protected:
 	Properties* mProperties;
+	
+	void localeChanged();
 
 protected slots:
+	void on_tbChangeLocale_clicked();
 	void on_tbCachePath_clicked();
 	void on_cbProxyType_currentIndexChanged( int index );
 	virtual void accept();

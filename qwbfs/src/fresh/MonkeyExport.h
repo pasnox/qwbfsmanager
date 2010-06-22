@@ -1,0 +1,6 @@
+#ifndef MONKEY_EXPORT_H
+#define MONKEY_EXPORT_H
+
+#define Q_MONKEY_EXPORT
+
+#endif // MONKEY_EXPORT_H

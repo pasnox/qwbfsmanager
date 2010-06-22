@@ -54,6 +54,8 @@ public:
 	PartitionWidget( QWidget* parent = 0 );
 	virtual ~PartitionWidget();
 	
+	virtual bool event( QEvent* event );
+	
 	const QWBFS::Driver* driver() const;
 	QWBFS::Model::DiscModel* discModel() const;
 	QWBFS::Model::DiscModel* importModel() const;
@@ -75,6 +77,8 @@ protected:
 	
 	virtual void dragEnterEvent( QDragEnterEvent* event );
 	virtual void dropEvent( QDropEvent* event );
+	
+	void localeChanged();
 
 protected slots:
 	void models_countChanged();

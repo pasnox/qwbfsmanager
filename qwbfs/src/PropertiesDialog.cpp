@@ -36,6 +36,9 @@
 #include "PropertiesDialog.h"
 #include "Properties.h"
 
+#include <pTranslationManager.h>
+#include <pTranslationDialog.h>
+
 #include <QFileDialog>
 #include <QNetworkProxy>
 
@@ -52,9 +55,11 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 	lProxyWarning->setFont( font );
 #endif
 	
-	cbProxyType->addItem( tr( "No Proxy" ), QNetworkProxy::NoProxy );
-	cbProxyType->addItem( tr( "Socks5" ), QNetworkProxy::Socks5Proxy );
-	cbProxyType->addItem( tr( "Http" ), QNetworkProxy::HttpProxy );
+	cbProxyType->addItem( QString::null, QNetworkProxy::NoProxy );
+	cbProxyType->addItem( QString::null, QNetworkProxy::Socks5Proxy );
+	cbProxyType->addItem( QString::null, QNetworkProxy::HttpProxy );
+	
+	lCurrentLocale->setText( mProperties->locale().name() );
 	
 	leCachePath->setText( mProperties->cacheWorkingPath() );
 	sbCacheDiskSize->setValue( mProperties->cacheDiskSize() /1024 );
@@ -66,10 +71,44 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 	sbProxyPort->setValue( mProperties->proxyPort() );
 	leProxyLogin->setText( mProperties->proxyLogin() );
 	leProxyPassword->setText( mProperties->proxyPassword() );
+	
+	localeChanged();
 }
 
 PropertiesDialog::~PropertiesDialog()
 {
+}
+
+bool PropertiesDialog::event( QEvent* event )
+{
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
+	}
+	
+	return QDialog::event( event );
+}
+
+void PropertiesDialog::localeChanged()
+{
+	retranslateUi( this );
+	
+	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::NoProxy ), tr( "No Proxy" ) );
+	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::Socks5Proxy ), tr( "Socks5" ) );
+	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::HttpProxy ), tr( "Http" ) );
+}
+
+void PropertiesDialog::on_tbChangeLocale_clicked()
+{
+	pTranslationManager* translationManager = pTranslationManager::instance();
+	const QString locale = pTranslationDialog::getLocale( translationManager );
+	
+	if ( !locale.isEmpty() ) {
+		lCurrentLocale->setText( locale );
+	}
 }
 
 void PropertiesDialog::on_tbCachePath_clicked()
@@ -109,6 +148,8 @@ void PropertiesDialog::on_cbProxyType_currentIndexChanged( int index )
 
 void PropertiesDialog::accept()
 {
+	pTranslationManager* translationManager = pTranslationManager::instance();
+	
 	mProperties->setCacheWorkingPath( leCachePath->text() );
 	mProperties->setCacheDiskSize( Q_INT64_C( sbCacheDiskSize->value() *1024 ) );
 	mProperties->setCacheMemorySize( Q_INT64_C( sbCacheMemorySize->value() *1024 ) );
@@ -119,6 +160,10 @@ void PropertiesDialog::accept()
 	mProperties->setProxyPort( sbProxyPort->value() );
 	mProperties->setProxyLogin( leProxyLogin->text() );
 	mProperties->setProxyPassword( leProxyPassword->text() );
+	
+	mProperties->setTranslationsPaths( translationManager->translationsPaths() );
+	mProperties->setLocaleAccepted( true );
+	mProperties->setLocale( QLocale( lCurrentLocale->text() ) );
 	
 	QDialog::accept();
 	
