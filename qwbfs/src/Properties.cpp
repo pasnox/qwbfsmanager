@@ -40,6 +40,7 @@
 #include <QSettings>
 #include <QDir>
 #include <QCoreApplication>
+#include <QLibraryInfo>
 #include <QDebug>
 
 #define SETTINGS_CACHE_WORKING_PATH "cache/workingPath"
@@ -188,8 +189,24 @@ void Properties::setUpdateLastChecked( const QDateTime& dateTime )
 
 QStringList Properties::translationsPaths() const
 {
-	const QString defaultTranslationsPath = QCoreApplication::applicationDirPath().append( "/../translations" );
-	return mSettings->value( SETTINGS_TRANSLATIONS_PATHS, QStringList( defaultTranslationsPath ) ).toStringList();
+	QStringList defaultTranslationsPaths;
+	
+	defaultTranslationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+	
+#if defined( Q_OS_WIN )
+	// sources ones
+	defaultTranslationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+#elif defined( Q_OS_MAC )
+	// sources ones
+	defaultTranslationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
+#else
+	// sources ones
+	defaultTranslationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+#endif
+
+	//qWarning() << defaultTranslationsPaths;
+	
+	return mSettings->value( SETTINGS_TRANSLATIONS_PATHS, defaultTranslationsPaths ).toStringList();
 }
 
 void Properties::setTranslationsPaths( const QStringList& translationsPaths )

@@ -22,6 +22,19 @@ unix {
 		message( "The application will be installed to $${PACKAGE_PREFIX}" )
 		message( "You can overwrite the prefix calling qmake with parameter: qmake PREFIX=/usr" )
 	}
+	
+	mac:qwbfs_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/Translations
+	else:qwbfs_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
+	qwbfs_translations.files	= $$PWD/../translations/*.qm
+	
+	INSTALLS	+= qwbfs_translations
+	
+	mac {
+		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/Translations
+		qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/*.qm
+		
+		INSTALLS	+= qwbfs_qt_translations
+	}
 }
 
 unix:!mac {
