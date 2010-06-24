@@ -215,7 +215,7 @@ void pUpdateCheckerDialog::accessManager_finished( QNetworkReply* reply )
 {
 	const pVersion currentVersion( mUpdateChecker->version() );
 	const QDateTime lastUpdated = mUpdateChecker->lastUpdated();
-	const QDateTime lastCheck = mUpdateChecker->lastChecked();
+	//const QDateTime lastCheck = mUpdateChecker->lastChecked();
 	
 	if ( reply->error() != QNetworkReply::NoError ) {
 		lwVersions->addItem( new QListWidgetItem( tr( "An error occur: %1" ).arg( reply->errorString() ) ) );
@@ -244,8 +244,10 @@ void pUpdateCheckerDialog::accessManager_finished( QNetworkReply* reply )
 			
 			mUpdateChecker->setLastUpdated( updated );
 			
+			qWarning() << lastUpdated << updated << ( lastUpdated < updated );
+			
 			if ( lwVersions->count() > 0 ) {				
-				if ( !isVisible() && lastUpdated < updated ) {
+				if ( !isVisible() && lastUpdated > updated ) {
 					open();
 				}
 			}
