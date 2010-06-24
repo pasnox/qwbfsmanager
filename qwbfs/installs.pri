@@ -5,7 +5,7 @@
 ##	Project   : qwbfs
 ##	FileName  : installs.pri
 ##	Date      : 2010-04-04T11:04:05
-##	License   : GPL3
+##	License   : GPL2
 ##	Comment   : Creating using Monkey Studio RAD
 ##	Home Page   : http://code.google.com/p/qwbfs
 ##

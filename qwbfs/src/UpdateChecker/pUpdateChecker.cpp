@@ -5,7 +5,7 @@
 ** Project   : Monkey Studio Base Plugins
 ** FileName  : pUpdateChecker.cpp
 ** Date      : 2008-01-14T00:39:52
-** License   : GPL
+** License   : GPL2
 ** Comment   : This header has been automatically generated, if you are the original author, or co-author, fill free to replace/append with your informations.
 ** Home Page : http://www.monkeystudio.org
 **
