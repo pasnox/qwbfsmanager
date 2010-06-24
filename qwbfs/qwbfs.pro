@@ -32,7 +32,7 @@ PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
 PACKAGE_DOWNLOADS_FEED	= "http://code.google.com/feeds/p/qwbfs/downloads/basic"
 PACKAGE_REPORT_BUG_URL	= "http://code.google.com/p/qwbfs/issues/list"
 PACKAGE_DISCUSS_URL	= "http://groups.google.com/group/qwbfs-discuss"
-PACKAGE_VERSION	= 1.0.3
+PACKAGE_VERSION	= 1.1.0
 SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
 system( touch $$PWD/src/main.h )
@@ -73,7 +73,24 @@ win32:RC_FILE	*= resources/qwbfsmanager.rc
 RESOURCES	*= resources/resources.qrc \
 	src/fresh/resources/fresh.qrc
 
-TRANSLATIONS	*= ../translations/qwbfsmanager-fr_FR.ts
+TRANSLATIONS	*= ../translations/qwbfsmanager-ru_RU.ts \
+	../translations/qwbfsmanager-sl_SI.ts \
+	../translations/qwbfsmanager-pl_PL.ts \
+	../translations/qwbfsmanager-zh_CN.ts \
+	../translations/qwbfsmanager-he_IL.ts \
+	../translations/qwbfsmanager-da_DK.ts \
+	../translations/qwbfsmanager-sk_SK.ts \
+	../translations/qwbfsmanager-ja_JP.ts \
+	../translations/qwbfsmanager-uk_UA.ts \
+	../translations/qwbfsmanager-cs_CZ.ts \
+	../translations/qwbfsmanager-ca_ES.ts \
+	../translations/qwbfsmanager-ar_SA.ts \
+	../translations/qwbfsmanager-fr_FR.ts \
+	../translations/qwbfsmanager-zh_TW.ts \
+	../translations/qwbfsmanager-es_ES.ts \
+	../translations/qwbfsmanager-de_DE.ts \
+	../translations/qwbfsmanager-pt_PT.ts \
+	../translations/qwbfsmanager-sv_SE.ts
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
