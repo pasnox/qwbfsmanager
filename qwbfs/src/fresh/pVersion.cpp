@@ -1,6 +1,7 @@
 #include "pVersion.h"
 
 #include <QStringList>
+#include <QDebug>
 
 pVersion::pVersion( const QString& version )
 {
@@ -12,13 +13,11 @@ pVersion::pVersion( const QString& version )
 	minor = parts.value( 1 ).toInt();
 	patch = parts.value( 2 ).toInt();
 
-	if ( index != -1 )
-	{
+	if ( index != -1 ) {
 		build = parts.value( 3 ).mid( 0, index ).toInt();
 		extra = parts.value( 3 ).mid( index );
 	}
-	else
-	{
+	else {
 		build = parts.value( 3 ).toInt();
 	}
 }
@@ -30,7 +29,11 @@ const QString& pVersion::toString() const
 
 bool pVersion::operator==( const pVersion& other ) const
 {
-	return mVersion == other.mVersion;
+	return major == other.major
+		&& minor == other.minor
+		&& patch == other.patch
+		&& build == other.build
+		&& extra == other.extra;
 }
 
 bool pVersion::operator!=( const pVersion& other ) const
@@ -40,52 +43,66 @@ bool pVersion::operator!=( const pVersion& other ) const
 
 bool pVersion::operator<( const pVersion& other ) const
 {
-	if ( *this == other )
+	if ( *this == other ) {
 		return false;
+	}
 
-	if ( major < other.major )
-		return true;
+	if ( major != other.major ) {
+		return major < other.major;
+	}
 
-	if ( minor < other.minor )
-		return true;
+	if ( minor != other.minor ) {
+		return minor < other.minor;
+	}
 
-	if ( patch < other.patch )
-		return true;
+	if ( patch != other.patch ) {
+		return patch < other.patch;
+	}
 
-	if ( build < other.build )
-		return true;
+	if ( build != other.build ) {
+		return build < other.build;
+	}
 
-	if ( extra.isEmpty() && !other.extra.isEmpty() )
+	if ( extra.isEmpty() && !other.extra.isEmpty() ) {
 		return false;
+	}
 	
-	if ( !extra.isEmpty() && other.extra.isEmpty() )
+	if ( !extra.isEmpty() && other.extra.isEmpty() ) {
 		return true;
+	}
 	
 	return extra < other.extra; // not the best but afaik ;)
 }
 
 bool pVersion::operator>( const pVersion& other ) const
 {
-	if ( *this == other )
+	if ( *this == other ) {
 		return false;
+	}
 
-	if ( major > other.major )
-		return true;
+	if ( major != other.major ) {
+		return major > other.major;
+	}
 
-	if ( minor > other.minor )
-		return true;
+	if ( minor != other.minor ) {
+		return minor > other.minor;
+	}
 
-	if ( patch > other.patch )
-		return true;
+	if ( patch != other.patch ) {
+		return patch > other.patch;
+	}
 
-	if ( build > other.build )
-		return true;
+	if ( build != other.build ) {
+		return build > other.build;
+	}
 	
-	if ( extra.isEmpty() && !other.extra.isEmpty() )
+	if ( extra.isEmpty() && !other.extra.isEmpty() ) {
 		return true;
+	}
 	
-	if ( !extra.isEmpty() && other.extra.isEmpty() )
+	if ( !extra.isEmpty() && other.extra.isEmpty() ) {
 		return false;
+	}
 
 	return extra > other.extra; // not the best but afaik ;)
 }
