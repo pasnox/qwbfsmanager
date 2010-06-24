@@ -57,6 +57,7 @@ DataNetworkCache::DataNetworkCache( QObject* parent )
 	mWorkingPath = QDir::tempPath();
 	mDiskCacheSize = 0;
 	mMemoryCacheSize = 0;
+	mMaxRetry = 5;
 	
 	setDiskCacheSize( DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE );
 	setMemoryCacheSize( DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE );
@@ -103,6 +104,7 @@ void DataNetworkCache::networkManager_finished( QNetworkReply* reply )
 	reply->deleteLater();
 	
 	if ( reply->error() != QNetworkReply::NoError || code != 200 ) {
+		mRetries[ key ]++;
 		emit error( tr( "Error when downloading the file '%1'." ).arg( url.toString() ), url );
 		return;
 	}
@@ -167,6 +169,11 @@ qint64 DataNetworkCache::diskCacheSize() const
 qint64 DataNetworkCache::memoryCacheSize() const
 {
 	return mMemoryCacheSize;
+}
+
+int DataNetworkCache::maxRetry() const
+{
+	return mMaxRetry;
 }
 
 bool DataNetworkCache::hasCachedData( const QUrl& url ) const
@@ -289,11 +296,21 @@ void DataNetworkCache::setMemoryCacheSize( qint64 sizeKb )
 	mCache.setMaxCost( mMemoryCacheSize *1024 );
 }
 
+void DataNetworkCache::setMaxRetry( int count )
+{
+	mMaxRetry = count;
+}
+
 void DataNetworkCache::cacheData( const QUrl& url )
 {
 	const uint key = qHash( url );
 	
 	if ( mRequests.contains( key ) ) {
+		return;
+	}
+	
+	if ( mRetries.value( key ) >= mMaxRetry ) {
+		qWarning( "Can't cache '%s' because max retry limit has been reached", qPrintable( url.toString() ) );
 		return;
 	}
 	
@@ -315,4 +332,9 @@ void DataNetworkCache::clearMemory()
 void DataNetworkCache::clearDisk()
 {
 	clearDisk( true );
+}
+
+void DataNetworkCache::clearRetries()
+{
+	mRetries.clear();
 }

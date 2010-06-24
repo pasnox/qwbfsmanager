@@ -57,6 +57,7 @@ public:
 	QString workingPath() const;
 	qint64 diskCacheSize() const;
 	qint64 memoryCacheSize() const;
+	int maxRetry() const;
 	bool hasCachedData( const QUrl& url ) const;
 	QByteArray* cachedData( const QUrl& url ) const;
 	QIODevice* cachedDataDevice( const QUrl& url ) const;
@@ -66,18 +67,22 @@ public slots:
 	void setWorkingPath( const QString& path );
 	void setDiskCacheSize( qint64 sizeKb );
 	void setMemoryCacheSize( qint64 sizeKb );
+	void setMaxRetry( int count );
 	void cacheData( const QUrl& url );
 	void clear();
 	void clearMemory();
 	void clearDisk();
+	void clearRetries();
 
 protected:
 	QNetworkAccessManager* mManager;
 	mutable QCache<uint, QByteArray> mCache;
 	QHash<uint,QNetworkReply*> mRequests;
+	QHash<uint, int> mRetries;
 	QString mWorkingPath;
 	qint64 mDiskCacheSize;
 	qint64 mMemoryCacheSize;
+	int mMaxRetry;
 	
 	QString localFilePath( uint key ) const;
 	QString localFilePath( const QUrl& url ) const;
