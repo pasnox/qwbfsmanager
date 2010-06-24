@@ -1,4 +1,7 @@
 <RCC>
+  <qresource prefix="/files">
+    <file>../../GPL-2</file>
+  </qresource>
   <qresource prefix="/icons">
     <file>donation.png</file>
     <file>qwbfsmanager.png</file>

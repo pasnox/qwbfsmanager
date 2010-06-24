@@ -36,6 +36,8 @@
 #include "UIAbout.h"
 #include "main.h"
 
+#include <QFile>
+
 UIAbout::UIAbout( QWidget* parent )
 	: QDialog( parent )
 {
@@ -45,6 +47,10 @@ UIAbout::UIAbout( QWidget* parent )
 	lCopyrights->setText( APPLICATION_COPYRIGHTS );
 	lDomain->setText( QString( "<a href=\"http://%1\" style=\"text-decoration:none;\">http://%1</a>" ).arg( APPLICATION_DOMAIN ) );
 	localeChanged();
+	
+	QFile file( ":/files/GPL-2" );
+	file.open( QIODevice::ReadOnly );
+	pteLicense->setPlainText( QString::fromUtf8( file.readAll() ) );
 }
 
 bool UIAbout::event( QEvent* event )
@@ -66,18 +72,4 @@ void UIAbout::localeChanged()
 	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
 	lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ) );
 	adjustSize();
-}
-
-void UIAbout::on_dbbButtons_clicked( QAbstractButton* button )
-{
-	const QDialogButtonBox::StandardButton sb = dbbButtons->standardButton( button );
-	
-	switch ( sb )
-	{
-		case QDialogButtonBox::Ok:
-			QDialog::accept();
-			break;
-		default:
-			break;
-	}
 }

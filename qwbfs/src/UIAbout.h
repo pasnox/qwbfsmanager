@@ -49,9 +49,6 @@ public:
 
 protected:
 	void localeChanged();
-
-protected slots:
-	void on_dbbButtons_clicked( QAbstractButton* button );
 };
 
 #endif // UIABOUT_H

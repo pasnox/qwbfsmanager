@@ -540,12 +540,31 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>A Propos...</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="175"/>
-        <source>IMPORTANT NOTICE: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
-        <translation>IMPORTANT: JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
+        <location filename="../qwbfs/src/UIAbout.ui" line="146"/>
+        <source>Informations</source>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.cpp" line="66"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="166"/>
+        <source>License</source>
+        <translation>Licence</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIAbout.ui" line="238"/>
+        <source>Notice</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIAbout.ui" line="290"/>
+        <source>I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
+        <translation>JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
+    </message>
+    <message>
+        <source>IMPORTANT NOTICE: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
+        <translation type="obsolete">IMPORTANT: JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIAbout.cpp" line="72"/>
         <source>Version %1</source>
         <translation></translation>
     </message>
