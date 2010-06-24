@@ -52,12 +52,12 @@ pStringListEditor::pStringListEditor( QWidget* parent, const QString& title )
 	mLayout->addWidget( mList );
 	
 	// create actions
-	QAction* aAdd = new QAction( QIcon( ":/listeditor/add.png" ), QString::null, tb );
-	QAction* aRemove = new QAction( QIcon( ":/listeditor/remove.png" ), QString::null, tb );
-	QAction* aClear = new QAction( QIcon( ":/listeditor/clear.png" ), QString::null, tb );
-	QAction* aUp = new QAction( QIcon( ":/listeditor/up.png" ), QString::null, tb );
-	QAction* aDown = new QAction( QIcon( ":/listeditor/down.png" ), QString::null, tb );
-	QAction* aEdit = new QAction( QIcon( ":/listeditor/edit.png" ), QString::null, tb );
+	aAdd = new QAction( QIcon( ":/listeditor/add.png" ), QString::null, tb );
+	aRemove = new QAction( QIcon( ":/listeditor/remove.png" ), QString::null, tb );
+	aClear = new QAction( QIcon( ":/listeditor/clear.png" ), QString::null, tb );
+	aUp = new QAction( QIcon( ":/listeditor/up.png" ), QString::null, tb );
+	aDown = new QAction( QIcon( ":/listeditor/down.png" ), QString::null, tb );
+	aEdit = new QAction( QIcon( ":/listeditor/edit.png" ), QString::null, tb );
 	
 	// add actions to toolbar
 	tb->addAction( aAdd );
