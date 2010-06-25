@@ -213,6 +213,8 @@ void pUpdateCheckerDialog::localeChanged()
 
 void pUpdateCheckerDialog::accessManager_finished( QNetworkReply* reply )
 {
+	localeChanged();
+	
 	const pVersion currentVersion( mUpdateChecker->version() );
 	const QDateTime lastUpdated = mUpdateChecker->lastUpdated();
 	//const QDateTime lastCheck = mUpdateChecker->lastChecked();
@@ -244,10 +246,8 @@ void pUpdateCheckerDialog::accessManager_finished( QNetworkReply* reply )
 			
 			mUpdateChecker->setLastUpdated( updated );
 			
-			qWarning() << lastUpdated << updated << ( lastUpdated < updated );
-			
 			if ( lwVersions->count() > 0 ) {				
-				if ( !isVisible() && lastUpdated > updated ) {
+				if ( !isVisible() && lastUpdated < updated ) {
 					open();
 				}
 			}
