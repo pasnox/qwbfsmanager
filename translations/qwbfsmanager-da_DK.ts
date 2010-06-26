@@ -4,32 +4,32 @@
 <context>
     <name>DataNetworkCache</name>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="106"/>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="108"/>
         <source>Error when downloading the file &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="113"/>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="115"/>
         <source>Error when creating the cache for file &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="118"/>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="120"/>
         <source>Error when writing the cache for file &apos;%1&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="251"/>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="258"/>
         <source>Can&apos;t cache pixmap</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="264"/>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="271"/>
         <source>The working path &apos;%1&apos; exists and is not a directory.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="272"/>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="279"/>
         <source>Can&apos;t create the working path &apos;%1&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -539,27 +539,27 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="146"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="162"/>
         <source>Informations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="166"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="182"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="238"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="254"/>
         <source>Notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="290"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="306"/>
         <source>I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.cpp" line="72"/>
+        <location filename="../qwbfs/src/UIAbout.cpp" line="82"/>
         <source>Version %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -785,17 +785,17 @@ Generally lastest updates fix bugs and/or add new options/plugins/things.</sourc
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="221"/>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="223"/>
         <source>An error occur: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="253"/>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="255"/>
         <source>You are running the last available version.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="264"/>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="266"/>
         <source>An error occur while parsing xml, retry later.</source>
         <translation type="unfinished"></translation>
     </message>
