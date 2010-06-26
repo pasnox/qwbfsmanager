@@ -329,7 +329,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="364"/>
         <source>PLEASE NOTE THAT THE PASSWORD IS ENCRYPTED WITH A SHIT METHOD. BE CAREFUL.</source>
-        <translation>VEUILLEZ NOTER QUE LE MOT DE PASSE EST CRYPTÉ AVEC UNE METHODE BASIC. SOYEZ PRUDENT.</translation>
+        <translation>VEUILLEZ NOTER QUE LE MOT DE PASSE EST CRYPTÉ AVEC UNE METHODE BASIQUE. SOYEZ PRUDENT.</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="99"/>

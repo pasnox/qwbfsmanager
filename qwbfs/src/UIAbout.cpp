@@ -43,6 +43,16 @@ UIAbout::UIAbout( QWidget* parent )
 {
 	setAttribute( Qt::WA_DeleteOnClose );
 	setupUi( this );
+#if defined( Q_OS_MAC )
+	const QList<QWidget*> widgets = QList<QWidget*>() << lName << lVersion << lDescription;
+	
+	foreach ( QWidget* widget, widgets ) {
+		QFont font = widget->font();
+		font.setPointSize( font.pointSize() +2 );
+		widget->setFont( font );
+	}
+#endif
+	
 	lName->setText( APPLICATION_NAME );
 	lCopyrights->setText( APPLICATION_COPYRIGHTS );
 	lDomain->setText( QString( "<a href=\"http://%1\" style=\"text-decoration:none;\">http://%1</a>" ).arg( APPLICATION_DOMAIN ) );

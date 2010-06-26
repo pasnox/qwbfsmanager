@@ -51,7 +51,7 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 
 #if defined( Q_OS_MAC )
 	QFont font = lProxyWarning->font();
-	font.setPointSize( 11 );
+	font.setPointSize( 10 );
 	lProxyWarning->setFont( font );
 #endif
 	
