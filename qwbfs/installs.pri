@@ -19,18 +19,26 @@ unix {
 	}
 	
 	!build_pass {
-		message( "The application will be installed to $${PACKAGE_PREFIX}" )
-		message( "You can overwrite the prefix calling qmake with parameter: qmake PREFIX=/usr" )
+		mac {
+			isEqual( MAC_FULL_INSTALL, 1 ) {
+				message( "The application will be installed to $${PACKAGE_PREFIX}" )
+				message( "You can overwrite the prefix calling qmake with parameter: qmake PREFIX=/usr" )
+			}
+			else {
+				message( "The application bundle will not be installed into $${PACKAGE_PREFIX}." )
+				message( "Call: 'qmake MAC_FULL_INSTALL=1' for install the bundle." )
+			}
+		}
 	}
 	
-	mac:qwbfs_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/Translations
+	mac:qwbfs_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
 	else:qwbfs_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
 	qwbfs_translations.files	= $$PWD/../translations/*.qm
 	
 	INSTALLS	+= qwbfs_translations
 	
 	mac {
-		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/Translations
+		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/qt/translations
 		qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/*.qm
 		
 		INSTALLS	+= qwbfs_qt_translations
@@ -57,8 +65,8 @@ unix:!mac {
 mac {
 	# binary
 	qwbfs_target.path	= $${PACKAGE_PREFIX}
-	qwbfs_target.files	= $${DESTDIR}/$${TARGET}
+	qwbfs_target.files	= $${DESTDIR}/$${TARGET}.app
 	qwbfs_target.CONFIG += no_check_exist
 	
-	INSTALLS	+= qwbfs_target
+	isEqual( MAC_FULL_INSTALL, 1 ):INSTALLS	+= qwbfs_target
 }
