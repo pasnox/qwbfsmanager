@@ -20,7 +20,7 @@ if [ -z "$VERSION" ]; then
 	VERSION_STR="trunk-svn$VERSION"
 fi
 
-BASE_NAME="qwbfsmanager-$VERSION_STR"
+BASE_NAME=qwbfsmanager-$VERSION_STR
 FOLDER_NAME=$BASE_NAME-src
 TAR_GZ_FILE=$FOLDER_NAME.tar.gz
 ZIP_FILE=$FOLDER_NAME.zip
@@ -29,6 +29,7 @@ WIN_FOLDER=$BASE_NAME-win32
 WIN_PACKAGE=$WIN_FOLDER.zip
 MAC_PACKAGE=$BASE_NAME.dmg
 CUR_PATH=$PWD
+LOG_FOLDER=$CUR_PATH/log
 
 if [ $OS = "Linux" ]; then
 	WINE="wine"
@@ -50,6 +51,7 @@ export SVN_REVISION
 # execute command and stop if fails
 startCommand()
 {
+	echo "    -Starting command: $1"
 	error=0
 	eval "$1" || error=1
 	
@@ -76,21 +78,21 @@ deleteIfExists()
 # export a svn path from source $1 to target $2
 svnExport()
 {
-	echo "Exporting repository: svn export $1 $2"
-	startCommand "svn export \"$1\" \"$2\""
+	echo "*** Exporting repository: $1 to $2"
+	startCommand "svn export \"$1\" \"$2\" &> /dev/null"
 }
 
 # create a tar.gz file $1 from path $2
 createTarGz()
 {
-	echo "Creating tar.gz sources package: tar czf $1 $2"
+	echo "*** Creating tar.gz package: $1"
 	startCommand "tar czf \"$1\" \"$2\""
 }
 
 # create a zip file $1 from path $2 and extra parameters $3 and ending parameters $4
 createZip()
 {
-	echo "Creating zip package: zip -q -r -9 $3 $1 $2 $4"
+	echo "*** Creating zip package: $1"
 	
 	params=
 	
@@ -116,7 +118,7 @@ createZip()
 # crossbuild for windows
 crossBuild()
 {
-	echo "Crossbuilding for windows"
+	echo "*** Crossbuilding for windows"
 
 	if [ $OS = "Linux" ]; then
 		QT_VERSION="4.6.3"
@@ -146,11 +148,11 @@ crossBuild()
 
 	startCommand "cd \"./$FOLDER_NAME\""
 	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r"
+	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r &> /dev/null"
 	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r"
-	startCommand "make -j4 release &> $CUR_PATH/winbuild.log"
-	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" &> $CUR_PATH/winpackage.log"
+	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r &> /dev/null"
+	startCommand "make -j4 release &> $CUR_PATH/log/winbuild.log"
+	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" &> $CUR_PATH/log/winpackage.log"
 	startCommand "make distclean &> /dev/null" 0
 	startCommand "cd \"$CUR_PATH\""
 
@@ -162,13 +164,13 @@ crossBuild()
 # create windows zip package
 windowsZipPackage()
 {
-	echo "Creating windows zip package"
+	echo "*** Creating windows zip package"
 
 	# uninstall previous package
-	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent"
+	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent &> /dev/null"
 
 	# install the current one
-	startCommand "\"$WINE\" \"./$WIN_SETUP\" /silent"
+	startCommand "\"$WINE\" \"./$WIN_SETUP\" /silent &> /dev/null"
 
 	# create zip
 	startCommand "cp -fr \"$WINE_PROGRAM_FILES/QWBFS Manager\" \"./$WIN_FOLDER\""
@@ -176,13 +178,13 @@ windowsZipPackage()
 	startCommand "deleteIfExists \"./$WIN_FOLDER\""
 
 	# uninstall installed package
-	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent"
+	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent &> /dev/null"
 }
 
 # create mac os x package
 macPackage()
 {
-	echo "Create Mac OS X package"
+	echo "*** Create Mac OS X package"
 
 	QT_VERSION="4.6.2-universal"
 	BUNDLE_NAME="QWBFSManager"
@@ -192,12 +194,12 @@ macPackage()
 
 	startCommand "cd \"./$FOLDER_NAME\""
 	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -r"
+	startCommand "\"$QT_PATH/bin/qmake\" -r &> /dev/null"
 	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -r"
-	startCommand "make -j4 release &> $CUR_PATH/macbuild.log"
-	startCommand "make install"
-	startCommand "\"$QT_PATH/bin/macdeployqt\" \"$BUNDLE_APP_PATH\" -dmg"
+	startCommand "\"$QT_PATH/bin/qmake\" -r &> /dev/null"
+	startCommand "make -j4 release &> $CUR_PATH/log/macbuild.log"
+	startCommand "make install &> /dev/null"
+	startCommand "\"$QT_PATH/bin/macdeployqt\" \"$BUNDLE_APP_PATH\" -dmg &> /dev/null"
 	startCommand "make distclean &> /dev/null" 0
 	startCommand "cd \"$CUR_PATH\""
 
@@ -206,14 +208,23 @@ macPackage()
 	fi
 }
 
+# startup function
+startup()
+{
+	if [ '!' -d "$LOG_FOLDER" ]; then
+		echo "*** Create log folder"
+		startCommand "mkdir -p \"$LOG_FOLDER\""
+	fi
+}
+
 # finish function, muse not use startCommand or function calling it to avoid possible unfinite loop on errors.
 finish()
 {
 	# close wine, WineBottler & X11
 	if [ $OS = "Darwin" ]; then
-		killall wine
-		killall WineBottler
-		killall X11.bin
+		killall wine &> /dev/null
+		killall WineBottler &> /dev/null
+		killall X11.bin &> /dev/null
 	fi
 	
 	# come back to start folder
@@ -227,6 +238,8 @@ finish()
 	exit $1
 }
 
+# startup call
+startup
 # delete source folder
 deleteIfExists "./$FOLDER_NAME"
 # delete tar.gz source
@@ -249,15 +262,14 @@ createZip "./$ZIP_FILE" "./$FOLDER_NAME"
 crossBuild
 # create windows zip package
 windowsZipPackage
-
+# darwin specific
 if [ $OS = "Darwin" ]; then
 	echo "*** Mac"
 	macPackage
 fi
-
+# linux specific
 if [ $OS = "Linux" ]; then
 	echo "*** Linux"
 fi
-
-# exit with success
+# finish call
 finish 0
