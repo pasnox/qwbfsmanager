@@ -189,24 +189,36 @@ void Properties::setUpdateLastChecked( const QDateTime& dateTime )
 
 QStringList Properties::translationsPaths() const
 {
-	QStringList defaultTranslationsPaths;
+	QSet<QString> translationsPaths = mSettings->value( SETTINGS_TRANSLATIONS_PATHS ).toStringList().toSet();
 	
-	defaultTranslationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+	translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
 	
 #if defined( Q_OS_WIN )
 	// sources ones
-	defaultTranslationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+	translationsPaths << "qt/translations";
+	translationsPaths << "translations";
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
 #elif defined( Q_OS_MAC )
 	// sources ones
-	defaultTranslationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
+	translationsPaths << "../Resources/qt/translations";
+	translationsPaths << "../Resources/translations";
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
 #else
 	// sources ones
-	defaultTranslationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+	translationsPaths << "qt/translations";
+	translationsPaths << "translations";
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
 #endif
 
-	//qWarning() << defaultTranslationsPaths;
+	//qWarning() << translationsPaths;
 	
-	return mSettings->value( SETTINGS_TRANSLATIONS_PATHS, defaultTranslationsPaths ).toStringList();
+	return translationsPaths.toList();
 }
 
 void Properties::setTranslationsPaths( const QStringList& translationsPaths )
