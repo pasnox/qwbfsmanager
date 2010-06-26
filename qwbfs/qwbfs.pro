@@ -43,8 +43,6 @@ CONFIG( debug, debug|release ) {
 	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION release)
 }
 
-include( installs.pri )
-
 # define variable for source code
 DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
 	"_APPLICATION_VERSION=\"\\\"$${PACKAGE_VERSION}\\\"\"" \
@@ -161,3 +159,5 @@ SOURCES	*= src/main.cpp \
 	src/fresh/pQueuedMessageWidget.cpp
 
 include( src/UpdateChecker/pUpdateChecker.pri )
+
+include( installs.pri )
