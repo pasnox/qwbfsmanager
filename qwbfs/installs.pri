@@ -39,7 +39,9 @@ unix {
 	
 	mac {
 		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/qt/translations
-		qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/qt_{,[A-Za-z][A-Za-z]_}[A-Za-z][A-Za-z].qm
+		#qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/qt_{\,[A-Za-z][A-Za-z]_}[A-Za-z][A-Za-z].qm
+		qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/qt_??.qm
+		qwbfs_qt_translations.files	+= $$[QT_INSTALL_TRANSLATIONS]/qt_??_??.qm
 		
 		INSTALLS	+= qwbfs_qt_translations
 	}
