@@ -24,9 +24,9 @@ VersionInfoCopyright={cm:QWBFS_COPYRIGHTS}
 AppCopyright={cm:QWBFS_COPYRIGHTS}
 AppName={cm:QWBFS_NAME}
 AppVerName={cm:QWBFS_NAME} {#QWBFS_VERSION}
-InfoAfterFile=..\GPL-3
-InfoBeforeFile=..\GPL-3
-LicenseFile=..\GPL-3
+InfoAfterFile=..\GPL-2
+InfoBeforeFile=..\GPL-2
+LicenseFile=..\GPL-2
 ChangesAssociations=true
 PrivilegesRequired=none
 DefaultDirName={pf}\{cm:QWBFS_NAME}
@@ -34,7 +34,7 @@ EnableDirDoesntExistWarning=false
 AllowNoIcons=true
 DefaultGroupName={cm:QWBFS_NAME}
 AlwaysUsePersonalGroup=true
-;SetupIconFile=..\qwbfs\resources\qwbfs.ico
+SetupIconFile=..\qwbfs\resources\qwbfsmanager.ico
 AppPublisher={cm:QWBFS_COPYRIGHTS}
 AppPublisherURL={cm:QWBFS_URL}
 AppSupportURL={cm:QWBFS_ISSUES_URL}
@@ -52,8 +52,8 @@ UseAbsolutePaths=false
 ; QWBFS Manager related files
 Source: qwbfsmanager.exe; DestDir: {app}; Flags: promptifolder
 Source: ..\packages\qt_windows.conf; DestDir: {app}; DestName: qt.conf; Flags: promptifolder
-Source: ..\GPL-3; DestDir: {app}; Flags: promptifolder
-;Source: ..\datas\translations\*.*; DestDir: {app}\translations; Flags: promptifolder
+Source: ..\GPL-2; DestDir: {app}; Flags: promptifolder
+Source: ..\translations\*.qm; DestDir: {app}\translations; Flags: promptifolder
 ; Qt related files
 Source: {#QT_PATH}\bin\QtCore4.dll; DestDir: {app}; Flags: promptifolder
 Source: {#QT_PATH}\bin\QtGui4.dll; DestDir: {app}; Flags: promptifolder
