@@ -145,13 +145,13 @@ crossBuild()
 	export CROSS_WIN32_QT_PATH="$QT_WIN32_PATH"
 
 	startCommand "cd \"./$FOLDER_NAME\""
-	startCommand "make distclean" 0
+	startCommand "make distclean &> /dev/null" 0
 	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r"
-	startCommand "make distclean" 0
+	startCommand "make distclean &> /dev/null" 0
 	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r"
-	startCommand "make -j4 release"
-	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\""
-	startCommand "make distclean" 0
+	startCommand "make -j4 release &> $CUR_PATH/winbuild.log"
+	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" &> $CUR_PATH/winpackage.log"
+	startCommand "make distclean &> /dev/null" 0
 	startCommand "cd \"$CUR_PATH\""
 
 	if [ -f "./$FOLDER_NAME/packages/releases/$WIN_SETUP" ]; then
@@ -191,14 +191,14 @@ macPackage()
 	QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
 
 	startCommand "cd \"./$FOLDER_NAME\""
-	startCommand "make distclean" 0
+	startCommand "make distclean &> /dev/null" 0
 	startCommand "\"$QT_PATH/bin/qmake\" -r"
-	startCommand "make distclean" 0
+	startCommand "make distclean &> /dev/null" 0
 	startCommand "\"$QT_PATH/bin/qmake\" -r"
-	startCommand "make -j4 release"
+	startCommand "make -j4 release &> $CUR_PATH/macbuild.log"
 	startCommand "make install"
 	startCommand "\"$QT_PATH/bin/macdeployqt\" \"$BUNDLE_APP_PATH\" -dmg"
-	startCommand "make distclean" 0
+	startCommand "make distclean &> /dev/null" 0
 	startCommand "cd \"$CUR_PATH\""
 
 	if [ -f "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
