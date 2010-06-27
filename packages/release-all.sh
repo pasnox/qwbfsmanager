@@ -79,7 +79,7 @@ deleteIfExists()
 svnExport()
 {
 	echo "*** Exporting repository: $1 to $2"
-	startCommand "svn export \"$1\" \"$2\" &> /dev/null"
+	startCommand "svn export \"$1\" \"$2\" > /dev/null 2>&1"
 }
 
 # create a tar.gz file $1 from path $2
@@ -147,13 +147,13 @@ crossBuild()
 	export CROSS_WIN32_QT_PATH="$QT_WIN32_PATH"
 
 	startCommand "cd \"./$FOLDER_NAME\""
-	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r &> /dev/null"
-	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r &> /dev/null"
-	startCommand "make -j4 release &> $CUR_PATH/log/winbuild.log"
-	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" &> $CUR_PATH/log/winpackage.log"
-	startCommand "make distclean &> /dev/null" 0
+	startCommand "make distclean > /dev/null 2>&1" 0
+	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
+	startCommand "make distclean > /dev/null 2>&1" 0
+	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
+	startCommand "make -j4 release > \"$CUR_PATH/log/winbuild.log\" 2>&1"
+	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" > \"$CUR_PATH/log/winpackage.log\" 2>&1"
+	startCommand "make distclean > /dev/null 2>&1" 0
 	startCommand "cd \"$CUR_PATH\""
 
 	if [ -f "./$FOLDER_NAME/packages/releases/$WIN_SETUP" ]; then
@@ -167,10 +167,10 @@ windowsZipPackage()
 	echo "*** Creating windows zip package"
 
 	# uninstall previous package
-	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent &> /dev/null"
+	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent > /dev/null 2>&1"
 
 	# install the current one
-	startCommand "\"$WINE\" \"./$WIN_SETUP\" /silent &> /dev/null"
+	startCommand "\"$WINE\" \"./$WIN_SETUP\" /silent > /dev/null 2>&1"
 
 	# create zip
 	startCommand "cp -fr \"$WINE_PROGRAM_FILES/QWBFS Manager\" \"./$WIN_FOLDER\""
@@ -178,7 +178,7 @@ windowsZipPackage()
 	startCommand "deleteIfExists \"./$WIN_FOLDER\""
 
 	# uninstall installed package
-	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent &> /dev/null"
+	startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent > /dev/null 2>&1"
 }
 
 # create mac os x package
@@ -193,14 +193,14 @@ macPackage()
 	QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
 
 	startCommand "cd \"./$FOLDER_NAME\""
-	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -r &> /dev/null"
-	startCommand "make distclean &> /dev/null" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -r &> /dev/null"
-	startCommand "make -j4 release &> $CUR_PATH/log/macbuild.log"
-	startCommand "make install &> /dev/null"
-	startCommand "\"$QT_PATH/bin/macdeployqt\" \"$BUNDLE_APP_PATH\" -dmg &> /dev/null"
-	startCommand "make distclean &> /dev/null" 0
+	startCommand "make distclean > /dev/null 2>&1" 0
+	startCommand "\"$QT_PATH/bin/qmake\" -r > /dev/null 2>&1"
+	startCommand "make distclean > /dev/null 2>&1" 0
+	startCommand "\"$QT_PATH/bin/qmake\" -r > /dev/null 2>&1"
+	startCommand "make -j4 release > \"$CUR_PATH/log/macbuild.log\" 2>&1"
+	startCommand "make install > /dev/null 2>&1"
+	startCommand "\"$QT_PATH/bin/macdeployqt\" \"$BUNDLE_APP_PATH\" -dmg > /dev/null 2>&1"
+	startCommand "make distclean > /dev/null 2>&1" 0
 	startCommand "cd \"$CUR_PATH\""
 
 	if [ -f "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
@@ -222,9 +222,9 @@ finish()
 {
 	# close wine, WineBottler & X11
 	if [ $OS = "Darwin" ]; then
-		killall wine &> /dev/null
-		killall WineBottler &> /dev/null
-		killall X11.bin &> /dev/null
+		killall wine > /dev/null 2>&1
+		killall WineBottler > /dev/null 2>&1
+		killall X11.bin > /dev/null 2>&1
 	fi
 	
 	# come back to start folder
