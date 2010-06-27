@@ -19,15 +19,15 @@ unix {
 	}
 	
 	!build_pass {
-		mac {
-			isEqual( MAC_FULL_INSTALL, 1 ) {
+		unix:CAN_INSTALL	= 1
+		else:mac:isEqual( MAC_FULL_INSTALL, 1 ):CAN_INSTALL	= 1
+		
+		isEqual( CAN_INSTALL, 1 ) {
 				message( "The application will be installed to $${PACKAGE_PREFIX}" )
 				message( "You can overwrite the prefix calling qmake with parameter: qmake PREFIX=/usr" )
-			}
-			else {
-				message( "The application bundle will not be installed into $${PACKAGE_PREFIX}." )
-				message( "Call: 'qmake MAC_FULL_INSTALL=1' for install the bundle." )
-			}
+		} else:mac {
+			message( "The application bundle will not be installed into $${PACKAGE_PREFIX}." )
+			message( "Call: 'qmake MAC_FULL_INSTALL=1' for install the bundle." )
 		}
 	}
 	
