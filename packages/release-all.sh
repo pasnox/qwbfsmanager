@@ -222,16 +222,16 @@ finish()
 {
 	# close wine, WineBottler & X11
 	if [ $OS = "Darwin" ]; then
-		killall wine > /dev/null 2>&1
-		killall WineBottler > /dev/null 2>&1
-		killall X11.bin > /dev/null 2>&1
+		startCommand "killall wine > /dev/null 2>&1" 0
+		startCommand "killall WineBottler > /dev/null 2>&1" 0
+		startCommand "killall X11.bin > /dev/null 2>&1" 0
 	fi
 	
 	# come back to start folder
-	cd "$CUR_PATH"
+	startCommand "cd \"$CUR_PATH\"" 0
 	
 	# delete exported repository
-	rm -fr "./$FOLDER_NAME"
+	startCommand "rm -fr \"./$FOLDER_NAME\"" 0
 
 	echo "********** Processing release finished - Exit code: $1 **********"
 	
