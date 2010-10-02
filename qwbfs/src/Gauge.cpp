@@ -44,7 +44,7 @@ Gauge::Gauge( QWidget* parent )
 	: QWidget( parent )
 {
 	setStyle( QStyleFactory::create( "plastique" ) );
-	
+
 	mSize = 0;
 	mUsedSize = 0;
 	mFreeSize = 0;
@@ -121,10 +121,10 @@ void Gauge::paintEvent( QPaintEvent* event )
 	const qreal cent = 100;
 	const int totalPercent = available != 0 ? int( total /available *cent ) : 0;
 	const int usedPercent = available != 0 ? int( used /available *cent ) : 0;
-	const int extraPercent = max != used && available != 0 ? int( qBound( (double)usedPercent, max /available *cent, cent ) ) : 0;
+	const int extraPercent = max != used && available != 0 ? int( qBound( qreal(usedPercent), qreal(max /available *cent), cent ) ) : 0;
 	const int overflowPercent = max > available ? int( available != 0 ? max /available *cent : 0 ) : 0;
 	const int flags = Qt::AlignCenter | Qt::TextWordWrap;
-	
+
 	QStyleOptionProgressBarV2 option;
 	option.bottomToTop = false;
 	option.invertedAppearance = false;
@@ -145,40 +145,40 @@ void Gauge::paintEvent( QPaintEvent* event )
 	option.palette = palette();
 	option.rect = rect();
 	option.state = QStyle::State_Horizontal;
-	
+
 	if ( isEnabled() ) {
 		option.state |= QStyle::State_Active;
 		option.state |= QStyle::State_Enabled;
 	}
-	
+
 	if ( hasFocus() ) {
 		option.state |= QStyle::State_HasFocus;
 	}
-	
+
 	// groove
 	style()->drawControl( QStyle::CE_ProgressBarGroove, &option, &painter, this );
-	
+
 	// overflow
 	if ( overflowPercent != 0 ) {
 		option.progress = overflowPercent;
 		option.palette.setColor( QPalette::Highlight, QColor( 255, 181, 213, 255 ) );
 		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
 	}
-	
+
 	// extra
 	if ( extraPercent != 0 ) {
 		option.progress = extraPercent;
 		option.palette.setColor( QPalette::Highlight, QColor( 213, 255, 181, 255 ) );
 		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
 	}
-	
+
 	// used
 	if ( usedPercent != 0 ) {
 		option.progress = usedPercent;
 		option.palette.setColor( QPalette::Highlight, palette().color( QPalette::Highlight ) );
 		style()->drawControl( QStyle::CE_ProgressBarContents, &option, &painter, this );
 	}
-	
+
 	// text	painter.setPen( option.palette.color( QPalette::Text ) );
 	painter.setBrush( Qt::NoBrush );
 	painter.drawText( rect(), flags, option.text );
@@ -196,31 +196,31 @@ QString Gauge::fileSizeToString( double nb )
 	{
 		return QString::number( nb ) +" " +QObject::tr( "B"  );
 	}
-	
+
 	if ( ( nb = nb / 1024 ) < 1024 )
 	{
 		return fileSizeAdaptString( nb ) +" " +QObject::tr( "KB" );
 	}
-	
+
 	if ( ( nb = nb / 1024 ) < 1024 )
 	{
 		return fileSizeAdaptString( nb ) +" " +QObject::tr( "MB" );
 	}
-	
+
 	if ( ( nb = nb / 1024 ) < 1024 )
 	{
 		return fileSizeAdaptString( nb ) +" " +QObject::tr( "GB" );
 	}
-	
+
 	if ( ( nb = nb / 1024 ) < 1024 )
 	{
 		return fileSizeAdaptString( nb ) +" " +QObject::tr( "TB" );
 	}
-	
+
 	if ( ( nb = nb / 1024 ) < 1024 )
 	{
 		return fileSizeAdaptString( nb ) +" " +QObject::tr( "PB" );
 	}
-	
+
 	return QObject::tr( "Too big" );
 }
