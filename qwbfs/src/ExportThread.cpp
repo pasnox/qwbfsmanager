@@ -207,7 +207,7 @@ void ExportThread::importWorker()
 		}
 		
 		// create handle if needed
-		if ( QWBFS::Driver::isWBFSPartition( disc.origin ) ) {
+		if ( QWBFS::Driver::isWBFSPartitionOrFile( disc.origin ) ) {
 			sph = QWBFS::Driver::getHandle( disc.origin, &hc );
 			result = td.addDisc( disc.id, sph );
 		}
