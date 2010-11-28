@@ -248,23 +248,69 @@ int Driver::usedBlocksCount() const
 
 int Driver::discImageInfo( const QString& fileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection ) const
 {
-	if ( !isOpen() ) {
+	const bool isWBFSFile = isWBFSPartitionOrFile( fileName );
+	
+	if ( !isOpen() && !isWBFSFile ) {
 		return Driver::PartitionNotOpened;
 	}
 	
-	void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
+	u8* header = (u8*)wbfs_ioalloc( 0x100 );
+	
+	// *.wbfs
+	if ( isWBFSFile ) {
+		wbfs_t* cdPartition = wbfs_try_open_partition( fileName.toLocal8Bit().data(), 0 );
+		wbfs_disc_t* cd;
+		int count;
+		
+		if ( !cdPartition ) {
+			wbfs_iofree( header );
+			return Driver::InvalidDisc;
+		}
+		
+		count = wbfs_count_discs( cdPartition );
+		
+		if ( count != 1 ) {
+			wbfs_iofree( header );
+			wbfs_close( cdPartition );
+			return Driver::InvalidDisc;
+		}
+		
+		quint32 size;
+		
+		if( !wbfs_get_disc_info( cdPartition, 0, header, 0x100, &size ) ) {
+			cd = wbfs_open_disc( cdPartition, header );
+			
+			if ( !cd ) {
+				wbfs_iofree( header );
+				wbfs_close( cdPartition );
+				return Driver::InvalidDisc;
+			}
+			
+			wbfs_close_disc( cd );
+		}
+		
+		disc.size = size;
+		
+		wbfs_close( cdPartition );
+	}
+	// *.iso
+	else {
+		void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
 
-	if ( !fileHandle ) {
-		return Driver::DiscReadFailed;
+		if ( !fileHandle ) {
+			wbfs_iofree( header );
+			return Driver::DiscReadFailed;
+		}
+		
+		disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection, header );
+		
+		wbfs_close_file( fileHandle );
 	}
 	
 	disc.origin = fileName;
-	u8* header = (u8*)wbfs_ioalloc( 0x100 );
-	disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection, header );
-	
 	discInfo( header, disc );
+	
 	wbfs_iofree( header );
-	wbfs_close_file( fileHandle );
 	
 	return disc.size != 0 ? Driver::Ok : Driver::InvalidDisc;
 }
@@ -467,7 +513,7 @@ int Driver::discList( QWBFS::Model::DiscList& list ) const
 	return Driver::Ok;
 }
 
-bool Driver::isWBFSPartition( const QString& fileName )
+bool Driver::isWBFSPartitionOrFile( const QString& fileName )
 {
 	if ( !QFile::exists( fileName ) ) {
 		return false;

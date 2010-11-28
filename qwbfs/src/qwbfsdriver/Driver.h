@@ -205,11 +205,11 @@ public:
 	*/
 	int discList( QWBFS::Model::DiscList& list ) const;
 	/*!
-		\details return if a file is a wbfs partition.
+		\details return if a file is a wbfs partition/file.
 		\param fileName the fileName to check.
-		\return return true if fileName is a wbfs partition, else false.
+		\return return true if fileName is a wbfs partition/file, else false.
 	*/
-	static bool isWBFSPartition( const QString& fileName );
+	static bool isWBFSPartitionOrFile( const QString& fileName );
 	/*!
 		\details return a string representation of the error.
 		\param error the error to represent.
