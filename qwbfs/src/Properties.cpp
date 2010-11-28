@@ -59,7 +59,9 @@
 #define SETTINGS_LOCALE_CURRENT "locale/current"
 #define SETTINGS_WINDOW_GEOMETRY "window/geometry"
 #define SETTINGS_WINDOW_STATE "window/state"
-#define SETTINGS_PARTITION_WIDGET_STATE "partitionWidget"
+#define SETTINGS_WINDOW_SELECTED_PATH "window/selectedPath"
+#define SETTINGS_PARTITION_WIDGET_STATE "partitionWidget/state"
+#define SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION "partitionWidget/selectedPartition"
 
 Properties::Properties( QObject* parent )
 	: QObject( parent )
@@ -268,6 +270,26 @@ void Properties::saveState( UIMain* window )
 	
 	mSettings->setValue( SETTINGS_WINDOW_GEOMETRY, geometry );
 	mSettings->setValue( SETTINGS_WINDOW_STATE, state );
+}
+
+QString Properties::selectedPath() const
+{
+	return mSettings->value( SETTINGS_WINDOW_SELECTED_PATH ).toString();
+}
+
+void Properties::setSelectedPath( const QString& path )
+{
+	mSettings->setValue( SETTINGS_WINDOW_SELECTED_PATH, path );
+}
+
+QString Properties::selectedPartition() const
+{
+	return mSettings->value( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION ).toString();
+}
+
+void Properties::setSelectedPartition( const QString& partition )
+{
+	mSettings->setValue( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION, partition );
 }
 
 QString Properties::decrypt( const QByteArray& data )

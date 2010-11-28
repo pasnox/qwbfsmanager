@@ -99,6 +99,12 @@ public:
 	void restoreState( UIMain* window ) const;
 	void saveState( UIMain* window );
 	
+	QString selectedPath() const;
+	void setSelectedPath( const QString& path );
+	
+	QString selectedPartition() const;
+	void setSelectedPartition( const QString& partition );
+	
 	static QString decrypt( const QByteArray& data );
 	static QByteArray crypt( const QString& string );
 

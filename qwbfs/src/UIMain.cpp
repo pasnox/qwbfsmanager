@@ -54,6 +54,7 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QSpacerItem>
+#include <QTimer>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -141,7 +142,7 @@ void UIMain::showEvent( QShowEvent* event )
 	
 	if ( !shown ) {
 		shown = true;
-		loadProperties();
+		QTimer::singleShot( 25, this, SLOT( loadProperties() ) );
 		mUpdateChecker->silentCheck();
 		qmtbInfos->appendMessage( tr(
 				"Welcome to %1, the cross-platform WBFS Manager. Report bugs <a href=\"%2\">here</a>, discuss <a href=\"%3\">here</a>."
@@ -169,12 +170,19 @@ bool UIMain::event( QEvent* event )
 	return QMainWindow::event( event );
 }
 
+void UIMain::connectView( PartitionWidget* widget )
+{
+	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
+	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
+	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
+}
+
 void UIMain::localeChanged()
 {
 	retranslateUi( this );
 }
 
-void UIMain::loadProperties()
+void UIMain::loadProperties( bool firstInit )
 {
 	Properties properties( this );
 	
@@ -194,9 +202,6 @@ void UIMain::loadProperties()
 	mDonationWidget->cache()->setMemoryCacheSize( mCache->memoryCacheSize() );
 	mDonationWidget->cache()->setWorkingPath( mCache->workingPath() );
 	
-	mUpdateChecker->setLastUpdated( properties.updateLastUpdated() );
-	mUpdateChecker->setLastChecked( properties.updateLastChecked() );
-	
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	translationManager->setTranslationsPaths( properties.translationsPaths() );
 	translationManager->setCurrentLocale( properties.locale().name() );
@@ -211,23 +216,35 @@ void UIMain::loadProperties()
 		widget->setLocale( translationManager->currentLocale() );
 	}
 	
-	properties.restoreState( this );
+	if ( firstInit ) {
+		mUpdateChecker->setLastUpdated( properties.updateLastUpdated() );
+		mUpdateChecker->setLastChecked( properties.updateLastChecked() );
+		
+		const QModelIndex index = mFoldersModel->index( properties.selectedPath() );
+		
+		properties.restoreState( this );
+		tvFolders->setCurrentIndex( index );
+		tvFolders->scrollTo( index );
+		on_tvFolders_activated( index );
+		pwMainView->setCurrentPartition( properties.selectedPartition() );
+		
+		if ( !properties.selectedPartition().isEmpty() ) {
+			pwMainView->tbLoad->click();
+		}
+	}
 }
 
 void UIMain::saveProperties()
 {
+	const QModelIndex index = tvFolders->selectionModel()->selectedIndexes().value( 0 );
+	const QString selectedPath = mFoldersModel->filePath( index );
 	Properties properties;
 	
 	properties.setUpdateLastUpdated( mUpdateChecker->lastUpdated() );
 	properties.setUpdateLastChecked( mUpdateChecker->lastChecked() );
+	properties.setSelectedPath( selectedPath );
+	properties.setSelectedPartition( pwMainView->currentPartition() );
 	properties.saveState( this );
-}
-
-void UIMain::connectView( PartitionWidget* widget )
-{
-	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
-	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
-	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
 }
 
 void UIMain::changeLocaleRequested()
@@ -248,7 +265,7 @@ void UIMain::changeLocaleRequested()
 
 void UIMain::propertiesChanged()
 {
-	loadProperties();
+	loadProperties( false );
 }
 
 void UIMain::openViewRequested()

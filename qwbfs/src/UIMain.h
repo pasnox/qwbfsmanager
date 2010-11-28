@@ -74,12 +74,12 @@ protected:
 	virtual void showEvent( QShowEvent* event );
 	virtual void closeEvent( QCloseEvent* event );
 	
-	void localeChanged();
-	void loadProperties();
-	void saveProperties();
 	void connectView( PartitionWidget* widget );
 
 protected slots:
+	void localeChanged();
+	void loadProperties( bool firstInit = true );
+	void saveProperties();
 	void changeLocaleRequested();
 	void propertiesChanged();
 	void openViewRequested();
