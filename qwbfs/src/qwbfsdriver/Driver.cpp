@@ -208,14 +208,16 @@ int Driver::discInfo( int index, QWBFS::Model::Disc& disc ) const
 	
 	const int headerSize = 0x100;
 	u8* header = (u8*)wbfs_ioalloc( headerSize );
+	quint32 size;
 	
 	disc.origin = mHandle.partition();
 
-	if ( wbfs_get_disc_info( mHandle.ptr(), index, header, headerSize, &disc.size ) != 0 ) {
+	if ( wbfs_get_disc_info( mHandle.ptr(), index, header, headerSize, &size ) != 0 ) {
 		wbfs_iofree( header );
 		return Driver::DiscReadFailed;
 	}
 	
+	disc.size = size *4ULL;
 	discInfo( header, disc );
 	wbfs_iofree( header );
 	
@@ -289,7 +291,7 @@ int Driver::discImageInfo( const QString& fileName, QWBFS::Model::Disc& disc, pa
 			wbfs_close_disc( cd );
 		}
 		
-		disc.size = size;
+		disc.size = size *4ULL;
 		
 		wbfs_close( cdPartition );
 	}
