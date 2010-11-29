@@ -3,6 +3,8 @@
     <file>../../GPL-2</file>
   </qresource>
   <qresource prefix="/icons">
+    <file>128/iso-to-wbfs.png</file>
+    <file>128/wbfs-to-iso.png</file>
     <file>donation.png</file>
     <file>qwbfsmanager.png</file>
     <file>splashscreen.png</file>

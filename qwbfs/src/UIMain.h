@@ -93,6 +93,7 @@ protected slots:
 	void on_aQuit_triggered();
 	void on_aAbout_triggered();
 	void on_aProperties_triggered();
+	void on_aConvertIsoFile_triggered();
 	void on_tvFolders_activated( const QModelIndex& index );
 	void on_tbReloadDrives_clicked();
 	void on_cbDrives_currentIndexChanged( const QString& text );

@@ -457,6 +457,19 @@ void UIMain::on_aProperties_triggered()
 	dlg->open();
 }
 
+void UIMain::on_aConvertIsoFile_triggered()
+{
+	const QString isoFilePath = QFileDialog::getOpenFileName( this, tr( "Choose an ISO file to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
+	
+	if ( isoFilePath.isEmpty() ) {
+		return;
+	}
+	
+	ProgressDialog* dlg = new ProgressDialog( this );
+	
+	dlg->convertIsoToWBFS( isoFilePath );
+}
+
 void UIMain::on_tvFolders_activated( const QModelIndex& index )
 {
 	const QString filePath = mFoldersModel->filePath( index );

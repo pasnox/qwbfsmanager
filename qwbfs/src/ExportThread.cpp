@@ -98,6 +98,23 @@ bool ExportThread::importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS
 	return true;
 }
 
+bool ExportThread::convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath )
+{
+	if ( isRunning() ) {
+		Q_ASSERT( 0 );
+		return false;
+	}
+	
+	mTask = ExportThread::Convert;
+	mConvertFile.first = isoFilePath;
+	mConvertFile.second = wbfsFilePath;
+	mStop = false;
+	
+	start();
+	
+	return true;
+}
+
 void ExportThread::stop()
 {
 	QMutexLocker locker( &mMutex );
@@ -113,6 +130,9 @@ void ExportThread::run()
 			break;
 		case ExportThread::Import:
 			importWorker();
+			break;
+		case ExportThread::Convert:
+			convertWorker();
 			break;
 	}
 }
@@ -179,7 +199,7 @@ void ExportThread::importWorker()
 	QWBFS::Driver td( 0, mImportPartitionHandle );
 	
 	if ( !td.isOpen() ) {
-		emit message( tr( "Can't open partition '%1'." ).arg( td.partition() ) );
+		emit log( tr( "Can't open partition '%1'." ).arg( td.partition() ) );
 		return;
 	}
 	
@@ -234,6 +254,72 @@ void ExportThread::importWorker()
 	}
 }
 
+void ExportThread::convertWorker()
+{
+	int result;
+	
+	if ( mConvertFile.second.isEmpty() ) {
+		mConvertFile.second = QString( "%1.wbfs" ).arg( mConvertFile.first );
+	}
+	
+	result = QWBFS::Driver::initializeWBFSFile( mConvertFile.second );
+	emit message( tr( "Initializing wbfs file '%1'." ).arg( mConvertFile.second ) );
+	
+	if ( result != QWBFS::Driver::Ok ) {
+		emit log(
+			tr( "Can't create wbfs file '%1' (%2)." )
+				.arg( mConvertFile.second )
+				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
+		);
+		return;
+	}
+	
+	QWBFS::Partition::Properties properties( mConvertFile.second );
+	properties.reset = true;
+	
+	QWBFS::Partition::Handle handle( properties );
+	QWBFS::Driver td( 0, handle );
+	
+	if ( !td.isOpen() ) {
+		emit log( tr( "Can't open wbfs file '%1'." ).arg( td.partition() ) );
+		return;
+	}
+	
+	connectDriver( td );
+	
+	QWBFS::Model::Disc disc;
+	result = td.discImageInfo( mConvertFile.first, disc );
+	
+	if ( result != QWBFS::Driver::Ok ) {
+		emit log(
+			tr( "Can't get disc informations '%1' (%2)." )
+				.arg( mConvertFile.first )
+				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
+		);
+		return;
+	}
+	
+	emit message( tr( "Converting '%1'..." ).arg( disc.title ) );
+	result = td.addDiscImage( disc.origin );
+	
+	if ( result != QWBFS::Driver::Ok ) {
+		emit log(
+			tr( "Can't add disc '%1' (%2)." )
+				.arg( mConvertFile.first )
+				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
+		);
+		return;
+	}
+	
+	emit message( tr( "Triming '%1'..." ).arg( disc.title ) );
+	result = td.trim();
+	disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
+	disc.error = result;
+	
+	emit globalProgressChanged( 1 );
+	emit jobFinished( disc );
+}
+
 QString ExportThread::taskToString( ExportThread::Task task )
 {
 	switch ( task )
@@ -242,6 +328,8 @@ QString ExportThread::taskToString( ExportThread::Task task )
 			return tr( "Extracting" );
 		case ExportThread::Import:
 			return tr( "Adding" );
+		case ExportThread::Convert:
+			return tr( "Converting" );
 	}
 	
 	return QString::null;

@@ -95,6 +95,7 @@ void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QSt
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
 	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
+	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
 	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
@@ -117,6 +118,7 @@ void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWB
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
 	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
+	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
 	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
@@ -131,10 +133,42 @@ void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWB
 	}
 }
 
+void ProgressDialog::convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath )
+{
+	mThread = new ExportThread( this );
+	
+	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
+	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
+	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
+	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
+	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
+	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
+	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
+	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
+	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
+	
+	setWindowTitle( tr( "Converting disc..." ) );
+	pbGlobal->setMaximum( 1 );
+	open();
+	
+	if ( !mThread->convertIsoToWBFS( isoFilePath, wbfsFilePath ) ) {
+		deleteLater();
+	}
+}
+
 void ProgressDialog::thread_started()
 {
 	mElapsed.restart();
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( true );
+}
+
+void ProgressDialog::thread_log( const QString& text )
+{
+	pteErrors->appendPlainText( text );
+	
+	if ( !cbDetails->isChecked() ) {
+		cbDetails->toggle();
+	}
 }
 
 void ProgressDialog::thread_jobFinished( const QWBFS::Model::Disc& disc )

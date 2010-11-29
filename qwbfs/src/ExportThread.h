@@ -49,10 +49,10 @@ class ExportThread : public QThread
 	Q_OBJECT
 	
 public:
-	enum Task
-	{
+	enum Task {
 		Export,
-		Import
+		Import,
+		Convert
 	};
 	
 	ExportThread( QObject* parent = 0 );
@@ -62,6 +62,7 @@ public:
 	
 	bool exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
 	bool importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
+	bool convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath = QString::null );
 	
 	static QString taskToString( ExportThread::Task task );
 
@@ -73,6 +74,7 @@ protected:
 	QWBFS::Model::DiscList mDiscs;
 	QString mPath;
 	QWBFS::Partition::Handle mImportPartitionHandle;
+	QPair<QString, QString> mConvertFile;
 	bool mStop;
 	QMutex mMutex;
 	
@@ -81,12 +83,14 @@ protected:
 	void connectDriver( const QWBFS::Driver& driver );
 	void exportWorker();
 	void importWorker();
+	void convertWorker();
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
 	void globalProgressChanged( int value );
 	void jobFinished( const QWBFS::Model::Disc& disc );
 	void message( const QString& text );
+	void log( const QString& text );
 };
 
 #endif // EXPORTTHREAD_H
