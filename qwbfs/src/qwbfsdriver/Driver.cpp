@@ -560,37 +560,43 @@ int Driver::initializeWBFSFile( const QString& filePath, qint64 size )
 
 int Driver::convertIsoFileToWBFSFile( const QString& isoFilePath, const QString& _wbfsFilePath )
 {
-	/*const QString wbfsFilePath = _wbfsFilePath.isEmpty() ? QString( "%1.wbfs" ).arg( isoFilePath ) : _wbfsFilePath;
+	int result;
+	QString wbfsFilePath = _wbfsFilePath;
 	
-	if ( !QFile::exists( isoFilePath ) || QFileInfo( isoFilePath ).suffix().compare( "iso", Qt::CaseInsensitive ) != 0 ) {
-		return Driver::DiscReadFailed;
+	if ( wbfsFilePath.isEmpty() ) {
+		wbfsFilePath = QString( "%1.wbfs" ).arg( isoFilePath );
 	}
 	
-	const int result = Driver::initializeWBFSFile( isoFilePath );
+	result = QWBFS::Driver::initializeWBFSFile( wbfsFilePath );
 	
-	if ( result != Driver::Ok ) {
+	if ( result != QWBFS::Driver::Ok ) {
 		return result;
 	}
 	
-	bool created;
-	QWBFS::Partition::Handle handle = Driver::getHandle( isoFilePath, &created );
+	QWBFS::Partition::Properties properties( wbfsFilePath );
+	properties.reset = true;
 	
-	if ( !handle.isValid() ) {
-		return Driver::DiscReadFailed;
+	QWBFS::Partition::Handle handle( properties );
+	QWBFS::Driver td( 0, handle );
+	
+	if ( !td.isOpen() ) {
+		return Driver::PartitionNotOpened;
 	}
 	
-	const int result = 0;//addDiscImage( isoFilePath );
+	QWBFS::Model::Disc disc;
+	result = td.discImageInfo( isoFilePath, disc );
 	
-	if ( result == Driver::Ok ) {
-		wbfs_trim( handle.ptr() );
-		wbfs_file_truncate( handle.ptr()->callback_data, handle.ptr()->n_hd_sec *512ULL );
+	if ( result != QWBFS::Driver::Ok ) {
+		return result;
 	}
 	
-	if ( created ) {
-		Driver::closeHandle( handle );
+	result = td.addDiscImage( disc.origin );
+	
+	if ( result != QWBFS::Driver::Ok ) {
+		return result;
 	}
 	
-	return result != Driver::Ok ? result : Driver::Ok;*/
+	return td.trim();
 }
 
 QString Driver::errorToString( QWBFS::Driver::Error error )

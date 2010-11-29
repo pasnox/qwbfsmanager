@@ -207,7 +207,6 @@ public:
 		\return PartitionNotOpened or Ok
 	*/
 	int trim() const;
-	
 	/*!
 		\details return if a file is a wbfs partition/file.
 		\param fileName the fileName to check.
