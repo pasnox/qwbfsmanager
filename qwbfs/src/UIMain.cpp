@@ -38,16 +38,16 @@
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
 #include "wiitdb/Covers.h"
-#include "datacache/DataNetworkCache.h"
 #include "ProgressDialog.h"
 #include "PropertiesDialog.h"
 #include "Properties.h"
 #include "main.h"
-#include "donation/PaypalDonationWidget.h"
-#include "UpdateChecker/pUpdateChecker.h"
 
-#include <pTranslationManager.h>
-#include <pTranslationDialog.h>
+#include <Core/pNetworkAccessManager>
+#include <Core/pTranslationManager>
+#include <Gui/pTranslationDialog>
+#include <Gui/pUpdateChecker>
+#include <Gui/pPaypalButton>
 
 #include <QMenu>
 #include <QFileSystemModel>
@@ -59,7 +59,7 @@
 UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
-	mCache = new DataNetworkCache( this );
+	mCache = pNetworkAccessManager::instance();
 	mUpdateChecker = new pUpdateChecker( this );
 	mUpdateChecker->setDownloadsFeedUrl( QUrl( APPLICATION_DOWNLOADS_FEED ) );
 	mUpdateChecker->setVersion( APPLICATION_VERSION );
@@ -76,7 +76,7 @@ UIMain::UIMain( QWidget* parent )
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
 	dwCovers->toggleViewAction()->setIcon( QIcon( ":/icons/256/covers.png" ) );
 	
-	mDonationWidget = new PaypalDonationWidget( this );
+	mDonationWidget = new pPaypalButton( this );
 	mDonationWidget->setBusinessId( "5R924WYXJ6BAW" );
 	mDonationWidget->setItemName( "QWBFS Manager" );
 	mDonationWidget->setItemId( "QWBFS-DONATION" );
@@ -125,9 +125,9 @@ UIMain::UIMain( QWidget* parent )
 	
 	localeChanged();
 	
-	connect( mCache, SIGNAL( dataCached( const QUrl& ) ), this, SLOT( dataNetworkCache_dataCached( const QUrl& ) ) );
-	connect( mCache, SIGNAL( error( const QString&, const QUrl& ) ), this, SLOT( dataNetworkCache_error( const QString&, const QUrl& ) ) );
-	connect( mCache, SIGNAL( invalidated() ), this, SLOT( dataNetworkCache_invalidated() ) );
+	connect( mCache, SIGNAL( cached( const QUrl& ) ), this, SLOT( networkAccessManager_cached( const QUrl& ) ) );
+	connect( mCache, SIGNAL( error( const QUrl&, const QString& ) ), this, SLOT( networkAccessManager_error( const QUrl&, const QString& ) ) );
+	connect( mCache, SIGNAL( cacheCleared() ), this, SLOT( networkAccessManager_cacheCleared() ) );
 }
 
 UIMain::~UIMain()
@@ -135,7 +135,7 @@ UIMain::~UIMain()
 	//qWarning() << Q_FUNC_INFO;
 }
 
-DataNetworkCache* UIMain::cache() const
+pNetworkAccessManager* UIMain::cache() const
 {
 	return mCache;
 }
@@ -192,9 +192,8 @@ void UIMain::loadProperties( bool firstInit )
 {
 	Properties properties( this );
 	
-	mCache->setDiskCacheSize( properties.cacheDiskSize() );
-	mCache->setMemoryCacheSize( properties.cacheMemorySize() );
-	mCache->setWorkingPath( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
+	mCache->setMaximumCacheSize( properties.cacheDiskSize() );
+	mCache->setCacheDirectory( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
 	
 	QNetworkProxy proxy( properties.proxyType() );
 	proxy.setHostName( properties.proxyServer() );
@@ -203,10 +202,6 @@ void UIMain::loadProperties( bool firstInit )
 	proxy.setPassword( properties.proxyPassword() );
 	
 	QNetworkProxy::setApplicationProxy( proxy );
-	
-	mDonationWidget->cache()->setDiskCacheSize( mCache->diskCacheSize() );
-	mDonationWidget->cache()->setMemoryCacheSize( mCache->memoryCacheSize() );
-	mDonationWidget->cache()->setWorkingPath( mCache->workingPath() );
 	
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	translationManager->setTranslationsPaths( properties.translationsPaths() );
@@ -300,16 +295,16 @@ void UIMain::coverRequested( const QString& id )
 	lCDCover->clear();
 	lCover->clear();
 	
-	if ( mCache->hasCachedData( urlCD ) || mCache->hasCachedData( urlCDCustom ) || mCache->hasCachedData( urlCover ) ) {
-		dataNetworkCache_dataCached( QUrl() );
+	if ( mCache->hasCacheData( urlCD ) || mCache->hasCacheData( urlCDCustom ) || mCache->hasCacheData( urlCover ) ) {
+		networkAccessManager_cached( QUrl() );
 	}
 	
 	if ( !lCDCover->pixmap() ) {
-		mCache->cacheData( urlCD );
+		mCache->get( QNetworkRequest( urlCD ) );
 	}
 	
 	if ( !lCover->pixmap() ) {
-		mCache->cacheData( urlCover );
+		mCache->get( QNetworkRequest( urlCover ) );
 	}
 }
 
@@ -318,9 +313,11 @@ void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 	mExportModel->updateDisc( disc );
 }
 
-void UIMain::dataNetworkCache_dataCached( const QUrl& url )
+void UIMain::networkAccessManager_cached( const QUrl& url )
 {
-	Q_UNUSED( url );
+	if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) ) {
+		return;
+	}
 	
 	// update all views
 	const QList<QAbstractItemView*> views = findChildren<QAbstractItemView*>();
@@ -338,25 +335,25 @@ void UIMain::dataNetworkCache_dataCached( const QUrl& url )
 	const QUrl urlCDCustom = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, mLastDiscId );
 	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, mLastDiscId );
 	
-	if ( mCache->hasCachedData( urlCD ) ) {
+	if ( mCache->hasCacheData( urlCD ) ) {
 		lCDCover->setPixmap( mCache->cachedPixmap( urlCD ) );
 	}
 	
-	if ( mCache->hasCachedData( urlCDCustom ) ) {
+	if ( mCache->hasCacheData( urlCDCustom ) ) {
 		lCDCover->setPixmap( mCache->cachedPixmap( urlCDCustom ) );
 	}
 	
-	if ( mCache->hasCachedData( urlCover ) ) {
+	if ( mCache->hasCacheData( urlCover ) ) {
 		lCover->setPixmap( mCache->cachedPixmap( urlCover ) );
 	}
 }
 
-void UIMain::dataNetworkCache_error( const QString& message, const QUrl& url )
+void UIMain::networkAccessManager_error( const QUrl& url, const QString& message )
 {
 	switch ( QWBFS::WiiTDB::Covers::type( url ) )
 	{
 		case QWBFS::WiiTDB::Covers::Disc:
-			mCache->cacheData( QWBFS::WiiTDB::Covers( url ).url( QWBFS::WiiTDB::Covers::DiscCustom ) );
+			mCache->get( QNetworkRequest( QWBFS::WiiTDB::Covers( url ).url( QWBFS::WiiTDB::Covers::DiscCustom ) ) );
 			return;
 		case QWBFS::WiiTDB::Covers::HQ:
 		case QWBFS::WiiTDB::Covers::Cover:
@@ -370,9 +367,9 @@ void UIMain::dataNetworkCache_error( const QString& message, const QUrl& url )
 	qmtbInfos->appendMessage( message );
 }
 
-void UIMain::dataNetworkCache_invalidated()
+void UIMain::networkAccessManager_cacheCleared()
 {
-	dataNetworkCache_dataCached( QUrl() );
+	networkAccessManager_cached( QUrl() );
 }
 
 void UIMain::on_aReloadPartitions_triggered()

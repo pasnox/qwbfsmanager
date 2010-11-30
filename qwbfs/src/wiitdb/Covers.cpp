@@ -98,17 +98,17 @@ QUrl Covers::url( Type type, const QString& id )
 	switch ( type )
 	{
 		case HQ:
-			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/coverfullHQ/%1/%2.png" ).arg( language ).arg( id ) );
+			return QUrl( QString( "%3/wiitdb/artwork/coverfullHQ/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
 		case Cover:
-			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/cover/%1/%2.png" ).arg( language ).arg( id ) );
+			return QUrl( QString( "%3/wiitdb/artwork/cover/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
 		case _3D:
-			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/coverfull3D/%1/%2.png" ).arg( language ).arg( id ) );
+			return QUrl( QString( "%3/wiitdb/artwork/coverfull3D/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
 		case Disc:
-			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/disc/%1/%2.png" ).arg( language ).arg( id ) );
+			return QUrl( QString( "%3/wiitdb/artwork/disc/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
 		case DiscCustom:
-			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ) );
+			return QUrl( QString( "%3/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
 		case Full:
-			return QUrl( QString( "http://wiitdb.com/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ) );
+			return QUrl( QString( "%3/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
 		case Invalid:
 			break;
 	}

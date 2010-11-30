@@ -39,14 +39,15 @@
 #include <QString>
 #include <QUrl>
 
+#define WIITDB_DOMAIN "http://wiitdb.com"
+
 namespace QWBFS {
 namespace WiiTDB {
 
 class Covers
 {
 public:
-	enum Type
-	{
+	enum Type {
 		Invalid,
 		HQ,
 		Cover,

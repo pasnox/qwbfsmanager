@@ -39,8 +39,8 @@
 #include "ui_UIMain.h"
 
 class QFileSystemModel;
-class DataNetworkCache;
-class PaypalDonationWidget;
+class pNetworkAccessManager;
+class pPaypalButton;
 class pUpdateChecker;
 
 namespace QWBFS {
@@ -59,15 +59,15 @@ public:
 	
 	virtual bool event( QEvent* event );
 	
-	DataNetworkCache* cache() const;
+	pNetworkAccessManager* cache() const;
 
 protected:
-	PaypalDonationWidget* mDonationWidget;
+	pPaypalButton* mDonationWidget;
 	QStringList mPartitions;
 	QFileSystemModel* mFoldersModel;
 	QFileSystemModel* mFilesModel;
 	QWBFS::Model::DiscModel* mExportModel;
-	DataNetworkCache* mCache;
+	pNetworkAccessManager* mCache;
 	QString mLastDiscId;
 	pUpdateChecker* mUpdateChecker;
 	
@@ -86,9 +86,9 @@ protected slots:
 	void closeViewRequested();
 	void coverRequested( const QString& id );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void dataNetworkCache_dataCached( const QUrl& url );
-	void dataNetworkCache_error( const QString& message, const QUrl& url );
-	void dataNetworkCache_invalidated();
+	void networkAccessManager_cached( const QUrl& url );
+	void networkAccessManager_error( const QUrl& url, const QString& message );
+	void networkAccessManager_cacheCleared();
 	void on_aReloadPartitions_triggered();
 	void on_aQuit_triggered();
 	void on_aAbout_triggered();

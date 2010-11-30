@@ -36,8 +36,8 @@
 #include "PropertiesDialog.h"
 #include "Properties.h"
 
-#include <pTranslationManager.h>
-#include <pTranslationDialog.h>
+#include <Core/pTranslationManager>
+#include <Gui/pTranslationDialog>
 
 #include <QFileDialog>
 #include <QNetworkProxy>
@@ -62,8 +62,7 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 	lCurrentLocale->setText( mProperties->locale().name() );
 	
 	leCachePath->setText( mProperties->cacheWorkingPath() );
-	sbCacheDiskSize->setValue( mProperties->cacheDiskSize() /1024 );
-	sbCacheMemorySize->setValue( mProperties->cacheMemorySize() /1024 );
+	sbCacheDiskSize->setValue( mProperties->cacheDiskSize() /1024 /1024 );
 	cbCacheUseTemporary->setChecked( mProperties->cacheUseTemporaryPath() );
 	
 	cbProxyType->setCurrentIndex( cbProxyType->findData( mProperties->proxyType() ) );
@@ -151,8 +150,7 @@ void PropertiesDialog::accept()
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	
 	mProperties->setCacheWorkingPath( leCachePath->text() );
-	mProperties->setCacheDiskSize( Q_INT64_C( sbCacheDiskSize->value() *1024 ) );
-	mProperties->setCacheMemorySize( Q_INT64_C( sbCacheMemorySize->value() *1024 ) );
+	mProperties->setCacheDiskSize( Q_INT64_C( sbCacheDiskSize->value() *1024 *1024 ) );
 	mProperties->setCacheUseTemporaryPath( cbCacheUseTemporary->isChecked() );
 	
 	mProperties->setProxyType( QNetworkProxy::ProxyType( cbProxyType->itemData( cbProxyType->currentIndex() ).toInt() ) );

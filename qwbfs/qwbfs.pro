@@ -20,8 +20,11 @@ QT	= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
+FRESH_LIBRARY_PATH = ../../../fresh
+
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
+include( $${FRESH_LIBRARY_PATH}/fresh.pri )
 
 # define some usefull values
 QMAKE_TARGET_COMPANY	= "QWBFS Team"
@@ -68,8 +71,7 @@ DEPENDPATH	*= . \
 mac:ICON	= resources/qwbfsmanager.icns
 win32:RC_FILE	*= resources/qwbfsmanager.rc
 
-RESOURCES	*= resources/resources.qrc \
-	src/fresh/resources/fresh.qrc
+RESOURCES	*= resources/resources.qrc
 
 TRANSLATIONS	*= ../translations/qwbfsmanager-ru_RU.ts \
 	../translations/qwbfsmanager-sl_SI.ts \
@@ -94,8 +96,7 @@ FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
 	src/ProgressDialog.ui \
 	src/UIAbout.ui \
-	src/PropertiesDialog.ui \
-	src/fresh/pTranslationDialog.ui
+	src/PropertiesDialog.ui
 
 HEADERS	*= src/main.h \
 	src/UIMain.h \
@@ -113,20 +114,8 @@ HEADERS	*= src/main.h \
 	src/qwbfsdriver/Driver.h \
 	src/UIAbout.h \
 	src/wiitdb/Covers.h \
-	src/datacache/DataNetworkCache.h \
 	src/PropertiesDialog.h \
-	src/Properties.h \
-	src/donation/PaypalDonationWidget.h \
-	src/fresh/pVersion.h \
-	src/fresh/pTranslationDialog.h \
-	src/fresh/pTranslationManager.h \
-	src/fresh/MonkeyExport.h \
-	src/fresh/pIconManager.h \
-	src/fresh/pPathListEditor.h \
-	src/fresh/pStringListEditor.h \
-	src/fresh/pFileListEditor.h \
-	src/fresh/pQueuedMessageToolBar.h \
-	src/fresh/pQueuedMessageWidget.h
+	src/Properties.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -144,20 +133,7 @@ SOURCES	*= src/main.cpp \
 	src/qwbfsdriver/Driver.cpp \
 	src/UIAbout.cpp \
 	src/wiitdb/Covers.cpp \
-	src/datacache/DataNetworkCache.cpp \
 	src/PropertiesDialog.cpp \
-	src/Properties.cpp \
-	src/donation/PaypalDonationWidget.cpp \
-	src/fresh/pVersion.cpp \
-	src/fresh/pTranslationDialog.cpp \
-	src/fresh/pTranslationManager.cpp \
-	src/fresh/pIconManager.cpp \
-	src/fresh/pPathListEditor.cpp \
-	src/fresh/pStringListEditor.cpp \
-	src/fresh/pFileListEditor.cpp \
-	src/fresh/pQueuedMessageToolBar.cpp \
-	src/fresh/pQueuedMessageWidget.cpp
-
-include( src/UpdateChecker/pUpdateChecker.pri )
+	src/Properties.cpp
 
 include( installs.pri )

@@ -39,7 +39,8 @@
 #include "models/DiscDelegate.h"
 #include "ProgressDialog.h"
 #include "UIMain.h"
-#include "datacache/DataNetworkCache.h"
+
+#include <Core/pNetworkAccessManager>
 
 #include <QLineEdit>
 #include <QInputDialog>

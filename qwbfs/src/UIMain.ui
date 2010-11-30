@@ -398,7 +398,7 @@
   <customwidget>
    <class>pQueuedMessageToolBar</class>
    <extends>QToolBar</extends>
-   <header location="global">pQueuedMessageToolBar.h</header>
+   <header location="global">Gui/pQueuedMessageToolBar</header>
   </customwidget>
  </customwidgets>
  <resources>

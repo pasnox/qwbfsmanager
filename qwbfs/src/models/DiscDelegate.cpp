@@ -37,16 +37,18 @@
 #include "DiscModel.h"
 #include "qwbfsdriver/Driver.h"
 #include "Gauge.h"
-#include "datacache/DataNetworkCache.h"
 #include "wiitdb/Covers.h"
-#include "fresh/pIconManager.h"
+
+#include <Core/pNetworkAccessManager>
+#include <Gui/pIconManager>
 
 #include <QPainter>
+#include <QPixmapCache>
 #include <QDebug>
 
 using namespace QWBFS::Model;
 
-DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent, DataNetworkCache* cache )
+DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent, pNetworkAccessManager* cache )
 	: QStyledItemDelegate( parent )
 {
 	Q_ASSERT( parent );
@@ -133,10 +135,10 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		const QWBFS::WiiTDB::Covers cover( disc.id );
 		QString url;
 		
-		if ( mCache->hasCachedData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
+		if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
 			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
 		}
-		else if ( mCache->hasCachedData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
+		else if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
 			url = cover.url( QWBFS::WiiTDB::Covers::DiscCustom ).toString();
 		}
 		else {
@@ -146,12 +148,19 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		const QString key = QString( "%1-%2-%3" ).arg( url ).arg( rect.width() ).arg( rect.height() );
 		
 		if ( !QPixmapCache::find( key, pixmap ) ) {
-			const QByteArray* data = mCache->cachedData( url );
+			if ( !mCache->hasCacheData( url ) ) {
+				mCache->get( QNetworkRequest( url ) );
+				return;
+			}
 			
-			if ( data && pixmap.loadFromData( *data ) ) {
+			QIODevice* data = mCache->cacheData( url );
+			
+			if ( data && pixmap.loadFromData( data->readAll() ) ) {
 				pixmap = pixmap.scaled( rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
 				QPixmapCache::insert( key, pixmap );
 			}
+			
+			delete data;
 		}
 	}
 	else {

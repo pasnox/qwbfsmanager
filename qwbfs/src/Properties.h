@@ -58,10 +58,7 @@ public:
 	void setCacheWorkingPath( const QString& path );
 	
 	qint64 cacheDiskSize() const;
-	void setCacheDiskSize( qint64 sizeKb );
-	
-	qint64 cacheMemorySize() const;
-	void setCacheMemorySize( qint64 sizeKb );
+	void setCacheDiskSize( qint64 sizeByte );
 	
 	bool cacheUseTemporaryPath() const;
 	void setCacheUseTemporaryPath( bool useTemporary );

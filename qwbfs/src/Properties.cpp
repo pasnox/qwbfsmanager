@@ -34,18 +34,20 @@
 **
 ****************************************************************************/
 #include "Properties.h"
-#include "datacache/DataNetworkCache.h"
 #include "UIMain.h"
 
-#include <QSettings>
+#include <Core/pSettings>
+#include <Core/pNetworkAccessManager>
+
 #include <QDir>
 #include <QCoreApplication>
 #include <QLibraryInfo>
 #include <QDebug>
 
+#define DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE 1024 *1024 *50
+
 #define SETTINGS_CACHE_WORKING_PATH "cache/workingPath"
 #define SETTINGS_CACHE_DISK_SIZE "cache/diskSize"
-#define SETTINGS_CACHE_MEMORY_SIZE "cache/memorySize"
 #define SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH "cache/useTemporaryWorkingPath"
 #define SETTINGS_PROXY_TYPE "proxy/type"
 #define SETTINGS_PROXY_SERVER "proxy/server"
@@ -66,7 +68,7 @@
 Properties::Properties( QObject* parent )
 	: QObject( parent )
 {
-	mSettings = new QSettings( this );
+	mSettings = new pSettings( this );
 	//qWarning() << mSettings->fileName();
 }
 
@@ -94,19 +96,9 @@ qint64 Properties::cacheDiskSize() const
 	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE ).value<qint64>();
 }
 
-void Properties::setCacheDiskSize( qint64 sizeKb )
+void Properties::setCacheDiskSize( qint64 sizeByte )
 {
-	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeKb );
-}
-
-qint64 Properties::cacheMemorySize() const
-{
-	return mSettings->value( SETTINGS_CACHE_MEMORY_SIZE, DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE ).value<qint64>();
-}
-
-void Properties::setCacheMemorySize( qint64 sizeKb )
-{
-	mSettings->setValue( SETTINGS_CACHE_MEMORY_SIZE, sizeKb );
+	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeByte );
 }
 
 bool Properties::cacheUseTemporaryPath() const
