@@ -105,9 +105,26 @@ bool ExportThread::convertIsoToWBFS( const QString& isoFilePath, const QString& 
 		return false;
 	}
 	
-	mTask = ExportThread::Convert;
+	mTask = ExportThread::ConvertISO;
 	mConvertFile.first = isoFilePath;
 	mConvertFile.second = wbfsFilePath;
+	mStop = false;
+	
+	start();
+	
+	return true;
+}
+
+bool ExportThread::convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath )
+{
+	if ( isRunning() ) {
+		Q_ASSERT( 0 );
+		return false;
+	}
+	
+	mTask = ExportThread::ConvertWBFS;
+	mConvertFile.first = wbfsFilePath;
+	mConvertFile.second = isoFilePath;
 	mStop = false;
 	
 	start();
@@ -131,8 +148,11 @@ void ExportThread::run()
 		case ExportThread::Import:
 			importWorker();
 			break;
-		case ExportThread::Convert:
-			convertWorker();
+		case ExportThread::ConvertISO:
+			convertISOWorker();
+			break;
+		case ExportThread::ConvertWBFS:
+			convertWBFSWorker();
 			break;
 	}
 }
@@ -254,13 +274,15 @@ void ExportThread::importWorker()
 	}
 }
 
-void ExportThread::convertWorker()
+void ExportThread::convertISOWorker()
 {
 	int result;
 	
 	if ( mConvertFile.second.isEmpty() ) {
 		mConvertFile.second = QString( "%1.wbfs" ).arg( mConvertFile.first );
 	}
+	
+	emit globalProgressChanged( 0 );
 	
 	result = QWBFS::Driver::initializeWBFSFile( mConvertFile.second );
 	emit message( tr( "Initializing wbfs file '%1'." ).arg( mConvertFile.second ) );
@@ -299,7 +321,7 @@ void ExportThread::convertWorker()
 		return;
 	}
 	
-	emit message( tr( "Converting '%1'..." ).arg( disc.title ) );
+	emit message( tr( "Converting '%1' to WBFS..." ).arg( disc.title ) );
 	result = td.addDiscImage( disc.origin );
 	
 	if ( result != QWBFS::Driver::Ok ) {
@@ -320,6 +342,46 @@ void ExportThread::convertWorker()
 	emit jobFinished( disc );
 }
 
+void ExportThread::convertWBFSWorker()
+{
+	if ( mConvertFile.second.isEmpty() ) {
+		mConvertFile.second = QString( "%1.iso" ).arg( mConvertFile.first );
+	}
+	
+	emit globalProgressChanged( 0 );
+	
+	const QFileInfo file( mConvertFile.second );
+	QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( mConvertFile.first );
+	QWBFS::Model::Disc disc;
+	int result;
+	
+	// create driver
+	QWBFS::Driver driver( 0, handle );
+	connectDriver( driver );
+	result = driver.discInfo( 0, disc );
+	
+	if ( result != QWBFS::Driver::Ok ) {
+		emit log(
+			tr( "Can't get disc informations '%1' (%2)." )
+				.arg( mConvertFile.first )
+				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
+		);
+		return;
+	}
+	
+	emit message( tr( "Converting '%1' to ISO..." ).arg( disc.title ) );
+	
+	result = driver.extractDisc( disc.id, file.absolutePath(), file.fileName() );
+	
+	disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
+	disc.error = result;
+	
+	emit globalProgressChanged( 1 );
+	emit jobFinished( disc );
+	
+	QWBFS::Driver::closeHandle( handle );
+}
+
 QString ExportThread::taskToString( ExportThread::Task task )
 {
 	switch ( task )
@@ -328,8 +390,10 @@ QString ExportThread::taskToString( ExportThread::Task task )
 			return tr( "Extracting" );
 		case ExportThread::Import:
 			return tr( "Adding" );
-		case ExportThread::Convert:
-			return tr( "Converting" );
+		case ExportThread::ConvertISO:
+			return tr( "Converting ISO" );
+		case ExportThread::ConvertWBFS:
+			return tr( "Converting WBFS" );
 	}
 	
 	return QString::null;

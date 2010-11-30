@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>635</width>
-    <height>353</height>
+    <width>633</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -382,9 +382,6 @@
    </property>
   </action>
   <action name="aConvertWBFSFile">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="icon">
     <iconset resource="../resources/resources.qrc">
      <normaloff>:/icons/128/wbfs-to-iso.png</normaloff>:/icons/128/wbfs-to-iso.png</iconset>

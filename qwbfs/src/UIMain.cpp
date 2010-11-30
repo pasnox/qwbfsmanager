@@ -142,7 +142,8 @@ void UIMain::showEvent( QShowEvent* event )
 	
 	if ( !shown ) {
 		shown = true;
-		QTimer::singleShot( 25, this, SLOT( loadProperties() ) );
+		loadProperties();
+		//QTimer::singleShot( 25, this, SLOT( loadProperties() ) );
 		mUpdateChecker->silentCheck();
 		qmtbInfos->appendMessage( tr(
 				"Welcome to %1, the cross-platform WBFS Manager. Report bugs <a href=\"%2\">here</a>, discuss <a href=\"%3\">here</a>."
@@ -459,15 +460,28 @@ void UIMain::on_aProperties_triggered()
 
 void UIMain::on_aConvertIsoFile_triggered()
 {
-	const QString isoFilePath = QFileDialog::getOpenFileName( this, tr( "Choose an ISO file to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
+	const QString filePath = QFileDialog::getOpenFileName( this, tr( "Choose an ISO file to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
 	
-	if ( isoFilePath.isEmpty() ) {
+	if ( filePath.isEmpty() ) {
 		return;
 	}
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
-	dlg->convertIsoToWBFS( isoFilePath );
+	dlg->convertIsoToWBFS( filePath );
+}
+
+void UIMain::on_aConvertWBFSFile_triggered()
+{
+	const QString filePath = QFileDialog::getOpenFileName( this, tr( "Choose a WBFS file to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
+	
+	if ( filePath.isEmpty() ) {
+		return;
+	}
+	
+	ProgressDialog* dlg = new ProgressDialog( this );
+	
+	dlg->convertWBFSToIso( filePath );
 }
 
 void UIMain::on_tvFolders_activated( const QModelIndex& index )

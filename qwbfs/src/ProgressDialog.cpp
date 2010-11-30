@@ -87,10 +87,8 @@ void ProgressDialog::localeChanged()
 	retranslateUi( this );
 }
 
-void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )
+void ProgressDialog::doConnections()
 {
-	mThread = new ExportThread( this );
-	
 	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
@@ -100,6 +98,13 @@ void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QSt
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
+}
+
+void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )
+{
+	mThread = new ExportThread( this );
+	
+	doConnections();
 	
 	setWindowTitle( tr( "Exporting discs..." ) );
 	pbGlobal->setMaximum( discs.count() );
@@ -114,15 +119,7 @@ void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWB
 {
 	mThread = new ExportThread( this );
 	
-	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
-	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
-	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
-	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
-	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
-	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
-	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
-	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
-	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
+	doConnections();
 	
 	setWindowTitle( tr( "Importing discs..." ) );
 	pbGlobal->setMaximum( discs.count() );
@@ -137,21 +134,28 @@ void ProgressDialog::convertIsoToWBFS( const QString& isoFilePath, const QString
 {
 	mThread = new ExportThread( this );
 	
-	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
-	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
-	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
-	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
-	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
-	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
-	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
-	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
-	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
+	doConnections();
 	
 	setWindowTitle( tr( "Converting disc..." ) );
 	pbGlobal->setMaximum( 1 );
 	open();
 	
 	if ( !mThread->convertIsoToWBFS( isoFilePath, wbfsFilePath ) ) {
+		deleteLater();
+	}
+}
+
+void ProgressDialog::convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath )
+{
+	mThread = new ExportThread( this );
+	
+	doConnections();
+	
+	setWindowTitle( tr( "Converting disc..." ) );
+	pbGlobal->setMaximum( 1 );
+	open();
+	
+	if ( !mThread->convertWBFSToIso( wbfsFilePath, isoFilePath ) ) {
 		deleteLater();
 	}
 }

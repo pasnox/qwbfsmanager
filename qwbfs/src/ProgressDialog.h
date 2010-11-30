@@ -58,6 +58,7 @@ public:
 	void exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
 	void importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
 	void convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath = QString::null );
+	void convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath = QString::null );
 
 protected:
 	QPointer<ExportThread> mThread;
@@ -65,6 +66,7 @@ protected:
 	
 	void closeEvent( QCloseEvent* event );
 	void localeChanged();
+	void doConnections();
 
 protected slots:
 	void thread_started();

@@ -52,7 +52,8 @@ public:
 	enum Task {
 		Export,
 		Import,
-		Convert
+		ConvertISO,
+		ConvertWBFS
 	};
 	
 	ExportThread( QObject* parent = 0 );
@@ -63,6 +64,7 @@ public:
 	bool exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
 	bool importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
 	bool convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath = QString::null );
+	bool convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath = QString::null );
 	
 	static QString taskToString( ExportThread::Task task );
 
@@ -83,7 +85,8 @@ protected:
 	void connectDriver( const QWBFS::Driver& driver );
 	void exportWorker();
 	void importWorker();
-	void convertWorker();
+	void convertISOWorker();
+	void convertWBFSWorker();
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
