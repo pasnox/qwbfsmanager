@@ -54,8 +54,6 @@
 #include <QFileDialog>
 #include <QProcess>
 #include <QMessageBox>
-#include <QSpacerItem>
-#include <QTimer>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -151,7 +149,6 @@ void UIMain::showEvent( QShowEvent* event )
 	if ( !shown ) {
 		shown = true;
 		loadProperties();
-		//QTimer::singleShot( 25, this, SLOT( loadProperties() ) );
 		mUpdateChecker->silentCheck();
 		qmtbInfos->appendMessage( tr(
 				"Welcome to %1, the cross-platform WBFS Manager. Report bugs <a href=\"%2\">here</a>, discuss <a href=\"%3\">here</a>."
