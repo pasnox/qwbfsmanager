@@ -49,6 +49,7 @@
 #include <pTranslationManager.h>
 #include <pTranslationDialog.h>
 
+#include <QMenu>
 #include <QFileSystemModel>
 #include <QFileDialog>
 #include <QProcess>
@@ -83,7 +84,14 @@ UIMain::UIMain( QWidget* parent )
 	mDonationWidget->setItemId( "QWBFS-DONATION" );
 	mDonationWidget->setCurrencyCode( "EUR" );
 	
+	QMenu* menu = new QMenu( tr( "Actions" ), this );
+	menu->setIcon( aConvertIsoFile->icon() );
+	menu->addAction( aConvertIsoFile );
+	menu->addAction( aConvertWBFSFile );
+	
 	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
+	toolBar->addAction( menu->menuAction() );
+	toolBar->addSeparator();
 	toolBar->addAction( dwTools->toggleViewAction() );
 	toolBar->addAction( dwCovers->toggleViewAction() );
 	QWidget* spacerWidget = new QWidget( toolBar );

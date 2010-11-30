@@ -266,9 +266,6 @@
    <addaction name="aAbout"/>
    <addaction name="aQuit"/>
    <addaction name="separator"/>
-   <addaction name="aConvertIsoFile"/>
-   <addaction name="aConvertWBFSFile"/>
-   <addaction name="separator"/>
   </widget>
   <widget class="QDockWidget" name="dwCovers">
    <property name="minimumSize">
