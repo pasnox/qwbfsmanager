@@ -4,67 +4,120 @@
 <context>
     <name>DataNetworkCache</name>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="108"/>
         <source>Error when downloading the file &apos;%1&apos;.</source>
-        <translation>Erreur lors du téléchargement du fichier &apos;%1&apos;.</translation>
+        <translation type="obsolete">Erreur lors du téléchargement du fichier &apos;%1&apos;.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="115"/>
         <source>Error when creating the cache for file &apos;%1&apos;</source>
-        <translation>Erreur lors de la création du cache pour le fichier &apos;%1&apos;</translation>
+        <translation type="obsolete">Erreur lors de la création du cache pour le fichier &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="120"/>
         <source>Error when writing the cache for file &apos;%1&apos;</source>
-        <translation>Erreur lors de l&apos;écriture du cache pour le fichier &apos;%1&apos;</translation>
+        <translation type="obsolete">Erreur lors de l&apos;écriture du cache pour le fichier &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="258"/>
         <source>Can&apos;t cache pixmap</source>
-        <translation>Impossible de mettre en cache</translation>
+        <translation type="obsolete">Impossible de mettre en cache</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="271"/>
         <source>The working path &apos;%1&apos; exists and is not a directory.</source>
-        <translation>Le dossier de travail &apos;%1&apos; existe et n&apos;est pas un dossier.</translation>
+        <translation type="obsolete">Le dossier de travail &apos;%1&apos; existe et n&apos;est pas un dossier.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="279"/>
         <source>Can&apos;t create the working path &apos;%1&apos;.</source>
-        <translation>Impossible de créer le dossier de travail &apos;%1&apos;.</translation>
+        <translation type="obsolete">Impossible de créer le dossier de travail &apos;%1&apos;.</translation>
     </message>
 </context>
 <context>
     <name>ExportThread</name>
     <message>
-        <location filename="../qwbfs/src/ExportThread.cpp" line="105"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="139"/>
         <source>Cancel requested, the process will stop after the current operation.</source>
         <translation>Annulation demandée, le processus s&apos;arrêtera après la tâche courante.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ExportThread.cpp" line="136"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="176"/>
         <source>Exporting &apos;%1&apos;...</source>
         <translation>Export en cours de &apos;%1&apos;...</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ExportThread.cpp" line="182"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="222"/>
         <source>Can&apos;t open partition &apos;%1&apos;.</source>
         <translation>Impossible d&apos;ouvrir la partition &apos;%1&apos;.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ExportThread.cpp" line="198"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="238"/>
         <source>Importing &apos;%1&apos;...</source>
         <translation>Import en cours de &apos;%1&apos;...</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ExportThread.cpp" line="242"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="288"/>
+        <source>Initializing wbfs file &apos;%1&apos;.</source>
+        <translation>Initialisation du fichier wbfs &apos;%1&apos;.</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="292"/>
+        <source>Can&apos;t create wbfs file &apos;%1&apos; (%2).</source>
+        <translation>Impossible de créer le fichier wbfs &apos;%1&apos; (%2).</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="306"/>
+        <source>Can&apos;t open wbfs file &apos;%1&apos;.</source>
+        <translation>Impossible d&apos;ouvrir le fichier wbfs &apos;%1&apos;.</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="317"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="365"/>
+        <source>Can&apos;t get disc informations &apos;%1&apos; (%2).</source>
+        <translation>Impossible d&apos;obtenir les informations du disque &apos;%1&apos; (%2).</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="324"/>
+        <source>Converting &apos;%1&apos; to WBFS...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="394"/>
+        <source>Converting ISO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="396"/>
+        <source>Converting WBFS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Converting &apos;%1&apos;...</source>
+        <translation type="obsolete">Conversion en cours de &apos;%1&apos;...</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="329"/>
+        <source>Can&apos;t add disc &apos;%1&apos; (%2).</source>
+        <translation>Impossible d&apos;ajouter le disque &apos;%1&apos; (%2).</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="336"/>
+        <source>Triming &apos;%1&apos;...</source>
+        <translation>Mise à jour de la taille du disque &apos;%1&apos;...</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="372"/>
+        <source>Converting &apos;%1&apos; to ISO...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="390"/>
         <source>Extracting</source>
         <translation>Extraction</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ExportThread.cpp" line="244"/>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="392"/>
         <source>Adding</source>
         <translation>Ajout</translation>
+    </message>
+    <message>
+        <source>Converting</source>
+        <translation type="obsolete">Conversion</translation>
     </message>
 </context>
 <context>
@@ -139,45 +192,45 @@
         <translation>Importer les disques dans la partition WBFS</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="180"/>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="192"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="181"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="193"/>
         <source>%1 disc(s) on the partition - %2 disc(s) to import.</source>
         <translation>%1 disque(s) sur la partition - %2 disque(s) à importer.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="228"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="229"/>
         <source>Can&apos;t open partition.</source>
         <translation>Impossible d&apos;ouvrir la partition.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="257"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="258"/>
         <source>The partition &apos;%1&apos; will be formatted,
 all data will be erased permanently, are you sure?</source>
         <translation>La partition &apos;%1&apos; va être formatée,
 toutes les données vont être supprimées de façon permanente, êtes-vous sûr ?</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="269"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="270"/>
         <source>Can&apos;t format partition.</source>
         <translation>Impossible de formater la partition.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="287"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="288"/>
         <source>You are about to permanently delete %1 disc(s) on partition &apos;%2&apos;, are you sure?</source>
         <translation>Vous êtes sur le point de supprimer définitivement %1 disque(s) sur la partition &apos;%2&apos;, êtes-vous sûr ?</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="310"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="311"/>
         <source>One or more discs have failed to be removed.</source>
         <translation>Un ou plusieurs disques n&apos;ont pu être supprimés.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="323"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="324"/>
         <source>Choose a new name for the disc</source>
         <translation>Choisissez le nouveau nom pour le disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="333"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="334"/>
         <source>Can&apos;t rename disc id #%1 (%2) to &apos;%3&apos;</source>
         <translation>Impossible de renommer le disque #%1 (%2) en &apos;%3&apos;</translation>
     </message>
@@ -185,14 +238,12 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>PaypalDonationWidget</name>
     <message>
-        <location filename="../qwbfs/src/donation/PaypalDonationWidget.cpp" line="183"/>
         <source>Donation</source>
-        <translation>Don</translation>
+        <translation type="obsolete">Don</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/donation/PaypalDonationWidget.cpp" line="184"/>
         <source>Make a donation via Paypal</source>
-        <translation>Faire un don via Paypal</translation>
+        <translation type="obsolete">Faire un don via Paypal</translation>
     </message>
 </context>
 <context>
@@ -208,22 +259,28 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Détails.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="103"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="109"/>
         <source>Exporting discs...</source>
         <translation>Exportation des disques...</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="125"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="124"/>
         <source>Importing discs...</source>
         <translation>Import des disques...</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="162"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="139"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="154"/>
+        <source>Converting disc...</source>
+        <translation>Conversion de disque...</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="200"/>
         <source>Time remaining: %1</source>
         <translation>Temps restant : %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="172"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="210"/>
         <source>The thread finished in %1</source>
         <translation>La tâche s&apos;est terminée en %1</translation>
     </message>
@@ -332,22 +389,22 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>VEUILLEZ NOTER QUE LE MOT DE PASSE EST CRYPTÉ AVEC UNE METHODE BASIQUE. SOYEZ PRUDENT.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="99"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="98"/>
         <source>No Proxy</source>
         <translation>Pas de Proxy</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="100"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="99"/>
         <source>Socks5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="101"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="100"/>
         <source>Http</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="116"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="115"/>
         <source>Choose a folder for the data cache</source>
         <translation>Choisissez un dossier pour les données du cache</translation>
     </message>
@@ -390,7 +447,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Trop grand</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="95"/>
+        <location filename="../qwbfs/src/main.cpp" line="97"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
         <translation>Le gestionnaire de Systéme de Fichier de Sauvegarde Wii multi-platforme Libre, Rapide et Puissant</translation>
     </message>
@@ -398,82 +455,82 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>QWBFS::Driver</name>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="489"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="608"/>
         <source>No error.</source>
         <translation>Aucune erreur.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="491"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="610"/>
         <source>Partition not opened.</source>
         <translation>La partition n&apos;est pas ouverte.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="493"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="612"/>
         <source>Source partition not opened.</source>
         <translation>La partition source n&apos;est pas ouverte.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="495"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="614"/>
         <source>Disc read failed.</source>
         <translation>Impossible de lire le disque.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="497"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="616"/>
         <source>Disc write failed.</source>
         <translation>Impossible d&apos;écrire sur le disque.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="499"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="618"/>
         <source>Disc extract failed.</source>
         <translation>Extraction du disque impossible.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="501"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="620"/>
         <source>Disc add failed.</source>
         <translation>Ajout du disque impossible.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="503"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="622"/>
         <source>Disc found.</source>
         <translation>Disque présent.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="505"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="624"/>
         <source>Disc not found (or not exists).</source>
         <translation>Disque introuvable (ou n&apos;existe pas).</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="507"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="626"/>
         <source>Invalid disc index.</source>
         <translation>Index de disque invalide.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="509"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="628"/>
         <source>Invalid disc id.</source>
         <translation>Id de disque invalide.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="511"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="630"/>
         <source>Invalid disc.</source>
         <translation>Disque invalide.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="513"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="632"/>
         <source>Can&apos;t drive to drive copy.</source>
         <translation>Impossible de copier de disque à disque.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="533"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="652"/>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="535"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="654"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="537"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="656"/>
         <source>Failed</source>
         <translation>Erreur</translation>
     </message>
@@ -527,7 +584,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>SplashScreen</name>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="60"/>
+        <location filename="../qwbfs/src/main.cpp" line="61"/>
         <source>Version %1</source>
         <translation></translation>
     </message>
@@ -627,6 +684,16 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Recharger la liste des partitions</translation>
     </message>
     <message>
+        <location filename="../qwbfs/src/UIMain.ui" line="378"/>
+        <source>Convert ISO File</source>
+        <translation>Convertir un fichier ISO</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.ui" line="387"/>
+        <source>Convert WBFS File</source>
+        <translation>Convertir un fichier WBFS</translation>
+    </message>
+    <message>
         <source>Reload partitions</source>
         <translation type="obsolete">Recharger les partitions</translation>
     </message>
@@ -646,19 +713,44 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="146"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="85"/>
+        <source>Actions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="151"/>
         <source>Welcome to %1, the cross-platform WBFS Manager. Report bugs &lt;a href=&quot;%2&quot;&gt;here&lt;/a&gt;, discuss &lt;a href=&quot;%3&quot;&gt;here&lt;/a&gt;.</source>
         <translation>Bienvenue dans %1, le Gestionnaire WBFS multi-platforme. Reportez les bugs &lt;a href=&quot;%2&quot;&gt;ici&lt;/a&gt;, discutez &lt;a href=&quot;%3&quot;&gt;ici&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="409"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="428"/>
         <source>I don&apos;t know how to list partition for this platform.
 You will have to set the correct partition path yourself for mounting partitions.</source>
         <translation>Je ne sais pas comment charger la liste des partitions pour cette plateforme.
 Vous devrez renseigner vous même le chemin des partitions pour les points de montage.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="464"/>
+        <source>Choose an ISO file to convert</source>
+        <translation>Choisissez un fichier ISO à convertir</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="464"/>
+        <source>ISO Files (*.iso)</source>
+        <translation>Fichiers ISO (*.iso)</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="477"/>
+        <source>Choose a WBFS file to convert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="477"/>
+        <source>WBFS Files (*.wbfs)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="549"/>
         <source>Choose a folder to export the discs</source>
         <translation>Choisissez un dossier pour exporter les disques</translation>
     </message>
@@ -666,150 +758,123 @@ Vous devrez renseigner vous même le chemin des partitions pour les points de mo
 <context>
     <name>pFileListEditor</name>
     <message>
-        <location filename="../qwbfs/src/fresh/pFileListEditor.cpp" line="41"/>
         <source>Choose file(s)</source>
-        <translation>Choisissez un ou plusieurs fichier(s)</translation>
+        <translation type="obsolete">Choisissez un ou plusieurs fichier(s)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pFileListEditor.cpp" line="60"/>
         <source>Choose file</source>
-        <translation>Choisissez un fichier</translation>
+        <translation type="obsolete">Choisissez un fichier</translation>
     </message>
 </context>
 <context>
     <name>pPathListEditor</name>
     <message>
-        <location filename="../qwbfs/src/fresh/pPathListEditor.cpp" line="40"/>
-        <location filename="../qwbfs/src/fresh/pPathListEditor.cpp" line="56"/>
         <source>Choose directory</source>
-        <translation>Choisissez un dossier</translation>
+        <translation type="obsolete">Choisissez un dossier</translation>
     </message>
 </context>
 <context>
     <name>pStringListEditor</name>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="131"/>
         <source>Add Item</source>
-        <translation>Ajouter un item</translation>
+        <translation type="obsolete">Ajouter un item</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="132"/>
         <source>Remove Item</source>
-        <translation>Supprimer un item</translation>
+        <translation type="obsolete">Supprimer un item</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="133"/>
         <source>Clear Items</source>
-        <translation>Vider la liste des items</translation>
+        <translation type="obsolete">Vider la liste des items</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="134"/>
         <source>Move Item Up</source>
-        <translation>Déplacer l&apos;item vers le haut</translation>
+        <translation type="obsolete">Déplacer l&apos;item vers le haut</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="135"/>
         <source>Move Item Down</source>
-        <translation>Déplacer l&apos;item vers le bas</translation>
+        <translation type="obsolete">Déplacer l&apos;item vers le bas</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="136"/>
         <source>Edit Item</source>
-        <translation>Éditer l&apos;item</translation>
+        <translation type="obsolete">Éditer l&apos;item</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="150"/>
         <source>New item</source>
-        <translation>Nouvelle item</translation>
+        <translation type="obsolete">Nouvelle item</translation>
     </message>
 </context>
 <context>
     <name>pTranslationDialog</name>
     <message>
-        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="14"/>
         <source>Choose a translation locale</source>
-        <translation>Choisissez une langue</translation>
+        <translation type="obsolete">Choisissez une langue</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="24"/>
         <source>Select the locale you want to use with the application.
 You can click on buttons to locate/reload the translations.</source>
-        <translation>Séléctionnez la langue que vous voulez utiliser pour l&apos;application.
+        <translation type="obsolete">Séléctionnez la langue que vous voulez utiliser pour l&apos;application.
 Vous pouvez cliquer sur les boutons pour choisir/recharger les traductions.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="48"/>
         <source>Click here to change the application translations paths</source>
-        <translation>Cliquez ici pour changer les dossiers de traductions</translation>
+        <translation type="obsolete">Cliquez ici pour changer les dossiers de traductions</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="59"/>
         <source>Click here to reload the translations</source>
-        <translation>Cliquez ici pour recharger les traductions</translation>
+        <translation type="obsolete">Cliquez ici pour recharger les traductions</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/fresh/pTranslationDialog.cpp" line="64"/>
         <source>Translations paths configuration</source>
-        <translation>Configuration des dossiers de traductions</translation>
+        <translation type="obsolete">Configuration des dossiers de traductions</translation>
     </message>
 </context>
 <context>
     <name>pUpdateChecker</name>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateChecker.cpp" line="137"/>
         <source>Update</source>
-        <translation>Mise à Jour</translation>
+        <translation type="obsolete">Mise à Jour</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateChecker.cpp" line="138"/>
         <source>Check for update</source>
-        <translation>Vérifier les mises à jour</translation>
+        <translation type="obsolete">Vérifier les mises à jour</translation>
     </message>
 </context>
 <context>
     <name>pUpdateCheckerDialog</name>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.ui" line="14"/>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.ui" line="61"/>
         <source>Update Checker</source>
-        <translation>Vérificateur de mise à jour</translation>
+        <translation type="obsolete">Vérificateur de mise à jour</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.ui" line="77"/>
         <source>When an update is detected, you can directly download it (or update it with your package manager).
 Generally lastest updates fix bugs and/or add new options/plugins/things.</source>
-        <translation>Lorsque une mise à jour est détéctée, vous pouvez la télécharger directement (ou la mettre à jour via votre gestionnaire de paquet).
+        <translation type="obsolete">Lorsque une mise à jour est détéctée, vous pouvez la télécharger directement (ou la mettre à jour via votre gestionnaire de paquet).
 Généralement les derniéres mises à jour corrigent des bugs et/ou ajoutent des nouvelles options, greffons etc.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="125"/>
         <source>Updated on %1 by %2</source>
-        <translation>Mis à jour le %1 par %2</translation>
+        <translation type="obsolete">Mis à jour le %1 par %2</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="210"/>
         <source>You are using version &lt;b&gt;%1&lt;/b&gt; (%2).</source>
-        <translation>Vous utilisez la version &lt;b&gt;%1&lt;/b&gt; (%2).</translation>
+        <translation type="obsolete">Vous utilisez la version &lt;b&gt;%1&lt;/b&gt; (%2).</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="211"/>
         <source>Download</source>
-        <translation>Télécharger</translation>
+        <translation type="obsolete">Télécharger</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="223"/>
         <source>An error occur: %1</source>
-        <translation>Une erreur est survenue: %1</translation>
+        <translation type="obsolete">Une erreur est survenue: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="255"/>
         <source>You are running the last available version.</source>
-        <translation>Vous utilisez la dernière version disponible.</translation>
+        <translation type="obsolete">Vous utilisez la dernière version disponible.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="266"/>
         <source>An error occur while parsing xml, retry later.</source>
-        <translation>Une erreur est survenue en traitant le fichier xml, veuillez re-essayer plus tard.</translation>
+        <translation type="obsolete">Une erreur est survenue en traitant le fichier xml, veuillez re-essayer plus tard.</translation>
     </message>
 </context>
 </TS>
