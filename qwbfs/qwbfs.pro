@@ -20,10 +20,19 @@ QT	= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
-FRESH_LIBRARY_PATH = ../../../fresh
-
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
+
+exists( ../fresh/fresh.pro ) {
+	FRESH_LIBRARY_PATH = ../fresh
+	!build_pass:message( "Using bundled fresh library." )
+} else:exists( ../../../fresh/fresh.pro ) {
+	FRESH_LIBRARY_PATH = ../../../fresh
+	!build_pass:message( "Using external fresh library." )
+} else {
+	!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+}
+
 include( $${FRESH_LIBRARY_PATH}/fresh.pri )
 
 # define some usefull values

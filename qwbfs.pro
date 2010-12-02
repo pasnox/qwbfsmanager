@@ -21,10 +21,20 @@ XUPProjectSettings {
 }
 
 TEMPLATE	= subdirs
-CONFIG	+= ordered
+CONFIG	*= ordered
 
 BUILD_PATH	= build
 include( shared.pri )
 
-SUBDIRS	+= libwbfs \
+exists( fresh/fresh.pro ) {
+	SUBDIRS	*= fresh/fresh.pro
+	!build_pass:message( "Using bundled fresh library." )
+} else:exists( ../../fresh/fresh.pro ) {
+	!build_pass:message( "Using external fresh library." )
+	SUBDIRS	*= ../../fresh/fresh.pro
+} else {
+	!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+}
+
+SUBDIRS	*= libwbfs \
 	qwbfs
