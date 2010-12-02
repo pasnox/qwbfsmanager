@@ -73,6 +73,7 @@ protected:
 	
 	virtual void showEvent( QShowEvent* event );
 	virtual void closeEvent( QCloseEvent* event );
+	virtual bool eventFilter( QObject* object, QEvent* event );
 	
 	void connectView( PartitionWidget* widget );
 

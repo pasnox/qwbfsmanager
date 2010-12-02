@@ -54,6 +54,7 @@
 #include <QFileDialog>
 #include <QProcess>
 #include <QMessageBox>
+#include <QPainter>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -71,6 +72,7 @@ UIMain::UIMain( QWidget* parent )
 	setupUi( this );
 	
 	centralVerticalLayout->setMenuBar( qmtbInfos );
+	qmtbInfos->layout()->setMargin( 5 );
 	qmtbInfos->setVisible( false );
 	
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
@@ -123,6 +125,8 @@ UIMain::UIMain( QWidget* parent )
 	tbReloadDrives->click();
 	aReloadPartitions->trigger();
 	
+	qmtbInfos->installEventFilter( this );
+	
 	localeChanged();
 	
 	connect( mCache, SIGNAL( cached( const QUrl& ) ), this, SLOT( networkAccessManager_cached( const QUrl& ) ) );
@@ -138,6 +142,19 @@ UIMain::~UIMain()
 pNetworkAccessManager* UIMain::cache() const
 {
 	return mCache;
+}
+
+bool UIMain::event( QEvent* event )
+{
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
+	}
+	
+	return QMainWindow::event( event );
 }
 
 void UIMain::showEvent( QShowEvent* event )
@@ -163,17 +180,27 @@ void UIMain::closeEvent( QCloseEvent* event )
 	QMainWindow::closeEvent( event );
 }
 
-bool UIMain::event( QEvent* event )
+bool UIMain::eventFilter( QObject* object, QEvent* event )
 {
-	switch ( event->type() ) {
-		case QEvent::LocaleChange:
-			localeChanged();
-			break;
-		default:
-			break;
+	if ( object == qmtbInfos ) {
+		if ( event->type() == QEvent::Paint ) {
+			if ( qmtbInfos->queuedMessageWidget()->pendingMessageCount() > 0 ) {
+				QBrush brush;
+				qmtbInfos->queuedMessageWidget()->currentMessageInformations( 0, &brush, 0 );
+				
+				QPainter painter( qmtbInfos );
+				
+				painter.setRenderHint( QPainter::Antialiasing );
+				painter.setPen( QPen( brush.color().darker( 150 ), 0.5 ) );
+				painter.setBrush( brush );
+				painter.drawRoundedRect( qmtbInfos->rect().adjusted( 1, -9, -1, -1 ), 9, 9 );
+				
+				return true;
+			}
+		}
 	}
 	
-	return QMainWindow::event( event );
+	return QMainWindow::eventFilter( object, event );
 }
 
 void UIMain::connectView( PartitionWidget* widget )
