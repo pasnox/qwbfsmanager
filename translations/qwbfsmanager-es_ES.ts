@@ -21,11 +21,11 @@
     </message>
     <message>
         <source>The working path &apos;%1&apos; exists and is not a directory.</source>
-        <translation type="obsolete">La carpeta de trabajo&apos;%1&apos; no existe o no es una carpeta.</translation>
+        <translation type="obsolete">La carpeta de trabajo &apos;%1&apos; no existe o no es una carpeta.</translation>
     </message>
     <message>
         <source>Can&apos;t create the working path &apos;%1&apos;.</source>
-        <translation type="obsolete">No se puede crear la carpeta en la ruta&apos;%1&apos;.</translation>
+        <translation type="obsolete">No se puede crear la carpeta en la ruta &apos;%1&apos;.</translation>
     </message>
 </context>
 <context>
@@ -53,23 +53,23 @@
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="288"/>
         <source>Initializing wbfs file &apos;%1&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Inicializando archivo &apos;%1&apos;.</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="292"/>
         <source>Can&apos;t create wbfs file &apos;%1&apos; (%2).</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede crear el archivo wbfs &apos;%1&apos; (%2).</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="306"/>
         <source>Can&apos;t open wbfs file &apos;%1&apos;.</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede abrir el archivo wbfs &apos;%1&apos;.</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="317"/>
         <location filename="../qwbfs/src/ExportThread.cpp" line="365"/>
         <source>Can&apos;t get disc informations &apos;%1&apos; (%2).</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede obtener la información del juego &apos;%1&apos; (%2).</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="324"/>
@@ -87,9 +87,13 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Converting &apos;%1&apos;...</source>
+        <translation type="obsolete">Convertir &apos;%1&apos;...</translation>
+    </message>
+    <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="329"/>
         <source>Can&apos;t add disc &apos;%1&apos; (%2).</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede agregar el juego &apos;%1&apos; (%2).</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="336"/>
@@ -110,6 +114,10 @@
         <location filename="../qwbfs/src/ExportThread.cpp" line="392"/>
         <source>Adding</source>
         <translation>Añadir</translation>
+    </message>
+    <message>
+        <source>Converting</source>
+        <translation type="obsolete">Convertir</translation>
     </message>
 </context>
 <context>
@@ -198,7 +206,7 @@
         <location filename="../qwbfs/src/PartitionWidget.cpp" line="258"/>
         <source>The partition &apos;%1&apos; will be formatted,
 all data will be erased permanently, are you sure?</source>
-        <translation>La partición &apos;%1&apos;será formateada, todos los datos 
+        <translation>La partición &apos;%1&apos; será formateada, todos los datos 
 serán borrados de forma permanente, ¿está seguro?</translation>
     </message>
     <message>
@@ -253,7 +261,7 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="109"/>
         <source>Exporting discs...</source>
-        <translation>Exportando de juegos...</translation>
+        <translation>Exportando juegos...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="124"/>
@@ -264,7 +272,7 @@ serán borrados de forma permanente, ¿está seguro?</translation>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="139"/>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="154"/>
         <source>Converting disc...</source>
-        <translation type="unfinished"></translation>
+        <translation>Convertir juego...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="200"/>
@@ -662,7 +670,7 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="333"/>
         <source>Reload</source>
-        <translation>Recagar</translation>
+        <translation>Recargar</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="336"/>
@@ -687,12 +695,12 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="378"/>
         <source>Convert ISO File</source>
-        <translation type="unfinished"></translation>
+        <translation>Convertir archivo ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="387"/>
         <source>Convert WBFS File</source>
-        <translation type="unfinished"></translation>
+        <translation>Covertir archivo WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="87"/>
@@ -715,12 +723,12 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="492"/>
         <source>Choose an ISO file to convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija un archivo ISO para convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="492"/>
         <source>ISO Files (*.iso)</source>
-        <translation type="unfinished"></translation>
+        <translation>Archivo ISO (*.iso)</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="505"/>
