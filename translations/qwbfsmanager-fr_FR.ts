@@ -74,17 +74,17 @@
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="324"/>
         <source>Converting &apos;%1&apos; to WBFS...</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversion de &apos;%1&apos; en WBFS...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="394"/>
         <source>Converting ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversion ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="396"/>
         <source>Converting WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversion WBFS</translation>
     </message>
     <message>
         <source>Converting &apos;%1&apos;...</source>
@@ -103,7 +103,7 @@
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="372"/>
         <source>Converting &apos;%1&apos; to ISO...</source>
-        <translation type="unfinished"></translation>
+        <translation>Conversion de &apos;%1&apos; en ISO...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ExportThread.cpp" line="390"/>
@@ -293,98 +293,95 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="24"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="21"/>
         <source>General</source>
         <translation>Générale</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="44"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="41"/>
         <source>Application locale</source>
         <translation>Langue de l&apos;application</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="63"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="60"/>
         <source>Click here to change the application locale</source>
         <translation>Cliquez ici pour changer la langue de l&apos;application</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="99"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="96"/>
         <source>Covers&apos; Cache</source>
         <translation>Cache des couvertures</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="105"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="102"/>
         <source>Path</source>
         <translation>Dossier</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="121"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="118"/>
         <source>Browse for a folder</source>
         <translation>Choisir un dossier</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="160"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="157"/>
         <source>Use the system temporary directory</source>
         <translation>Utiliser le dossier temporaire du système</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="167"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="164"/>
         <source>Disk Size</source>
         <translation>Taille sur le disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="177"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="174"/>
         <source>Unlimited</source>
         <translation>Illimité</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="180"/>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="216"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="177"/>
         <source> MB</source>
         <translation> Mo</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="203"/>
         <source>Memory Size</source>
-        <translation>Taille en mémoire</translation>
+        <translation type="obsolete">Taille en mémoire</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="213"/>
         <source>Default</source>
-        <translation>Défaut</translation>
+        <translation type="obsolete">Défaut</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="227"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="201"/>
         <source>Proxy</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="236"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="210"/>
         <source>Type</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="246"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="220"/>
         <source>Login</source>
         <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="260"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="234"/>
         <source>Password</source>
         <translation>Mot de passe</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="290"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="264"/>
         <source>Server</source>
         <translation>Serveur</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="304"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="278"/>
         <source>Port</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="364"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="338"/>
         <source>PLEASE NOTE THAT THE PASSWORD IS ENCRYPTED WITH A SHIT METHOD. BE CAREFUL.</source>
         <translation>VEUILLEZ NOTER QUE LE MOT DE PASSE EST CRYPTÉ AVEC UNE METHODE BASIQUE. SOYEZ PRUDENT.</translation>
     </message>
@@ -447,7 +444,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Trop grand</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="97"/>
+        <location filename="../qwbfs/src/main.cpp" line="98"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
         <translation>Le gestionnaire de Systéme de Fichier de Sauvegarde Wii multi-platforme Libre, Rapide et Puissant</translation>
     </message>
@@ -584,7 +581,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>SplashScreen</name>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="61"/>
+        <location filename="../qwbfs/src/main.cpp" line="62"/>
         <source>Version %1</source>
         <translation></translation>
     </message>
@@ -713,44 +710,44 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="85"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="87"/>
         <source>Actions</source>
-        <translation type="unfinished"></translation>
+        <translation>Actions</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="151"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="170"/>
         <source>Welcome to %1, the cross-platform WBFS Manager. Report bugs &lt;a href=&quot;%2&quot;&gt;here&lt;/a&gt;, discuss &lt;a href=&quot;%3&quot;&gt;here&lt;/a&gt;.</source>
         <translation>Bienvenue dans %1, le Gestionnaire WBFS multi-platforme. Reportez les bugs &lt;a href=&quot;%2&quot;&gt;ici&lt;/a&gt;, discutez &lt;a href=&quot;%3&quot;&gt;ici&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="428"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="456"/>
         <source>I don&apos;t know how to list partition for this platform.
 You will have to set the correct partition path yourself for mounting partitions.</source>
         <translation>Je ne sais pas comment charger la liste des partitions pour cette plateforme.
 Vous devrez renseigner vous même le chemin des partitions pour les points de montage.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="464"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="492"/>
         <source>Choose an ISO file to convert</source>
         <translation>Choisissez un fichier ISO à convertir</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="464"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="492"/>
         <source>ISO Files (*.iso)</source>
         <translation>Fichiers ISO (*.iso)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="477"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="505"/>
         <source>Choose a WBFS file to convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Choisissez un fichier WBFS à convertir</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="477"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="505"/>
         <source>WBFS Files (*.wbfs)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichiers WBFS (*.wbfs)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="549"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="577"/>
         <source>Choose a folder to export the discs</source>
         <translation>Choisissez un dossier pour exporter les disques</translation>
     </message>
