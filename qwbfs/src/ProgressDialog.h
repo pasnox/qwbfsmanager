@@ -37,7 +37,7 @@
 #define PROGRESSDIALOG_H
 
 #include "ui_ProgressDialog.h"
-#include "ExportThread.h"
+#include "WorkerThread.h"
 #include "models/Disc.h"
 
 #include <QTime>
@@ -52,13 +52,13 @@ public:
 	
 	virtual bool event( QEvent* event );
 	
-	void setWork( const ExportThread::Work& work );
+	void setWork( const WorkerThread::Work& work );
 
 public slots:
 	virtual void done( int r );
 
 protected:
-	ExportThread* mThread;
+	WorkerThread* mThread;
 	QTime mElapsed;
 	
 	void closeEvent( QCloseEvent* event );

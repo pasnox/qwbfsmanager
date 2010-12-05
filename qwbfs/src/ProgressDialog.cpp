@@ -49,7 +49,7 @@ ProgressDialog::ProgressDialog( QWidget* parent )
 	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( false );
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
 	
-	mThread = new ExportThread( this );
+	mThread = new WorkerThread( this );
 	doConnections();
 	localeChanged();
 }
@@ -72,7 +72,7 @@ bool ProgressDialog::event( QEvent* event )
 	return QDialog::event( event );
 }
 
-void ProgressDialog::setWork( const ExportThread::Work& work )
+void ProgressDialog::setWork( const WorkerThread::Work& work )
 {
 	pbGlobal->setMaximum( work.discs.count() );
 	open();
@@ -144,7 +144,7 @@ void ProgressDialog::thread_log( const QString& text )
 void ProgressDialog::thread_jobFinished( const QWBFS::Model::Disc& disc )
 {
 	const QString text = QString( "%1 '%2': %3 (%4)" )
-		.arg( ExportThread::taskToLabel( mThread->task() ) )
+		.arg( WorkerThread::taskToLabel( mThread->task() ) )
 		.arg( disc.baseName() )
 		.arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) )
 		.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );

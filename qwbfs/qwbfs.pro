@@ -39,7 +39,7 @@ include( $${FRESH_LIBRARY_PATH}/fresh.pri )
 QMAKE_TARGET_COMPANY	= "QWBFS Team"
 QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerful cross platform Wii Backup File System manager"
-QMAKE_TARGET_COPYRIGHT	= "(C) 2010 Filipe Azevedo"
+QMAKE_TARGET_COPYRIGHT	= "(C) 2010 - 2011 Filipe Azevedo"
 PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
 PACKAGE_DOWNLOADS_FEED	= "http://code.google.com/feeds/p/qwbfs/downloads/basic"
 PACKAGE_REPORT_BUG_URL	= "http://code.google.com/p/qwbfs/issues/list"
@@ -67,9 +67,7 @@ DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
 	"_APPLICATION_REPORT_BUG_URL=\"\\\"$${PACKAGE_REPORT_BUG_URL}\\\"\"" \
 	"_APPLICATION_DISCUSS_URL=\"\\\"$${PACKAGE_DISCUSS_URL}\\\"\""
 
-INCLUDEPATH	*= . \
-	src \
-	src/fresh
+INCLUDEPATH	*= src
 
 DEPENDPATH	*= src \
 	src/models \
@@ -111,7 +109,7 @@ HEADERS	*= src/main.h \
 	src/Gauge.h \
 	src/PartitionWidget.h \
 	src/ProgressDialog.h \
-	src/ExportThread.h \
+	src/WorkerThread.h \
 	src/qwbfsdriver/PartitionDiscHandle.h \
 	src/qwbfsdriver/PartitionHandle.h \
 	src/qwbfsdriver/PartitionProperties.h \
@@ -130,7 +128,7 @@ SOURCES	*= src/main.cpp \
 	src/Gauge.cpp \
 	src/PartitionWidget.cpp \
 	src/ProgressDialog.cpp \
-	src/ExportThread.cpp \
+	src/WorkerThread.cpp \
 	src/qwbfsdriver/PartitionDiscHandle.cpp \
 	src/qwbfsdriver/PartitionHandle.cpp \
 	src/qwbfsdriver/PartitionProperties.cpp \

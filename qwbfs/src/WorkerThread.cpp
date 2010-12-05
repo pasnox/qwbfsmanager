@@ -3,7 +3,7 @@
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
-** FileName  : ExportThread.cpp
+** FileName  : WorkerThread.cpp
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
 ** Home Page : http://code.google.com/p/qwbfs
@@ -33,7 +33,7 @@
 ** wish to do so, delete this exception statement from your version.
 **
 ****************************************************************************/
-#include "ExportThread.h"
+#include "WorkerThread.h"
 
 #include <QTime>
 #include <QWidget>
@@ -41,13 +41,13 @@
 #include <QMetaType>
 #include <QDebug>
 
-ExportThread::ExportThread( QObject* parent )
+WorkerThread::WorkerThread( QObject* parent )
 	: QThread( parent )
 {
 	qRegisterMetaType<QWBFS::Model::Disc>( "QWBFS::Model::Disc" );
 }
 
-ExportThread::~ExportThread()
+WorkerThread::~WorkerThread()
 {
 	if ( isRunning() ) {
 		qWarning() << "Waiting thread to finish...";
@@ -58,13 +58,13 @@ ExportThread::~ExportThread()
 	//qWarning() << Q_FUNC_INFO;
 }
 
-ExportThread::Task ExportThread::task() const
+WorkerThread::Task WorkerThread::task() const
 {
-	QMutexLocker locker( &const_cast<ExportThread*>( this )->mMutex );
+	QMutexLocker locker( &const_cast<WorkerThread*>( this )->mMutex );
 	return mWork.task;
 }
 
-bool ExportThread::setWork( const ExportThread::Work& work )
+bool WorkerThread::setWork( const WorkerThread::Work& work )
 {
 	if ( isRunning() ) {
 		Q_ASSERT( 0 );
@@ -79,44 +79,44 @@ bool ExportThread::setWork( const ExportThread::Work& work )
 	return true;
 }
 
-QString ExportThread::taskToWindowTitle( ExportThread::Task task )
+QString WorkerThread::taskToWindowTitle( WorkerThread::Task task )
 {
 	return taskToLabel( task ).append( "..." );
 }
 
-QString ExportThread::taskToLabel( ExportThread::Task task )
+QString WorkerThread::taskToLabel( WorkerThread::Task task )
 {
-	const bool isIndirect = task & ExportThread::Indirect;
-	task &= ~ExportThread::Indirect;
+	const bool isIndirect = task & WorkerThread::Indirect;
+	task &= ~WorkerThread::Indirect;
 	
 	switch ( task ) {
-		case ExportThread::ExportISO:
+		case WorkerThread::ExportISO:
 			return isIndirect ? tr( "Indirect Export to ISO" ) : tr( "Export to ISO" );
-		case ExportThread::ExportWBFS:
+		case WorkerThread::ExportWBFS:
 			return isIndirect ? tr( "Indirect Export to WBFS" ) : tr( "Export to WBFS" );
-		case ExportThread::ImportISO:
+		case WorkerThread::ImportISO:
 			return isIndirect ? tr( "Indirect Import to ISO" ) : tr( "Import to ISO" );
-		case ExportThread::ImportWBFS:
+		case WorkerThread::ImportWBFS:
 			return isIndirect ? tr( "Indirect Import to WBFS" ) : tr( "Import to WBFS" );
-		case ExportThread::ConvertISO:
+		case WorkerThread::ConvertISO:
 			return isIndirect ? tr( "Indirect Convert to ISO" ) : tr( "Convert to ISO" );
-		case ExportThread::ConvertWBFS:
+		case WorkerThread::ConvertWBFS:
 			return isIndirect ? tr( "Indirect Convert to WBFS" ) : tr( "Convert to WBFS" );
 	}
 	
 	return QString::null;
 }
 
-void ExportThread::stop()
+void WorkerThread::stop()
 {
 	QMutexLocker locker( &mMutex );
 	mStop = true;
 	emit canceled();
 }
 
-void ExportThread::run()
+void WorkerThread::run()
 {
-	ExportThread::Work work;
+	WorkerThread::Work work;
 	int count = 0;
 	
 	{
@@ -139,20 +139,20 @@ void ExportThread::run()
 					case QWBFS::Driver::WBFSFile:
 					case QWBFS::Driver::ISOFile:
 					case QWBFS::Driver::UnknownFile: {
-						if ( work.task & ExportThread::WBFS ) {
+						if ( work.task & WorkerThread::WBFS ) {
 							wbfsToWBFS( work.task, disc, work.target, true );
 						}
-						else if ( work.task & ExportThread::ISO ) {
+						else if ( work.task & WorkerThread::ISO ) {
 							wbfsToISO( work.task, disc, work.target );
 						}
 						else {
-							if ( work.task & ExportThread::Import ) {
+							if ( work.task & WorkerThread::Import ) {
 								disc.error = QWBFS::Driver::DiscAddFailed;
 							}
-							else if ( work.task & ExportThread::Export ) {
+							else if ( work.task & WorkerThread::Export ) {
 								disc.error = QWBFS::Driver::DiscExtractFailed;
 							}
-							else if ( work.task & ExportThread::Convert ) {
+							else if ( work.task & WorkerThread::Convert ) {
 								disc.error = QWBFS::Driver::DiscConvertFailed;
 							}
 							else {
@@ -175,20 +175,20 @@ void ExportThread::run()
 					case QWBFS::Driver::WBFSFile:
 					case QWBFS::Driver::ISOFile:
 					case QWBFS::Driver::UnknownFile: {
-						if ( work.task & ExportThread::WBFS ) {
+						if ( work.task & WorkerThread::WBFS ) {
 							isoToWBFS( work.task, disc, work.target, true );
 						}
-						else if ( work.task & ExportThread::ISO ) {
+						else if ( work.task & WorkerThread::ISO ) {
 							isoToISO( work.task, disc, work.target );
 						}
 						else {
-							if ( work.task & ExportThread::Import ) {
+							if ( work.task & WorkerThread::Import ) {
 								disc.error = QWBFS::Driver::DiscAddFailed;
 							}
-							else if ( work.task & ExportThread::Export ) {
+							else if ( work.task & WorkerThread::Export ) {
 								disc.error = QWBFS::Driver::DiscExtractFailed;
 							}
-							else if ( work.task & ExportThread::Convert ) {
+							else if ( work.task & WorkerThread::Convert ) {
 								disc.error = QWBFS::Driver::DiscConvertFailed;
 							}
 							else {
@@ -224,13 +224,13 @@ void ExportThread::run()
 	emit globalProgressChanged( work.discs.count() );
 }
 
-void ExportThread::connectDriver( QWBFS::Driver* driver )
+void WorkerThread::connectDriver( QWBFS::Driver* driver )
 {
 	connect( driver, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SIGNAL( currentProgressChanged( int, int, const QTime& ) ) );
 	connect( driver, SIGNAL( globalProgressChanged( int ) ), this, SIGNAL( globalProgressChanged( int ) ) );
 }
 
-void ExportThread::isoToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
+void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -312,7 +312,7 @@ void ExportThread::isoToWBFS( ExportThread::Task task, QWBFS::Model::Disc& sourc
 	}
 }
 
-void ExportThread::wbfsToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
+void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -361,7 +361,7 @@ void ExportThread::wbfsToISO( ExportThread::Task task, QWBFS::Model::Disc& sourc
 	}
 }
 
-void ExportThread::isoToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
+void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -436,7 +436,7 @@ void ExportThread::isoToISO( ExportThread::Task task, QWBFS::Model::Disc& source
 	out.close();
 }
 
-void ExportThread::wbfsToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
+void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -525,7 +525,7 @@ void ExportThread::wbfsToWBFS( ExportThread::Task task, QWBFS::Model::Disc& sour
 	}
 	// indirect drive2drive
 	else {
-		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task | ExportThread::Indirect ) ).arg( source.baseName() ) );
+		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task | WorkerThread::Indirect ) ).arg( source.baseName() ) );
 		
 		const QFileInfo tmpFile( QString( "%1/%2.iso" ).arg( QDir::tempPath() ).arg( source.baseName() ) );
 		QWBFS::Driver sourceDriver( 0, sourceHandle );

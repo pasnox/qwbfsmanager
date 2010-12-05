@@ -3,7 +3,7 @@
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
-** FileName  : ExportThread.h
+** FileName  : WorkerThread.h
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
 ** Home Page : http://code.google.com/p/qwbfs
@@ -33,8 +33,8 @@
 ** wish to do so, delete this exception statement from your version.
 **
 ****************************************************************************/
-#ifndef EXPORTTHREAD_H
-#define EXPORTTHREAD_H
+#ifndef WORKERTHREAD_H
+#define WORKERTHREAD_H
 
 #include <QThread>
 #include <QMutex>
@@ -46,7 +46,7 @@
 
 class QWidget;
 
-class ExportThread : public QThread
+class WorkerThread : public QThread
 {
 	Q_OBJECT
 	
@@ -72,21 +72,21 @@ public:
 	
 	struct Work
 	{
-		ExportThread::Task task;
+		WorkerThread::Task task;
 		QWBFS::Model::DiscList discs;
 		QString target;
 		QWidget* window;
 	};
 	
-	ExportThread( QObject* parent = 0 );
-	virtual ~ExportThread();
+	WorkerThread( QObject* parent = 0 );
+	virtual ~WorkerThread();
 	
-	ExportThread::Task task() const;
+	WorkerThread::Task task() const;
 	
-	bool setWork( const ExportThread::Work& work );
+	bool setWork( const WorkerThread::Work& work );
 	
-	static QString taskToWindowTitle( ExportThread::Task task );
-	static QString taskToLabel( ExportThread::Task task );
+	static QString taskToWindowTitle( WorkerThread::Task task );
+	static QString taskToLabel( WorkerThread::Task task );
 
 public slots:
 	void stop();
@@ -94,15 +94,15 @@ public slots:
 protected:
 	QMutex mMutex;
 	bool mStop;
-	ExportThread::Work mWork;
+	WorkerThread::Work mWork;
 	
 	virtual void run();
 	
 	void connectDriver( QWBFS::Driver* driver );
-	void isoToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
-	void wbfsToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target );
-	void isoToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target );
-	void wbfsToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
+	void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
+	void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
+	void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
+	void wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
@@ -113,6 +113,6 @@ signals:
 	void canceled();
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( ExportThread::Task )
+Q_DECLARE_OPERATORS_FOR_FLAGS( WorkerThread::Task )
 
-#endif // EXPORTTHREAD_H
+#endif // WORKERTHREAD_H

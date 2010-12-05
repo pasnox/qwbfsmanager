@@ -497,8 +497,8 @@ void UIMain::on_aConvertToWBFSFiles_triggered()
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
-	ExportThread::Work work;
-	work.task = ExportThread::Convert | ExportThread::WBFS;
+	WorkerThread::Work work;
+	work.task = WorkerThread::Convert | WorkerThread::WBFS;
 	
 	foreach ( const QString& filePath, filePaths ) {
 		work.discs << QWBFS::Model::Disc( filePath );
@@ -520,8 +520,8 @@ void UIMain::on_aConvertToISOFiles_triggered()
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
-	ExportThread::Work work;
-	work.task = ExportThread::Convert | ExportThread::ISO;
+	WorkerThread::Work work;
+	work.task = WorkerThread::Convert | WorkerThread::ISO;
 	
 	foreach ( const QString& filePath, filePaths ) {
 		work.discs << QWBFS::Model::Disc( filePath );
@@ -604,8 +604,8 @@ void UIMain::on_tbExport_clicked()
 	
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	
-	ExportThread::Work work;
-	work.task = ExportThread::Export | ExportThread::ISO;
+	WorkerThread::Work work;
+	work.task = WorkerThread::Export | WorkerThread::ISO;
 	work.discs = mExportModel->discs();
 	work.target = path;
 	work.window = dlg;
