@@ -11,6 +11,9 @@
 ##
 ###########################################################################################
 
+CONFIG	-= debug_and_release release debug warn_off warn_on
+CONFIG	*= release warn_on
+
 DEFINES *= LARGE_FILES _FILE_OFFSET_BITS=64
 LIB_WBFS_PWD	= $$PWD
 LIB_WBFS_BUILD_PATH	= $${LIB_WBFS_PWD}/../build

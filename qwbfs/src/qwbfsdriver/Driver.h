@@ -236,7 +236,7 @@ public:
 		\param disc the disc to fill informations.
 		\return InvalidDisc or Ok
 	*/
-	static int wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection = ONLY_GAME_PARTITION );
+	static int wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc );
 	/*!
 		\details convert an iso file to a wbfs file
 		\param isoFilePath the source iso file path

@@ -12,7 +12,7 @@
 ###########################################################################################
 
 CONFIG	-= debug_and_release release debug warn_off warn_on
-CONFIG	*= release
+CONFIG	*= release warn_on
 
 CONFIG(debug, debug|release) {
 	#Debug

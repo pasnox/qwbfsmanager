@@ -85,9 +85,9 @@ UIMain::UIMain( QWidget* parent )
 	mDonationWidget->setCurrencyCode( "EUR" );
 	
 	QMenu* menu = new QMenu( tr( "Actions" ), this );
-	menu->setIcon( aConvertToWBFSFile->icon() );
-	menu->addAction( aConvertToWBFSFile );
-	menu->addAction( aConvertToISOFile );
+	menu->setIcon( aConvertToWBFSFiles->icon() );
+	menu->addAction( aConvertToWBFSFiles );
+	menu->addAction( aConvertToISOFiles );
 	
 	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
 	toolBar->addAction( menu->menuAction() );
@@ -487,11 +487,11 @@ void UIMain::on_aProperties_triggered()
 	dlg->open();
 }
 
-void UIMain::on_aConvertToWBFSFile_triggered()
+void UIMain::on_aConvertToWBFSFiles_triggered()
 {
-	const QString filePath = QFileDialog::getOpenFileName( this, tr( "Choose an ISO file to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
+	const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose ISO files to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
 	
-	if ( filePath.isEmpty() ) {
+	if ( filePaths.isEmpty() ) {
 		return;
 	}
 	
@@ -499,18 +499,22 @@ void UIMain::on_aConvertToWBFSFile_triggered()
 	
 	ExportThread::Work work;
 	work.task = ExportThread::Convert | ExportThread::WBFS;
-	work.discs << QWBFS::Model::Disc( filePath );
-	work.target = QFileInfo( filePath ).absolutePath();
+	
+	foreach ( const QString& filePath, filePaths ) {
+		work.discs << QWBFS::Model::Disc( filePath );
+	}
+	
+	work.target = QFileInfo( filePaths.first() ).absolutePath();
 	work.window = dlg;
 	
 	dlg->setWork( work );
 }
 
-void UIMain::on_aConvertToISOFile_triggered()
+void UIMain::on_aConvertToISOFiles_triggered()
 {
-	const QString filePath = QFileDialog::getOpenFileName( this, tr( "Choose a WBFS file to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
+	const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose WBFS files to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
 	
-	if ( filePath.isEmpty() ) {
+	if ( filePaths.isEmpty() ) {
 		return;
 	}
 	
@@ -518,8 +522,12 @@ void UIMain::on_aConvertToISOFile_triggered()
 	
 	ExportThread::Work work;
 	work.task = ExportThread::Convert | ExportThread::ISO;
-	work.discs << QWBFS::Model::Disc( filePath );
-	work.target = QFileInfo( filePath ).absolutePath();
+	
+	foreach ( const QString& filePath, filePaths ) {
+		work.discs << QWBFS::Model::Disc( filePath );
+	}
+	
+	work.target = QFileInfo( filePaths.first() ).absolutePath();
 	work.window = dlg;
 	
 	dlg->setWork( work );

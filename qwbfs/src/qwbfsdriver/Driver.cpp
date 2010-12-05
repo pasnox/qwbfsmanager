@@ -254,7 +254,7 @@ int Driver::usedBlocksCount() const
 int Driver::discImageInfo( const QString& fileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection ) const
 {
 	if ( isWBFSPartitionOrFile( fileName ) ) {
-		return wbfsFileInfo( fileName, disc, partitionSelection );
+		return wbfsFileInfo( fileName, disc );
 	}
 	
 	if ( !isOpen() ) {
@@ -522,7 +522,7 @@ int Driver::initializeWBFSFile( const QString& filePath, qint64 size )
 	return Driver::Ok;
 }
 
-int Driver::wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection )
+int Driver::wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc )
 {
 	/*if ( !isWBFSPartitionOrFile( wbfsFileName ) ) {
 		return Driver::InvalidDisc;
@@ -613,31 +613,35 @@ QString Driver::errorToString( QWBFS::Driver::Error error )
 {
 	switch ( error ) {
 		case Driver::Ok:
-			return tr( "No error." );
+			return tr( "No error" );
 		case Driver::PartitionNotOpened:
-			return tr( "Partition not opened." );
+			return tr( "Partition not opened" );
 		case Driver::SourcePartitionNotOpened:
-			return tr( "Source partition not opened." );
+			return tr( "Source partition not opened" );
 		case Driver::DiscReadFailed:
-			return tr( "Disc read failed." );
+			return tr( "Disc read failed" );
 		case Driver::DiscWriteFailed:
-			return tr( "Disc write failed." );
+			return tr( "Disc write failed" );
 		case Driver::DiscExtractFailed:
-			return tr( "Disc extract failed." );
+			return tr( "Disc extract failed" );
 		case Driver::DiscAddFailed:
-			return tr( "Disc add failed." );
+			return tr( "Disc add failed" );
+		case Driver::DiscConvertFailed:
+			return tr( "Disc convert failed" );
 		case Driver::DiscFound:
-			return tr( "Disc found." );
+			return tr( "Disc found" );
 		case Driver::DiscNotFound:
-			return tr( "Disc not found (or not exists)." );
+			return tr( "Disc not found (or not exists)" );
 		case Driver::InvalidDiscIndex:
-			return tr( "Invalid disc index." );
+			return tr( "Invalid disc index" );
 		case Driver::InvalidDiscID:
-			return tr( "Invalid disc id." );
+			return tr( "Invalid disc id" );
 		case Driver::InvalidDisc:
-			return tr( "Invalid disc." );
+			return tr( "Invalid disc" );
 		case Driver::CantDrive2Drive:
-			return tr( "Can't drive to drive copy." );
+			return tr( "Can't drive to drive copy" );
+		case Driver::UnknownError:
+			return tr( "Unknown error" );
 	}
 	
 	return QString::null;

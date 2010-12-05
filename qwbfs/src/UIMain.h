@@ -94,8 +94,8 @@ protected slots:
 	void on_aQuit_triggered();
 	void on_aAbout_triggered();
 	void on_aProperties_triggered();
-	void on_aConvertToWBFSFile_triggered();
-	void on_aConvertToISOFile_triggered();
+	void on_aConvertToWBFSFiles_triggered();
+	void on_aConvertToISOFiles_triggered();
 	void on_tvFolders_activated( const QModelIndex& index );
 	void on_tbReloadDrives_clicked();
 	void on_cbDrives_currentIndexChanged( const QString& text );

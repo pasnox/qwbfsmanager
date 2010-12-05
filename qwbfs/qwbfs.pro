@@ -70,17 +70,16 @@ DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
 INCLUDEPATH	*= . \
 	src \
 	src/fresh
-DEPENDPATH	*= . \
-	src \
-	src/qwbfsdriver \
+
+DEPENDPATH	*= src \
 	src/models \
-	src/WiiTDB \
-	src/fresh
+	src/qwbfsdriver \
+	src/wiitdb
 
 mac:ICON	= resources/qwbfsmanager.icns
-win32:RC_FILE	*= resources/qwbfsmanager.rc
+win32:RC_FILE	= resources/qwbfsmanager.rc
 
-RESOURCES	*= resources/resources.qrc
+RESOURCES	= resources/resources.qrc
 
 TRANSLATIONS	*= ../translations/qwbfsmanager-ru_RU.ts \
 	../translations/qwbfsmanager-sl_SI.ts \
