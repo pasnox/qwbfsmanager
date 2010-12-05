@@ -356,5 +356,11 @@ void PartitionWidget::on_tbImport_clicked()
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
 	
-	dlg->importDiscs( mImportModel->discs(), mDriver->handle() );
+	ExportThread::Work work;
+	work.task = ExportThread::Import | ExportThread::WBFS;
+	work.discs = mImportModel->discs();
+	work.target = mDriver->handle().partition();
+	work.window = dlg;
+	
+	dlg->setWork( work );
 }

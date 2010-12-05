@@ -85,9 +85,9 @@ UIMain::UIMain( QWidget* parent )
 	mDonationWidget->setCurrencyCode( "EUR" );
 	
 	QMenu* menu = new QMenu( tr( "Actions" ), this );
-	menu->setIcon( aConvertIsoFile->icon() );
-	menu->addAction( aConvertIsoFile );
-	menu->addAction( aConvertWBFSFile );
+	menu->setIcon( aConvertToWBFSFile->icon() );
+	menu->addAction( aConvertToWBFSFile );
+	menu->addAction( aConvertToISOFile );
 	
 	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
 	toolBar->addAction( menu->menuAction() );
@@ -487,7 +487,7 @@ void UIMain::on_aProperties_triggered()
 	dlg->open();
 }
 
-void UIMain::on_aConvertIsoFile_triggered()
+void UIMain::on_aConvertToWBFSFile_triggered()
 {
 	const QString filePath = QFileDialog::getOpenFileName( this, tr( "Choose an ISO file to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
 	
@@ -497,10 +497,16 @@ void UIMain::on_aConvertIsoFile_triggered()
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
-	dlg->convertIsoToWBFS( filePath );
+	ExportThread::Work work;
+	work.task = ExportThread::Convert | ExportThread::WBFS;
+	work.discs << QWBFS::Model::Disc( filePath );
+	work.target = QFileInfo( filePath ).absolutePath();
+	work.window = dlg;
+	
+	dlg->setWork( work );
 }
 
-void UIMain::on_aConvertWBFSFile_triggered()
+void UIMain::on_aConvertToISOFile_triggered()
 {
 	const QString filePath = QFileDialog::getOpenFileName( this, tr( "Choose a WBFS file to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
 	
@@ -510,7 +516,13 @@ void UIMain::on_aConvertWBFSFile_triggered()
 	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
-	dlg->convertWBFSToIso( filePath );
+	ExportThread::Work work;
+	work.task = ExportThread::Convert | ExportThread::ISO;
+	work.discs << QWBFS::Model::Disc( filePath );
+	work.target = QFileInfo( filePath ).absolutePath();
+	work.window = dlg;
+	
+	dlg->setWork( work );
 }
 
 void UIMain::on_tvFolders_activated( const QModelIndex& index )
@@ -584,5 +596,11 @@ void UIMain::on_tbExport_clicked()
 	
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	
-	dlg->exportDiscs( mExportModel->discs(), path );
+	ExportThread::Work work;
+	work.task = ExportThread::Export | ExportThread::ISO;
+	work.discs = mExportModel->discs();
+	work.target = path;
+	work.window = dlg;
+	
+	dlg->setWork( work );
 }

@@ -34,7 +34,6 @@
 **
 ****************************************************************************/
 #include "ProgressDialog.h"
-#include "ExportThread.h"
 
 #include <QPushButton>
 #include <QTimer>
@@ -44,13 +43,14 @@
 ProgressDialog::ProgressDialog( QWidget* parent )
 	: QDialog( parent )
 {
-	mThread = 0;
-	
 	setupUi( this );
 	setAttribute( Qt::WA_DeleteOnClose );
 	cbDetails->setChecked( false );
 	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( false );
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
+	
+	mThread = new ExportThread( this );
+	doConnections();
 	localeChanged();
 }
 
@@ -72,9 +72,28 @@ bool ProgressDialog::event( QEvent* event )
 	return QDialog::event( event );
 }
 
+void ProgressDialog::setWork( const ExportThread::Work& work )
+{
+	pbGlobal->setMaximum( work.discs.count() );
+	open();
+	
+	if ( !mThread->setWork( work ) ) {
+		deleteLater();
+	}
+}
+
+void ProgressDialog::done( int r )
+{
+	if ( mThread->isRunning() ) {
+		return;
+	}
+	
+	QDialog::done( r );
+}
+
 void ProgressDialog::closeEvent( QCloseEvent* event )
 {
-	if ( mThread && mThread->isRunning() ) {
+	if ( mThread->isRunning() ) {
 		event->ignore();
 		return;
 	}
@@ -92,78 +111,25 @@ void ProgressDialog::doConnections()
 	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
 	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
 	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
-	connect( mThread, SIGNAL( message( const QString& ) ), lCurrentInformations, SLOT( setText( const QString& ) ) );
+	connect( mThread, SIGNAL( message( const QString& ) ), this, SLOT( thread_message( const QString& ) ) );
 	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
 	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
 	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
+	connect( mThread, SIGNAL( canceled() ), this, SLOT( thread_canceled() ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
-}
-
-void ProgressDialog::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )
-{
-	mThread = new ExportThread( this );
-	
-	doConnections();
-	
-	setWindowTitle( tr( "Exporting discs..." ) );
-	pbGlobal->setMaximum( discs.count() );
-	open();
-	
-	if ( !mThread->exportDiscs( discs, path ) ) {
-		deleteLater();
-	}
-}
-
-void ProgressDialog::importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle )
-{
-	mThread = new ExportThread( this );
-	
-	doConnections();
-	
-	setWindowTitle( tr( "Importing discs..." ) );
-	pbGlobal->setMaximum( discs.count() );
-	open();
-	
-	if ( !mThread->importDiscs( discs, partitionHandle ) ) {
-		deleteLater();
-	}
-}
-
-void ProgressDialog::convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath )
-{
-	mThread = new ExportThread( this );
-	
-	doConnections();
-	
-	setWindowTitle( tr( "Converting disc..." ) );
-	pbGlobal->setMaximum( 1 );
-	open();
-	
-	if ( !mThread->convertIsoToWBFS( isoFilePath, wbfsFilePath ) ) {
-		deleteLater();
-	}
-}
-
-void ProgressDialog::convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath )
-{
-	mThread = new ExportThread( this );
-	
-	doConnections();
-	
-	setWindowTitle( tr( "Converting disc..." ) );
-	pbGlobal->setMaximum( 1 );
-	open();
-	
-	if ( !mThread->convertWBFSToIso( wbfsFilePath, isoFilePath ) ) {
-		deleteLater();
-	}
 }
 
 void ProgressDialog::thread_started()
 {
 	mElapsed.restart();
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( true );
+}
+
+void ProgressDialog::thread_message( const QString& text )
+{
+	lCurrentInformations->setText( text );
+	pteErrors->appendPlainText( text );
 }
 
 void ProgressDialog::thread_log( const QString& text )
@@ -177,16 +143,15 @@ void ProgressDialog::thread_log( const QString& text )
 
 void ProgressDialog::thread_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	
-	const QString text = QString( "%1 '%2': %3 (%4)" )
-		.arg( ExportThread::taskToString( mThread->task() ) )
-		.arg( disc.title )
+	const QString text = QString( "%1 '%2': %3(%4)" )
+		.arg( ExportThread::taskToLabel( mThread->task() ) )
+		.arg( disc.baseName() )
 		.arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) )
 		.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
 	
 	pteErrors->appendPlainText( text );
 	
-	if ( !cbDetails->isChecked() && disc.state == QWBFS::Driver::Failed ) {
+	if ( !cbDetails->isChecked() && disc.hasError() ) {
 		cbDetails->toggle();
 	}
 	
@@ -200,6 +165,11 @@ void ProgressDialog::thread_currentProgressChanged( int value, int maximum, cons
 	lCurrentRemaining->setText( tr( "Time remaining: %1" ).arg( remaining.toString() ) );
 }
 
+void ProgressDialog::thread_canceled()
+{
+	lGlobalInformations->setText( tr( "Cancel requested, the process will stop after the current operation." ) );
+}
+
 void ProgressDialog::thread_finished()
 {
 	QTime time( 0, 0, 0, 0 );
@@ -208,7 +178,6 @@ void ProgressDialog::thread_finished()
 	lCurrentInformations->setText( "Tasks finished." );
 	lCurrentRemaining->clear();
 	lGlobalInformations->setText( tr( "The thread finished in %1" ).arg( time.toString() ) );
-	delete mThread;
 	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( true );
 	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
 	

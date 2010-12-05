@@ -34,9 +34,9 @@
 **
 ****************************************************************************/
 #include "ExportThread.h"
-#include "qwbfsdriver/PartitionDiscHandle.h"
 
 #include <QTime>
+#include <QWidget>
 #include <QDir>
 #include <QMetaType>
 #include <QDebug>
@@ -61,340 +61,503 @@ ExportThread::~ExportThread()
 ExportThread::Task ExportThread::task() const
 {
 	QMutexLocker locker( &const_cast<ExportThread*>( this )->mMutex );
-	return mTask;
+	return mWork.task;
 }
 
-bool ExportThread::exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path )
+bool ExportThread::setWork( const ExportThread::Work& work )
 {
 	if ( isRunning() ) {
 		Q_ASSERT( 0 );
 		return false;
 	}
 	
-	mTask = ExportThread::Export;
-	mDiscs = discs;
-	mPath = path;
-	mStop = false;
+	mWork = work;
+	mWork.window->setWindowTitle( taskToWindowTitle( mWork.task ) );
 	
 	start();
 	
 	return true;
 }
 
-bool ExportThread::importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle )
+QString ExportThread::taskToWindowTitle( ExportThread::Task task )
 {
-	if ( isRunning() ) {
-		Q_ASSERT( 0 );
-		return false;
-	}
-	
-	mTask = ExportThread::Import;
-	mDiscs = discs;
-	mImportPartitionHandle = partitionHandle;
-	mStop = false;
-	
-	start();
-	
-	return true;
+	return taskToLabel( task ).append( "..." );
 }
 
-bool ExportThread::convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath )
+QString ExportThread::taskToLabel( ExportThread::Task task )
 {
-	if ( isRunning() ) {
-		Q_ASSERT( 0 );
-		return false;
+	const bool isIndirect = task & ExportThread::Indirect;
+	task &= ~ExportThread::Indirect;
+	
+	switch ( task ) {
+		case ExportThread::ExportISO:
+			return isIndirect ? tr( "Indirect Export to ISO" ) : tr( "Export to ISO" );
+		case ExportThread::ExportWBFS:
+			return isIndirect ? tr( "Indirect Export to WBFS" ) : tr( "Export to WBFS" );
+		case ExportThread::ImportISO:
+			return isIndirect ? tr( "Indirect Import to ISO" ) : tr( "Import to ISO" );
+		case ExportThread::ImportWBFS:
+			return isIndirect ? tr( "Indirect Import to WBFS" ) : tr( "Import to WBFS" );
+		case ExportThread::ConvertISO:
+			return isIndirect ? tr( "Indirect Convert to ISO" ) : tr( "Convert to ISO" );
+		case ExportThread::ConvertWBFS:
+			return isIndirect ? tr( "Indirect Convert to WBFS" ) : tr( "Convert to WBFS" );
 	}
 	
-	mTask = ExportThread::ConvertISO;
-	mConvertFile.first = isoFilePath;
-	mConvertFile.second = wbfsFilePath;
-	mStop = false;
-	
-	start();
-	
-	return true;
-}
-
-bool ExportThread::convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath )
-{
-	if ( isRunning() ) {
-		Q_ASSERT( 0 );
-		return false;
-	}
-	
-	mTask = ExportThread::ConvertWBFS;
-	mConvertFile.first = wbfsFilePath;
-	mConvertFile.second = isoFilePath;
-	mStop = false;
-	
-	start();
-	
-	return true;
+	return QString::null;
 }
 
 void ExportThread::stop()
 {
 	QMutexLocker locker( &mMutex );
 	mStop = true;
-	emit message( tr( "Cancel requested, the process will stop after the current operation." ) );
+	emit canceled();
 }
 
 void ExportThread::run()
 {
-	switch ( mTask ) {
-		case ExportThread::Export:
-			exportWorker();
-			break;
-		case ExportThread::Import:
-			importWorker();
-			break;
-		case ExportThread::ConvertISO:
-			convertISOWorker();
-			break;
-		case ExportThread::ConvertWBFS:
-			convertWBFSWorker();
-			break;
+	ExportThread::Work work;
+	int count = 0;
+	
+	{
+		QMutexLocker locker( &mMutex );
+		mStop = false;
+		work = mWork;
 	}
-}
-
-void ExportThread::connectDriver( const QWBFS::Driver& driver )
-{
-	connect( &driver, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SIGNAL( currentProgressChanged( int, int, const QTime& ) ) );
-	connect( &driver, SIGNAL( globalProgressChanged( int ) ), this, SIGNAL( globalProgressChanged( int ) ) );
-}
-
-void ExportThread::exportWorker()
-{
-	QWBFS::Partition::Handle handle;
-	bool hc = false;
 	
 	emit globalProgressChanged( 0 );
 	
-	for ( int i = 0; i < mDiscs.count(); i++ ) {
-		QWBFS::Model::Disc disc = mDiscs.at( i );
-		
-		emit message( tr( "Exporting '%1'..." ).arg( disc.title ) );
-		
-		// close handle if different partition
-		if ( handle.partition() != disc.origin ) {
-			if ( hc ) {
-				QWBFS::Driver::closeHandle( handle );
+	foreach ( QWBFS::Model::Disc disc, work.discs ) {
+		switch ( QWBFS::Driver::fileType( disc.origin ) ) {
+			case QWBFS::Driver::WBFSFile:
+			case QWBFS::Driver::WBFSPartitionFile: {
+				switch ( QWBFS::Driver::fileType( work.target ) ) {
+					case QWBFS::Driver::WBFSPartitionFile: {
+						wbfsToWBFS( work.task, disc, work.target, false );
+						break;
+					}
+					case QWBFS::Driver::WBFSFile:
+					case QWBFS::Driver::ISOFile:
+					case QWBFS::Driver::UnknownFile: {
+						if ( work.task & ExportThread::WBFS ) {
+							wbfsToWBFS( work.task, disc, work.target, true );
+						}
+						else if ( work.task & ExportThread::ISO ) {
+							wbfsToISO( work.task, disc, work.target );
+						}
+						else {
+							if ( work.task & ExportThread::Import ) {
+								disc.error = QWBFS::Driver::DiscAddFailed;
+							}
+							else if ( work.task & ExportThread::Export ) {
+								disc.error = QWBFS::Driver::DiscExtractFailed;
+							}
+							else if ( work.task & ExportThread::Convert ) {
+								disc.error = QWBFS::Driver::DiscConvertFailed;
+							}
+							else {
+								disc.error = QWBFS::Driver::UnknownError;
+							}
+						}
+						
+						break;
+					}
+				}
+				
+				break;
 			}
-			
-			handle = QWBFS::Partition::Handle();
+			case QWBFS::Driver::ISOFile: {
+				switch ( QWBFS::Driver::fileType( work.target ) ) {
+					case QWBFS::Driver::WBFSPartitionFile: {
+						isoToWBFS( work.task, disc, work.target, false );
+						break;
+					}
+					case QWBFS::Driver::WBFSFile:
+					case QWBFS::Driver::ISOFile:
+					case QWBFS::Driver::UnknownFile: {
+						if ( work.task & ExportThread::WBFS ) {
+							isoToWBFS( work.task, disc, work.target, true );
+						}
+						else if ( work.task & ExportThread::ISO ) {
+							isoToISO( work.task, disc, work.target );
+						}
+						else {
+							if ( work.task & ExportThread::Import ) {
+								disc.error = QWBFS::Driver::DiscAddFailed;
+							}
+							else if ( work.task & ExportThread::Export ) {
+								disc.error = QWBFS::Driver::DiscExtractFailed;
+							}
+							else if ( work.task & ExportThread::Convert ) {
+								disc.error = QWBFS::Driver::DiscConvertFailed;
+							}
+							else {
+								disc.error = QWBFS::Driver::UnknownError;
+							}
+						}
+						
+						break;
+					}
+				}
+				
+				break;
+			}
+			case QWBFS::Driver::UnknownFile:
+				disc.error = QWBFS::Driver::UnknownError;
+				break;
 		}
 		
-		// create handle if needed
-		if ( !handle.isValid() ) {
-			handle = QWBFS::Driver::getHandle( disc.origin, &hc );
-		}
+		disc.state = disc.error == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
 		
-		// create driver
-		QWBFS::Driver driver( 0, handle );
-		connectDriver( driver );
-		const int result = driver.extractDisc( disc.id, mPath );
-		
-		disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
-		disc.error = result;
-		
-		emit globalProgressChanged( i +1 );
+		emit globalProgressChanged( ++count );
 		emit jobFinished( disc );
 		
 		{
 			QMutexLocker locker( &mMutex );
+			
 			if ( mStop ) {
 				break;
 			}
 		}
 	}
 	
-	if ( hc ) {
+	emit globalProgressChanged( work.discs.count() );
+}
+
+void ExportThread::connectDriver( QWBFS::Driver* driver )
+{
+	connect( driver, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SIGNAL( currentProgressChanged( int, int, const QTime& ) ) );
+	connect( driver, SIGNAL( globalProgressChanged( int ) ), this, SIGNAL( globalProgressChanged( int ) ) );
+}
+
+void ExportThread::isoToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
+{
+	if ( !source.isValid() ) {
+		source.error = QWBFS::Driver::InvalidDisc;
+		return;
+	}
+	
+	const QFileInfo file( _target );
+	QString target = _target;
+	bool created = false;
+	QWBFS::Partition::Handle handle;
+	
+	if ( trimWBFS && file.isDir() ) {
+		target = QDir::cleanPath( target.append( QString( "/%1.wbfs" ).arg( source.baseName() ) ) );
+	}
+	
+	if ( trimWBFS ) {
+		
+		if ( QFile::exists( target ) ) {
+			source.error = QWBFS::Driver::DiscFound;
+			return;
+		}
+		
+		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName() ) );
+		source.error = QWBFS::Driver::initializeWBFSFile( target );
+		
+		if ( source.hasError() ) {
+			QFile::remove( target );
+			return;
+		}
+		
+		QWBFS::Partition::Properties properties( target );
+		properties.reset = true;
+		
+		emit message( tr( "Formating WBFS disc '%1'..." ).arg( source.baseName() ) );
+		
+		handle = QWBFS::Partition::Handle( properties );
+	}
+	else {
+		handle = QWBFS::Driver::getHandle( target, &created );
+	}
+	
+	if ( !handle.isValid() ) {
+		if ( created ) {
+			QWBFS::Driver::closeHandle( handle );
+		}
+		
+		if ( trimWBFS ) {
+			QFile::remove( target );
+		}
+		
+		source.error = QWBFS::Driver::PartitionNotOpened;
+		return;
+	}
+	
+	QWBFS::Driver driver( 0, handle );
+	connectDriver( &driver );
+	
+	emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	source.error = driver.addDiscImage( source.origin );
+	
+	if ( source.hasError() ) {
+		if ( created ) {
+			QWBFS::Driver::closeHandle( handle );
+		}
+		
+		if ( trimWBFS ) {
+			QFile::remove( target );
+		}
+		
+		return;
+	}
+	
+	if ( trimWBFS ) {
+		source.error = driver.trim();
+	}
+	
+	if ( created ) {
 		QWBFS::Driver::closeHandle( handle );
 	}
 }
 
-void ExportThread::importWorker()
+void ExportThread::wbfsToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
 {
-	// target partition handle
-	QWBFS::Driver td( 0, mImportPartitionHandle );
-	
-	if ( !td.isOpen() ) {
-		emit log( tr( "Can't open partition '%1'." ).arg( td.partition() ) );
+	if ( !source.isValid() ) {
+		source.error = QWBFS::Driver::InvalidDisc;
 		return;
 	}
 	
-	connectDriver( td );
+	QFileInfo file( _target );
+	QString target = _target;
 	
-	// source partition handle
-	QWBFS::Partition::Handle sph;
-	bool hc = false;
+	if ( file.isDir() ) {
+		target = QDir::cleanPath( target.append( QString( "/%1.iso" ).arg( source.baseName() ) ) );
+	}
 	
-	emit globalProgressChanged( 0 );
+	if ( QFile::exists( target ) ) {
+		source.error = QWBFS::Driver::DiscFound;
+		return;
+	}
 	
-	for ( int i = 0; i < mDiscs.count(); i++ ) {
-		QWBFS::Model::Disc disc = mDiscs.at( i );
-		int result;
+	file.setFile( target );
+	
+	bool created = false;
+	QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( source.origin, &created );
+	
+	// check handle validity
+	if ( !handle.isValid() ) {
+		if ( created ) {
+			QWBFS::Driver::closeHandle( handle );
+		}
 		
-		emit message( tr( "Importing '%1'..." ).arg( disc.title ) );
+		source.error = QWBFS::Driver::PartitionNotOpened;
+		return;
+	}
+	
+	QWBFS::Driver driver( 0, handle );
+	connectDriver( &driver );
+	
+	emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	source.error = driver.extractDisc( source.id, file.absolutePath(), file.fileName() );
+	
+	if ( source.hasError() ) {
+		QFile::remove( target );
+	}
+	
+	if ( created ) {
+		QWBFS::Driver::closeHandle( handle );
+	}
+}
+
+void ExportThread::isoToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
+{
+	if ( !source.isValid() ) {
+		source.error = QWBFS::Driver::InvalidDisc;
+		return;
+	}
+	
+	const QFileInfo file( _target );
+	QString target = _target;
+	
+	if ( file.isDir() ) {
+		target = QDir::cleanPath( target.append( QString( "/%1.iso" ).arg( source.baseName() ) ) );
+	}
+	
+	if ( QFile::exists( target ) ) {
+		source.error = QWBFS::Driver::DiscFound;
+		return;
+	}
+	
+	emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	
+	// copying the file chunk by chunk instead of using QFile::copy() to be able to see progression
+	QFile in( source.origin );
+	QFile out( target );
+	
+	if ( !in.open( QIODevice::ReadOnly ) ) {
+		source.error = QWBFS::Driver::DiscReadFailed;
+		return;
+	}
+	
+	if ( !out.open( QIODevice::WriteOnly ) ) {
+		source.error = QWBFS::Driver::DiscWriteFailed;
+		return;
+	}
+	
+	const uint bufferSize = 1024 *1024 *5; // 5 MB buffer size
+	char buffer[ bufferSize ];
+	int totalRead = 0;
+	
+	QTime estimatedTime = QWBFS::Driver::estimatedTimeForTask( totalRead, in.size() );
+	emit currentProgressChanged( totalRead, in.size(), estimatedTime );
+	
+	while ( !in.atEnd() ) {
+		const qint64 read = in.read( buffer, bufferSize );
 		
-		// close handle if different partition
-		if ( sph.partition() != disc.origin ) {
-			if ( hc ) {
-				QWBFS::Driver::closeHandle( sph );
+		if ( read == -1 ) {
+			out.close();
+			out.remove();
+			
+			QFile::remove( target );
+			source.error = QWBFS::Driver::DiscReadFailed;
+			return;
+		}
+		
+		const qint64 write = out.write( buffer, read );
+		
+		if ( write == -1 ) {
+			out.close();
+			out.remove();
+			
+			QFile::remove( target );
+			source.error = QWBFS::Driver::DiscWriteFailed;
+			return;
+		}
+		
+		totalRead += read;
+		
+		estimatedTime = QWBFS::Driver::estimatedTimeForTask( totalRead, in.size() );
+		emit currentProgressChanged( totalRead, in.size(), estimatedTime );
+	}
+	
+	in.close();
+	out.close();
+}
+
+void ExportThread::wbfsToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
+{
+	if ( !source.isValid() ) {
+		source.error = QWBFS::Driver::InvalidDisc;
+		return;
+	}
+	
+	const QFileInfo file( _target );
+	QString target = _target;
+	bool sourceCreated = false;
+	QWBFS::Partition::Handle sourceHandle = QWBFS::Driver::getHandle( source.origin, &sourceCreated );
+	bool targetCreated = false;
+	QWBFS::Partition::Handle targetHandle;
+	
+	if ( !sourceHandle.isValid() ) {
+		if ( sourceCreated ) {
+			QWBFS::Driver::closeHandle( sourceHandle );
+		}
+		
+		source.error = QWBFS::Driver::PartitionNotOpened;
+		return;
+	}
+	
+	if ( trimWBFS && file.isDir() ) {
+		target = QDir::cleanPath( target.append( QString( "/%1.wbfs" ).arg( source.baseName() ) ) );
+	}
+	
+	if ( trimWBFS ) {
+		
+		if ( QFile::exists( target ) ) {
+			if ( sourceCreated ) {
+				QWBFS::Driver::closeHandle( sourceHandle );
 			}
 			
-			sph = QWBFS::Partition::Handle();
+			source.error = QWBFS::Driver::DiscFound;
+			return;
 		}
 		
-		// create handle if needed
-		if ( QWBFS::Driver::isWBFSPartitionOrFile( disc.origin ) ) {
-			sph = QWBFS::Driver::getHandle( disc.origin, &hc );
-			result = td.addDisc( disc.id, sph );
+		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName() ) );
+		source.error = QWBFS::Driver::initializeWBFSFile( target );
+		
+		if ( source.hasError() ) {
+			if ( sourceCreated ) {
+				QWBFS::Driver::closeHandle( sourceHandle );
+			}
+			
+			QFile::remove( target );
+			return;
+		}
+		
+		QWBFS::Partition::Properties properties( target );
+		properties.reset = true;
+		
+		emit message( tr( "Formating WBFS disc '%1'..." ).arg( source.baseName() ) );
+		
+		targetHandle = QWBFS::Partition::Handle( properties );
+	}
+	else {
+		targetHandle = QWBFS::Driver::getHandle( target, &targetCreated );
+	}
+	
+	if ( !targetHandle.isValid() ) {
+		if ( sourceCreated ) {
+			QWBFS::Driver::closeHandle( sourceHandle );
+		}
+		
+		if ( targetCreated ) {
+			QWBFS::Driver::closeHandle( targetHandle );
+		}
+		
+		if ( trimWBFS ) {
+			QFile::remove( target );
+		}
+		
+		source.error = QWBFS::Driver::PartitionNotOpened;
+		return;
+	}
+	
+	QWBFS::Driver targetDriver( 0, targetHandle );
+	connectDriver( &targetDriver );
+	
+	// direct drive2drive
+	if ( targetDriver.canDrive2Drive( sourceHandle ) ) {
+		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+		
+		source.error = targetDriver.addDisc( source.id, sourceHandle );
+	}
+	// indirect drive2drive
+	else {
+		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task | ExportThread::Indirect ) ).arg( source.baseName() ) );
+		
+		const QFileInfo tmpFile( QString( "%1/%2.iso" ).arg( QDir::tempPath() ).arg( source.baseName() ) );
+		QWBFS::Driver sourceDriver( 0, sourceHandle );
+		connectDriver( &sourceDriver );
+		
+		if ( !targetDriver.hasDisc( source.id ) ) {
+			source.error = sourceDriver.extractDisc( source.id, tmpFile.absolutePath(), tmpFile.fileName() );
+			
+			if ( !source.hasError() ) {
+				source.error = targetDriver.addDiscImage( tmpFile.absoluteFilePath() );
+			}
+			
+			QFile::remove( tmpFile.absoluteFilePath() );
 		}
 		else {
-			result = td.addDiscImage( disc.origin );
-		}
-		
-		disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
-		disc.error = result;
-		
-		emit globalProgressChanged( i +1 );
-		emit jobFinished( disc );
-		
-		{
-			QMutexLocker locker( &mMutex );
-			if ( mStop ) {
-				break;
-			}
+			source.error = QWBFS::Driver::DiscFound;
 		}
 	}
 	
-	if ( hc ) {
-		QWBFS::Driver::closeHandle( sph );
-	}
-}
-
-void ExportThread::convertISOWorker()
-{
-	int result;
-	
-	if ( mConvertFile.second.isEmpty() ) {
-		mConvertFile.second = QString( "%1.wbfs" ).arg( mConvertFile.first );
+	if ( !source.hasError() && trimWBFS ) {
+		source.error = targetDriver.trim();
 	}
 	
-	emit globalProgressChanged( 0 );
-	
-	result = QWBFS::Driver::initializeWBFSFile( mConvertFile.second );
-	emit message( tr( "Initializing wbfs file '%1'." ).arg( mConvertFile.second ) );
-	
-	if ( result != QWBFS::Driver::Ok ) {
-		emit log(
-			tr( "Can't create wbfs file '%1' (%2)." )
-				.arg( mConvertFile.second )
-				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
-		);
-		return;
+	if ( sourceCreated ) {
+		QWBFS::Driver::closeHandle( sourceHandle );
 	}
 	
-	QWBFS::Partition::Properties properties( mConvertFile.second );
-	properties.reset = true;
-	
-	QWBFS::Partition::Handle handle( properties );
-	QWBFS::Driver td( 0, handle );
-	
-	if ( !td.isOpen() ) {
-		emit log( tr( "Can't open wbfs file '%1'." ).arg( td.partition() ) );
-		return;
+	if ( targetCreated ) {
+		QWBFS::Driver::closeHandle( targetHandle );
 	}
 	
-	connectDriver( td );
-	
-	QWBFS::Model::Disc disc;
-	result = td.discImageInfo( mConvertFile.first, disc );
-	
-	if ( result != QWBFS::Driver::Ok ) {
-		emit log(
-			tr( "Can't get disc informations '%1' (%2)." )
-				.arg( mConvertFile.first )
-				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
-		);
-		return;
+	if ( source.hasError() && trimWBFS ) {
+		QFile::remove( target );
 	}
-	
-	emit message( tr( "Converting '%1' to WBFS..." ).arg( disc.title ) );
-	result = td.addDiscImage( disc.origin );
-	
-	if ( result != QWBFS::Driver::Ok ) {
-		emit log(
-			tr( "Can't add disc '%1' (%2)." )
-				.arg( mConvertFile.first )
-				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
-		);
-		return;
-	}
-	
-	emit message( tr( "Triming '%1'..." ).arg( disc.title ) );
-	result = td.trim();
-	disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
-	disc.error = result;
-	
-	emit globalProgressChanged( 1 );
-	emit jobFinished( disc );
-}
-
-void ExportThread::convertWBFSWorker()
-{
-	if ( mConvertFile.second.isEmpty() ) {
-		mConvertFile.second = QString( "%1.iso" ).arg( mConvertFile.first );
-	}
-	
-	emit globalProgressChanged( 0 );
-	
-	const QFileInfo file( mConvertFile.second );
-	QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( mConvertFile.first );
-	QWBFS::Model::Disc disc;
-	int result;
-	
-	// create driver
-	QWBFS::Driver driver( 0, handle );
-	connectDriver( driver );
-	result = driver.discInfo( 0, disc );
-	
-	if ( result != QWBFS::Driver::Ok ) {
-		emit log(
-			tr( "Can't get disc informations '%1' (%2)." )
-				.arg( mConvertFile.first )
-				.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( result ) ) )
-		);
-		return;
-	}
-	
-	emit message( tr( "Converting '%1' to ISO..." ).arg( disc.title ) );
-	
-	result = driver.extractDisc( disc.id, file.absolutePath(), file.fileName() );
-	
-	disc.state = result == QWBFS::Driver::Ok ? QWBFS::Driver::Success : QWBFS::Driver::Failed;
-	disc.error = result;
-	
-	emit globalProgressChanged( 1 );
-	emit jobFinished( disc );
-	
-	QWBFS::Driver::closeHandle( handle );
-}
-
-QString ExportThread::taskToString( ExportThread::Task task )
-{
-	switch ( task )
-	{
-		case ExportThread::Export:
-			return tr( "Extracting" );
-		case ExportThread::Import:
-			return tr( "Adding" );
-		case ExportThread::ConvertISO:
-			return tr( "Converting ISO" );
-		case ExportThread::ConvertWBFS:
-			return tr( "Converting WBFS" );
-	}
-	
-	return QString::null;
 }

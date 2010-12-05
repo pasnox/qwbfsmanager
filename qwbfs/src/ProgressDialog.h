@@ -37,13 +37,10 @@
 #define PROGRESSDIALOG_H
 
 #include "ui_ProgressDialog.h"
+#include "ExportThread.h"
 #include "models/Disc.h"
-#include "qwbfsdriver/PartitionHandle.h"
 
-#include <QPointer>
 #include <QTime>
-
-class ExportThread;
 
 class ProgressDialog : public QDialog, public Ui::ProgressDialog
 {
@@ -55,13 +52,13 @@ public:
 	
 	virtual bool event( QEvent* event );
 	
-	void exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
-	void importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
-	void convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath = QString::null );
-	void convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath = QString::null );
+	void setWork( const ExportThread::Work& work );
+
+public slots:
+	virtual void done( int r );
 
 protected:
-	QPointer<ExportThread> mThread;
+	ExportThread* mThread;
 	QTime mElapsed;
 	
 	void closeEvent( QCloseEvent* event );
@@ -70,9 +67,11 @@ protected:
 
 protected slots:
 	void thread_started();
+	void thread_message( const QString& text );
 	void thread_log( const QString& text );
 	void thread_jobFinished( const QWBFS::Model::Disc& disc );
 	void thread_currentProgressChanged( int value, int maximum, const QTime& remaining );
+	void thread_canceled();
 	void thread_finished();
 	void on_cbDetails_toggled();
 	void updateSpace();

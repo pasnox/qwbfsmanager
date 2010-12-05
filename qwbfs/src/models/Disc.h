@@ -48,8 +48,13 @@ typedef QList<struct Disc> DiscList;
 struct Disc
 {
 	Disc( const QDomElement& element = QDomElement() );
+	Disc( const QString& filePath );
 	
 	bool operator==( const Disc& other ) const;
+	
+	bool isValid() const;
+	bool hasError() const;
+	QString baseName() const;
 	
 	void addToDocument( QDomDocument& document ) const;
 	void readFromElement( const QDomElement& element );

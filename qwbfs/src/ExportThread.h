@@ -44,16 +44,38 @@
 #include "qwbfsdriver/PartitionHandle.h"
 #include "qwbfsdriver/Driver.h"
 
+class QWidget;
+
 class ExportThread : public QThread
 {
 	Q_OBJECT
 	
 public:
-	enum Task {
-		Export,
-		Import,
-		ConvertISO,
-		ConvertWBFS
+	enum TaskFlag {
+		Export = 0x1,
+		Import = 0x2,
+		Convert = 0x4,
+		ISO = 0x8,
+		WBFS = 0x10,
+		//
+		Indirect = 0x20,
+		//
+		ExportISO = Export | ISO,
+		ExportWBFS = Export | WBFS,
+		ImportISO = Import | ISO,
+		ImportWBFS = Import | WBFS,
+		ConvertISO = Convert | ISO,
+		ConvertWBFS = Convert | WBFS
+	};
+	
+	Q_DECLARE_FLAGS( Task, TaskFlag )
+	
+	struct Work
+	{
+		ExportThread::Task task;
+		QWBFS::Model::DiscList discs;
+		QString target;
+		QWidget* window;
 	};
 	
 	ExportThread( QObject* parent = 0 );
@@ -61,32 +83,26 @@ public:
 	
 	ExportThread::Task task() const;
 	
-	bool exportDiscs( const QWBFS::Model::DiscList& discs, const QString& path );
-	bool importDiscs( const QWBFS::Model::DiscList& discs, const QWBFS::Partition::Handle& partitionHandle );
-	bool convertIsoToWBFS( const QString& isoFilePath, const QString& wbfsFilePath = QString::null );
-	bool convertWBFSToIso( const QString& wbfsFilePath, const QString& isoFilePath = QString::null );
+	bool setWork( const ExportThread::Work& work );
 	
-	static QString taskToString( ExportThread::Task task );
+	static QString taskToWindowTitle( ExportThread::Task task );
+	static QString taskToLabel( ExportThread::Task task );
 
 public slots:
 	void stop();
 
 protected:
-	ExportThread::Task mTask;
-	QWBFS::Model::DiscList mDiscs;
-	QString mPath;
-	QWBFS::Partition::Handle mImportPartitionHandle;
-	QPair<QString, QString> mConvertFile;
-	bool mStop;
 	QMutex mMutex;
+	bool mStop;
+	ExportThread::Work mWork;
 	
 	virtual void run();
 	
-	void connectDriver( const QWBFS::Driver& driver );
-	void exportWorker();
-	void importWorker();
-	void convertISOWorker();
-	void convertWBFSWorker();
+	void connectDriver( QWBFS::Driver* driver );
+	void isoToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
+	void wbfsToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target );
+	void isoToISO( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target );
+	void wbfsToWBFS( ExportThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
@@ -94,6 +110,9 @@ signals:
 	void jobFinished( const QWBFS::Model::Disc& disc );
 	void message( const QString& text );
 	void log( const QString& text );
+	void canceled();
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( ExportThread::Task )
 
 #endif // EXPORTTHREAD_H

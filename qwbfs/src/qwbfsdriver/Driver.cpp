@@ -42,9 +42,12 @@
 #include <ctime>
 
 #include <QDir>
+#include <QApplication>
 #include <QDebug>
 
 using namespace QWBFS;
+
+#define WBFS_FILE_MINIMUM_SIZE 1024 *1024 *16
 
 QMutex Driver::mMutex;
 bool Driver::mForce = false;
@@ -250,69 +253,28 @@ int Driver::usedBlocksCount() const
 
 int Driver::discImageInfo( const QString& fileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection ) const
 {
-	const bool isWBFSFile = isWBFSPartitionOrFile( fileName );
+	if ( isWBFSPartitionOrFile( fileName ) ) {
+		return wbfsFileInfo( fileName, disc, partitionSelection );
+	}
 	
-	if ( !isOpen() && !isWBFSFile ) {
+	if ( !isOpen() ) {
 		return Driver::PartitionNotOpened;
+	}
+	
+	void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
+
+	if ( !fileHandle ) {
+		return Driver::InvalidDisc;
 	}
 	
 	u8* header = (u8*)wbfs_ioalloc( 0x100 );
 	
-	// *.wbfs
-	if ( isWBFSFile ) {
-		wbfs_t* cdPartition = wbfs_try_open_partition( fileName.toLocal8Bit().data(), 0 );
-		wbfs_disc_t* cd;
-		int count;
-		
-		if ( !cdPartition ) {
-			wbfs_iofree( header );
-			return Driver::InvalidDisc;
-		}
-		
-		count = wbfs_count_discs( cdPartition );
-		
-		if ( count != 1 ) {
-			wbfs_iofree( header );
-			wbfs_close( cdPartition );
-			return Driver::InvalidDisc;
-		}
-		
-		quint32 size;
-		
-		if( !wbfs_get_disc_info( cdPartition, 0, header, 0x100, &size ) ) {
-			cd = wbfs_open_disc( cdPartition, header );
-			
-			if ( !cd ) {
-				wbfs_iofree( header );
-				wbfs_close( cdPartition );
-				return Driver::InvalidDisc;
-			}
-			
-			wbfs_close_disc( cd );
-		}
-		
-		disc.size = size *4ULL;
-		
-		wbfs_close( cdPartition );
-	}
-	// *.iso
-	else {
-		void* fileHandle = wbfs_open_file_for_read( fileName.toLocal8Bit().data() );
-
-		if ( !fileHandle ) {
-			wbfs_iofree( header );
-			return Driver::DiscReadFailed;
-		}
-		
-		disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection, header );
-		
-		wbfs_close_file( fileHandle );
-	}
-	
+	disc.size = wbfs_estimate_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, partitionSelection, header );
 	disc.origin = fileName;
 	discInfo( header, disc );
 	
 	wbfs_iofree( header );
+	wbfs_close_file( fileHandle );
 	
 	return disc.size != 0 ? Driver::Ok : Driver::InvalidDisc;
 }
@@ -560,6 +522,52 @@ int Driver::initializeWBFSFile( const QString& filePath, qint64 size )
 	return Driver::Ok;
 }
 
+int Driver::wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection )
+{
+	/*if ( !isWBFSPartitionOrFile( wbfsFileName ) ) {
+		return Driver::InvalidDisc;
+	}*/
+	
+	wbfs_t* partition = wbfs_try_open_partition( wbfsFileName.toLocal8Bit().data(), 0 );
+	
+	if ( !partition ) {
+		return Driver::InvalidDisc;
+	}
+	
+	u8* header = (u8*)wbfs_ioalloc( 0x100 );
+	int count = wbfs_count_discs( partition );
+	
+	if ( count != 1 ) {
+		wbfs_iofree( header );
+		wbfs_close( partition );
+		return Driver::InvalidDisc;
+	}
+	
+	wbfs_disc_t* cd;
+	quint32 size;
+	
+	if( !wbfs_get_disc_info( partition, 0, header, 0x100, &size ) ) {
+		cd = wbfs_open_disc( partition, header );
+		
+		if ( !cd ) {
+			wbfs_iofree( header );
+			wbfs_close( partition );
+			return Driver::InvalidDisc;
+		}
+		
+		wbfs_close_disc( cd );
+	}
+	
+	disc.size = size *4ULL;
+	disc.origin = wbfsFileName;
+	discInfo( header, disc );
+	
+	wbfs_iofree( header );
+	wbfs_close( partition );
+	
+	return disc.size != 0 ? Driver::Ok : Driver::InvalidDisc;
+}
+
 int Driver::convertIsoFileToWBFSFile( const QString& isoFilePath, const QString& _wbfsFilePath )
 {
 	int result;
@@ -735,6 +743,80 @@ void Driver::discInfo( u8* header, QWBFS::Model::Disc& disc )
 	disc.region = QChar( header[ 0x3 ] ).unicode();
 }
 
+qint64 Driver::minimumWBFSFileSize()
+{
+	return WBFS_FILE_MINIMUM_SIZE;
+}
+
+QWBFS::Model::Disc Driver::isoDiscInfo( const QString& filePath )
+{
+	const QString tmpFile = QString( "%1/%2.tmp%3" )
+		.arg( QDir::tempPath() )
+		.arg( QApplication::applicationName() )
+		.arg( minimumWBFSFileSize() );
+	QWBFS::Model::Disc disc;
+	
+	// create temporary wbfs container for estimating the size
+	if ( !QFile::exists( tmpFile ) ) {
+		if ( initializeWBFSFile( tmpFile, minimumWBFSFileSize() ) != QWBFS::Driver::Ok ) {
+			qWarning() << Q_FUNC_INFO << "Can't create tmp file" << tmpFile.toLocal8Bit().constData();
+			return disc;
+		}
+	}
+	
+	QWBFS::Partition::Properties properties( tmpFile );
+	properties.reset = true;
+	
+	QWBFS::Partition::Handle handle( properties );
+	
+	if ( handle.isValid() ) {
+		void* fileHandle = wbfs_open_file_for_read( filePath.toLocal8Bit().data() );
+
+		if ( fileHandle ) {
+			u8* header = (u8*)wbfs_ioalloc( 0x100 );
+			
+			disc.size = wbfs_estimate_disc( handle.ptr(), wbfs_read_wii_file, fileHandle, ONLY_GAME_PARTITION, header );
+			disc.origin = filePath;
+			discInfo( header, disc );
+			
+			wbfs_iofree( header );
+			wbfs_close_file( fileHandle );
+		}
+		else {
+			qWarning() << Q_FUNC_INFO << "Invalid file handle";
+		}
+	}
+	else {
+		qWarning() << Q_FUNC_INFO << "Invalid wbfs handle";
+	}
+	
+	//QFile::remove( tmpFile ); // should delete it but may be not performant for multiple requests of iso estimated size
+	
+	return disc;
+}
+
+Driver::FileType Driver::fileType( const QString& filePath )
+{
+	const QFileInfo file( filePath );
+	const QString suffix = file.isDir() ? QString::null : file.suffix().toLower();
+	
+	if ( suffix == "iso" ) {
+		return QWBFS::Driver::ISOFile;
+	}
+	else if ( suffix == "wbfs" ) {
+		if ( isWBFSPartitionOrFile( filePath ) ) {
+			return QWBFS::Driver::WBFSFile;
+		}
+	}
+	else if ( suffix.isEmpty() ) {
+		if ( isWBFSPartitionOrFile( filePath ) ) {
+			return QWBFS::Driver::WBFSPartitionFile;
+		}
+	}
+	
+	return QWBFS::Driver::UnknownFile;
+}
+
 int Driver::discRead_callback( void* fp, u32 lba, u32 count, void* iobuf )
 {
 	int ret = wbfs_disc_read( (wbfs_disc_t*)fp, lba, (u8*)iobuf, count );
@@ -757,7 +839,7 @@ int Driver::discRead_callback( void* fp, u32 lba, u32 count, void* iobuf )
 	return 0;
 }
 
-void Driver::progress_callback( int x, int max )
+QTime Driver::estimatedTimeForTask( int x, int max )
 {
 	static time_t start_time;
 	static u32 expected_total;
@@ -775,11 +857,7 @@ void Driver::progress_callback( int x, int max )
 		m = ( d /60 ) %60;
 		s = d %60;
 		
-		if ( mCurrentDriver ) {
-			emit mCurrentDriver->currentProgressChanged( x, max, QTime( h, m, s ) );
-		}
-		
-		return;
+		return QTime( h, m, s );
 	}
 
 	d = (u32)( time( 0 ) -start_time );
@@ -799,7 +877,12 @@ void Driver::progress_callback( int x, int max )
 	m = ( d /60 ) %60;
 	s = d %60;
 	
+	return QTime( h, m, s );
+}
+
+void Driver::progress_callback( int x, int max )
+{
 	if ( mCurrentDriver ) {
-		emit mCurrentDriver->currentProgressChanged( x, max, QTime( h, m, s ) );
+		emit mCurrentDriver->currentProgressChanged( x, max, estimatedTimeForTask( x, max ) );
 	}
 }

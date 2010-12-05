@@ -70,12 +70,21 @@ public:
 		DiscWriteFailed = -4,
 		DiscExtractFailed = -5,
 		DiscAddFailed = -6,
-		DiscFound = -7,
-		DiscNotFound = -8,
-		InvalidDiscIndex = -9,
-		InvalidDiscID = -10,
-		InvalidDisc = -11,
-		CantDrive2Drive = -12
+		DiscConvertFailed = -7,
+		DiscFound = -8,
+		DiscNotFound = -9,
+		InvalidDiscIndex = -10,
+		InvalidDiscID = -11,
+		InvalidDisc = -12,
+		CantDrive2Drive = -13,
+		UnknownError = -1000
+	};
+	
+	enum FileType {
+		UnknownFile = 0,
+		WBFSPartitionFile,
+		WBFSFile,
+		ISOFile
 	};
 	
 	Driver( QObject* parent = 0, const QWBFS::Partition::Handle& partitionHandle = QWBFS::Partition::Handle() );
@@ -221,6 +230,14 @@ public:
 	*/
 	static int initializeWBFSFile( const QString& filePath, qint64 size = 143432 *2 *0x8000ULL );
 	/*!
+		\details return a filled disc structure.
+		\param wbfsFileName the wbfs file to get informations from.
+		\param partitionSelector the partition selector.
+		\param disc the disc to fill informations.
+		\return InvalidDisc or Ok
+	*/
+	static int wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc, partition_selector_t partitionSelection = ONLY_GAME_PARTITION );
+	/*!
 		\details convert an iso file to a wbfs file
 		\param isoFilePath the source iso file path
 		\param wbfsFilePath the target wbfs file path if setted, else isoFilePath +".wbfs"
@@ -267,6 +284,13 @@ public:
 	static void addHandle( const QWBFS::Partition::Handle& handle );
 	static QWBFS::Partition::Handle getHandle( const QString& partition, bool* created = 0 );
 	static void closeHandle( const QWBFS::Partition::Handle& handle );
+	
+	static void discInfo( u8* header, QWBFS::Model::Disc& disc );
+	static qint64 minimumWBFSFileSize();
+	static QWBFS::Model::Disc isoDiscInfo( const QString& filePath );
+	static Driver::FileType fileType( const QString& filePath );
+	
+	static QTime estimatedTimeForTask( int value, int maximum );
 
 protected:
 	mutable QWBFS::Partition::Properties mProperties;
@@ -281,7 +305,6 @@ protected:
 	static QHash<int, QString> mRegions;
 	
 	static int u8StrLength( u8* str );
-	static void discInfo( u8* header, QWBFS::Model::Disc& disc );
 	
 	static int discRead_callback( void* fp, u32 lba, u32 count, void* iobuf );
 	static void progress_callback( int value, int maximum );

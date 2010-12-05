@@ -36,6 +36,8 @@
 #include "Disc.h"
 #include "qwbfsdriver/Driver.h"
 
+#include <QFileInfo>
+
 #define WBFS_DISC_XML_NAME "WBFS-Discs"
 
 using namespace QWBFS::Model;
@@ -43,6 +45,24 @@ using namespace QWBFS::Model;
 Disc::Disc( const QDomElement& element )
 {
 	readFromElement( element );
+}
+
+Disc::Disc( const QString& filePath )
+{
+	readFromElement( QDomElement() );
+	
+	switch ( QWBFS::Driver::fileType( filePath ) ) {
+		case QWBFS::Driver::WBFSFile:
+			QWBFS::Driver::wbfsFileInfo( filePath, *this );
+			break;
+		case QWBFS::Driver::ISOFile:
+			operator=( Driver::isoDiscInfo( filePath ) );
+			break;
+		case QWBFS::Driver::WBFSPartitionFile:
+		case QWBFS::Driver::UnknownFile:
+			Q_ASSERT( 0 );
+			break;
+	}
 }
 
 bool Disc::operator==( const Disc& other ) const
@@ -54,6 +74,21 @@ bool Disc::operator==( const Disc& other ) const
 		region == other.region /*&&
 		state == other.state &&
 		error == other.error*/;
+}
+
+bool Disc::isValid() const
+{
+	return !id.isEmpty() && !title.isEmpty();
+}
+
+bool Disc::hasError() const
+{
+	return error != QWBFS::Driver::Ok;
+}
+
+QString Disc::baseName() const
+{
+	return isValid() ? QString( "[%1] %2" ).arg( id ).arg( title ) : QString::null;
 }
 
 void Disc::addToDocument( QDomDocument& document ) const
