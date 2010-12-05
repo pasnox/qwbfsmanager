@@ -515,7 +515,7 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	connectDriver( &targetDriver );
 	
 	// direct drive2drive
-	if ( targetDriver.canDrive2Drive( sourceHandle ) ) {
+	if ( targetDriver.canDrive2Drive( sourceHandle ) == QWBFS::Driver::Ok ) {
 		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
 		
 		source.error = targetDriver.addDisc( source.id, sourceHandle );

@@ -600,14 +600,38 @@ void UIMain::on_tbExport_clicked()
 		return;
 	}
 	
+	WorkerThread::Work work;
+	work.discs = mExportModel->discs();
+	work.target = path;
+	
+	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::Ok;
+	const QMessageBox::StandardButton defaultButton = QMessageBox::Ok;
+	
+	QMessageBox msgBox( this );
+	msgBox.setIcon( QMessageBox::Question );
+	msgBox.setText( tr( "Which format do you want to use to export the discs ?" ) );
+	msgBox.setStandardButtons( buttons );
+	msgBox.button( QMessageBox::Yes )->setText( "ISO" );
+	msgBox.button( QMessageBox::Ok )->setText( "WBFS" );
+	msgBox.setEscapeButton( 0 );
+	msgBox.setDefaultButton( defaultButton );
+	
+	switch ( msgBox.exec() ) {
+		case QMessageBox::Yes:
+			work.task = WorkerThread::ExportISO;
+			break;
+		case QMessageBox::Ok:
+			work.task = WorkerThread::ExportWBFS;
+			break;
+		default:
+			Q_ASSERT( 0 );
+			return;
+	}
+	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	
-	WorkerThread::Work work;
-	work.task = WorkerThread::ExportISO;
-	work.discs = mExportModel->discs();
-	work.target = path;
 	work.window = dlg;
 	
 	dlg->setWork( work );

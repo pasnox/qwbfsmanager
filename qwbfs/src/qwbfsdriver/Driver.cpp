@@ -433,7 +433,10 @@ int Driver::canDrive2Drive( const QWBFS::Partition::Handle& sourcePartitionHandl
 		return Driver::SourcePartitionNotOpened;
 	}
 	
-	if ( ( sourcePartitionHandle.ptr()->wbfs_sec_sz /sourcePartitionHandle.ptr()->hd_sec_sz ) == ( mHandle.ptr()->wbfs_sec_sz /mHandle.ptr()->hd_sec_sz ) ) {
+	const double left = sourcePartitionHandle.ptr()->wbfs_sec_sz /sourcePartitionHandle.ptr()->hd_sec_sz;
+	const double right = mHandle.ptr()->wbfs_sec_sz /mHandle.ptr()->hd_sec_sz;
+	
+	if ( qFuzzyCompare( left, right ) ) {
 		return Driver::Ok;
 	}
 	
