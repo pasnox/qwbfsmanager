@@ -50,16 +50,17 @@ class WorkerThread : public QThread
 {
 	Q_OBJECT
 	
-public:
-	enum TaskFlag {
+	enum BasicTask {
 		Export = 0x1,
 		Import = 0x2,
 		Convert = 0x4,
 		ISO = 0x8,
 		WBFS = 0x10,
-		//
-		Indirect = 0x20,
-		//
+		Indirect = 0x20
+	};
+	
+public:
+	enum Task {
 		ExportISO = Export | ISO,
 		ExportWBFS = Export | WBFS,
 		ImportISO = Import | ISO,
@@ -67,8 +68,6 @@ public:
 		ConvertISO = Convert | ISO,
 		ConvertWBFS = Convert | WBFS
 	};
-	
-	Q_DECLARE_FLAGS( Task, TaskFlag )
 	
 	struct Work
 	{
@@ -85,8 +84,8 @@ public:
 	
 	bool setWork( const WorkerThread::Work& work );
 	
-	static QString taskToWindowTitle( WorkerThread::Task task );
-	static QString taskToLabel( WorkerThread::Task task );
+	static QString taskToWindowTitle( WorkerThread::Task task, bool indirect = false );
+	static QString taskToLabel( WorkerThread::Task task, bool indirect = false );
 
 public slots:
 	void stop();
@@ -112,7 +111,5 @@ signals:
 	void log( const QString& text );
 	void canceled();
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( WorkerThread::Task )
 
 #endif // WORKERTHREAD_H

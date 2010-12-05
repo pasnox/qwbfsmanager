@@ -79,29 +79,26 @@ bool WorkerThread::setWork( const WorkerThread::Work& work )
 	return true;
 }
 
-QString WorkerThread::taskToWindowTitle( WorkerThread::Task task )
+QString WorkerThread::taskToWindowTitle( WorkerThread::Task task, bool indirect )
 {
-	return taskToLabel( task ).append( "..." );
+	return taskToLabel( task, indirect ).append( "..." );
 }
 
-QString WorkerThread::taskToLabel( WorkerThread::Task task )
+QString WorkerThread::taskToLabel( WorkerThread::Task task, bool indirect )
 {
-	const bool isIndirect = task & WorkerThread::Indirect;
-	task &= ~WorkerThread::Indirect;
-	
 	switch ( task ) {
 		case WorkerThread::ExportISO:
-			return isIndirect ? tr( "Indirect Export to ISO" ) : tr( "Export to ISO" );
+			return indirect ? tr( "Indirect Export to ISO" ) : tr( "Export to ISO" );
 		case WorkerThread::ExportWBFS:
-			return isIndirect ? tr( "Indirect Export to WBFS" ) : tr( "Export to WBFS" );
+			return indirect ? tr( "Indirect Export to WBFS" ) : tr( "Export to WBFS" );
 		case WorkerThread::ImportISO:
-			return isIndirect ? tr( "Indirect Import to ISO" ) : tr( "Import to ISO" );
+			return indirect ? tr( "Indirect Import to ISO" ) : tr( "Import to ISO" );
 		case WorkerThread::ImportWBFS:
-			return isIndirect ? tr( "Indirect Import to WBFS" ) : tr( "Import to WBFS" );
+			return indirect ? tr( "Indirect Import to WBFS" ) : tr( "Import to WBFS" );
 		case WorkerThread::ConvertISO:
-			return isIndirect ? tr( "Indirect Convert to ISO" ) : tr( "Convert to ISO" );
+			return indirect ? tr( "Indirect Convert to ISO" ) : tr( "Convert to ISO" );
 		case WorkerThread::ConvertWBFS:
-			return isIndirect ? tr( "Indirect Convert to WBFS" ) : tr( "Convert to WBFS" );
+			return indirect ? tr( "Indirect Convert to WBFS" ) : tr( "Convert to WBFS" );
 	}
 	
 	return QString::null;
@@ -525,13 +522,13 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	}
 	// indirect drive2drive
 	else {
-		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task | WorkerThread::Indirect ) ).arg( source.baseName() ) );
+		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task, true ) ).arg( source.baseName() ) );
 		
 		const QFileInfo tmpFile( QString( "%1/%2.iso" ).arg( QDir::tempPath() ).arg( source.baseName() ) );
 		QWBFS::Driver sourceDriver( 0, sourceHandle );
 		connectDriver( &sourceDriver );
 		
-		if ( !targetDriver.hasDisc( source.id ) ) {
+		if ( targetDriver.hasDisc( source.id ) == QWBFS::Driver::DiscNotFound ) {
 			source.error = sourceDriver.extractDisc( source.id, tmpFile.absolutePath(), tmpFile.fileName() );
 			
 			if ( !source.hasError() ) {

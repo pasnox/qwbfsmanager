@@ -357,7 +357,7 @@ void PartitionWidget::on_tbImport_clicked()
 	connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
 	
 	WorkerThread::Work work;
-	work.task = WorkerThread::Import | WorkerThread::WBFS;
+	work.task = WorkerThread::ImportWBFS;
 	work.discs = mImportModel->discs();
 	work.target = mDriver->handle().partition();
 	work.window = dlg;
