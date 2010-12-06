@@ -285,7 +285,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	QWBFS::Driver driver( 0, handle );
 	connectDriver( &driver );
 	
-	emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
 	source.error = driver.addDiscImage( source.origin );
 	
 	if ( source.hasError() ) {
@@ -346,7 +346,7 @@ void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	QWBFS::Driver driver( 0, handle );
 	connectDriver( &driver );
 	
-	emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
 	source.error = driver.extractDisc( source.id, file.absolutePath(), file.fileName() );
 	
 	if ( source.hasError() ) {
@@ -377,7 +377,7 @@ void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source
 		return;
 	}
 	
-	emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
 	
 	// copying the file chunk by chunk instead of using QFile::copy() to be able to see progression
 	QFile in( source.origin );
@@ -516,13 +516,13 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	
 	// direct drive2drive
 	if ( targetDriver.canDrive2Drive( sourceHandle ) == QWBFS::Driver::Ok ) {
-		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+		emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
 		
 		source.error = targetDriver.addDisc( source.id, sourceHandle );
 	}
 	// indirect drive2drive
 	else {
-		emit message( tr( "%1 '%2'..." ).arg( taskToLabel( task, true ) ).arg( source.baseName() ) );
+		emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task, true ) ).arg( source.baseName() ) );
 		
 		const QFileInfo tmpFile( QString( "%1/%2.iso" ).arg( QDir::tempPath() ).arg( source.baseName() ) );
 		QWBFS::Driver sourceDriver( 0, sourceHandle );

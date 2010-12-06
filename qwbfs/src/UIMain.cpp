@@ -72,8 +72,14 @@ UIMain::UIMain( QWidget* parent )
 	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
 	
+	QFont font = this->font();
+#ifdef Q_OS_MAC
+	font.setPointSize( font.pointSize() +2 );
+#endif
+	
 	centralVerticalLayout->setMenuBar( qmtbInfos );
 	qmtbInfos->layout()->setMargin( 5 );
+	qmtbInfos->setFont( font );
 	qmtbInfos->setVisible( false );
 	
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
