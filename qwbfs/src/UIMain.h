@@ -39,6 +39,7 @@
 #include "ui_UIMain.h"
 
 class QFileSystemModel;
+class QNetworkReply;
 class pNetworkAccessManager;
 class pPaypalButton;
 class pUpdateChecker;
@@ -87,6 +88,7 @@ protected slots:
 	void closeViewRequested();
 	void coverRequested( const QString& id );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
+	void networkAccessManager_finished( QNetworkReply* reply );
 	void networkAccessManager_cached( const QUrl& url );
 	void networkAccessManager_error( const QUrl& url, const QString& message );
 	void networkAccessManager_cacheCleared();

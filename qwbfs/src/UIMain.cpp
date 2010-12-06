@@ -55,6 +55,7 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QPainter>
+#include <QNetworkReply>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
@@ -129,6 +130,7 @@ UIMain::UIMain( QWidget* parent )
 	
 	localeChanged();
 	
+	connect( mCache, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( networkAccessManager_finished( QNetworkReply* ) ) );
 	connect( mCache, SIGNAL( cached( const QUrl& ) ), this, SLOT( networkAccessManager_cached( const QUrl& ) ) );
 	connect( mCache, SIGNAL( error( const QUrl&, const QString& ) ), this, SLOT( networkAccessManager_error( const QUrl&, const QString& ) ) );
 	connect( mCache, SIGNAL( cacheCleared() ), this, SLOT( networkAccessManager_cacheCleared() ) );
@@ -280,8 +282,7 @@ void UIMain::changeLocaleRequested()
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	const QString locale = pTranslationDialog::getLocale( translationManager );
 	
-	if ( !locale.isEmpty() )
-	{
+	if ( !locale.isEmpty() ) {
 		Properties properties;
 		properties.setTranslationsPaths( translationManager->translationsPaths() );
 		properties.setLocaleAccepted( true );
@@ -323,7 +324,7 @@ void UIMain::coverRequested( const QString& id )
 	lCover->clear();
 	
 	if ( mCache->hasCacheData( urlCD ) || mCache->hasCacheData( urlCDCustom ) || mCache->hasCacheData( urlCover ) ) {
-		networkAccessManager_cached( QUrl() );
+		networkAccessManager_cached( QUrl( WIITDB_DOMAIN ) );
 	}
 	
 	if ( !lCDCover->pixmap() ) {
@@ -338,6 +339,11 @@ void UIMain::coverRequested( const QString& id )
 void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 {
 	mExportModel->updateDisc( disc );
+}
+
+void UIMain::networkAccessManager_finished( QNetworkReply* reply )
+{
+	reply->deleteLater();
 }
 
 void UIMain::networkAccessManager_cached( const QUrl& url )
