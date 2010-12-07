@@ -80,6 +80,7 @@ svnExport()
 {
 	echo "*** Exporting repository: $1 to $2"
 	startCommand "svn export \"$1\" \"$2\" > /dev/null 2>&1"
+	startCommand "ln -s \"$1/../../../fresh\" \"$2/fresh\"  > /dev/null 2>&1"
 }
 
 # create a tar.gz file $1 from path $2
@@ -151,7 +152,8 @@ crossBuild()
 	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
 	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
-	startCommand "make -j4 release > \"$CUR_PATH/log/winbuild.log\" 2>&1"
+	#startCommand "make -j4 release > \"$CUR_PATH/log/winbuild.log\" 2>&1"
+	startCommand "make -j4"
 	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" > \"$CUR_PATH/log/winpackage.log\" 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
 	startCommand "cd \"$CUR_PATH\""
