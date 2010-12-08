@@ -257,7 +257,7 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="170"/>
         <source>Cancel requested, the process will stop after the current operation.</source>
-        <translation type="unfinished">Cancelació demanada, el procés s&apos;aturarà després de la tasca actual.</translation>
+        <translation>Cancelació demanada, el procés s&apos;aturarà després de la tasca actual.</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="180"/>
@@ -486,77 +486,77 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="619"/>
         <source>No error</source>
-        <translation type="unfinished"></translation>
+        <translation>Sense errors</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="621"/>
         <source>Partition not opened</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible obrir la partició</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="623"/>
         <source>Source partition not opened</source>
-        <translation type="unfinished"></translation>
+        <translation>La partició no s&apos;obre</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="625"/>
         <source>Disc read failed</source>
-        <translation type="unfinished"></translation>
+        <translation>No es pot llegir el disc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="627"/>
         <source>Disc write failed</source>
-        <translation type="unfinished"></translation>
+        <translation>No es pot escriure al disc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="629"/>
         <source>Disc extract failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error en l&apos;extracció del disc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="631"/>
         <source>Disc add failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error en afegir el disc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="633"/>
         <source>Disc convert failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error en la conversió del disc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="635"/>
         <source>Disc found</source>
-        <translation type="unfinished"></translation>
+        <translation>Disc present</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="637"/>
         <source>Disc not found (or not exists)</source>
-        <translation type="unfinished"></translation>
+        <translation>El disc no es troba (o no existeix)</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="639"/>
         <source>Invalid disc index</source>
-        <translation type="unfinished"></translation>
+        <translation>Índex de disc no vàlid</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="641"/>
         <source>Invalid disc id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id del disc no vàlid</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="643"/>
         <source>Invalid disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Disc no vàlid</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="645"/>
         <source>Can&apos;t drive to drive copy</source>
-        <translation type="unfinished"></translation>
+        <translation>No es pot copiar d&apos;un disc a un altre</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="647"/>
         <source>Unknown error</source>
-        <translation type="unfinished"></translation>
+        <translation>Error desconegut</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="667"/>
@@ -737,12 +737,12 @@ JO NO EM FAIG RESPONSABLE DE QUALSEVOL DANY QUE PUGUI PRODUIR EN EL SEU CONSOLA 
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="378"/>
         <source>Convert ISO Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Converteix arxius ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="387"/>
         <source>Convert WBFS Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Convert arxius WBFS</translation>
     </message>
     <message>
         <source>Convert ISO File</source>
@@ -773,12 +773,12 @@ muntatge de la partició.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>Choose ISO files to convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Trieu un arxiu ISO per convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="624"/>
         <source>Which format do you want to use to export the discs ?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Quin format es vol utilitzar per exportar els discs?</translation>
     </message>
     <message>
         <source>Choose an ISO file to convert</source>
@@ -801,7 +801,7 @@ muntatge de la partició.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
         <source>Choose WBFS files to convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Trieu un arxiu WBFS per convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="609"/>
@@ -814,74 +814,74 @@ muntatge de la partició.</translation>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="91"/>
         <source>Indirect Export to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportació indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="91"/>
         <source>Export to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportació a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
         <source>Indirect Export to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportació indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
         <source>Export to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportació a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
         <source>Indirect Import to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Importació indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
         <source>Import to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Importació a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
         <source>Indirect Import to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Importació indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
         <source>Import to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Importació a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Indirect Convert to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Coversión indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Convert to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Coversión a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Indirect Convert to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Coversión indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Convert to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Coversión a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="253"/>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="474"/>
         <source>Initializing WBFS disc &apos;%1&apos;...</source>
-        <translation type="unfinished"></translation>
+        <translation>Inicialitzar disc WBFS  &apos;%1&apos;...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="264"/>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="489"/>
         <source>Formating WBFS disc &apos;%1&apos;...</source>
-        <translation type="unfinished"></translation>
+        <translation>Formatar disc WBFS &apos;%1&apos;...</translation>
     </message>
 </context>
 <context>

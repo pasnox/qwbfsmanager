@@ -257,7 +257,7 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="170"/>
         <source>Cancel requested, the process will stop after the current operation.</source>
-        <translation type="unfinished">Cancelación solicitada, el proceso se detendrá después de la tarea actual.</translation>
+        <translation>Cancelación solicitada, el proceso se detendrá después de la tarea actual.</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="180"/>
@@ -486,77 +486,77 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="619"/>
         <source>No error</source>
-        <translation type="unfinished"></translation>
+        <translation>Sin errores</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="621"/>
         <source>Partition not opened</source>
-        <translation type="unfinished"></translation>
+        <translation>Imposible abrir la partición</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="623"/>
         <source>Source partition not opened</source>
-        <translation type="unfinished"></translation>
+        <translation>La partición no se abre</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="625"/>
         <source>Disc read failed</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede leer el disco</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="627"/>
         <source>Disc write failed</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede escribir en el disco</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="629"/>
         <source>Disc extract failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error en la extracción del disco</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="631"/>
         <source>Disc add failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al añadir el disco</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="633"/>
         <source>Disc convert failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error en la conversión del disco</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="635"/>
         <source>Disc found</source>
-        <translation type="unfinished"></translation>
+        <translation>Disco presente</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="637"/>
         <source>Disc not found (or not exists)</source>
-        <translation type="unfinished"></translation>
+        <translation>El disco no se encuentra (o no existe)</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="639"/>
         <source>Invalid disc index</source>
-        <translation type="unfinished"></translation>
+        <translation>Índice de disco no válido</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="641"/>
         <source>Invalid disc id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id del disco no válido</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="643"/>
         <source>Invalid disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Disco no válido</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="645"/>
         <source>Can&apos;t drive to drive copy</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede copiar de un disco a otro</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="647"/>
         <source>Unknown error</source>
-        <translation type="unfinished"></translation>
+        <translation>Error desconocido</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="667"/>
@@ -737,12 +737,12 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="378"/>
         <source>Convert ISO Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Convertir archivos ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="387"/>
         <source>Convert WBFS Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Covertir archivos WBFS</translation>
     </message>
     <message>
         <source>Convert ISO File</source>
@@ -773,12 +773,12 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>Choose ISO files to convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija un archivo ISO para convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="624"/>
         <source>Which format do you want to use to export the discs ?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Qué formato se desea utilizar para exportar los juegos?</translation>
     </message>
     <message>
         <source>Choose an ISO file to convert</source>
@@ -801,7 +801,7 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
         <source>Choose WBFS files to convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Elija un archivo WBFS para convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="609"/>
@@ -814,74 +814,74 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="91"/>
         <source>Indirect Export to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportación indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="91"/>
         <source>Export to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportación a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
         <source>Indirect Export to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportación indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
         <source>Export to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportación a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
         <source>Indirect Import to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Importación indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
         <source>Import to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Importación a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
         <source>Indirect Import to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Importación indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
         <source>Import to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Importación a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Indirect Convert to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Coversión indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Convert to ISO</source>
-        <translation type="unfinished"></translation>
+        <translation>Covertir a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Indirect Convert to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Coversión indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Convert to WBFS</source>
-        <translation type="unfinished"></translation>
+        <translation>Covertir a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="253"/>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="474"/>
         <source>Initializing WBFS disc &apos;%1&apos;...</source>
-        <translation type="unfinished"></translation>
+        <translation>Inicializando disco WBFS &apos;%1&apos;...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="264"/>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="489"/>
         <source>Formating WBFS disc &apos;%1&apos;...</source>
-        <translation type="unfinished"></translation>
+        <translation>Formateando disco WBFS &apos;%1&apos;...</translation>
     </message>
 </context>
 <context>
