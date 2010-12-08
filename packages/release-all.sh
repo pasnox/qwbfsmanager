@@ -120,8 +120,11 @@ createZip()
 crossBuild()
 {
 	echo "*** Crossbuilding for windows"
+	
+	QMAKE="qmake"
 
 	if [ $OS = "Linux" ]; then
+		QMAKE="qmake-qt4"
 		QT_VERSION="4.7.0"
 		QT_WIN32_VERSION="4.7.1"
 		QT_PATH="/usr"
@@ -149,9 +152,9 @@ crossBuild()
 
 	startCommand "cd \"./$FOLDER_NAME\""
 	startCommand "make distclean > /dev/null 2>&1" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
+	startCommand "\"$QT_PATH/bin/$QMAKE\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
+	startCommand "\"$QT_PATH/bin/$QMAKE\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
 	startCommand "make -j4 > \"$CUR_PATH/log/winbuild.log\" 2>&1"
 	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" > \"$CUR_PATH/log/winpackage.log\" 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
