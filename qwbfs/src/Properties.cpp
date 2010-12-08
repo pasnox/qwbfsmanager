@@ -185,36 +185,38 @@ QStringList Properties::translationsPaths() const
 {
 	QSet<QString> translationsPaths = mSettings->value( SETTINGS_TRANSLATIONS_PATHS ).toStringList().toSet();
 	
-	translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
-	
+	if ( translationsPaths.isEmpty() ) {
+		translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+		
 #if defined( Q_OS_WIN )
-	// sources ones
-	translationsPaths << "qt/translations";
-	translationsPaths << "translations";
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
+		// sources ones
+		translationsPaths << "qt/translations";
+		translationsPaths << "translations";
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
 #elif defined( Q_OS_MAC )
-	// sources ones
-	translationsPaths << "../Resources/qt/translations";
-	translationsPaths << "../Resources/translations";
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../fresh/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../../../fresh/translations" );
+		// sources ones
+		translationsPaths << "../Resources/qt/translations";
+		translationsPaths << "../Resources/translations";
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../fresh/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../../../fresh/translations" );
 #else
-	// sources ones
-	translationsPaths << "qt/translations";
-	translationsPaths << "translations";
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
-	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
+		// sources ones
+		translationsPaths << "qt/translations";
+		translationsPaths << "translations";
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
+		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
 #endif
+	}
 
 	//qWarning() << translationsPaths;
 	
