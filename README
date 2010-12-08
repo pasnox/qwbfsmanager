@@ -16,7 +16,7 @@ Requirements
 
 - Build tool chain (GCC...)
 - Qt >= 4.5.x
-- OpenSSL
+- OpenSSL (Windows: http://www.slproweb.com/download/Win32OpenSSL-0_9_8q.exe)
 - A computer
 - A chair
 - A brain
