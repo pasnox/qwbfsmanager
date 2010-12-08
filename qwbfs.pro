@@ -27,11 +27,11 @@ BUILD_PATH	= build
 include( shared.pri )
 
 exists( fresh/fresh.pro ) {
-	SUBDIRS	*= fresh/fresh.pro
+	SUBDIRS	*= fresh
 	!build_pass:message( "Using bundled fresh library." )
 } else:exists( ../../fresh/fresh.pro ) {
 	!build_pass:message( "Using external fresh library." )
-	SUBDIRS	*= ../../fresh/fresh.pro
+	SUBDIRS	*= ../../fresh
 } else {
 	!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
 }
