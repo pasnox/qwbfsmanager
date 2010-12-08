@@ -36,6 +36,7 @@ exists( ../fresh/fresh.pro ) {
 include( $${FRESH_LIBRARY_PATH}/fresh.pri )
 
 # define some usefull values
+OS	= $$lower( $$QMAKE_HOST.os )
 QMAKE_TARGET_COMPANY	= "QWBFS Team"
 QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerful cross platform Wii Backup File System manager"
@@ -45,9 +46,10 @@ PACKAGE_DOWNLOADS_FEED	= "http://code.google.com/feeds/p/qwbfs/downloads/basic"
 PACKAGE_REPORT_BUG_URL	= "http://code.google.com/p/qwbfs/issues/list"
 PACKAGE_DISCUSS_URL	= "http://groups.google.com/group/qwbfs-discuss"
 PACKAGE_VERSION	= 1.2.0
-SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
+isEqual( OS, "windows" ):SVN_REVISION	= "N/C"
+else:SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
-system( touch $$PWD/src/main.h )
+!isEqual( OS, "windows" ):system( touch $$PWD/src/main.h )
 
 CONFIG( debug, debug|release ) {
 	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION debug)

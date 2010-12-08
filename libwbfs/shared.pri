@@ -22,11 +22,12 @@ INCLUDEPATH	*= $${LIB_WBFS_PWD}
 DEPENDPATH	*= $${LIB_WBFS_PWD}
 
 win32 {
-	OS=$$system( "uname -s" )
+	OS	= $$lower( $$QMAKE_HOST.os )
+	#OS=$$system( "uname -s" )
 	
 	OPENSSL_INSTALL_DIR = D:/Developpement/OpenSSL
-	isEqual( OS, "Darwin" ):OPENSSL_INSTALL_DIR	= $(HOME)/Win32Libraries
-	else:isEqual( OS, "Linux" ):OPENSSL_INSTALL_DIR	= $(HOME)/.wine/drive_c/Development/OpenSSL
+	isEqual( OS, "darwin" ):OPENSSL_INSTALL_DIR	= $(HOME)/Win32Libraries
+	else:isEqual( OS, "linux" ):OPENSSL_INSTALL_DIR	= $(HOME)/.wine/drive_c/Development/OpenSSL
 	
 	*-g++*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/MinGW
 	*-msvc*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/VC
