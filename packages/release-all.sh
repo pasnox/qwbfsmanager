@@ -122,8 +122,8 @@ crossBuild()
 	echo "*** Crossbuilding for windows"
 
 	if [ $OS = "Linux" ]; then
-		QT_VERSION="4.6.3"
-		QT_WIN32_VERSION="4.6.1"
+		QT_VERSION="4.7.0"
+		QT_WIN32_VERSION="4.7.1"
 		QT_PATH="/usr"
 		MKSPEC="$HOME/.qt/win32-x11-g++"
 		QT_WIN32_PATH="$WINE_DRIVE/Development/Qt/$QT_WIN32_VERSION"
@@ -152,8 +152,7 @@ crossBuild()
 	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
 	startCommand "\"$QT_PATH/bin/qmake\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
-	#startCommand "make -j4 release > \"$CUR_PATH/log/winbuild.log\" 2>&1"
-	startCommand "make -j4"
+	startCommand "make -j4 > \"$CUR_PATH/log/winbuild.log\" 2>&1"
 	startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" > \"$CUR_PATH/log/winpackage.log\" 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
 	startCommand "cd \"$CUR_PATH\""
@@ -219,7 +218,7 @@ startup()
 	fi
 }
 
-# finish function, muse not use startCommand or function calling it to avoid possible unfinite loop on errors.
+# finish function, must not use startCommand or function calling it to avoid possible unfinite loop on errors.
 finish()
 {
 	# close wine, WineBottler & X11

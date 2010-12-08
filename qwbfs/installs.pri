@@ -37,6 +37,20 @@ unix {
 	
 	INSTALLS	+= qwbfs_translations
 	
+	exists( ../fresh/fresh.pro ) {
+		FRESH_LIBRARY_PATH = ../fresh
+	} else:exists( ../../../fresh/fresh.pro ) {
+		FRESH_LIBRARY_PATH = ../../../fresh
+	}
+	
+	!isEmpty( FRESH_LIBRARY_PATH ) {
+		mac:fresh_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
+		else:fresh_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
+		fresh_translations.files	= $${FRESH_LIBRARY_PATH}/translations/*.qm
+		
+		INSTALLS	+= fresh_translations
+	}
+	
 	mac {
 		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/qt/translations
 		#qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/qt_{\,[A-Za-z][A-Za-z]_}[A-Za-z][A-Za-z].qm
