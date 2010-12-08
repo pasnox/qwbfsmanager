@@ -71,6 +71,7 @@ Source: {#QT_PATH}\bin\mingwm10.dll; DestDir: {app}; Flags: promptifolder
 Source: {#QT_PATH}\bin\libgcc_s_dw2-1.dll; DestDir: {app}; Flags: promptifolder skipifsourcedoesntexist
 Source: {#DLLS_PATH}\libeay32.dll; DestDir: {app}; Flags: promptifolder
 Source: {#DLLS_PATH}\libssl32.dll; DestDir: {app}; Flags: promptifolder
+Source: {#DLLS_PATH}\ssleay32.dll; DestDir: {app}; Flags: promptifolder
 
 [Icons]
 Name: {group}\{cm:QWBFS_NAME}; Filename: {app}\qwbfsmanager.exe; WorkingDir: {app}; IconFilename: {app}\qwbfsmanager.exe; IconIndex: 0
