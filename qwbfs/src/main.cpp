@@ -102,6 +102,7 @@ int main( int argc, char** argv )
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	translationManager->setFakeCLocaleEnabled( true );
 	translationManager->addTranslationsMask( "qt*.qm" );
+	translationManager->addTranslationsMask( "fresh*.qm" );
 	translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
 	translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
 	

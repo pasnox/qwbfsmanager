@@ -194,6 +194,8 @@ QStringList Properties::translationsPaths() const
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
 #elif defined( Q_OS_MAC )
 	// sources ones
 	translationsPaths << "../Resources/qt/translations";
@@ -201,6 +203,8 @@ QStringList Properties::translationsPaths() const
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../fresh/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../../../fresh/translations" );
 #else
 	// sources ones
 	translationsPaths << "qt/translations";
@@ -208,6 +212,8 @@ QStringList Properties::translationsPaths() const
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
 	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
 #endif
 
 	//qWarning() << translationsPaths;
