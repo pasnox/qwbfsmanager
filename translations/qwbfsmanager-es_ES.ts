@@ -310,7 +310,7 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="164"/>
         <source>Disk Size</source>
-        <translation>Tamaño en disco</translation>
+        <translation>Tamaño del disco</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="174"/>
