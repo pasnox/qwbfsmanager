@@ -50,7 +50,7 @@ UseAbsolutePaths=false
 
 [Files]
 ; Fresh framework related
-Source: ..\..\fresh\translations\*.qm; DestDir: {app}\translations; Flags: promptifolder
+Source: ..\fresh\translations\*.qm; DestDir: {app}\translations; Flags: promptifolder
 ; QWBFS Manager related files
 Source: qwbfsmanager.exe; DestDir: {app}; Flags: promptifolder
 Source: ..\packages\qt_windows.conf; DestDir: {app}; DestName: qt.conf; Flags: promptifolder
