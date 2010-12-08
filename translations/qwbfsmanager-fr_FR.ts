@@ -2,108 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
-    <name>DataNetworkCache</name>
-    <message>
-        <source>Error when downloading the file &apos;%1&apos;.</source>
-        <translation type="obsolete">Erreur lors du téléchargement du fichier &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Error when creating the cache for file &apos;%1&apos;</source>
-        <translation type="obsolete">Erreur lors de la création du cache pour le fichier &apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>Error when writing the cache for file &apos;%1&apos;</source>
-        <translation type="obsolete">Erreur lors de l&apos;écriture du cache pour le fichier &apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>Can&apos;t cache pixmap</source>
-        <translation type="obsolete">Impossible de mettre en cache</translation>
-    </message>
-    <message>
-        <source>The working path &apos;%1&apos; exists and is not a directory.</source>
-        <translation type="obsolete">Le dossier de travail &apos;%1&apos; existe et n&apos;est pas un dossier.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t create the working path &apos;%1&apos;.</source>
-        <translation type="obsolete">Impossible de créer le dossier de travail &apos;%1&apos;.</translation>
-    </message>
-</context>
-<context>
-    <name>ExportThread</name>
-    <message>
-        <source>Cancel requested, the process will stop after the current operation.</source>
-        <translation type="obsolete">Annulation demandée, le processus s&apos;arrêtera après la tâche courante.</translation>
-    </message>
-    <message>
-        <source>Exporting &apos;%1&apos;...</source>
-        <translation type="obsolete">Export en cours de &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Can&apos;t open partition &apos;%1&apos;.</source>
-        <translation type="obsolete">Impossible d&apos;ouvrir la partition &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Importing &apos;%1&apos;...</source>
-        <translation type="obsolete">Import en cours de &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Initializing wbfs file &apos;%1&apos;.</source>
-        <translation type="obsolete">Initialisation du fichier wbfs &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t create wbfs file &apos;%1&apos; (%2).</source>
-        <translation type="obsolete">Impossible de créer le fichier wbfs &apos;%1&apos; (%2).</translation>
-    </message>
-    <message>
-        <source>Can&apos;t open wbfs file &apos;%1&apos;.</source>
-        <translation type="obsolete">Impossible d&apos;ouvrir le fichier wbfs &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t get disc informations &apos;%1&apos; (%2).</source>
-        <translation type="obsolete">Impossible d&apos;obtenir les informations du disque &apos;%1&apos; (%2).</translation>
-    </message>
-    <message>
-        <source>Converting &apos;%1&apos; to WBFS...</source>
-        <translation type="obsolete">Conversion de &apos;%1&apos; en WBFS...</translation>
-    </message>
-    <message>
-        <source>Converting ISO</source>
-        <translation type="obsolete">Conversion ISO</translation>
-    </message>
-    <message>
-        <source>Converting WBFS</source>
-        <translation type="obsolete">Conversion WBFS</translation>
-    </message>
-    <message>
-        <source>Converting &apos;%1&apos;...</source>
-        <translation type="obsolete">Conversion en cours de &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Can&apos;t add disc &apos;%1&apos; (%2).</source>
-        <translation type="obsolete">Impossible d&apos;ajouter le disque &apos;%1&apos; (%2).</translation>
-    </message>
-    <message>
-        <source>Triming &apos;%1&apos;...</source>
-        <translation type="obsolete">Mise à jour de la taille du disque &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Converting &apos;%1&apos; to ISO...</source>
-        <translation type="obsolete">Conversion de &apos;%1&apos; en ISO...</translation>
-    </message>
-    <message>
-        <source>Extracting</source>
-        <translation type="obsolete">Extraction</translation>
-    </message>
-    <message>
-        <source>Adding</source>
-        <translation type="obsolete">Ajout</translation>
-    </message>
-    <message>
-        <source>Converting</source>
-        <translation type="obsolete">Conversion</translation>
-    </message>
-</context>
-<context>
     <name>Gauge</name>
     <message>
         <location filename="../qwbfs/src/Gauge.cpp" line="135"/>
@@ -219,17 +117,6 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     </message>
 </context>
 <context>
-    <name>PaypalDonationWidget</name>
-    <message>
-        <source>Donation</source>
-        <translation type="obsolete">Don</translation>
-    </message>
-    <message>
-        <source>Make a donation via Paypal</source>
-        <translation type="obsolete">Faire un don via Paypal</translation>
-    </message>
-</context>
-<context>
     <name>ProgressDialog</name>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.ui" line="44"/>
@@ -240,18 +127,6 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <location filename="../qwbfs/src/ProgressDialog.ui" line="54"/>
         <source>Details.</source>
         <translation>Détails.</translation>
-    </message>
-    <message>
-        <source>Exporting discs...</source>
-        <translation type="obsolete">Exportation des disques...</translation>
-    </message>
-    <message>
-        <source>Importing discs...</source>
-        <translation type="obsolete">Import des disques...</translation>
-    </message>
-    <message>
-        <source>Converting disc...</source>
-        <translation type="obsolete">Conversion de disque...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="165"/>
@@ -325,14 +200,6 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="177"/>
         <source> MB</source>
         <translation> Mo</translation>
-    </message>
-    <message>
-        <source>Memory Size</source>
-        <translation type="obsolete">Taille en mémoire</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Défaut</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="201"/>
@@ -435,58 +302,6 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 </context>
 <context>
     <name>QWBFS::Driver</name>
-    <message>
-        <source>No error.</source>
-        <translation type="obsolete">Aucune erreur.</translation>
-    </message>
-    <message>
-        <source>Partition not opened.</source>
-        <translation type="obsolete">La partition n&apos;est pas ouverte.</translation>
-    </message>
-    <message>
-        <source>Source partition not opened.</source>
-        <translation type="obsolete">La partition source n&apos;est pas ouverte.</translation>
-    </message>
-    <message>
-        <source>Disc read failed.</source>
-        <translation type="obsolete">Impossible de lire le disque.</translation>
-    </message>
-    <message>
-        <source>Disc write failed.</source>
-        <translation type="obsolete">Impossible d&apos;écrire sur le disque.</translation>
-    </message>
-    <message>
-        <source>Disc extract failed.</source>
-        <translation type="obsolete">Extraction du disque impossible.</translation>
-    </message>
-    <message>
-        <source>Disc add failed.</source>
-        <translation type="obsolete">Ajout du disque impossible.</translation>
-    </message>
-    <message>
-        <source>Disc found.</source>
-        <translation type="obsolete">Disque présent.</translation>
-    </message>
-    <message>
-        <source>Disc not found (or not exists).</source>
-        <translation type="obsolete">Disque introuvable (ou n&apos;existe pas).</translation>
-    </message>
-    <message>
-        <source>Invalid disc index.</source>
-        <translation type="obsolete">Index de disque invalide.</translation>
-    </message>
-    <message>
-        <source>Invalid disc id.</source>
-        <translation type="obsolete">Id de disque invalide.</translation>
-    </message>
-    <message>
-        <source>Invalid disc.</source>
-        <translation type="obsolete">Disque invalide.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t drive to drive copy.</source>
-        <translation type="obsolete">Impossible de copier de disque à disque.</translation>
-    </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="619"/>
         <source>No error</source>
@@ -660,10 +475,6 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
     </message>
     <message>
-        <source>IMPORTANT NOTICE: I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
-        <translation type="obsolete">IMPORTANT: JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
-    </message>
-    <message>
         <location filename="../qwbfs/src/UIAbout.cpp" line="82"/>
         <source>Version %1</source>
         <translation></translation>
@@ -737,18 +548,6 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Convertir des fichiers WBFS</translation>
     </message>
     <message>
-        <source>Convert ISO File</source>
-        <translation type="obsolete">Convertir un fichier ISO</translation>
-    </message>
-    <message>
-        <source>Convert WBFS File</source>
-        <translation type="obsolete">Convertir un fichier WBFS</translation>
-    </message>
-    <message>
-        <source>Reload partitions</source>
-        <translation type="obsolete">Recharger les partitions</translation>
-    </message>
-    <message>
         <location filename="../qwbfs/src/UIMain.ui" line="345"/>
         <source>About...</source>
         <translation>A Propos...</translation>
@@ -791,17 +590,9 @@ Vous devrez renseigner vous même le chemin des partitions pour les points de mo
         <translation>Quel format voulez vous utiliser pour exporter les disques ?</translation>
     </message>
     <message>
-        <source>Choose an ISO file to convert</source>
-        <translation type="obsolete">Choisissez un fichier ISO à convertir</translation>
-    </message>
-    <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>ISO Files (*.iso)</source>
         <translation>Fichiers ISO (*.iso)</translation>
-    </message>
-    <message>
-        <source>Choose a WBFS file to convert</source>
-        <translation type="obsolete">Choisissez un fichier WBFS à convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
@@ -892,128 +683,6 @@ Vous devrez renseigner vous même le chemin des partitions pour les points de mo
         <location filename="../qwbfs/src/WorkerThread.cpp" line="489"/>
         <source>Formating WBFS disc &apos;%1&apos;...</source>
         <translation>Formatage du disque WBFS &apos;%1&apos;...</translation>
-    </message>
-</context>
-<context>
-    <name>pFileListEditor</name>
-    <message>
-        <source>Choose file(s)</source>
-        <translation type="obsolete">Choisissez un ou plusieurs fichier(s)</translation>
-    </message>
-    <message>
-        <source>Choose file</source>
-        <translation type="obsolete">Choisissez un fichier</translation>
-    </message>
-</context>
-<context>
-    <name>pPathListEditor</name>
-    <message>
-        <source>Choose directory</source>
-        <translation type="obsolete">Choisissez un dossier</translation>
-    </message>
-</context>
-<context>
-    <name>pStringListEditor</name>
-    <message>
-        <source>Add Item</source>
-        <translation type="obsolete">Ajouter un item</translation>
-    </message>
-    <message>
-        <source>Remove Item</source>
-        <translation type="obsolete">Supprimer un item</translation>
-    </message>
-    <message>
-        <source>Clear Items</source>
-        <translation type="obsolete">Vider la liste des items</translation>
-    </message>
-    <message>
-        <source>Move Item Up</source>
-        <translation type="obsolete">Déplacer l&apos;item vers le haut</translation>
-    </message>
-    <message>
-        <source>Move Item Down</source>
-        <translation type="obsolete">Déplacer l&apos;item vers le bas</translation>
-    </message>
-    <message>
-        <source>Edit Item</source>
-        <translation type="obsolete">Éditer l&apos;item</translation>
-    </message>
-    <message>
-        <source>New item</source>
-        <translation type="obsolete">Nouvelle item</translation>
-    </message>
-</context>
-<context>
-    <name>pTranslationDialog</name>
-    <message>
-        <source>Choose a translation locale</source>
-        <translation type="obsolete">Choisissez une langue</translation>
-    </message>
-    <message>
-        <source>Select the locale you want to use with the application.
-You can click on buttons to locate/reload the translations.</source>
-        <translation type="obsolete">Séléctionnez la langue que vous voulez utiliser pour l&apos;application.
-Vous pouvez cliquer sur les boutons pour choisir/recharger les traductions.</translation>
-    </message>
-    <message>
-        <source>Click here to change the application translations paths</source>
-        <translation type="obsolete">Cliquez ici pour changer les dossiers de traductions</translation>
-    </message>
-    <message>
-        <source>Click here to reload the translations</source>
-        <translation type="obsolete">Cliquez ici pour recharger les traductions</translation>
-    </message>
-    <message>
-        <source>Translations paths configuration</source>
-        <translation type="obsolete">Configuration des dossiers de traductions</translation>
-    </message>
-</context>
-<context>
-    <name>pUpdateChecker</name>
-    <message>
-        <source>Update</source>
-        <translation type="obsolete">Mise à Jour</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation type="obsolete">Vérifier les mises à jour</translation>
-    </message>
-</context>
-<context>
-    <name>pUpdateCheckerDialog</name>
-    <message>
-        <source>Update Checker</source>
-        <translation type="obsolete">Vérificateur de mise à jour</translation>
-    </message>
-    <message>
-        <source>When an update is detected, you can directly download it (or update it with your package manager).
-Generally lastest updates fix bugs and/or add new options/plugins/things.</source>
-        <translation type="obsolete">Lorsque une mise à jour est détéctée, vous pouvez la télécharger directement (ou la mettre à jour via votre gestionnaire de paquet).
-Généralement les derniéres mises à jour corrigent des bugs et/ou ajoutent des nouvelles options, greffons etc.</translation>
-    </message>
-    <message>
-        <source>Updated on %1 by %2</source>
-        <translation type="obsolete">Mis à jour le %1 par %2</translation>
-    </message>
-    <message>
-        <source>You are using version &lt;b&gt;%1&lt;/b&gt; (%2).</source>
-        <translation type="obsolete">Vous utilisez la version &lt;b&gt;%1&lt;/b&gt; (%2).</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation type="obsolete">Télécharger</translation>
-    </message>
-    <message>
-        <source>An error occur: %1</source>
-        <translation type="obsolete">Une erreur est survenue: %1</translation>
-    </message>
-    <message>
-        <source>You are running the last available version.</source>
-        <translation type="obsolete">Vous utilisez la dernière version disponible.</translation>
-    </message>
-    <message>
-        <source>An error occur while parsing xml, retry later.</source>
-        <translation type="obsolete">Une erreur est survenue en traitant le fichier xml, veuillez re-essayer plus tard.</translation>
     </message>
 </context>
 </TS>

@@ -2,104 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ca_ES" sourcelanguage="en">
 <context>
-    <name>DataNetworkCache</name>
-    <message>
-        <source>Error when downloading the file &apos;%1&apos;.</source>
-        <translation type="obsolete">Error en descarregar l&apos;arxiu &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Error when creating the cache for file &apos;%1&apos;</source>
-        <translation type="obsolete">Error en crear la memòria cau del fitxer &apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>Error when writing the cache for file &apos;%1&apos;</source>
-        <translation type="obsolete">Error en escriure a la memòria cau del fitxer &apos;%1&apos;</translation>
-    </message>
-    <message>
-        <source>Can&apos;t cache pixmap</source>
-        <translation type="obsolete">No es pot emmagatzemar en memòria cau</translation>
-    </message>
-    <message>
-        <source>The working path &apos;%1&apos; exists and is not a directory.</source>
-        <translation type="obsolete">La carpeta de treball &apos;%1&apos; no existeix o no és una carpeta.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t create the working path &apos;%1&apos;.</source>
-        <translation type="obsolete">No es pot crear la carpeta en la ruta &apos;%1&apos;.</translation>
-    </message>
-</context>
-<context>
-    <name>ExportThread</name>
-    <message>
-        <source>Cancel requested, the process will stop after the current operation.</source>
-        <translation type="obsolete">Cancelació demanada, el procés s&apos;aturarà després de la tasca actual.</translation>
-    </message>
-    <message>
-        <source>Exporting &apos;%1&apos;...</source>
-        <translation type="obsolete">Exportant &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Can&apos;t open partition &apos;%1&apos;.</source>
-        <translation type="obsolete">Impossible obrir partició &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Importing &apos;%1&apos;...</source>
-        <translation type="obsolete">Important &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Initializing wbfs file &apos;%1&apos;.</source>
-        <translation type="obsolete">Inicialitzant fitxer &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t create wbfs file &apos;%1&apos; (%2).</source>
-        <translation type="obsolete">No es pot crear el fitxer WBFS &apos;%1&apos; (%2).</translation>
-    </message>
-    <message>
-        <source>Can&apos;t open wbfs file &apos;%1&apos;.</source>
-        <translation type="obsolete">No es pot obrir el fitxer WBFS &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t get disc informations &apos;%1&apos; (%2).</source>
-        <translation type="obsolete">No es pot obtenir la informació del joc &apos;%1&apos; (%2).</translation>
-    </message>
-    <message>
-        <source>Converting &apos;%1&apos; to WBFS...</source>
-        <translation type="obsolete">Converteix &apos;%1&apos; a WBFS...</translation>
-    </message>
-    <message>
-        <source>Converting ISO</source>
-        <translation type="obsolete">Converteix ISO</translation>
-    </message>
-    <message>
-        <source>Converting WBFS</source>
-        <translation type="obsolete">Converteix WBFS</translation>
-    </message>
-    <message>
-        <source>Converting &apos;%1&apos;...</source>
-        <translation type="obsolete">Convertir &apos;%1&apos;...</translation>
-    </message>
-    <message>
-        <source>Can&apos;t add disc &apos;%1&apos; (%2).</source>
-        <translation type="obsolete">No es pot afegir el joc &apos;%1&apos; (%2).</translation>
-    </message>
-    <message>
-        <source>Converting &apos;%1&apos; to ISO...</source>
-        <translation type="obsolete">Converteix &apos;%1&apos; a ISO...</translation>
-    </message>
-    <message>
-        <source>Extracting</source>
-        <translation type="obsolete">Extracció</translation>
-    </message>
-    <message>
-        <source>Adding</source>
-        <translation type="obsolete">Afegir</translation>
-    </message>
-    <message>
-        <source>Converting</source>
-        <translation type="obsolete">Converteix</translation>
-    </message>
-</context>
-<context>
     <name>Gauge</name>
     <message>
         <location filename="../qwbfs/src/Gauge.cpp" line="135"/>
@@ -215,17 +117,6 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
     </message>
 </context>
 <context>
-    <name>PaypalDonationWidget</name>
-    <message>
-        <source>Donation</source>
-        <translation type="obsolete">Donar</translation>
-    </message>
-    <message>
-        <source>Make a donation via Paypal</source>
-        <translation type="obsolete">Done a través de Paypal</translation>
-    </message>
-</context>
-<context>
     <name>ProgressDialog</name>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.ui" line="44"/>
@@ -236,18 +127,6 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
         <location filename="../qwbfs/src/ProgressDialog.ui" line="54"/>
         <source>Details.</source>
         <translation>Detalls.</translation>
-    </message>
-    <message>
-        <source>Exporting discs...</source>
-        <translation type="obsolete">Exportant jocs...</translation>
-    </message>
-    <message>
-        <source>Importing discs...</source>
-        <translation type="obsolete">Important joc...</translation>
-    </message>
-    <message>
-        <source>Converting disc...</source>
-        <translation type="obsolete">Converteix joc...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/ProgressDialog.cpp" line="165"/>
@@ -321,14 +200,6 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="177"/>
         <source> MB</source>
         <translation> MB</translation>
-    </message>
-    <message>
-        <source>Memory Size</source>
-        <translation type="obsolete">Tamaño de la memoria</translation>
-    </message>
-    <message>
-        <source>Default</source>
-        <translation type="obsolete">Per defecte</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="201"/>
@@ -431,58 +302,6 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
 </context>
 <context>
     <name>QWBFS::Driver</name>
-    <message>
-        <source>No error.</source>
-        <translation type="obsolete">Sense errors.</translation>
-    </message>
-    <message>
-        <source>Partition not opened.</source>
-        <translation type="obsolete">Impossible obrir la partició.</translation>
-    </message>
-    <message>
-        <source>Source partition not opened.</source>
-        <translation type="obsolete">La partició no s&apos;obre.</translation>
-    </message>
-    <message>
-        <source>Disc read failed.</source>
-        <translation type="obsolete">No es pot llegir el disc.</translation>
-    </message>
-    <message>
-        <source>Disc write failed.</source>
-        <translation type="obsolete">No es pot escriure al disc.</translation>
-    </message>
-    <message>
-        <source>Disc extract failed.</source>
-        <translation type="obsolete">Error en l&apos;extracció del disc.</translation>
-    </message>
-    <message>
-        <source>Disc add failed.</source>
-        <translation type="obsolete">Error en afegir el disc.</translation>
-    </message>
-    <message>
-        <source>Disc found.</source>
-        <translation type="obsolete">Disc present.</translation>
-    </message>
-    <message>
-        <source>Disc not found (or not exists).</source>
-        <translation type="obsolete">El disc no es troba (o no existeix).</translation>
-    </message>
-    <message>
-        <source>Invalid disc index.</source>
-        <translation type="obsolete">Índex de disc no vàlid.</translation>
-    </message>
-    <message>
-        <source>Invalid disc id.</source>
-        <translation type="obsolete">Id del disc no vàlid.</translation>
-    </message>
-    <message>
-        <source>Invalid disc.</source>
-        <translation type="obsolete">Disc no vàlid.</translation>
-    </message>
-    <message>
-        <source>Can&apos;t drive to drive copy.</source>
-        <translation type="obsolete">No es pot copiar d&apos;un disc a un altre.</translation>
-    </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="619"/>
         <source>No error</source>
@@ -745,14 +564,6 @@ JO NO EM FAIG RESPONSABLE DE QUALSEVOL DANY QUE PUGUI PRODUIR EN EL SEU CONSOLA 
         <translation>Convert arxius WBFS</translation>
     </message>
     <message>
-        <source>Convert ISO File</source>
-        <translation type="obsolete">Converteix fitxer ISO</translation>
-    </message>
-    <message>
-        <source>Convert WBFS File</source>
-        <translation type="obsolete">Convert arxiu WBFS</translation>
-    </message>
-    <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="94"/>
         <source>Actions</source>
         <translation>Accions</translation>
@@ -781,17 +592,9 @@ muntatge de la partició.</translation>
         <translation>¿Quin format es vol utilitzar per exportar els discs?</translation>
     </message>
     <message>
-        <source>Choose an ISO file to convert</source>
-        <translation type="obsolete">Trieu un fitxer ISO per convertir</translation>
-    </message>
-    <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>ISO Files (*.iso)</source>
         <translation>Arxiu ISO (*.iso)</translation>
-    </message>
-    <message>
-        <source>Choose a WBFS file to convert</source>
-        <translation type="obsolete">Triar un arxiu WBFS per convertir</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
@@ -882,128 +685,6 @@ muntatge de la partició.</translation>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="489"/>
         <source>Formating WBFS disc &apos;%1&apos;...</source>
         <translation>Formatar disc WBFS &apos;%1&apos;...</translation>
-    </message>
-</context>
-<context>
-    <name>pFileListEditor</name>
-    <message>
-        <source>Choose file(s)</source>
-        <translation type="obsolete">Trieu un o més arxiu(s)</translation>
-    </message>
-    <message>
-        <source>Choose file</source>
-        <translation type="obsolete">Trieu un arxiu</translation>
-    </message>
-</context>
-<context>
-    <name>pPathListEditor</name>
-    <message>
-        <source>Choose directory</source>
-        <translation type="obsolete">Trieu una carpeta</translation>
-    </message>
-</context>
-<context>
-    <name>pStringListEditor</name>
-    <message>
-        <source>Add Item</source>
-        <translation type="obsolete">Afegeix element</translation>
-    </message>
-    <message>
-        <source>Remove Item</source>
-        <translation type="obsolete">Eliminar element</translation>
-    </message>
-    <message>
-        <source>Clear Items</source>
-        <translation type="obsolete">Esborrar elements</translation>
-    </message>
-    <message>
-        <source>Move Item Up</source>
-        <translation type="obsolete">Mou element cap amunt</translation>
-    </message>
-    <message>
-        <source>Move Item Down</source>
-        <translation type="obsolete">Mou element cap avall</translation>
-    </message>
-    <message>
-        <source>Edit Item</source>
-        <translation type="obsolete">Edita element</translation>
-    </message>
-    <message>
-        <source>New item</source>
-        <translation type="obsolete">Nou element</translation>
-    </message>
-</context>
-<context>
-    <name>pTranslationDialog</name>
-    <message>
-        <source>Choose a translation locale</source>
-        <translation type="obsolete">Trieu un idioma</translation>
-    </message>
-    <message>
-        <source>Select the locale you want to use with the application.
-You can click on buttons to locate/reload the translations.</source>
-        <translation type="obsolete">Seleccioneu l&apos;idioma que voleu utilitzar per a l&apos;aplicació.
-Pot prémer en els botons per seleccionar o carregar les traduccions.</translation>
-    </message>
-    <message>
-        <source>Click here to change the application translations paths</source>
-        <translation type="obsolete">Premi aquí per canviar els arxius de traducció</translation>
-    </message>
-    <message>
-        <source>Click here to reload the translations</source>
-        <translation type="obsolete">Premi aquí per recarregar les traduccions</translation>
-    </message>
-    <message>
-        <source>Translations paths configuration</source>
-        <translation type="obsolete">Arxius de configuració per a les traduccions</translation>
-    </message>
-</context>
-<context>
-    <name>pUpdateChecker</name>
-    <message>
-        <source>Update</source>
-        <translation type="obsolete">Actualizar</translation>
-    </message>
-    <message>
-        <source>Check for update</source>
-        <translation type="obsolete">Cerca actualitzacions</translation>
-    </message>
-</context>
-<context>
-    <name>pUpdateCheckerDialog</name>
-    <message>
-        <source>Update Checker</source>
-        <translation type="obsolete">Comprovar si hi ha actualitzacions</translation>
-    </message>
-    <message>
-        <source>When an update is detected, you can directly download it (or update it with your package manager).
-Generally lastest updates fix bugs and/or add new options/plugins/things.</source>
-        <translation type="obsolete">Quan es detecta una actualització, es pot descarregar directament (o pot fer-ho a través del seu gestor de paquets).
-En general, les últimes actualitzacions corregeixen errors i/o agreguen noves funcions, com plugins, etc, etc.</translation>
-    </message>
-    <message>
-        <source>Updated on %1 by %2</source>
-        <translation type="obsolete">Actualitzat el %1 per %2</translation>
-    </message>
-    <message>
-        <source>You are using version &lt;b&gt;%1&lt;/b&gt; (%2).</source>
-        <translation type="obsolete">Esteu utilitzant la versió &lt;b&gt;%1&lt;/b&gt; (%2).</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation type="obsolete">Descarregar</translation>
-    </message>
-    <message>
-        <source>An error occur: %1</source>
-        <translation type="obsolete">S&apos;ha produït un error: %1</translation>
-    </message>
-    <message>
-        <source>You are running the last available version.</source>
-        <translation type="obsolete">Està utilitzant la versió més recent.</translation>
-    </message>
-    <message>
-        <source>An error occur while parsing xml, retry later.</source>
-        <translation type="obsolete">S&apos;ha produït un error en processar el fitxer XML, si us plau, torneu-ho a provar més tard.</translation>
     </message>
 </context>
 </TS>
