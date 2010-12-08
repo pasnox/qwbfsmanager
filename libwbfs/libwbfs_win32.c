@@ -54,6 +54,11 @@ void wbfs_file_reserve_space(void*handle,long long size)
 	SetEndOfFile((HANDLE)handle);
 }
 
+void wbfs_file_truncate(void *handle,long long size)
+{
+	_chsize(fileno((FILE*)handle),size);
+}
+
 int wbfs_read_wii_file(void *_handle, u32 _offset, u32 count, void *buf)
 {
 	HANDLE *handle = (HANDLE *)_handle;
