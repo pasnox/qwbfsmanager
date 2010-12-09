@@ -59,7 +59,7 @@ int wbfs_read_wii_file(void*handle,u32 offset,u32 count,void*iobuf)
                 return 1;
         }
         if (fread(iobuf, count, 1, fp) != 1){
-                wbfs_error("error reading disc");
+                wbfs_error("error reading disc 2");
                 return 1;
 	}
 	return 0;
@@ -95,7 +95,7 @@ static int wbfs_fread_sector(void *_fp,u32 lba,u32 count,void*buf)
 		return 1;
 	}
 	if (fread(buf, count*512ULL, 1, fp) != 1){
-		wbfs_error("error reading disc");
+		wbfs_error("error reading disc 1");
 		return 1;
 	}
 	return 0;
