@@ -309,9 +309,9 @@ int Driver::addDiscImage( const QString& fileName, progress_callback_t progressC
 	
 	const u32 result2 = wbfs_add_disc( mHandle.ptr(), wbfs_read_wii_file, fileHandle, progressCallback, partitionSelection, copy1to1 ? 1 : 0
 #ifdef Q_OS_WIN
-	, newName.isEmpty() ? 0 : newName.toLocal8Bit().data()
+		, newName.isEmpty() ? 0 : newName.toLocal8Bit().data()
 #endif
-		);
+	);
 
 	wbfs_close_file( fileHandle );
 	return result2 == 0 ? Driver::Ok : Driver::DiscAddFailed;
