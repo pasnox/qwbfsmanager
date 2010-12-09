@@ -286,7 +286,7 @@ void UIMain::saveProperties()
 void UIMain::changeLocaleRequested()
 {
 	pTranslationManager* translationManager = pTranslationManager::instance();
-	const QString locale = pTranslationDialog::getLocale( translationManager );
+	const QString locale = pTranslationDialog::getLocale( translationManager, this );
 	
 	if ( !locale.isEmpty() ) {
 		Properties properties;
