@@ -185,12 +185,12 @@ void Gauge::paintEvent( QPaintEvent* event )
 	//style()->drawControl( QStyle::CE_ProgressBarLabel, &option, &painter, this );
 }
 
-QString Gauge::fileSizeAdaptString( double nb )
+QString Gauge::fileSizeAdaptString( qreal nb )
 {
 	return nb >= 100 ? QString::number( nb, 'f', 0 ) : QString::number( nb, 'g', 3 );
 }
 
-QString Gauge::fileSizeToString( double nb )
+QString Gauge::fileSizeToString( qreal nb )
 {
 	if ( nb < 1024 )
 	{
