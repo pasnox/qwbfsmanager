@@ -97,7 +97,7 @@ int main( int argc, char** argv )
 	Q_INIT_RESOURCE( fresh );
 	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
 	
-	pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Portable ) );
+	pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Auto ) );
 	
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	translationManager->setFakeCLocaleEnabled( true );
