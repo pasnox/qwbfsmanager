@@ -41,17 +41,21 @@ int wbfs_read_file(void*handle, int len, void *buf)
 	return read;
 }
 
-void wbfs_close_file(void *handle)
+int wbfs_close_file(void *handle)
 {
-	CloseHandle((HANDLE)handle);
+	return CloseHandle((HANDLE)handle) == 0 ? 1 : 0;
 }
 
-void wbfs_file_reserve_space(void*handle,long long size)
+int wbfs_file_reserve_space(void*handle,long long size)
 {
+	int result;
 	LARGE_INTEGER large;
 	large.QuadPart = size;
-	SetFilePointerEx((HANDLE)handle, large, NULL, FILE_BEGIN);
-	SetEndOfFile((HANDLE)handle);
+	result = SetFilePointerEx((HANDLE)handle, large, NULL, FILE_BEGIN);
+	if ( result != 0 ) {
+		result = SetEndOfFile((HANDLE)handle);
+	}
+	return result == 0 ? 1 : 0;
 }
 
 void wbfs_file_truncate(void *handle,long long size)

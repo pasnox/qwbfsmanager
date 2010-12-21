@@ -33,15 +33,17 @@ int wbfs_read_file(void*handle, int len, void *buf)
 {
         return fread(buf,len,1,(FILE*)handle);
 }
-void wbfs_close_file(void *handle)
+int wbfs_close_file(void *handle)
 {
-        fclose((FILE*)handle);
+        return fclose((FILE*)handle) == 0 ? 0 : 1;
 }
-void wbfs_file_reserve_space(void*handle, long long size)
+int wbfs_file_reserve_space(void*handle, long long size)
 {
         FILE*f=(FILE*)handle;
+		int result;
         fseeko(f, size-1ULL, SEEK_SET);
-        fwrite("", 1, 1, f);
+        result = fwrite("", 1, 1, f);
+		return result == 1 ? 0 : 1;
 }
 void wbfs_file_truncate(void *handle,long long size)
 {
