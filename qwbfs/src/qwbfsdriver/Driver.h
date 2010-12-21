@@ -223,12 +223,12 @@ public:
 	*/
 	static bool isWBFSPartitionOrFile( const QString& fileName );
 	/*!
-		\details initialize a wbfs file (for converting an iso file to a wbfs file)
+		\details initialize a file having \a size bytes
 		\param filePath the filepath where to initialize the file
 		\param size the size to allocate in the file
 		\return DiscWriteFailed or Ok
 	*/
-	static int initializeWBFSFile( const QString& filePath, qint64 size = 143432 *2 *0x8000ULL );
+	static int allocateFile( const QString& filePath, qint64 size = -1 );
 	/*!
 		\details return a filled disc structure.
 		\param wbfsFileName the wbfs file to get informations from.

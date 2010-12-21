@@ -347,21 +347,16 @@ int Driver::extractDisc( const QString& discId, const QString& path, const QStri
 	
 	const QString name = _name.isEmpty() ? discHandle.isoName() : _name;
 	const QString filePath = QDir::toNativeSeparators( QString( "%1/%2" ).arg( path ).arg( name ) );
-	void* fileHandle = wbfs_open_file_for_write( filePath.toLocal8Bit().data() );
+	int result = Driver::allocateFile( filePath, ( discHandle.ptr()->p->n_wii_sec_per_disc /2 ) *0x8000ULL );
+	void* fileHandle = result == Driver::Ok ? wbfs_open_file_for_write( filePath.toLocal8Bit().data() ) : 0;
 
 	if ( fileHandle ) {
-		// write a zero at the end of the iso to ensure the correct size
-		// XXX should check if the game is DVD9..
-		wbfs_file_reserve_space( fileHandle, ( discHandle.ptr()->p->n_wii_sec_per_disc /2 ) *0x8000ULL );
-		const int result = wbfs_extract_disc( discHandle.ptr(), wbfs_write_wii_file, fileHandle, progressCallback );
+		result = wbfs_extract_disc( discHandle.ptr(), wbfs_write_wii_file, fileHandle, progressCallback );
 		wbfs_close_file( fileHandle );
-		
-		if ( result == 0 ) {
-			return Driver::Ok;
-		}
-		else {
-			return Driver::DiscExtractFailed;
-		}
+		return result == 0 ? Driver::Ok : Driver::DiscExtractFailed;
+	}
+	else {
+		QFile::remove( filePath );
 	}
 	
 	return Driver::DiscWriteFailed;
@@ -507,22 +502,32 @@ bool Driver::isWBFSPartitionOrFile( const QString& fileName )
 	return false;
 }
 
-int Driver::initializeWBFSFile( const QString& filePath, qint64 size )
+int Driver::allocateFile( const QString& filePath, qint64 size )
 {
-	if ( QFile::exists( filePath ) ) {
-		return Driver::DiscWriteFailed;
+	const int go = 1024 *1024 *1024;
+	QFile file( filePath );
+	
+	if ( file.exists() ) {
+		return Driver::DiscFound;
 	}
 	
-	void* fileHandle = wbfs_open_file_for_write( filePath.toLocal8Bit().data() );
-	
-	if ( !fileHandle ) {
-		return Driver::DiscWriteFailed;
+	if ( file.open( QIODevice::WriteOnly ) ) {
+		if ( size == -1 ) {
+			if ( file.resize( go *8.8 ) ) { // 8.8 go - all FS except FAT32 // 143432 *2 *0x8000ULL
+				return Driver::Ok;
+			}
+			else if ( file.resize( ( go *4.0 ) -1 ) ) { // 4go - fat32 FS
+				return Driver::Ok;
+			}
+		}
+		else if ( file.resize( size ) ) {
+			return Driver::Ok;
+		}
 	}
 	
-	wbfs_file_reserve_space( fileHandle, size );
-	wbfs_close_file( fileHandle );
+	file.remove();
 	
-	return Driver::Ok;
+	return Driver::DiscWriteFailed;
 }
 
 int Driver::wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc )
@@ -580,7 +585,7 @@ int Driver::convertIsoFileToWBFSFile( const QString& isoFilePath, const QString&
 		wbfsFilePath = QString( "%1.wbfs" ).arg( isoFilePath );
 	}
 	
-	result = QWBFS::Driver::initializeWBFSFile( wbfsFilePath );
+	result = Driver::allocateFile( wbfsFilePath );
 	
 	if ( result != QWBFS::Driver::Ok ) {
 		return result;
@@ -765,7 +770,7 @@ QWBFS::Model::Disc Driver::isoDiscInfo( const QString& filePath )
 	
 	// create temporary wbfs container for estimating the size
 	if ( !QFile::exists( tmpFile ) ) {
-		if ( initializeWBFSFile( tmpFile, minimumWBFSFileSize() ) != QWBFS::Driver::Ok ) {
+		if ( Driver::allocateFile( tmpFile, minimumWBFSFileSize() ) != QWBFS::Driver::Ok ) {
 			qWarning() << Q_FUNC_INFO << "Can't create tmp file" << tmpFile.toLocal8Bit().constData();
 			return disc;
 		}
