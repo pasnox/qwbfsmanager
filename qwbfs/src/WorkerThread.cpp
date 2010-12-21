@@ -251,7 +251,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 		}
 		
 		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName() ) );
-		source.error = QWBFS::Driver::initializeWBFSFile( target );
+		source.error = QWBFS::Driver::allocateFile( target );
 		
 		if ( source.hasError() ) {
 			QFile::remove( target );
@@ -472,7 +472,7 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 		}
 		
 		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName() ) );
-		source.error = QWBFS::Driver::initializeWBFSFile( target );
+		source.error = QWBFS::Driver::allocateFile( target );
 		
 		if ( source.hasError() ) {
 			if ( sourceCreated ) {
