@@ -88,7 +88,7 @@ bool Disc::hasError() const
 
 QString Disc::baseName() const
 {
-	return isValid() ? QString( "[%1] %2" ).arg( id ).arg( title ) : QString::null;
+	return isValid() ? QString( "%1 [%2]" ).arg( title ).arg( id ) : QString::null;
 }
 
 void Disc::addToDocument( QDomDocument& document ) const
