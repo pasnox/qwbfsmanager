@@ -71,12 +71,13 @@ public:
 		DiscExtractFailed = -5,
 		DiscAddFailed = -6,
 		DiscConvertFailed = -7,
-		DiscFound = -8,
-		DiscNotFound = -9,
-		InvalidDiscIndex = -10,
-		InvalidDiscID = -11,
-		InvalidDisc = -12,
-		CantDrive2Drive = -13,
+		DiscRenameFailed = -8,
+		DiscFound = -9,
+		DiscNotFound = -10,
+		InvalidDiscIndex = -11,
+		InvalidDiscID = -12,
+		InvalidDisc = -13,
+		CantDrive2Drive = -14,
 		UnknownError = -1000
 	};
 	

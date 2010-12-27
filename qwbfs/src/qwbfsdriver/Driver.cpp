@@ -636,6 +636,8 @@ QString Driver::errorToString( QWBFS::Driver::Error error )
 			return tr( "Disc add failed" );
 		case Driver::DiscConvertFailed:
 			return tr( "Disc convert failed" );
+		case Driver::DiscRenameFailed:
+			return tr( "Disc rename failed" );
 		case Driver::DiscFound:
 			return tr( "Disc found" );
 		case Driver::DiscNotFound:
