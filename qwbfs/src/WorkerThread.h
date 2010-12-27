@@ -54,9 +54,10 @@ class WorkerThread : public QThread
 		Export = 0x1,
 		Import = 0x2,
 		Convert = 0x4,
-		ISO = 0x8,
-		WBFS = 0x10,
-		Indirect = 0x20
+		Rename = 0x8,
+		ISO = 0x10,
+		WBFS = 0x20,
+		Indirect = 0x40
 	};
 	
 public:
@@ -66,7 +67,8 @@ public:
 		ImportISO = Import | ISO,
 		ImportWBFS = Import | WBFS,
 		ConvertISO = Convert | ISO,
-		ConvertWBFS = Convert | WBFS
+		ConvertWBFS = Convert | WBFS,
+		RenameAll = Rename | WBFS | ISO
 	};
 	
 	struct Work
@@ -74,6 +76,7 @@ public:
 		WorkerThread::Task task;
 		QWBFS::Model::DiscList discs;
 		QString target;
+		QString pattern;
 		QWidget* window;
 	};
 	
@@ -98,6 +101,7 @@ protected:
 	virtual void run();
 	
 	void connectDriver( QWBFS::Driver* driver );
+	void renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern );
 	void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
 	void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
 	void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
@@ -105,7 +109,7 @@ protected:
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
-	void globalProgressChanged( int value );
+	void globalProgressChanged( int value, int maximum );
 	void jobFinished( const QWBFS::Model::Disc& disc );
 	void message( const QString& text );
 	void log( const QString& text );

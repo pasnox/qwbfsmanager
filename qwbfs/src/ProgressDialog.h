@@ -71,6 +71,7 @@ protected slots:
 	void thread_log( const QString& text );
 	void thread_jobFinished( const QWBFS::Model::Disc& disc );
 	void thread_currentProgressChanged( int value, int maximum, const QTime& remaining );
+	void thread_globalProgressChanged( int value, int maximum );
 	void thread_canceled();
 	void thread_finished();
 	void on_cbDetails_toggled();

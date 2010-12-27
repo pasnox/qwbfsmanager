@@ -54,6 +54,7 @@
 #include <QFileDialog>
 #include <QProcess>
 #include <QMessageBox>
+#include <QInputDialog>
 #include <QPainter>
 #include <QNetworkReply>
 #include <QDebug>
@@ -95,6 +96,7 @@ UIMain::UIMain( QWidget* parent )
 	menu->setIcon( aConvertToWBFSFiles->icon() );
 	menu->addAction( aConvertToWBFSFiles );
 	menu->addAction( aConvertToISOFiles );
+	menu->addAction( aRenameDiscsInFolder );
 	
 	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
 	toolBar->addAction( menu->menuAction() );
@@ -540,6 +542,49 @@ void UIMain::on_aConvertToISOFiles_triggered()
 	}
 	
 	work.target = QFileInfo( filePaths.first() ).absolutePath();
+	work.window = dlg;
+	
+	dlg->setWork( work );
+}
+
+void UIMain::on_aRenameDiscsInFolder_triggered()
+{
+	const QString path = QFileDialog::getExistingDirectory( this, tr( "Choose the folder to scan for ISOs/WBFSs files" ) );
+	
+	if ( path.isEmpty() ) {
+		return;
+	}
+	
+	/*
+		%title = Game Title
+		%id = Game ID
+		%suffix = File Suffix
+	*/
+	const QStringList patterns = QStringList()
+		<< "%id.%suffix" // GAMEID.wbfs
+		<< "%title [%id].%suffix" // Game Title [GAMEID].wbfs
+		<< "%id_%title/%id.%suffix" // GAMEID_Game Title/GAMEID.wbfs
+		<< "%title/%id.%suffix" // Game Title/GAMEID.wbfs
+		<< "%title[%id]/%id.%suffix" // Game Title[GAMEID]/GAMEID.wbfs
+		;
+	const QString text = tr( "Choose the pattern to apply:\n%1\n%2\n%3\n" )
+		.arg( tr( "%title = Game Title" ) )
+		.arg( tr( "%id = Game Id" ) )
+		.arg( tr( "%suffix = File Suffix" ) )
+		;
+	bool ok;
+	const QString pattern = QInputDialog::getItem( this, QString::null, text, patterns, 0, true, &ok );
+	
+	if ( !ok || pattern.isEmpty() ) {
+		return;
+	}
+	
+	ProgressDialog* dlg = new ProgressDialog( this );
+	
+	WorkerThread::Work work;
+	work.task = WorkerThread::RenameAll;
+	work.pattern = pattern;
+	work.target = path;
 	work.window = dlg;
 	
 	dlg->setWork( work );

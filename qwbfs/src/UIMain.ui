@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>629</width>
-    <height>347</height>
+    <width>627</width>
+    <height>345</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -385,6 +385,15 @@
    </property>
    <property name="text">
     <string>Convert WBFS Files</string>
+   </property>
+  </action>
+  <action name="aRenameDiscsInFolder">
+   <property name="icon">
+    <iconset resource="../resources/resources.qrc">
+     <normaloff>:/icons/256/read-partition.png</normaloff>:/icons/256/read-partition.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rename Discs in folder</string>
    </property>
   </action>
  </widget>

@@ -74,7 +74,6 @@ bool ProgressDialog::event( QEvent* event )
 
 void ProgressDialog::setWork( const WorkerThread::Work& work )
 {
-	pbGlobal->setMaximum( work.discs.count() );
 	open();
 	
 	if ( !mThread->setWork( work ) ) {
@@ -115,7 +114,7 @@ void ProgressDialog::doConnections()
 	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
 	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
-	connect( mThread, SIGNAL( globalProgressChanged( int ) ), pbGlobal, SLOT( setValue( int ) ) );
+	connect( mThread, SIGNAL( globalProgressChanged( int, int ) ), this, SLOT( thread_globalProgressChanged( int, int ) ) );
 	connect( mThread, SIGNAL( canceled() ), this, SLOT( thread_canceled() ) );
 	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
 }
@@ -163,6 +162,12 @@ void ProgressDialog::thread_currentProgressChanged( int value, int maximum, cons
 	pbCurrent->setMaximum( maximum );
 	pbCurrent->setValue( value );
 	lCurrentRemaining->setText( tr( "Time remaining: %1" ).arg( remaining.toString() ) );
+}
+
+void ProgressDialog::thread_globalProgressChanged( int value, int maximum )
+{
+	pbGlobal->setMaximum( maximum );
+	pbGlobal->setValue( value );
 }
 
 void ProgressDialog::thread_canceled()
