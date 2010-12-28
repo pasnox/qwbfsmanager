@@ -55,9 +55,9 @@ class WorkerThread : public QThread
 		Import = 0x2,
 		Convert = 0x4,
 		Rename = 0x8,
-		ISO = 0x10,
-		WBFS = 0x20,
-		Indirect = 0x40
+		ISO = 0x1000,
+		WBFS = 0x2000,
+		Indirect = 0x4000
 	};
 	
 public:
