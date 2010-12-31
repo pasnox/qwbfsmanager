@@ -155,7 +155,7 @@ void WorkerThread::run()
 	foreach ( QWBFS::Model::Disc disc, work.discs ) {
 		switch ( work.task ) {
 			case WorkerThread::RenameAll:
-				renameDisc( work.task, disc, work.target, work.pattern );
+				renameDisc( work.task, disc, work.target, work.pattern, work.invalidChars );
 				break;
 			case WorkerThread::ExportISO:
 			case WorkerThread::ExportWBFS:
@@ -267,7 +267,28 @@ void WorkerThread::connectDriver( QWBFS::Driver* driver )
 	connect( driver, SIGNAL( globalProgressChanged( int ) ), this, SIGNAL( globalProgressChanged( int ) ) );
 }
 
-void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern )
+QString WorkerThread::cleanupGameTitle( const QString& string, const QString& invalidChars ) const
+{
+	QString title = pFileSystemUtils::toTitleCase( string );
+	
+	foreach ( const QChar& c, invalidChars ) {
+		QString r;
+		
+		/*switch ( c.toAscii() ) {
+			case '\'':
+				r = " ";
+				break;
+			case ':':
+				r = "-";
+		}*/
+		
+		title.replace( c, r );
+	}
+	
+	return title;
+}
+
+void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern, const QString& invalidChars )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -282,7 +303,7 @@ void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	const QString filePath = QString( "%1/%2" )
 		.arg( target )
 		.arg( pattern )
-		.replace( "%title", source.title, Qt::CaseInsensitive )
+		.replace( "%title", cleanupGameTitle( source.title, invalidChars ), Qt::CaseInsensitive )
 		.replace( "%id", source.id.toUpper(), Qt::CaseInsensitive )
 		.replace( "%suffix", QFileInfo( source.origin ).suffix(), Qt::CaseInsensitive )
 		;

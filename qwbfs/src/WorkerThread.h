@@ -73,10 +73,16 @@ public:
 	
 	struct Work
 	{
+		Work()
+		{
+			invalidChars = "/\\:|<>?*\"'";
+		}
+		
 		WorkerThread::Task task;
 		QWBFS::Model::DiscList discs;
 		QString target;
 		QString pattern;
+		QString invalidChars;
 		QWidget* window;
 	};
 	
@@ -101,7 +107,8 @@ protected:
 	virtual void run();
 	
 	void connectDriver( QWBFS::Driver* driver );
-	void renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern );
+	QString cleanupGameTitle( const QString& string, const QString& invalidChars ) const;
+	void renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern, const QString& invalidChars );
 	void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
 	void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
 	void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
