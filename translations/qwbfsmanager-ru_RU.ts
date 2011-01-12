@@ -128,17 +128,17 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="165"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="164"/>
         <source>Time remaining: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="170"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="175"/>
         <source>Cancel requested, the process will stop after the current operation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="180"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="185"/>
         <source>The thread finished in %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -302,92 +302,97 @@ all data will be erased permanently, are you sure?</source>
 <context>
     <name>QWBFS::Driver</name>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="619"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="624"/>
         <source>No error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="621"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="626"/>
         <source>Partition not opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="623"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="628"/>
         <source>Source partition not opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="625"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="630"/>
         <source>Disc read failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="627"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="632"/>
         <source>Disc write failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="629"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="634"/>
         <source>Disc extract failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="631"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="636"/>
         <source>Disc add failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="633"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="638"/>
         <source>Disc convert failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="635"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="640"/>
+        <source>Disc rename failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="642"/>
         <source>Disc found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="637"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="644"/>
         <source>Disc not found (or not exists)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="639"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="646"/>
         <source>Invalid disc index</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="641"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="648"/>
         <source>Invalid disc id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="643"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="650"/>
         <source>Invalid disc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="645"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="652"/>
         <source>Can&apos;t drive to drive copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="647"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="654"/>
         <source>Unknown error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="667"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="674"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="669"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="676"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="671"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="678"/>
         <source>Failed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -562,48 +567,82 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="94"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="396"/>
+        <source>Rename Discs in folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="226"/>
         <source>Actions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="178"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="180"/>
         <source>Welcome to %1, the cross-platform WBFS Manager. Report bugs &lt;a href=&quot;%2&quot;&gt;here&lt;/a&gt;, discuss &lt;a href=&quot;%3&quot;&gt;here&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="468"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="471"/>
         <source>I don&apos;t know how to list partition for this platform.
 You will have to set the correct partition path yourself for mounting partitions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="507"/>
         <source>Choose ISO files to convert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="624"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="553"/>
+        <source>Choose the folder to scan for ISOs/WBFSs files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="571"/>
+        <source>Choose the pattern to apply:
+%1
+%2
+%3
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="670"/>
         <source>Which format do you want to use to export the discs ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="507"/>
         <source>ISO Files (*.iso)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="530"/>
         <source>WBFS Files (*.wbfs)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="530"/>
         <source>Choose WBFS files to convert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="609"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="572"/>
+        <source>%1 = Game Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="573"/>
+        <source>%1 = Game Id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="574"/>
+        <source>%1 = File Suffix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.cpp" line="655"/>
         <source>Choose a folder to export the discs</source>
         <translation type="unfinished"></translation>
     </message>
@@ -611,74 +650,79 @@ You will have to set the correct partition path yourself for mounting partitions
 <context>
     <name>WorkerThread</name>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="91"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
         <source>Indirect Export to ISO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="91"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
         <source>Export to ISO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
         <source>Indirect Export to WBFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
         <source>Export to WBFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
         <source>Indirect Import to ISO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
         <source>Import to ISO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Indirect Import to WBFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Import to WBFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Indirect Convert to ISO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Convert to ISO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="103"/>
         <source>Indirect Convert to WBFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="103"/>
         <source>Convert to WBFS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="253"/>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="474"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="105"/>
+        <source>Rename Disc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="359"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="580"/>
         <source>Initializing WBFS disc &apos;%1&apos;...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="264"/>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="489"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="370"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="595"/>
         <source>Formating WBFS disc &apos;%1&apos;...</source>
         <translation type="unfinished"></translation>
     </message>
