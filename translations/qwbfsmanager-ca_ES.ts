@@ -345,7 +345,7 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="640"/>
         <source>Disc rename failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error en renombrar el Joc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="642"/>
@@ -571,7 +571,7 @@ JO NO EM FAIG RESPONSABLE DE QUALSEVOL DANY QUE PUGUI PRODUIR EN EL SEU CONSOLA 
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="396"/>
         <source>Rename Discs in folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Renombrar el Joc a la carpeta</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="226"/>
@@ -599,7 +599,7 @@ muntatge de la partició.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="553"/>
         <source>Choose the folder to scan for ISOs/WBFSs files</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccioneu la carpeta per cercar fitxers ISOs/WBFSs</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="571"/>
@@ -608,7 +608,11 @@ muntatge de la partició.</translation>
 %2
 %3
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Trieu la manera a ser aplicat:
+%1
+%2
+%3
+</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="670"/>
@@ -633,17 +637,17 @@ muntatge de la partició.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="572"/>
         <source>%1 = Game Title</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = Títol del Joc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="573"/>
         <source>%1 = Game Id</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = ID de Joc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="574"/>
         <source>%1 = File Suffix</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = Sufix del fitxer</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="655"/>
@@ -716,7 +720,7 @@ muntatge de la partició.</translation>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="105"/>
         <source>Rename Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Renombrar Joc</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="359"/>

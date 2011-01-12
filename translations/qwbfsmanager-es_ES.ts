@@ -345,7 +345,7 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="640"/>
         <source>Disc rename failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al renombrar el Juego</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="642"/>
@@ -571,7 +571,7 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="396"/>
         <source>Rename Discs in folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Renombrar Juego en la carpeta</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="226"/>
@@ -599,7 +599,7 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="553"/>
         <source>Choose the folder to scan for ISOs/WBFSs files</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccione carpeta para buscar archivos ISOs/WBFSs</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="571"/>
@@ -608,7 +608,11 @@ mismo para el montaje de la partición.</translation>
 %2
 %3
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Elija el modo a ser aplicado:
+%1
+%2
+%3
+</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="670"/>
@@ -633,17 +637,17 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="572"/>
         <source>%1 = Game Title</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = Título del Juego</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="573"/>
         <source>%1 = Game Id</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = ID de Juego</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="574"/>
         <source>%1 = File Suffix</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 = Sufijo de archivo</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="655"/>
@@ -716,7 +720,7 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="105"/>
         <source>Rename Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Renombrar Juego</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="359"/>
