@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>627</width>
-    <height>345</height>
+    <width>625</width>
+    <height>343</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -40,7 +40,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QDockWidget" name="dwTools">
+  <widget class="pDockWidget" name="dwTools">
    <property name="features">
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -267,7 +267,7 @@
    <addaction name="aQuit"/>
    <addaction name="separator"/>
   </widget>
-  <widget class="QDockWidget" name="dwCovers">
+  <widget class="pDockWidget" name="dwCovers">
    <property name="minimumSize">
     <size>
      <width>184</width>
@@ -408,6 +408,12 @@
    <class>pQueuedMessageToolBar</class>
    <extends>QToolBar</extends>
    <header location="global">Gui/pQueuedMessageToolBar</header>
+  </customwidget>
+  <customwidget>
+   <class>pDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">Gui/pDockWidget</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

@@ -63,6 +63,7 @@ public:
 	pNetworkAccessManager* cache() const;
 
 protected:
+	QMenu* mActions;
 	pPaypalButton* mDonationWidget;
 	QStringList mPartitions;
 	QFileSystemModel* mFoldersModel;

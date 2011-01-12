@@ -92,14 +92,14 @@ UIMain::UIMain( QWidget* parent )
 	mDonationWidget->setItemId( "QWBFS-DONATION" );
 	mDonationWidget->setCurrencyCode( "EUR" );
 	
-	QMenu* menu = new QMenu( tr( "Actions" ), this );
-	menu->setIcon( aConvertToWBFSFiles->icon() );
-	menu->addAction( aConvertToWBFSFiles );
-	menu->addAction( aConvertToISOFiles );
-	menu->addAction( aRenameDiscsInFolder );
+	mActions = new QMenu( this );
+	mActions->setIcon( aConvertToWBFSFiles->icon() );
+	mActions->addAction( aConvertToWBFSFiles );
+	mActions->addAction( aConvertToISOFiles );
+	mActions->addAction( aRenameDiscsInFolder );
 	
 	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
-	toolBar->addAction( menu->menuAction() );
+	toolBar->addAction( mActions->menuAction() );
 	toolBar->addSeparator();
 	toolBar->addAction( dwTools->toggleViewAction() );
 	toolBar->addAction( dwCovers->toggleViewAction() );
@@ -223,6 +223,7 @@ void UIMain::connectView( PartitionWidget* widget )
 void UIMain::localeChanged()
 {
 	retranslateUi( this );
+	mActions->setTitle( tr( "Actions" ) );
 }
 
 void UIMain::loadProperties( bool firstInit )
@@ -568,9 +569,9 @@ void UIMain::on_aRenameDiscsInFolder_triggered()
 		<< "%title[%id]/%id.%suffix" // Game Title[GAMEID]/GAMEID.wbfs
 		;
 	const QString text = tr( "Choose the pattern to apply:\n%1\n%2\n%3\n" )
-		.arg( tr( "%title = Game Title" ) )
-		.arg( tr( "%id = Game Id" ) )
-		.arg( tr( "%suffix = File Suffix" ) )
+		.arg( tr( "%1 = Game Title" ).arg( "%title" ) )
+		.arg( tr( "%1 = Game Id" ).arg( "%id" ) )
+		.arg( tr( "%1 = File Suffix" ).arg( "%suffix" ) )
 		;
 	bool ok;
 	const QString pattern = QInputDialog::getItem( this, QString::null, text, patterns, 0, true, &ok );

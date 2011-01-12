@@ -66,8 +66,7 @@ Covers::Covers( const Covers& other )
 
 Covers& Covers::operator=( const Covers& other )
 {
-	if( *this != other )
-	{
+	if( *this != other ) {
 		mId = other.mId;
 	}
 
@@ -84,32 +83,31 @@ bool Covers::operator!=( const Covers& other ) const
 	return !operator==( other );
 }
 
-QUrl Covers::url( Type type ) const
+QUrl Covers::url( Covers::Type type ) const
 {
 	return url( type, mId );
 }
 
-QUrl Covers::url( Type type, const QString& id )
+QUrl Covers::url( Covers::Type type, const QString& id )
 {
 	Q_ASSERT( !id.isEmpty() );
 	
 	const QString language = QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() );
 	
-	switch ( type )
-	{
-		case HQ:
+	switch ( type ) {
+		case Covers::HQ:
 			return QUrl( QString( "%3/wiitdb/artwork/coverfullHQ/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Cover:
+		case Covers::Cover:
 			return QUrl( QString( "%3/wiitdb/artwork/cover/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case _3D:
+		case Covers::_3D:
 			return QUrl( QString( "%3/wiitdb/artwork/coverfull3D/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Disc:
+		case Covers::Disc:
 			return QUrl( QString( "%3/wiitdb/artwork/disc/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case DiscCustom:
+		case Covers::DiscCustom:
 			return QUrl( QString( "%3/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Full:
+		case Covers::Full:
 			return QUrl( QString( "%3/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Invalid:
+		case Covers::Invalid:
 			break;
 	}
 	
@@ -118,30 +116,24 @@ QUrl Covers::url( Type type, const QString& id )
 
 Covers::Type Covers::type( const QUrl& url )
 {
-	if ( Covers( url ).url( HQ ) == url )
-	{
-		return HQ;
+	if ( Covers( url ).url( Covers::HQ ) == url ) {
+		return Covers::HQ;
 	}
-	else if ( Covers( url ).url( Cover ) == url )
-	{
-		return Cover;
+	else if ( Covers( url ).url( Covers::Cover ) == url ) {
+		return Covers::Cover;
 	}
-	else if ( Covers( url ).url( _3D ) == url )
-	{
-		return _3D;
+	else if ( Covers( url ).url( Covers::_3D ) == url ) {
+		return Covers::_3D;
 	}
-	else if ( Covers( url ).url( Disc ) == url )
-	{
-		return Disc;
+	else if ( Covers( url ).url( Covers::Disc ) == url ) {
+		return Covers::Disc;
 	}
-	else if ( Covers( url ).url( DiscCustom ) == url )
-	{
-		return DiscCustom;
+	else if ( Covers( url ).url( Covers::DiscCustom ) == url ) {
+		return Covers::DiscCustom;
 	}
-	else if ( Covers( url ).url( Full ) == url )
-	{
-		return Full;
+	else if ( Covers( url ).url( Covers::Full ) == url ) {
+		return Covers::Full;
 	}
 	
-	return Invalid;
+	return Covers::Invalid;
 }

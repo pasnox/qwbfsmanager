@@ -66,8 +66,8 @@ public:
 	bool operator==( const Covers& other ) const;
 	bool operator!=( const Covers& other ) const;
 	
-	QUrl url( Type type ) const;
-	static QUrl url( Type type, const QString& id );
+	QUrl url( Covers::Type type ) const;
+	static QUrl url( Covers::Type type, const QString& id );
 	static Type type( const QUrl& url );
 
 protected:
