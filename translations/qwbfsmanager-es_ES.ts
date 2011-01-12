@@ -561,7 +561,7 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="387"/>
         <source>Convert WBFS Files</source>
-        <translation>Covertir archivos WBFS</translation>
+        <translation>Convertir archivos WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.cpp" line="94"/>
@@ -657,22 +657,22 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Indirect Convert to ISO</source>
-        <translation>Coversión indirecta a ISO</translation>
+        <translation>Conversión indirecta a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
         <source>Convert to ISO</source>
-        <translation>Covertir a ISO</translation>
+        <translation>Convertir a ISO</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Indirect Convert to WBFS</source>
-        <translation>Coversión indirecta a WBFS</translation>
+        <translation>Conversión indirecta a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
         <source>Convert to WBFS</source>
-        <translation>Covertir a WBFS</translation>
+        <translation>Convertir a WBFS</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/WorkerThread.cpp" line="253"/>
