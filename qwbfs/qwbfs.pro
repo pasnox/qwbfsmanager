@@ -98,7 +98,8 @@ TRANSLATIONS	*= ../translations/qwbfsmanager-ru_RU.ts \
 	../translations/qwbfsmanager-es_ES.ts \
 	../translations/qwbfsmanager-de_DE.ts \
 	../translations/qwbfsmanager-pt_PT.ts \
-	../translations/qwbfsmanager-sv_SE.ts
+	../translations/qwbfsmanager-sv_SE.ts \
+	../translations/qwbfsmanager-it_IT.ts
 
 FORMS	*= src/UIMain.ui \
 	src/PartitionWidget.ui \
