@@ -36,8 +36,8 @@
 #include "Properties.h"
 #include "UIMain.h"
 
-#include <Core/pSettings>
-#include <Core/pNetworkAccessManager>
+#include <FreshCore/pSettings>
+#include <FreshCore/pNetworkAccessManager>
 
 #include <QDir>
 #include <QCoreApplication>

@@ -43,11 +43,11 @@
 #include "Properties.h"
 #include "main.h"
 
-#include <Core/pNetworkAccessManager>
-#include <Core/pTranslationManager>
-#include <Gui/pTranslationDialog>
-#include <Gui/pUpdateChecker>
-#include <Gui/pPaypalButton>
+#include <FreshCore/pNetworkAccessManager>
+#include <FreshCore/pTranslationManager>
+#include <FreshGui/pTranslationDialog>
+#include <FreshGui/pUpdateChecker>
+#include <FreshGui/pPaypalButton>
 
 #include <QMenu>
 #include <QFileSystemModel>

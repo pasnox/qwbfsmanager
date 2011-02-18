@@ -39,8 +39,8 @@
 #include "Gauge.h"
 #include "wiitdb/Covers.h"
 
-#include <Core/pNetworkAccessManager>
-#include <Gui/pIconManager>
+#include <FreshCore/pNetworkAccessManager>
+#include <FreshGui/pIconManager>
 
 #include <QPainter>
 #include <QPixmapCache>

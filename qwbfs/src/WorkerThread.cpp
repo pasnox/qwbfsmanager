@@ -35,7 +35,7 @@
 ****************************************************************************/
 #include "WorkerThread.h"
 
-#include <Core/pFileSystemUtils>
+#include <FreshCore/pCoreUtils>
 
 #include <QTime>
 #include <QWidget>
@@ -143,7 +143,7 @@ void WorkerThread::run()
 			filters << "*.iso";
 		}
 		
-		foreach ( const QString& filePath, pFileSystemUtils::findFiles( dir, filters, true ) ) {
+		foreach ( const QString& filePath, pCoreUtils::findFiles( dir, filters, true ) ) {
 			work.discs << QWBFS::Model::Disc( filePath );
 		}
 	}
@@ -269,7 +269,7 @@ void WorkerThread::connectDriver( QWBFS::Driver* driver )
 
 QString WorkerThread::cleanupGameTitle( const QString& string, const QString& invalidChars ) const
 {
-	QString title = pFileSystemUtils::toTitleCase( string );
+	QString title = pCoreUtils::toTitleCase( string );
 	
 	foreach ( const QChar& c, invalidChars ) {
 		QString r;
@@ -320,7 +320,7 @@ void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& sour
 			if ( !source.hasError() ) {
 				const QString sourcePath = QFileInfo( source.origin ).absolutePath();
 				
-				if ( pFileSystemUtils::isEmptyDirectory( sourcePath ) ) {
+				if ( pCoreUtils::isEmptyDirectory( sourcePath ) ) {
 					QDir( sourcePath ).rmdir( sourcePath );
 				}
 			}

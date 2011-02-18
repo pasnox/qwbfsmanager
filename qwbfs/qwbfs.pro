@@ -16,24 +16,45 @@ LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfsmanager)
 mac:TARGET	= $$quote(QWBFSManager)
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
-QT	= core gui network xml
+QT	*= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
-exists( ../fresh/fresh.pro ) {
-	FRESH_PATH = ../fresh
-	!build_pass:message( "Using bundled fresh library." )
-} else:exists( ../../../fresh/fresh.pro ) {
-	FRESH_PATH = ../../../fresh
-	!build_pass:message( "Using external fresh library." )
+fresh {
+	!build_pass:message( "Using system fresh library." )
 } else {
-	!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
-}
+	exists( ../fresh/fresh.pro ) {
+		FRESH_PATH = ../fresh
+		!build_pass:message( "Using bundled fresh library." )
+	} else:exists( ../../../fresh/fresh.pro ) {
+		FRESH_PATH = ../../../fresh
+		!build_pass:message( "Using external fresh library." )
+	} else {
+		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+	}
+	
+	include( $$FRESH_PATH/functions.pri )
+	
+	FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
+	
+	QMAKE_RPATHDIR *= $$FRESH_PATH/build
+	macx:LIBS	*= -F$$FRESH_PATH/build
+	LIBS	*= -L$$FRESH_PATH/build
 
-include( $${FRESH_PATH}/fresh.pri )
+	DEPENDPATH *= $$FRESH_PATH/include/FreshCore \
+		$$FRESH_PATH/include/FreshGui
+
+	INCLUDEPATH	*= $$FRESH_PATH/include
+	
+	DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
+	INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
+
+	QT	*= xml network
+	qtAddLibrary(fresh)
+}
 
 # define some usefull values
 OS	= $$lower( $$QMAKE_HOST.os )

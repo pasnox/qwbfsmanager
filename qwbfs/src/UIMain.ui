@@ -407,12 +407,12 @@
   <customwidget>
    <class>pQueuedMessageToolBar</class>
    <extends>QToolBar</extends>
-   <header location="global">Gui/pQueuedMessageToolBar</header>
+   <header location="global">FreshGui/pQueuedMessageToolBar</header>
   </customwidget>
   <customwidget>
    <class>pDockWidget</class>
    <extends>QDockWidget</extends>
-   <header location="global">Gui/pDockWidget</header>
+   <header location="global">FreshGui/pDockWidget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

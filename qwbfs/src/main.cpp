@@ -39,9 +39,9 @@
 #include <QTimer>
 #include <QDebug>
 
-#include <Core/pSettings>
-#include <Core/pTranslationManager>
-#include <Gui/pIconManager>
+#include <FreshCore/pSettings>
+#include <FreshCore/pTranslationManager>
+#include <FreshGui/pIconManager>
 
 #include "main.h"
 #include "UIMain.h"

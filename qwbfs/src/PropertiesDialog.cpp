@@ -36,8 +36,8 @@
 #include "PropertiesDialog.h"
 #include "Properties.h"
 
-#include <Core/pTranslationManager>
-#include <Gui/pTranslationDialog>
+#include <FreshCore/pTranslationManager>
+#include <FreshGui/pTranslationDialog>
 
 #include <QFileDialog>
 #include <QNetworkProxy>

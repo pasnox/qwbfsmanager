@@ -40,7 +40,7 @@
 #include "ProgressDialog.h"
 #include "UIMain.h"
 
-#include <Core/pNetworkAccessManager>
+#include <FreshCore/pNetworkAccessManager>
 
 #include <QLineEdit>
 #include <QInputDialog>
