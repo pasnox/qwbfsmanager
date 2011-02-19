@@ -23,7 +23,7 @@ DESTDIR	= ../bin
 include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
-fresh {
+fresh_static|fresh_shared {
 	!build_pass:message( "Using system fresh library." )
 } else {
 	exists( ../fresh/fresh.pro ) {

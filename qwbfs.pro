@@ -26,7 +26,7 @@ CONFIG	*= ordered
 BUILD_PATH	= build
 include( shared.pri )
 
-fresh {
+fresh_static|fresh_shared {
 	!build_pass:message( "Using system fresh library." )
 } else {
 	exists( fresh/fresh.pro ) {
