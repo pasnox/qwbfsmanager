@@ -25,7 +25,7 @@ win32 {
 	OS	= $$lower( $$QMAKE_HOST.os )
 	#OS=$$system( "uname -s" )
 	
-	OPENSSL_INSTALL_DIR = D:/Developpement/OpenSSL
+	OPENSSL_INSTALL_DIR = D:/Tools/OpenSSL
 	isEqual( OS, "darwin" ):OPENSSL_INSTALL_DIR	= $(HOME)/Win32Libraries
 	else:isEqual( OS, "linux" ):OPENSSL_INSTALL_DIR	= $(HOME)/.wine/drive_c/Development/OpenSSL
 	
