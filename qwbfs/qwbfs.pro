@@ -43,6 +43,7 @@ fresh_static|fresh_shared {
 	QMAKE_RPATHDIR *= $$FRESH_PATH/build
 	macx:LIBS	*= -F$$FRESH_PATH/build
 	LIBS	*= -L$$FRESH_PATH/build
+	DEFINES	*= FRESH_CORE_BUILD
 
 	DEPENDPATH *= $$FRESH_PATH/include/FreshCore \
 		$$FRESH_PATH/include/FreshGui
