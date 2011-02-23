@@ -312,7 +312,7 @@ protected:
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );
-	void globalProgressChanged( int value );
+	void globalProgressChanged( int value, int maximum );
 };
 
 }; // QWBFS
