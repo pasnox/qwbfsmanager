@@ -264,7 +264,7 @@ void WorkerThread::run()
 void WorkerThread::connectDriver( QWBFS::Driver* driver )
 {
 	connect( driver, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SIGNAL( currentProgressChanged( int, int, const QTime& ) ) );
-	connect( driver, SIGNAL( globalProgressChanged( int ) ), this, SIGNAL( globalProgressChanged( int ) ) );
+	connect( driver, SIGNAL( globalProgressChanged( int, int ) ), this, SIGNAL( globalProgressChanged( int, int ) ) );
 }
 
 QString WorkerThread::cleanupGameTitle( const QString& string, const QString& invalidChars ) const
