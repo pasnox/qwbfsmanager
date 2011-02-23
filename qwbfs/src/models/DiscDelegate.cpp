@@ -35,9 +35,10 @@
 ****************************************************************************/
 #include "DiscDelegate.h"
 #include "DiscModel.h"
-#include "qwbfsdriver/Driver.h"
 #include "Gauge.h"
+#include "qwbfsdriver/Driver.h"
 #include "wiitdb/Covers.h"
+#include "ListView.h"
 
 #include <FreshCore/pNetworkAccessManager>
 #include <FreshGui/pIconManager>
@@ -66,6 +67,96 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	QStyleOptionViewItemV4 option = _option;
     initStyleOption( &option, index );
 	
+	if ( mModel ) {
+		switch ( mModel->view()->viewMode() ) {
+			case QListView::ListMode: {
+				paintList( painter, option, index );
+				break;
+			}
+			case QListView::IconMode: {
+				paintIcon( painter, option, index );
+				break;
+			}
+		}
+	}
+}
+
+QSize DiscDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
+{
+	if ( mModel ) {
+		switch ( mModel->view()->viewMode() ) {
+			case QListView::ListMode: {
+				return QSize( -1, 37 );
+			}
+			case QListView::IconMode: {
+				return QSize( 120, 120 );
+			}
+		}
+	}
+	
+	return QStyledItemDelegate::sizeHint( option, index );
+}
+
+QPixmap DiscDelegate::coverPixmap( const QString& id, const QSize& size ) const
+{
+	const QWBFS::WiiTDB::Covers cover( id );
+	QString url;
+	QPixmap pixmap;
+	
+	if ( mModel->view()->viewIconType() == QWBFS::WiiTDB::Covers::Cover ) {
+		url = cover.url( QWBFS::WiiTDB::Covers::Cover ).toString();
+	}
+	else {
+		if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
+			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
+		}
+		else if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
+			url = cover.url( QWBFS::WiiTDB::Covers::DiscCustom ).toString();
+		}
+		else {
+			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
+		}
+	}
+	
+	const QString key = QString( "%1-%2-%3" ).arg( url ).arg( size.width() ).arg( size.height() );
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		if ( !mCache->hasCacheData( url ) ) {
+			mCache->get( QNetworkRequest( url ) );
+			return pixmap;
+		}
+		
+		QIODevice* data = mCache->cacheData( url );
+		
+		if ( data && pixmap.loadFromData( data->readAll() ) ) {
+			pixmap = pixmap.scaled( size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+			QPixmapCache::insert( key, pixmap );
+		}
+		
+		delete data;
+	}
+	
+	return pixmap;
+}
+
+QPixmap DiscDelegate::statePixmap( int state, const QSize& size ) const
+{
+	const QString url = state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png";
+	const QString key = QString( "%1-%2-%3" ).arg( url ).arg( size.width() ).arg( size.height() );
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		if ( pixmap.load( url ) ) {
+			pixmap = pixmap.scaled( size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+			QPixmapCache::insert( key, pixmap );
+		}
+	}
+	
+	return pixmap;
+}
+
+void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const
+{
 	painter->setRenderHint( QPainter::Antialiasing );
 	
 	QPainterPath path;
@@ -126,54 +217,9 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		painter->drawText( rect, Qt::AlignLeft | Qt::AlignVCenter, text );
 	}
 	
-	QPixmap pixmap;
-	
 	rect = option.rect;
 	rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
-	
-	if ( disc.state == QWBFS::Driver::None ) {
-		const QWBFS::WiiTDB::Covers cover( disc.id );
-		QString url;
-		
-		if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
-			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
-		}
-		else if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
-			url = cover.url( QWBFS::WiiTDB::Covers::DiscCustom ).toString();
-		}
-		else {
-			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
-		}
-		
-		const QString key = QString( "%1-%2-%3" ).arg( url ).arg( rect.width() ).arg( rect.height() );
-		
-		if ( !QPixmapCache::find( key, pixmap ) ) {
-			if ( !mCache->hasCacheData( url ) ) {
-				mCache->get( QNetworkRequest( url ) );
-				return;
-			}
-			
-			QIODevice* data = mCache->cacheData( url );
-			
-			if ( data && pixmap.loadFromData( data->readAll() ) ) {
-				pixmap = pixmap.scaled( rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-				QPixmapCache::insert( key, pixmap );
-			}
-			
-			delete data;
-		}
-	}
-	else {
-		const QString url = disc.state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png";
-		const QString key = QString( "%1-%2-%3" ).arg( url ).arg( rect.width() ).arg( rect.height() );
-		
-		if ( !QPixmapCache::find( key, pixmap ) ) {
-			if ( pixmap.load( url ) ) {
-				pixmap = pixmap.scaled( rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-				QPixmapCache::insert( key, pixmap );
-			}
-		}
-	}
+	QPixmap pixmap = disc.state == QWBFS::Driver::None ? coverPixmap( disc.id, rect.size() ) : statePixmap( disc.state, rect.size() );
 	
 	// icon
 	if ( !pixmap.isNull() ) {
@@ -181,9 +227,71 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	}
 }
 
-QSize DiscDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
+void DiscDelegate::paintIcon( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const
 {
-	Q_UNUSED( option );
-	Q_UNUSED( index );
-	return QSize( -1, 37 );
+	painter->setRenderHint( QPainter::Antialiasing );
+	
+	const bool selected = option.state & QStyle::State_Selected;
+	const QWBFS::Model::Disc disc = mModel->disc( index );
+	const int margin = 9;
+	const int fontHeight = 12;
+	const int spacing = 0;
+	QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
+	QPixmap cover = coverPixmap( disc.id, rect.size() -QSize( 0, fontHeight +spacing ) );
+	QPixmap state = statePixmap( disc.state, QSize( 24, 24 ) );
+	const QString text = disc.title;
+	
+	// selection
+	if ( selected ) {
+		QStyleOptionViewItemV4 opt = option;
+		opt.rect = opt.rect.adjusted( 1, 1, -1, -1 );
+		opt.icon = QIcon();
+		opt.index = QModelIndex();
+		opt.text = QString::null;
+		
+		QStyledItemDelegate::paint( painter, opt, QModelIndex() );
+	}
+	
+	// icon
+	if ( !cover.isNull() ) {
+		QRect r = QRect( QPoint(), cover.size() );
+		r.moveCenter( rect.center() );
+		r.moveTop( rect.top() );
+		
+		painter->drawPixmap( r.topLeft(), cover );
+	}
+	
+	// state
+	if ( !state.isNull() && disc.state != QWBFS::Driver::None ) {
+		painter->drawPixmap( option.rect.topLeft() +QPoint( 2, 2 ), state );
+	}
+	
+	// title
+	{
+		QStyleOptionViewItemV4 opt = option;
+		
+		QFont font = painter->font();
+		font.setPixelSize( fontHeight );
+		font.setBold( true );
+		
+		QFontMetrics metrics( font );
+		opt.text = metrics.elidedText( text, Qt::ElideRight, option.rect.width() );
+		
+		QRect r = option.rect.adjusted( 2, option.rect.height() -( margin *2 ), -2, -1 );
+		
+		opt.rect = r;
+		opt.icon = QIcon();
+		opt.font = font;
+		opt.displayAlignment = Qt::AlignHCenter | Qt::AlignVCenter;
+		
+		if ( !selected ) {
+			opt.state |= QStyle::State_Selected;
+		}
+		else {
+			opt.state &= ~QStyle::State_Selected;
+			opt.state &= ~QStyle::State_MouseOver;
+		}
+		
+		QStyledItemDelegate::paint( painter, opt, QModelIndex() );
+	}
 }

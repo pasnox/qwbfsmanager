@@ -59,6 +59,8 @@
 #define SETTINGS_TRANSLATIONS_PATHS "translations/paths"
 #define SETTINGS_LOCALE_ACCEPTED "locale/accepted"
 #define SETTINGS_LOCALE_CURRENT "locale/current"
+#define SETTINGS_VIEW_MODE "view/mode"
+#define SETTINGS_VIEW_ICON_TYPE "view/iconType"
 #define SETTINGS_WINDOW_GEOMETRY "window/geometry"
 #define SETTINGS_WINDOW_STATE "window/state"
 #define SETTINGS_WINDOW_SELECTED_PATH "window/selectedPath"
@@ -246,6 +248,26 @@ QLocale Properties::locale() const
 void Properties::setLocale( const QLocale& locale )
 {
 	mSettings->setValue( SETTINGS_LOCALE_CURRENT, locale.name() );
+}
+
+QListView::ViewMode Properties::viewMode() const
+{
+	return QListView::ViewMode( mSettings->value( SETTINGS_VIEW_MODE, QListView::IconMode ).toInt() );
+}
+
+void Properties::setViewMode( QListView::ViewMode mode )
+{
+	mSettings->setValue( SETTINGS_VIEW_MODE, mode );
+}
+
+QWBFS::WiiTDB::Covers::Type Properties::viewIconType() const
+{
+	return QWBFS::WiiTDB::Covers::Type( mSettings->value( SETTINGS_VIEW_ICON_TYPE, QWBFS::WiiTDB::Covers::Cover ).toInt() );
+}
+
+void Properties::setViewIconType( QWBFS::WiiTDB::Covers::Type type )
+{
+	mSettings->setValue( SETTINGS_VIEW_ICON_TYPE, type );
 }
 
 void Properties::restoreState( UIMain* window ) const

@@ -55,11 +55,19 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 	lProxyWarning->setFont( font );
 #endif
 	
+	cbViewMode->addItem( QString::null, QListView::ListMode );
+	cbViewMode->addItem( QString::null, QListView::IconMode );
+	
+	cbViewIconType->addItem( QString::null, QWBFS::WiiTDB::Covers::Disc );
+	cbViewIconType->addItem( QString::null, QWBFS::WiiTDB::Covers::Cover );
+	
 	cbProxyType->addItem( QString::null, QNetworkProxy::NoProxy );
 	cbProxyType->addItem( QString::null, QNetworkProxy::Socks5Proxy );
 	cbProxyType->addItem( QString::null, QNetworkProxy::HttpProxy );
 	
 	lCurrentLocale->setText( mProperties->locale().name() );
+	cbViewMode->setCurrentIndex( cbViewMode->findData( mProperties->viewMode() ) );
+	cbViewIconType->setCurrentIndex( cbViewIconType->findData( mProperties->viewIconType() ) );
 	
 	leCachePath->setText( mProperties->cacheWorkingPath() );
 	sbCacheDiskSize->setValue( mProperties->cacheDiskSize() /1024 /1024 );
@@ -94,6 +102,12 @@ bool PropertiesDialog::event( QEvent* event )
 void PropertiesDialog::localeChanged()
 {
 	retranslateUi( this );
+	
+	cbViewMode->setItemText( cbViewMode->findData( QListView::ListMode ), tr( "List" ) );
+	cbViewMode->setItemText( cbViewMode->findData( QListView::IconMode ), tr( "Icon" ) );
+	
+	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Covers::Disc ), tr( "Disc" ) );
+	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Covers::Cover ), tr( "Cover" ) );
 	
 	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::NoProxy ), tr( "No Proxy" ) );
 	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::Socks5Proxy ), tr( "Socks5" ) );
@@ -162,6 +176,8 @@ void PropertiesDialog::accept()
 	mProperties->setTranslationsPaths( translationManager->translationsPaths() );
 	mProperties->setLocaleAccepted( true );
 	mProperties->setLocale( QLocale( lCurrentLocale->text() ) );
+	mProperties->setViewMode( QListView::ViewMode( cbViewMode->itemData( cbViewMode->currentIndex() ).toInt() ) );
+	mProperties->setViewIconType( QWBFS::WiiTDB::Covers::Type( cbViewIconType->itemData( cbViewIconType->currentIndex() ).toInt() ) );
 	
 	QDialog::accept();
 	

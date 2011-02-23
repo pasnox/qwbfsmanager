@@ -68,7 +68,6 @@ protected:
 	QStringList mPartitions;
 	QFileSystemModel* mFoldersModel;
 	QFileSystemModel* mFilesModel;
-	QWBFS::Model::DiscModel* mExportModel;
 	pNetworkAccessManager* mCache;
 	QString mLastDiscId;
 	pUpdateChecker* mUpdateChecker;

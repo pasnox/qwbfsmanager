@@ -121,10 +121,7 @@ UIMain::UIMain( QWidget* parent )
 	
 	lvFiles->setModel( mFilesModel );
 	
-	mExportModel = new QWBFS::Model::DiscModel( this );
-	
-	lvExport->setModel( mExportModel );
-	lvExport->setItemDelegate( new QWBFS::Model::DiscDelegate( mExportModel, mCache ) );
+	lvExport->initialize( 0, mCache );
 	
 	mLastDiscId = -1;
 	
@@ -241,20 +238,6 @@ void UIMain::loadProperties( bool firstInit )
 	
 	QNetworkProxy::setApplicationProxy( proxy );
 	
-	pTranslationManager* translationManager = pTranslationManager::instance();
-	translationManager->setTranslationsPaths( properties.translationsPaths() );
-	translationManager->setCurrentLocale( properties.locale().name() );
-	
-	if ( !properties.localeAccepted() ) {
-		changeLocaleRequested();
-	}
-	
-	translationManager->reloadTranslations();
-	
-	foreach ( QWidget* widget, QApplication::topLevelWidgets() ) {
-		widget->setLocale( translationManager->currentLocale() );
-	}
-	
 	if ( firstInit ) {
 		mUpdateChecker->setLastUpdated( properties.updateLastUpdated() );
 		mUpdateChecker->setLastChecked( properties.updateLastChecked() );
@@ -270,6 +253,25 @@ void UIMain::loadProperties( bool firstInit )
 		if ( !properties.selectedPartition().isEmpty() ) {
 			pwMainView->tbLoad->click();
 		}
+	}
+	
+	pTranslationManager* translationManager = pTranslationManager::instance();
+	translationManager->setTranslationsPaths( properties.translationsPaths() );
+	translationManager->setCurrentLocale( properties.locale().name() );
+	
+	if ( !properties.localeAccepted() ) {
+		changeLocaleRequested();
+	}
+	
+	translationManager->reloadTranslations();
+	
+	foreach ( QWidget* widget, QApplication::topLevelWidgets() ) {
+		widget->setLocale( translationManager->currentLocale() );
+	}
+	
+	foreach ( ListView* view, findChildren<ListView*>() ) {
+		view->setViewMode( properties.viewMode() );
+		view->setViewIconType( properties.viewIconType() );
 	}
 }
 
@@ -347,7 +349,7 @@ void UIMain::coverRequested( const QString& id )
 
 void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	mExportModel->updateDisc( disc );
+	lvExport->model()->updateDisc( disc );
 }
 
 void UIMain::networkAccessManager_finished( QNetworkReply* reply )
@@ -638,17 +640,17 @@ void UIMain::on_cbDrives_currentIndexChanged( const QString& text )
 
 void UIMain::on_tbClearExport_clicked()
 {
-	mExportModel->clear();
+	lvExport->model()->clear();
 }
 
 void UIMain::on_tbRemoveExport_clicked()
 {
-	mExportModel->removeSelection( lvExport->selectionModel()->selection() );
+	lvExport->model()->removeSelection( lvExport->selectionModel()->selection() );
 }
 
 void UIMain::on_tbExport_clicked()
 {
-	if ( mExportModel->rowCount() == 0 ) {
+	if ( lvExport->model()->rowCount() == 0 ) {
 		return;
 	}
 	
@@ -659,7 +661,7 @@ void UIMain::on_tbExport_clicked()
 	}
 	
 	WorkerThread::Work work;
-	work.discs = mExportModel->discs();
+	work.discs = lvExport->model()->discs();
 	work.target = path;
 	
 	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::Ok;

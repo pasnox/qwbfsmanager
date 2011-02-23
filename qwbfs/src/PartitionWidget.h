@@ -72,8 +72,6 @@ public slots:
 
 protected:
 	QWBFS::Driver* mDriver;
-	QWBFS::Model::DiscModel* mDiscModel;
-	QWBFS::Model::DiscModel* mImportModel;
 	
 	virtual void dragEnterEvent( QDragEnterEvent* event );
 	virtual void dropEvent( QDropEvent* event );

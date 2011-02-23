@@ -42,6 +42,8 @@
 
 #include "Disc.h"
 
+class ListView;
+
 namespace QWBFS {
 class Driver;
 namespace Model {
@@ -53,7 +55,7 @@ class DiscModel : public QAbstractItemModel
 public:
 	typedef QPair<int, int> PairIntInt;
 	
-	DiscModel( QObject* parent = 0, QWBFS::Driver* driver = 0 );
+	DiscModel( ListView* parent = 0, QWBFS::Driver* driver = 0 );
 	virtual ~DiscModel();
 	
 	virtual int columnCount( const QModelIndex& parent = QModelIndex() ) const;
@@ -70,6 +72,8 @@ public:
 	virtual bool dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent );
 	virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
 	virtual QStringList mimeTypes() const;
+	
+	ListView* view() const;
 	
 	void insertDiscs( int index, const QWBFS::Model::DiscList& discs );
 	void addDiscs( const QWBFS::Model::DiscList& discs );
@@ -89,6 +93,7 @@ public slots:
 	void clear();
 
 protected:
+	ListView* mListView;
 	Driver* mDriver;
 	QWBFS::Model::DiscList mDiscs;
 	

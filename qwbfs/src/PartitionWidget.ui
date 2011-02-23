@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>288</width>
-    <height>463</height>
+    <width>284</width>
+    <height>459</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -209,15 +209,15 @@
         </layout>
        </item>
        <item>
-        <widget class="QListView" name="lvDiscs">
+        <widget class="ListView" name="lvDiscs">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
          <property name="dragEnabled">
           <bool>true</bool>
-         </property>
-         <property name="dragDropMode">
-          <enum>QAbstractItemView::DragOnly</enum>
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ExtendedSelection</enum>
@@ -322,7 +322,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QListView" name="lvImport">
+        <widget class="ListView" name="lvImport">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -365,6 +365,11 @@
    <extends>QWidget</extends>
    <header>Gauge.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ListView</class>
+   <extends>QListView</extends>
+   <header>ListView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

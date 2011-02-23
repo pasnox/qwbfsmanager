@@ -40,6 +40,9 @@
 #include <QNetworkProxy>
 #include <QDateTime>
 #include <QLocale>
+#include <QListView>
+
+#include "wiitdb/Covers.h"
 
 class QSettings;
 class UIMain;
@@ -92,6 +95,12 @@ public:
 	
 	QLocale locale() const;
 	void setLocale( const QLocale& locale );
+	
+	QListView::ViewMode viewMode() const;
+	void setViewMode( QListView::ViewMode mode );
+	
+	QWBFS::WiiTDB::Covers::Type viewIconType() const;
+	void setViewIconType( QWBFS::WiiTDB::Covers::Type type );
 	
 	void restoreState( UIMain* window ) const;
 	void saveState( UIMain* window );

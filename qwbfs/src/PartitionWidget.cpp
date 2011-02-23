@@ -36,7 +36,7 @@
 #include "PartitionWidget.h"
 #include "qwbfsdriver/Driver.h"
 #include "models/DiscModel.h"
-#include "models/DiscDelegate.h"
+#include "Properties.h"
 #include "ProgressDialog.h"
 #include "UIMain.h"
 
@@ -52,24 +52,26 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 {
 	Q_ASSERT( parent );
 	const UIMain* window = qobject_cast<UIMain*>( parent->window() );
-	
-	mDriver = new QWBFS::Driver( this );
-	mDiscModel = new QWBFS::Model::DiscModel( this, mDriver );
-	mImportModel = new QWBFS::Model::DiscModel( this, mDriver );
+	const Properties properties( this );
 	
 	setupUi( this );
 	setAcceptDrops( true );
-	lvDiscs->setModel( mDiscModel );
-	lvDiscs->setItemDelegate( new QWBFS::Model::DiscDelegate( mDiscModel, window->cache() ) );
-	lvImport->setModel( mImportModel );
-	lvImport->setItemDelegate( new QWBFS::Model::DiscDelegate( mImportModel, window->cache() ) );
+	
+	mDriver = new QWBFS::Driver( this );
+	
+	lvDiscs->initialize( mDriver, window->cache() );
+	lvDiscs->setViewMode( properties.viewMode() );
+	lvDiscs->setViewIconType( properties.viewIconType() );
+	lvImport->initialize( mDriver, window->cache() );
+	lvImport->setViewMode( properties.viewMode() );
+	lvImport->setViewIconType( properties.viewIconType() );
 	
 	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
 	
 	localeChanged();
 	
-	connect( mDiscModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
-	connect( mImportModel, SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+	connect( lvDiscs->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+	connect( lvImport->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( textChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
@@ -101,12 +103,12 @@ const QWBFS::Driver* PartitionWidget::driver() const
 
 QWBFS::Model::DiscModel* PartitionWidget::discModel() const
 {
-	return mDiscModel;
+	return lvDiscs->model();
 }
 
 QWBFS::Model::DiscModel* PartitionWidget::importModel() const
 {
-	return mImportModel;
+	return lvImport->model();
 }
 
 QToolButton* PartitionWidget::showHideImportViewButton() const
@@ -155,7 +157,7 @@ void PartitionWidget::showError( int error )
 void PartitionWidget::dragEnterEvent( QDragEnterEvent* event )
 {
 	if ( mDriver->isOpen() ) {
-		foreach ( const QString& mimeType, mImportModel->mimeTypes() ) {
+		foreach ( const QString& mimeType, importModel()->mimeTypes() ) {
 			if ( event->mimeData()->hasFormat( mimeType ) ) {
 				event->setDropAction( Qt::CopyAction );
 				event->accept();
@@ -171,14 +173,14 @@ void PartitionWidget::dropEvent( QDropEvent* event )
 		tbShowHideImportView->toggle();
 	}
 	
-	mImportModel->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
+	importModel()->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
 	event->acceptProposedAction();
 }
 
 void PartitionWidget::localeChanged()
 {
 	retranslateUi( this );
-	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
+	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( discModel()->rowCount() ).arg( importModel()->rowCount() ) );
 }
 
 void PartitionWidget::models_countChanged()
@@ -189,8 +191,8 @@ void PartitionWidget::models_countChanged()
 	gStatus->setSize( status.size );
 	gStatus->setUsedSize( status.used );
 	gStatus->setFreeSize( status.free );
-	gStatus->setTemporarySize( mImportModel->size() );
-	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( mDiscModel->rowCount() ).arg( mImportModel->rowCount() ) );
+	gStatus->setTemporarySize( importModel()->size() );
+	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( discModel()->rowCount() ).arg( importModel()->rowCount() ) );
 	
 	/*if ( result != QWBFS::Driver::Ok ) {
 		showError( result );
@@ -210,7 +212,7 @@ void PartitionWidget::views_selectionChanged()
 
 void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	mImportModel->updateDisc( disc );
+	importModel()->updateDisc( disc );
 }
 
 void PartitionWidget::progress_finished()
@@ -229,11 +231,11 @@ void PartitionWidget::on_tbLoad_clicked()
 		showError( tr( "Can't open partition." ) );
 	}
 	
-	if ( mDiscModel->rowCount() == 0 ) {
+	if ( discModel()->rowCount() == 0 ) {
 		models_countChanged();
 	}
 	else {
-		mDiscModel->clear();
+		discModel()->clear();
 	}
 	
 	if ( mDriver->isOpen() ) {
@@ -241,9 +243,9 @@ void PartitionWidget::on_tbLoad_clicked()
 		const int result = mDriver->discList( discs );
 		
 		if ( result == QWBFS::Driver::Ok ) {
-			mDiscModel->setDiscs( discs );
+			discModel()->setDiscs( discs );
 			
-			if ( mDiscModel->rowCount() == 0 ) {
+			if ( discModel()->rowCount() == 0 ) {
 				models_countChanged();
 			}
 		}
@@ -297,10 +299,10 @@ void PartitionWidget::on_tbRemoveDiscs_clicked()
 	
 	for ( int i = indexes.count() -1; i >= 0; i-- ) {
 		const QModelIndex& index = indexes[ i ];
-		const QString discId = mDiscModel->discId( index );
+		const QString discId = discModel()->discId( index );
 		
 		if ( mDriver->removeDisc( discId ) == QWBFS::Driver::Ok ) {
-			mDiscModel->removeRow( index.row() );
+			discModel()->removeRow( index.row() );
 		}
 		else {
 			errors++;
@@ -315,7 +317,7 @@ void PartitionWidget::on_tbRemoveDiscs_clicked()
 void PartitionWidget::on_tbRenameDisc_clicked()
 {
 	const QModelIndex index = lvDiscs->selectionModel()->selectedIndexes().value( 0 );
-	const QWBFS::Model::Disc disc = mDiscModel->disc( index );
+	const QWBFS::Model::Disc disc = discModel()->disc( index );
 	
 	if ( !index.isValid() ) {
 		return;
@@ -328,7 +330,7 @@ void PartitionWidget::on_tbRenameDisc_clicked()
 	}
 	
 	if ( mDriver->renameDisc( disc.id, name ) == QWBFS::Driver::Ok ) {
-		mDiscModel->setData( index, name, Qt::DisplayRole );
+		discModel()->setData( index, name, Qt::DisplayRole );
 	}
 	else {
 		showError( tr( "Can't rename disc id #%1 (%2) to '%3'" ).arg( disc.id ).arg( disc.title ).arg( name ) );
@@ -337,17 +339,17 @@ void PartitionWidget::on_tbRenameDisc_clicked()
 
 void PartitionWidget::on_tbClearImport_clicked()
 {
-	mImportModel->clear();
+	importModel()->clear();
 }
 
 void PartitionWidget::on_tbRemoveImport_clicked()
 {
-	mImportModel->removeSelection( lvImport->selectionModel()->selection() );
+	importModel()->removeSelection( lvImport->selectionModel()->selection() );
 }
 
 void PartitionWidget::on_tbImport_clicked()
 {
-	if ( mImportModel->rowCount() == 0 ) {
+	if ( importModel()->rowCount() == 0 ) {
 		return;
 	}
 	
@@ -358,7 +360,7 @@ void PartitionWidget::on_tbImport_clicked()
 	
 	WorkerThread::Work work;
 	work.task = WorkerThread::ImportWBFS;
-	work.discs = mImportModel->discs();
+	work.discs = importModel()->discs();
 	work.target = mDriver->handle().partition();
 	work.window = dlg;
 	

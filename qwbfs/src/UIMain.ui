@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>343</height>
+    <width>623</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -57,6 +57,9 @@
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QTabWidget" name="twPages">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
        <widget class="QWidget" name="wFS">
         <attribute name="icon">
          <iconset resource="../resources/resources.qrc">
@@ -213,9 +216,12 @@
           </layout>
          </item>
          <item>
-          <widget class="QListView" name="lvExport">
+          <widget class="ListView" name="lvExport">
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="showDropIndicator" stdset="0">
+            <bool>false</bool>
            </property>
            <property name="dragDropMode">
             <enum>QAbstractItemView::DropOnly</enum>
@@ -414,6 +420,11 @@
    <extends>QDockWidget</extends>
    <header location="global">FreshGui/pDockWidget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ListView</class>
+   <extends>QListView</extends>
+   <header>ListView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

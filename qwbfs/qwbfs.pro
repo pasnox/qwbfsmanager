@@ -24,37 +24,38 @@ include( ../shared.pri )
 include( ../libwbfs/libwbfs.pri )
 
 fresh_static|fresh_shared {
-	!build_pass:message( "Using system fresh library." )
+	!build_pass:	message( "Using system fresh library." )
 } else {
 	exists( ../fresh/fresh.pro ) {
-		FRESH_PATH = ../fresh
-		!build_pass:message( "Using bundled fresh library." )
+		FRESH_PATH	= ../fresh
+		!build_pass:		message( "Using bundled fresh library." )
 	} else:exists( ../../../fresh/fresh.pro ) {
-		FRESH_PATH = ../../../fresh
-		!build_pass:message( "Using external fresh library." )
-	} else {
-		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+		FRESH_PATH	= ../../../fresh
+		!build_pass:		message( "Using external fresh library." )
 	}
-	
+	else {
+		!build_pass:		error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+	}
+
 	include( $$FRESH_PATH/functions.pri )
-	
+
 	FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
-	
-	QMAKE_RPATHDIR *= $$FRESH_PATH/build
+
+	QMAKE_RPATHDIR	*= $$FRESH_PATH/build
 	macx:LIBS	*= -F$$FRESH_PATH/build
 	LIBS	*= -L$$FRESH_PATH/build
 	DEFINES	*= FRESH_CORE_BUILD
 
-	DEPENDPATH *= $$FRESH_PATH/include/FreshCore \
+	DEPENDPATH	*= $$FRESH_PATH/include/FreshCore \
 		$$FRESH_PATH/include/FreshGui
 
 	INCLUDEPATH	*= $$FRESH_PATH/include
-	
+
 	DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
 	INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
 
 	QT	*= xml network
-	qtAddLibrary(fresh)
+	qtAddLibrary( fresh )
 }
 
 # define some usefull values
@@ -146,7 +147,8 @@ HEADERS	*= src/main.h \
 	src/UIAbout.h \
 	src/wiitdb/Covers.h \
 	src/PropertiesDialog.h \
-	src/Properties.h
+	src/Properties.h \
+	src/ListView.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -165,6 +167,7 @@ SOURCES	*= src/main.cpp \
 	src/UIAbout.cpp \
 	src/wiitdb/Covers.cpp \
 	src/PropertiesDialog.cpp \
-	src/Properties.cpp
+	src/Properties.cpp \
+	src/ListView.cpp
 
 include( installs.pri )

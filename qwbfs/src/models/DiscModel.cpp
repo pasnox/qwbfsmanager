@@ -35,6 +35,7 @@
 ****************************************************************************/
 #include "DiscModel.h"
 #include "qwbfsdriver/Driver.h"
+#include "ListView.h"
 #include "Gauge.h"
 
 #include <QMimeData>
@@ -63,9 +64,11 @@ bool SelectionRangePairGreaterThanSorter::operator()( const DiscModel::PairIntIn
 
 QStringList DiscModel::mMimeTypes = QStringList() << URLS_FORMAT << WBFS_DISCS_FORMAT;
 
-DiscModel::DiscModel( QObject* parent, QWBFS::Driver* driver )
+DiscModel::DiscModel( ListView* parent, QWBFS::Driver* driver )
 	: QAbstractItemModel( parent )
 {
+	Q_ASSERT( parent );
+	mListView = parent;
 	mDriver = driver;
 }
 
@@ -268,6 +271,11 @@ QMimeData* DiscModel::mimeData( const QModelIndexList& indexes ) const
 QStringList DiscModel::mimeTypes() const
 {
 	return mMimeTypes;
+}
+
+ListView* DiscModel::view() const
+{
+	return mListView;
 }
 
 void DiscModel::insertDiscs( int index, const QWBFS::Model::DiscList& discs )
