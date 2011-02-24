@@ -2,6 +2,10 @@
   <qresource prefix="/files">
     <file>../../GPL-2</file>
   </qresource>
+  <qresource prefix="/wii">
+    <file alias="cover.png">wii-cover.png</file>
+    <file alias="disc.png">wii-disc.png</file>
+  </qresource>
   <qresource prefix="/icons">
     <file>128/iso-to-wbfs.png</file>
     <file>128/wbfs-to-iso.png</file>

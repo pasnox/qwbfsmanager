@@ -9,6 +9,12 @@ ListView::ListView( QWidget* parent )
 	mDriver = 0;
 	mModel = 0;
 	mDelegate = 0;
+	
+	QPalette pal = viewport()->palette();
+	pal.setColor( viewport()->backgroundRole(), QColor( Qt::transparent ) );
+	
+	viewport()->setPalette( pal );
+	viewport()->setAutoFillBackground( true );
 }
 
 ListView::~ListView()

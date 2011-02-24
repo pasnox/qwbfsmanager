@@ -42,6 +42,7 @@
 
 #include <FreshCore/pNetworkAccessManager>
 #include <FreshGui/pIconManager>
+#include <FreshGui/pGuiUtils>
 
 #include <QPainter>
 #include <QPixmapCache>
@@ -123,6 +124,14 @@ QPixmap DiscDelegate::coverPixmap( const QString& id, const QSize& size ) const
 	if ( !QPixmapCache::find( key, pixmap ) ) {
 		if ( !mCache->hasCacheData( url ) ) {
 			mCache->get( QNetworkRequest( url ) );
+			
+			if ( mModel->view()->viewIconType() == QWBFS::WiiTDB::Covers::Cover ) {
+				pixmap = pGuiUtils::scaledPixmap( ":/wii/cover.png", size );
+			}
+			else {
+				pixmap = pGuiUtils::scaledPixmap( ":/wii/disc.png", size );
+			}
+			
 			return pixmap;
 		}
 		
