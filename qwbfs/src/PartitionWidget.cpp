@@ -156,7 +156,7 @@ void PartitionWidget::showError( int error )
 
 void PartitionWidget::dragEnterEvent( QDragEnterEvent* event )
 {
-	if ( mDriver->isOpen() ) {
+	if ( mDriver->isOpen() && !findChildren<QWidget*>().contains( event->source() ) ) {
 		foreach ( const QString& mimeType, importModel()->mimeTypes() ) {
 			if ( event->mimeData()->hasFormat( mimeType ) ) {
 				event->setDropAction( Qt::CopyAction );
