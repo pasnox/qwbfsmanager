@@ -196,6 +196,11 @@ bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int ro
 	return true;
 }
 
+Qt::DropActions DiscModel::supportedDropActions() const
+{
+	return Qt::CopyAction;
+}
+
 bool DiscModel::dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent )
 {
 	Q_UNUSED( action );

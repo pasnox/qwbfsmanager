@@ -37,6 +37,8 @@ protected:
 	QWBFS::Driver* mDriver;
 	QWBFS::Model::DiscModel* mModel;
 	QWBFS::Model::DiscDelegate* mDelegate;
+	
+	virtual void mousePressEvent( QMouseEvent* event );
 };
 
 #endif // LISTVIEW_H

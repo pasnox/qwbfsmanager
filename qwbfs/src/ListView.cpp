@@ -2,6 +2,9 @@
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
 
+#include <QMouseEvent>
+#include <QDebug>
+
 ListView::ListView( QWidget* parent )
 	: QListView( parent )
 {
@@ -11,7 +14,7 @@ ListView::ListView( QWidget* parent )
 	mDelegate = 0;
 	
 	QPalette pal = viewport()->palette();
-	pal.setColor( viewport()->backgroundRole(), QColor( Qt::transparent ) );
+	pal.setColor( viewport()->backgroundRole(), pal.color( viewport()->backgroundRole() ).darker() );
 	
 	viewport()->setPalette( pal );
 	viewport()->setAutoFillBackground( true );
@@ -35,6 +38,10 @@ void ListView::initialize( QWBFS::Driver* driver, pNetworkAccessManager* manager
 
 void ListView::setViewMode( QListView::ViewMode mode )
 {
+	const bool wasDragEnabled = dragEnabled();
+	const bool wasAcceptDrops = acceptDrops();
+	const bool wasViewportAcceptDrops = viewport()->acceptDrops();
+	
 	QListView::setViewMode( mode );
 	setMovement( QListView::Static );
 	setResizeMode( QListView::Adjust );
@@ -49,6 +56,10 @@ void ListView::setViewMode( QListView::ViewMode mode )
 			break;
 		}
 	}
+	
+	setDragEnabled( wasDragEnabled );
+    setAcceptDrops( wasAcceptDrops );
+	viewport()->setAcceptDrops( wasViewportAcceptDrops );
 }
 
 void ListView::setViewIconType( QWBFS::WiiTDB::Covers::Type type )
@@ -70,4 +81,20 @@ QWBFS::Driver* ListView::driver() const
 QWBFS::Model::DiscModel* ListView::model() const
 {
 	return mModel;
+}
+
+void ListView::mousePressEvent( QMouseEvent* event )
+{
+	const QModelIndex index = indexAt( event->pos() );
+	const bool isSelected = selectionModel()->isSelected( index );
+	const bool leftButtonNoModifier = event->buttons() == Qt::LeftButton && event->modifiers() == Qt::NoModifier;
+	
+	QListView::mousePressEvent( event );
+	
+	if ( isSelected && leftButtonNoModifier ) {
+		setState( QAbstractItemView::DraggingState );
+	}
+	else {
+		setState( QAbstractItemView::DragSelectingState );
+	}
 }

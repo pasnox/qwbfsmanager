@@ -69,6 +69,7 @@ public:
 	virtual bool removeRows( int row, int count, const QModelIndex& parent = QModelIndex() );
 	virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 	
+	virtual Qt::DropActions supportedDropActions() const;
 	virtual bool dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent );
 	virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
 	virtual QStringList mimeTypes() const;
