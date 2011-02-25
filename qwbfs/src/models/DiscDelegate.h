@@ -63,6 +63,7 @@ protected:
 	QPixmap coverPixmap( const QString& id, const QSize& size ) const;
 	QPixmap statePixmap( int state, const QSize& size ) const;
 	
+	void paintFrame( QPainter* painter, const QStyleOptionViewItemV4& option, bool pair = true ) const;
 	void paintList( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;
 	void paintIcon( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;
 };

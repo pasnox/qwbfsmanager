@@ -43,6 +43,7 @@
 #include <FreshCore/pNetworkAccessManager>
 #include <FreshGui/pIconManager>
 #include <FreshGui/pGuiUtils>
+#include <FreshCore/pCoreUtils>
 
 #include <QPainter>
 #include <QPixmapCache>
@@ -67,6 +68,9 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 {
 	QStyleOptionViewItemV4 option = _option;
     initStyleOption( &option, index );
+	
+	// remove ugly focus rect
+	option.state &= ~QStyle::State_HasFocus;
 	
 	if ( mModel ) {
 		switch ( mModel->view()->viewMode() ) {
@@ -164,31 +168,57 @@ QPixmap DiscDelegate::statePixmap( int state, const QSize& size ) const
 	return pixmap;
 }
 
+void DiscDelegate::paintFrame( QPainter* painter, const QStyleOptionViewItemV4& option, bool pair ) const
+{
+	const int corner = 5;
+	const QRect r = option.rect.adjusted( 0, 0, -1, -1 );
+	const QPalette::ColorRole role = pair ? QPalette::Highlight : QPalette::Button;
+	QColor strokeColor = option.palette.color( role ).darker();
+	QColor fillColor1 = option.palette.color( role ).lighter();
+	QColor fillColor2 = option.palette.color( role );
+	
+	if ( option.state & QStyle::State_MouseOver ) {
+		const int factor = 110;
+		strokeColor = strokeColor.darker( factor );
+		fillColor1 = fillColor1.darker( factor );
+		fillColor2 = fillColor2.darker( factor );
+	}
+	
+	QLinearGradient gradient( option.rect.topLeft(), option.rect.bottomLeft() );
+	gradient.setColorAt( 0, fillColor1 );
+	gradient.setColorAt( 1, fillColor2 );
+	
+	painter->setPen( strokeColor );
+	painter->setBrush( gradient );
+	painter->drawRoundedRect( r, corner, corner );
+}
+
 void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const
 {
 	painter->setRenderHint( QPainter::Antialiasing );
 	
-	QPainterPath path;
-	path.addRoundedRect( option.rect.adjusted( 2, 2, -2, -2 ), 8, 8 );
-	
 	const bool selected = option.state & QStyle::State_Selected;
 	const QWBFS::Model::Disc disc = mModel->disc( index );
-	
-	// selection
-	if ( selected ) {
-		painter->setPen( QColor( 145, 147, 255, 130 ) );
-		painter->setBrush( QColor( 184, 153, 255, 130 ) );
-		painter->drawPath( path );
-	}
-	// background
-	else {
-		painter->setPen( Qt::NoPen );
-		painter->setBrush( QColor( 200, 200, 200, index.row() %2 == 0 ? 100 : 60 ) );
-		painter->drawPath( path );
-	}
-	
 	QRect rect;
-	QString text;
+	
+	// background / selection
+	{
+		QStyleOptionViewItemV4 o = option;
+		o.rect = option.rect.adjusted( 1, 1, 0, 0 );
+		
+		paintFrame( painter, o, selected );
+	}
+	
+	// icon
+	{
+		rect = option.rect;
+		rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
+		QPixmap pixmap = disc.state == QWBFS::Driver::None ? coverPixmap( disc.id, rect.size() ) : statePixmap( disc.state, rect.size() );
+		
+		if ( !pixmap.isNull() ) {
+			painter->drawPixmap( rect.topLeft(), pixmap );
+		}
+	}
 	
 	// title/region
 	{
@@ -199,7 +229,7 @@ void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& o
 		QFontMetrics metrics( font );
 		rect = option.rect.adjusted( 40, 2, -10, -( metrics.height() -2 ) );
 		
-		text = QString( "%1 - %2 (%3 - %4)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( disc.region ) ).arg( QWBFS::Driver::regionToLanguageString( disc.region ) );
+		QString text = QString( "%1 - %2 (%3 - %4)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( disc.region ) ).arg( QWBFS::Driver::regionToLanguageString( disc.region ) );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
 		painter->setFont( font );
@@ -217,22 +247,13 @@ void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& o
 		QFontMetricsF metrics( font );
 		rect = option.rect.adjusted( 40, rect.height(), -10, -2 );
 		
-		text = tr( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
+		QString text = tr( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
 		painter->setFont( font );
 		painter->setPen( QColor( 0, 0, 0 ) );
 		painter->setBrush( Qt::NoBrush );
 		painter->drawText( rect, Qt::AlignLeft | Qt::AlignVCenter, text );
-	}
-	
-	rect = option.rect;
-	rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
-	QPixmap pixmap = disc.state == QWBFS::Driver::None ? coverPixmap( disc.id, rect.size() ) : statePixmap( disc.state, rect.size() );
-	
-	// icon
-	if ( !pixmap.isNull() ) {
-		painter->drawPixmap( rect.topLeft(), pixmap );
 	}
 }
 
@@ -243,22 +264,18 @@ void DiscDelegate::paintIcon( QPainter* painter, const QStyleOptionViewItemV4& o
 	const bool selected = option.state & QStyle::State_Selected;
 	const QWBFS::Model::Disc disc = mModel->disc( index );
 	const int margin = 9;
-	const int fontHeight = 12;
-	const int spacing = 0;
-	QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
-	QPixmap cover = coverPixmap( disc.id, rect.size() -QSize( 0, fontHeight +spacing ) );
-	QPixmap state = statePixmap( disc.state, QSize( 24, 24 ) );
+	const int spacing = 5;
 	const QString text = disc.title;
+	QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
+	QPixmap cover = coverPixmap( disc.id, rect.size() -QSize( 0, painter->font().pointSize() +spacing ) );
+	QPixmap state = statePixmap( disc.state, QSize( 24, 24 ) );
 	
 	// selection
 	if ( selected ) {
-		QStyleOptionViewItemV4 opt = option;
-		opt.rect = opt.rect.adjusted( 1, 1, -1, -1 );
-		opt.icon = QIcon();
-		opt.index = QModelIndex();
-		opt.text = QString::null;
+		QStyleOptionViewItemV4 o = option;
+		o.rect = option.rect.adjusted( 1, 1, 0, 0 );
 		
-		QStyledItemDelegate::paint( painter, opt, QModelIndex() );
+		paintFrame( painter, o );
 	}
 	
 	// icon
@@ -277,30 +294,17 @@ void DiscDelegate::paintIcon( QPainter* painter, const QStyleOptionViewItemV4& o
 	
 	// title
 	{
-		QStyleOptionViewItemV4 opt = option;
-		
-		QFont font = painter->font();
-		font.setPixelSize( fontHeight );
-		font.setBold( true );
-		
-		QFontMetrics metrics( font );
-		opt.text = metrics.elidedText( text, Qt::ElideRight, option.rect.width() );
-		
-		QRect r = option.rect.adjusted( 2, option.rect.height() -( margin *2 ), -2, -1 );
-		
-		opt.rect = r;
-		opt.icon = QIcon();
-		opt.font = font;
-		opt.displayAlignment = Qt::AlignHCenter | Qt::AlignVCenter;
+		QStyleOptionViewItemV4 o = option;
+		o.displayAlignment = Qt::AlignCenter;
+		o.rect = option.rect.adjusted( 0, option.rect.height() -( margin *2 ), 0, 0 );
+		o.icon = QIcon();
+		o.text = painter->fontMetrics().elidedText( pCoreUtils::toTitleCase( text ), Qt::ElideRight, o.rect.width() -margin );
 		
 		if ( !selected ) {
-			opt.state |= QStyle::State_Selected;
-		}
-		else {
-			opt.state &= ~QStyle::State_Selected;
-			opt.state &= ~QStyle::State_MouseOver;
+			paintFrame( painter, o );
 		}
 		
-		QStyledItemDelegate::paint( painter, opt, QModelIndex() );
+		painter->setPen( selected ? o.palette.color( QPalette::HighlightedText ) : o.palette.color( QPalette::WindowText ) );
+		painter->drawText( o.rect, o.displayAlignment, o.text );
 	}
 }

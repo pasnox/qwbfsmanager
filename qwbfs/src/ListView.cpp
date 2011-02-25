@@ -17,6 +17,7 @@ ListView::ListView( QWidget* parent )
 	QPalette pal = viewport()->palette();
 	pal.setColor( viewport()->backgroundRole(), pal.color( viewport()->backgroundRole() ).darker() );
 	
+	setMouseTracking( true );
 	viewport()->setPalette( pal );
 	viewport()->setAutoFillBackground( true );
 }
