@@ -16,6 +16,9 @@ class DiscDelegate;
 }; // Model
 }; // QWBFS
 
+typedef QPair<QRect, QModelIndex> QItemViewPaintPair;
+typedef QList<QItemViewPaintPair> QItemViewPaintPairs;
+
 class ListView : public QListView
 {
 	Q_OBJECT
@@ -39,6 +42,14 @@ protected:
 	QWBFS::Model::DiscDelegate* mDelegate;
 	
 	virtual void mousePressEvent( QMouseEvent* event );
+	virtual void startDrag( Qt::DropActions supportedActions );
+	
+	// dirty code get from QAbstractItemView for avoid drag & drop bug (no preview when dragging)
+	
+	QItemViewPaintPairs draggablePaintPairs( const QModelIndexList& indexes, QRect* r ) const;
+	QPixmap renderToPixmap( const QModelIndexList& indexes, QRect* r ) const;
+	QStyleOptionViewItemV4 viewOptionsV4() const;
+	void clearOrRemove();
 };
 
 #endif // LISTVIEW_H
