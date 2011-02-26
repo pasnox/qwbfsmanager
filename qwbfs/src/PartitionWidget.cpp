@@ -223,7 +223,7 @@ void PartitionWidget::progress_finished()
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 {
 	setCurrentPartition( cbPartitions->itemText( index ) );
-}	
+}
 
 void PartitionWidget::on_tbLoad_clicked()
 {

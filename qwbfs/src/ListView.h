@@ -5,6 +5,7 @@
 
 #include "wiitdb/Covers.h"
 
+class QHeaderView;
 class pNetworkAccessManager;
 
 namespace QWBFS {
@@ -18,6 +19,8 @@ class DiscDelegate;
 
 typedef QPair<QRect, QModelIndex> QItemViewPaintPair;
 typedef QList<QItemViewPaintPair> QItemViewPaintPairs;
+
+#define HEADER_HEIGHT 21
 
 class ListView : public QListView
 {
@@ -35,12 +38,17 @@ public:
 	QWBFS::Driver* driver() const;
 	QWBFS::Model::DiscModel* model() const;
 
+protected slots:
+	void header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
+
 protected:
 	QWBFS::WiiTDB::Covers::Type mIconType;
 	QWBFS::Driver* mDriver;
 	QWBFS::Model::DiscModel* mModel;
 	QWBFS::Model::DiscDelegate* mDelegate;
+	QHeaderView* mHeader;
 	
+	virtual void resizeEvent( QResizeEvent* event );
 	virtual void mousePressEvent( QMouseEvent* event );
 	virtual void startDrag( Qt::DropActions supportedActions );
 	

@@ -60,6 +60,72 @@ bool SelectionRangePairGreaterThanSorter::operator()( const DiscModel::PairIntIn
 	return left.first > right.first;
 }
 
+HashLessThanSorter::HashLessThanSorter( int column )
+{
+	c = column;
+}
+
+bool HashLessThanSorter::operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const
+{
+	int compare = 0;
+	
+	switch ( c ) {
+		case 0:
+			compare = 0;
+			break;
+		case 1:
+			compare = QString::compare( left.id, right.id, Qt::CaseInsensitive );
+			break;
+		case 2:
+			compare = QString::compare( left.title, right.title, Qt::CaseInsensitive );
+			break;
+		case 3:
+			compare = left.size == right.size ? 0 : ( left.size < right.size ? -1 : 1 );
+			break;
+		case 4:
+			compare = QString::compare( QWBFS::Driver::regionToString( left.region ), QWBFS::Driver::regionToString( right.region ), Qt::CaseInsensitive );
+			break;
+		case 5:
+			compare = QString::compare( left.origin, right.origin, Qt::CaseInsensitive );
+			break;
+	}
+	
+	return compare == 0 ? false : compare < 0;
+}
+
+HashGreaterThanSorter::HashGreaterThanSorter( int column )
+{
+	c = column;
+}
+
+bool HashGreaterThanSorter::operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const
+{
+	int compare = 0;
+	
+	switch ( c ) {
+		case 0:
+			compare = 0;
+			break;
+		case 1:
+			compare = QString::compare( left.id, right.id, Qt::CaseInsensitive );
+			break;
+		case 2:
+			compare = QString::compare( left.title, right.title, Qt::CaseInsensitive );
+			break;
+		case 3:
+			compare = left.size == right.size ? 0 : ( left.size < right.size ? -1 : 1 );
+			break;
+		case 4:
+			compare = QString::compare( QWBFS::Driver::regionToString( left.region ), QWBFS::Driver::regionToString( right.region ), Qt::CaseInsensitive );
+			break;
+		case 5:
+			compare = QString::compare( left.origin, right.origin, Qt::CaseInsensitive );
+			break;
+	}
+	
+	return compare == 0 ? false : compare > 0;
+}
+
 // DiscModel
 
 QStringList DiscModel::mMimeTypes = QStringList() << URLS_FORMAT << WBFS_DISCS_FORMAT;
@@ -78,12 +144,12 @@ DiscModel::~DiscModel()
 
 int DiscModel::columnCount( const QModelIndex& parent ) const
 {
-	return parent.isValid() ? 0 : 1;
+	return parent.isValid() ? 0 : DISC_MODEL_COLUMN_COUNT;
 }
 
 QVariant DiscModel::data( const QModelIndex& index, int role ) const
 {
-	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() != 0 ) {
+	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() < 0 || index.column() >= DISC_MODEL_COLUMN_COUNT ) {
 		return QVariant();
 	}
 	
@@ -91,8 +157,22 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 	
 	switch ( role )
 	{
-		case Qt::DisplayRole:
-			return disc.title;
+		case Qt::DisplayRole: {
+			switch ( index.column() ) {
+				case 0:
+					return QVariant();
+				case 1:
+					return disc.id;
+				case 2:
+					return disc.title;
+				case 3:
+					return Gauge::fileSizeToString( disc.size );
+				case 4:
+					return QWBFS::Driver::regionToString( disc.region );
+				case 5:
+					return disc.origin;
+			}
+		}
 		case Qt::ToolTipRole:
 		{
 			QStringList values;
@@ -121,7 +201,7 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 
 QModelIndex DiscModel::index( int row, int column, const QModelIndex& parent ) const
 {
-	if ( parent.isValid() || row < 0 || row >= mDiscs.count() || column != 0 ) {
+	if ( parent.isValid() || row < 0 || row >= mDiscs.count() || column < 0 || column >= DISC_MODEL_COLUMN_COUNT ) {
 		return QModelIndex();
 	}
 	
@@ -179,21 +259,110 @@ bool DiscModel::removeRows( int row, int count, const QModelIndex& parent )
 
 bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int role )
 {
-	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() != 0 ) {
+	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() < 0 || index.column() >= DISC_MODEL_COLUMN_COUNT ) {
 		return false;
 	}
 	
 	switch ( role )
 	{
 		case Qt::DisplayRole:
-			mDiscs[ index.row() ].title = value.toString();
+			switch ( index.column() ) {
+				case 0:
+					break;
+				case 1:
+					mDiscs[ index.row() ].id = value.toString();
+					break;
+				case 2:
+					mDiscs[ index.row() ].title = value.toString();
+					break;
+				case 3:
+					mDiscs[ index.row() ].size = value.toUInt();
+					break;
+				case 4:
+					mDiscs[ index.row() ].region = value.toInt();
+					break;
+				case 5:
+					mDiscs[ index.row() ].origin = value.toString();
+					break;
+			}
+			
 			break;
 		default:
 			return false;
 	}
 	
-	emit dataChanged( index, index );
+	emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), DISC_MODEL_COLUMN_COUNT -1 ) );
 	return true;
+}
+
+QVariant DiscModel::headerData( int section, Qt::Orientation orientation, int role ) const
+{
+	if ( orientation == Qt::Horizontal && section >= 0 && section < DISC_MODEL_COLUMN_COUNT ) {
+		switch ( role ) {
+			case Qt::DisplayRole: {
+				switch ( section ) {
+					case 0:
+						return tr( "Image" );
+					case 1:
+						return tr( "Id" );
+					case 2:
+						return tr( "Title" );
+					case 3:
+						return tr( "Size" );
+					case 4:
+						return tr( "Region" );
+					case 5:
+						return tr( "Origin" );
+				}
+			}
+		}
+	}
+	
+	return QAbstractItemModel::headerData( section, orientation, role );
+}
+
+void DiscModel::sort( int column, Qt::SortOrder order )
+{
+	/*
+	Call beginLayoutChanged()
+	Remember the QModelIndex that will change
+	Update your internal data
+	Call changePersistentIndex()
+	Call endLayoutChanged()
+	*/
+	
+	emit layoutAboutToBeChanged();
+	
+	QModelIndexList oldIndexes = persistentIndexList();
+	QWBFS::Model::DiscList newDiscs = mDiscs;
+	QModelIndexList newIndexes;
+	QHash<int, int> mapping; // old row, new row
+	
+	for ( int i = 0; i < mDiscs.count(); i++ ) {
+		mapping[ i ] = i;
+	}
+	
+	if ( order == Qt::AscendingOrder ) {
+		HashLessThanSorter lesser( column );
+		qSort( newDiscs.begin(), newDiscs.end(), lesser );
+	}
+	else {
+		HashGreaterThanSorter greater( column );
+		qSort( newDiscs.begin(), newDiscs.end(), greater );
+	}
+	
+	for ( int i = 0; i < newDiscs.count(); i++ ) {
+		mapping[ index( newDiscs[ i ] ).row() ] = i;
+	}
+	
+	foreach ( const QModelIndex& index, oldIndexes ) {
+		newIndexes << createIndex( mapping[ index.row() ], index.column(), mapping[ index.row() ] );
+	}
+	
+	mDiscs = newDiscs;
+	changePersistentIndexList( oldIndexes, newIndexes );
+	
+	emit layoutChanged();
 }
 
 Qt::DropActions DiscModel::supportedDropActions() const
@@ -313,12 +482,12 @@ void DiscModel::setDiscs( const QWBFS::Model::DiscList& discs )
 
 void DiscModel::setDisc( const QModelIndex& index, const QWBFS::Model::Disc& disc )
 {
-	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() != 0 ) {
+	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() < 0 || index.column() >= DISC_MODEL_COLUMN_COUNT ) {
 		return;
 	}
 	
 	mDiscs[ index.row() ] = disc;
-	emit dataChanged( index, index );
+	emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), DISC_MODEL_COLUMN_COUNT -1 ) );
 }
 
 QWBFS::Model::DiscList DiscModel::discs() const
@@ -329,9 +498,13 @@ QWBFS::Model::DiscList DiscModel::discs() const
 QWBFS::Model::DiscList DiscModel::discs( const QModelIndexList& indexes )
 {
 	QWBFS::Model::DiscList discs;
+	QSet<int> rows;
 	
 	foreach ( const QModelIndex& index, indexes ) {
-		discs << disc( index );
+		if ( !rows.contains( index.row() ) ) {
+			rows << index.row();
+			discs << disc( index );
+		}
 	}
 	
 	return discs;
@@ -347,10 +520,10 @@ QWBFS::Model::Disc DiscModel::disc( const QModelIndex& index ) const
 	return mDiscs.value( index.row() );
 }
 
-QModelIndex DiscModel::index( const QWBFS::Model::Disc& disc ) const
+QModelIndex DiscModel::index( const QWBFS::Model::Disc& disc, int column ) const
 {
 	const int index = mDiscs.indexOf( disc );
-	return index == -1 ? QModelIndex() : createIndex( index, 0, index );
+	return index == -1 ? QModelIndex() : createIndex( index, column, index );
 }
 
 QString DiscModel::discId( const QModelIndex& index ) const
@@ -384,7 +557,7 @@ void DiscModel::updateDisc( const QWBFS::Model::Disc& disc )
 	if ( row != -1 ) {
 		const QModelIndex index = this->index( disc );
 		mDiscs[ row ] = disc;
-		emit dataChanged( index, index );
+		emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), DISC_MODEL_COLUMN_COUNT -1 ) );
 	}
 }
 

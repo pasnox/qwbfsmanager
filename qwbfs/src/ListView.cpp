@@ -3,6 +3,7 @@
 #include "models/DiscDelegate.h"
 
 #include <QMouseEvent>
+#include <QHeaderView>
 #include <QPainter>
 #include <QDebug>
 
@@ -13,13 +14,17 @@ ListView::ListView( QWidget* parent )
 	mDriver = 0;
 	mModel = 0;
 	mDelegate = 0;
+	mHeader = new QHeaderView( Qt::Horizontal, this );
 	
 	QPalette pal = viewport()->palette();
 	pal.setColor( viewport()->backgroundRole(), pal.color( viewport()->backgroundRole() ).darker() );
 	
 	setMouseTracking( true );
+	setViewportMargins( 0, HEADER_HEIGHT, 0, 0 );
 	viewport()->setPalette( pal );
 	viewport()->setAutoFillBackground( true );
+	
+	connect( mHeader, SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), this, SLOT( header_sortIndicatorChanged( int, Qt::SortOrder ) ) );
 }
 
 ListView::~ListView()
@@ -36,6 +41,15 @@ void ListView::initialize( QWBFS::Driver* driver, pNetworkAccessManager* manager
 	
 	setModel( mModel );
 	setItemDelegate( mDelegate );
+	mHeader->setModel( mModel );
+	
+	for ( int i = 0; i < mModel->columnCount(); i++ ) {
+		mHeader->setResizeMode( i, QHeaderView::ResizeToContents );
+	}
+	
+	mHeader->setResizeMode( 2, QHeaderView::Stretch );
+	mHeader->setClickable( true );
+	mHeader->setSortIndicatorShown( true );
 }
 
 void ListView::setViewMode( QListView::ViewMode mode )
@@ -83,6 +97,23 @@ QWBFS::Driver* ListView::driver() const
 QWBFS::Model::DiscModel* ListView::model() const
 {
 	return mModel;
+}
+
+void ListView::header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
+{
+	mModel->sort( logicalIndex, order );
+	
+	if ( selectionModel()->hasSelection() ) {
+		scrollTo( selectionModel()->selectedIndexes().last() );
+	}
+}
+
+void ListView::resizeEvent( QResizeEvent* event )
+{
+	QListView::resizeEvent( event );
+	
+	QRect rect = QRect( QPoint( frameWidth(), frameWidth() ), QSize( viewport()->width(), HEADER_HEIGHT ) );
+	mHeader->setGeometry( rect );
 }
 
 void ListView::mousePressEvent( QMouseEvent* event )

@@ -48,6 +48,8 @@ namespace QWBFS {
 class Driver;
 namespace Model {
 
+#define DISC_MODEL_COLUMN_COUNT 6
+
 class DiscModel : public QAbstractItemModel
 {
 	Q_OBJECT
@@ -68,6 +70,8 @@ public:
 	virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 	virtual bool removeRows( int row, int count, const QModelIndex& parent = QModelIndex() );
 	virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+	virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+	virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
 	
 	virtual Qt::DropActions supportedDropActions() const;
 	virtual bool dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent );
@@ -84,7 +88,7 @@ public:
 	QWBFS::Model::DiscList discs( const QModelIndexList& indexes );
 	QWBFS::Model::DiscList discs( const QItemSelection& selection );
 	QWBFS::Model::Disc disc( const QModelIndex& index ) const;
-	QModelIndex index( const QWBFS::Model::Disc& disc ) const;
+	QModelIndex index( const QWBFS::Model::Disc& disc, int column = 0 ) const;
 	QString discId( const QModelIndex& index ) const;
 	void removeSelection( const QItemSelection& selection );
 	void updateDisc( const QWBFS::Model::Disc& disc );
@@ -112,6 +116,24 @@ struct SelectionRangePairLessThanSorter
 struct SelectionRangePairGreaterThanSorter
 {
 	bool operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const;
+};
+
+struct HashLessThanSorter
+{
+	HashLessThanSorter( int column );
+	
+	bool operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const;
+
+	int c;
+};
+
+struct HashGreaterThanSorter
+{
+	HashGreaterThanSorter( int column );
+	
+	bool operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const;
+
+	int c;
 };
 
 }; // Models
