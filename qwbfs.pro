@@ -26,6 +26,9 @@ CONFIG	*= ordered
 BUILD_PATH	= build
 include( shared.pri )
 
+exists( "/usr/lib/libfresh*.a" ):CONFIG *= fresh_static
+else:exists( "/usr/lib/libfresh*.so" ):CONFIG *= fresh_shared
+
 fresh_static|fresh_shared {
 	!build_pass:message( "Using system fresh library." )
 } else {
