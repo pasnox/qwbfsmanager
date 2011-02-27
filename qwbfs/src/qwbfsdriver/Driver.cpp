@@ -80,49 +80,69 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 			X 58 Not a real region code. Homebrew Channel uses it, though. 
 		*/
 		
-		// channel regions:
-		mRegions[ 'A' ] = QLatin1String( "World" );
-		mRegions[ 'D' ] = QLatin1String( "PAL" );
-		mRegions[ 'E' ] = QLatin1String( "NTSC-U" );
-		mRegions[ 'F' ] = QLatin1String( "PAL" );
-		mRegions[ 'J' ] = QLatin1String( "NTSC-J" );
-		mRegions[ 'K' ] = QLatin1String( "NTSC-K" );
-		mRegions[ 'L' ] = QLatin1String( "PAL-R" );
-		mRegions[ 'M' ] = QLatin1String( "PAL-R" );
-		mRegions[ 'N' ] = QLatin1String( "NTSC-T" );
-		mRegions[ 'P' ] = QLatin1String( "PAL" );
-		mRegions[ 'Q' ] = QLatin1String( "NTSC-T" );
-		mRegions[ 'T' ] = QLatin1String( "NTSC-T" );
-		// game regions:
-		mRegions[ 'H' ] = QLatin1String( "PAL" );
-		mRegions[ 'I' ] = QLatin1String( "PAL" );
-		mRegions[ 'S' ] = QLatin1String( "PAL" );
-		mRegions[ 'X' ] = QLatin1String( "PAL" );
-		mRegions[ 'Y' ] = QLatin1String( "PAL" );
-		mRegions[ 'W' ] = QLatin1String( "NTSC-J" );
-		mRegions[ 0 ] = QLatin1String( "NTSC-U" );
+		/*
+			WiiTDB Folder Game ID:
+			
+			E = US
+			J = JA
+			K = KO
+			R = RU
+			W = ZH
+			
+			ça c'est fixe, ça ne bouge pas, c'est toujours en fonction du game ID
+			
+			Pour les ID en P,D,F,I,S,H,X,Y,Z, on fait en fonction de la langue de l'utilisateur
+			(donc celle de l'interface ou avec une option) et on utilise EN, FR, DE, ES, IT, NL, PT
+			
+			Si l'image n'est pas trouvée dans la langue de préférence, on essaye EN (sauf si la langue préférée est l'anglais bien sur)
+			
+			
+			Si l'ID ne contient aucune de ces lettres c'est que c'est un jeu custom avec un ID qui n'est pas standard.
+			
+			Dans ce cas on essaye la langue préférée, puis EN, puis other en tout dernier.
+		*/
 		
 		// channel regions:
-		mLanguages[ 'A' ] = QLatin1String( "EN" ); // All regions. System channels like the Mii channel use it.
-		mLanguages[ 'D' ] = QLatin1String( "DE" ); // German-speaking regions.
-		mLanguages[ 'E' ] = QLatin1String( "US" ); // USA and other NTSC regions except Japan
-		mLanguages[ 'F' ] = QLatin1String( "FR" ); // French-speaking regions.
-		mLanguages[ 'J' ] = QLatin1String( "JA" ); // Japan
-		mLanguages[ 'K' ] = QLatin1String( "KO" ); // Korea
-		mLanguages[ 'L' ] = QLatin1String( "EN" ); // Japanese Import to Europe, Australia and other PAL regions
+		/*mRegions[ 'L' ] = QLatin1String( "PAL-R" );
+		mRegions[ 'M' ] = QLatin1String( "PAL-R" );
+		mRegions[ 'N' ] = QLatin1String( "NTSC-T" );*/
+		
+		mRegions.insert( 'A', "World" ); // All regions. System channels like the Mii channel use it.
+		mRegions.insert( 'E', "NTSC-U" ); // USA and other NTSC regions except Japan.
+		mRegions.insert( 'J', "NTSC-J" ); // Japan
+		mRegions.insert( 'K', "NTSC-K" ); // Korea
+		mRegions.insert( 'P', "PAL" ); // Europe, Australia and other PAL regions.
+		mRegions.insert( 'W', "NTSC-T" ); // Taiwan
+		mRegions.insert( 'R', "PAL-R" ); // Russia
+		mRegions.insert( 'Q', "NTSC-K" ); // Korea with Japanese language.
+		mRegions.insert( 'T', "NTSC-K" ); // Korea with English language.
+		mRegions.insert( 'F', "PAL" ); // French-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
+		mRegions.insert( 'D', "PAL" ); // German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
+		mRegions.insert( 'I', "PAL" ); // Italien-speaking regions. Only if separate versions exist.
+		mRegions.insert( 'H', "PAL" ); // Dutch-speaking regions. Only if separate versions exist.
+		mRegions.insert( 'S', "PAL" ); // Dutch-speaking regions. Only if separate versions exist.
+		mRegions.insert( 'X', "PAL" ); // ??
+		
+		// languages
+		/*mLanguages[ 'L' ] = QLatin1String( "EN" ); // Japanese Import to Europe, Australia and other PAL regions
 		mLanguages[ 'M' ] = QLatin1String( "EN" ); // American Import to Europe, Australia and other PAL regions
-		mLanguages[ 'N' ] = QLatin1String( "JA" ); // Japanese Import to USA and other NTSC regions
-		mLanguages[ 'P' ] = QLatin1String( "EN" ); // Europe, Australia and other PAL regions
-		mLanguages[ 'Q' ] = QLatin1String( "KO" ); // Korea with Japanese language.
-		mLanguages[ 'T' ] = QLatin1String( "KO" ); // Korea with English language.
-		// game regions:
-		mLanguages[ 'H' ] = QLatin1String( "NL" ); // Netherlands
-		mLanguages[ 'I' ] = QLatin1String( "IT" ); // Italy
-		mLanguages[ 'S' ] = QLatin1String( "ES" ); // Spain
-		mLanguages[ 'X' ] = QLatin1String( "EN" );
-		mLanguages[ 'Y' ] = QLatin1String( "EN" );
-		mLanguages[ 'W' ] = QLatin1String( "ZH" );
-		mLanguages[ 0 ] = QLatin1String( "US" ); // Taiwan
+		mLanguages[ 'N' ] = QLatin1String( "JA" ); // Japanese Import to USA and other NTSC regions*/
+		
+		mLanguages.insert( 'A', "EN" ); // All regions. System channels like the Mii channel use it.
+		mLanguages.insert( 'E', "US" ); // USA and other NTSC regions except Japan.
+		mLanguages.insert( 'J', "JA" ); // Japan
+		mLanguages.insert( 'K', "KO" ); // Korea
+		mLanguages.insert( 'R', "RU" ); // Russia
+		mLanguages.insert( 'W', "ZH" ); // Taiwan
+		mLanguages.insert( 'Q', "JA" ); // Korea with Japanese language.
+		mLanguages.insert( 'T', "EN" ); // Korea with English language.
+		mLanguages.insert( 'F', "FR" ); // French-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
+		mLanguages.insert( 'D', "DE" ); // German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
+		mLanguages.insert( 'I', "IT" ); // Italian-speaking regions. Only if separate versions exist.
+		mLanguages.insert( 'H', "NL" ); // Dutch-speaking regions. Only if separate versions exist.
+		mLanguages.insert( 'S', "ES" ); // Dutch-speaking regions. Only if separate versions exist.
+		
+		//insert( 'P', "" ); // Europe, Australia and other PAL regions.
 	}
 }
 
@@ -659,12 +679,13 @@ QString Driver::errorToString( QWBFS::Driver::Error error )
 
 QString Driver::regionToString( int region )
 {
-	return mRegions.value( region, mRegions.value( 0 ) );
+	return mRegions.value( region, "Unknow Region" );
 }
 
 QString Driver::regionToLanguageString( int region )
 {
-	return mLanguages.value( region, mLanguages.value( 0 ) );
+	const QString systemLanguage = QLocale::system().name().section( '_', 0, 0 ).toUpper();
+	return mLanguages.value( region, systemLanguage.isEmpty() ? "EN" : systemLanguage );
 }
 
 QString Driver::stateToString( QWBFS::Driver::State state )
