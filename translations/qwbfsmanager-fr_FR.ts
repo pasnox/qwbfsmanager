@@ -169,12 +169,12 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="94"/>
         <source>View Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode d&apos;affichage</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="110"/>
         <source>View Icon Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode d&apos;affichage des icones</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="137"/>
@@ -249,22 +249,22 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="106"/>
         <source>List</source>
-        <translation type="unfinished"></translation>
+        <translation>Liste</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="107"/>
         <source>Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icône</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="109"/>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Disque</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="110"/>
         <source>Cover</source>
-        <translation type="unfinished"></translation>
+        <translation>Couverture</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="112"/>
@@ -476,52 +476,52 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="305"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Image</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="307"/>
         <source>Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="309"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Titre</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="311"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="313"/>
         <source>Region</source>
-        <translation type="unfinished"></translation>
+        <translation>Région</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="315"/>
         <source>Origin</source>
-        <translation type="unfinished"></translation>
+        <translation>Origine</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="325"/>
         <source>Sort by Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier par Id</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="327"/>
         <source>Sort by Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier par Titre</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="329"/>
         <source>Sort by Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier par Taille</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="331"/>
         <source>Sort by Region</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier par Région</translation>
     </message>
 </context>
 <context>
