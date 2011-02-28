@@ -169,12 +169,12 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="94"/>
         <source>View Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo de visualización</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="110"/>
         <source>View Icon Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo de vista Icono</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="137"/>
@@ -249,22 +249,22 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="106"/>
         <source>List</source>
-        <translation type="unfinished"></translation>
+        <translation>Lista</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="107"/>
         <source>Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Icono</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="109"/>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Juego</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="110"/>
         <source>Cover</source>
-        <translation type="unfinished"></translation>
+        <translation>Carátula</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.cpp" line="112"/>
@@ -476,32 +476,32 @@ serán borrados de forma permanente, ¿está seguro?</translation>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="305"/>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Imagen</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="307"/>
         <source>Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="309"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Título</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="311"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamaño</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="313"/>
         <source>Region</source>
-        <translation type="unfinished"></translation>
+        <translation>Región</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="315"/>
         <source>Origin</source>
-        <translation type="unfinished"></translation>
+        <translation>Origen</translation>
     </message>
 </context>
 <context>
