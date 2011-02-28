@@ -314,6 +314,26 @@ QVariant DiscModel::headerData( int section, Qt::Orientation orientation, int ro
 					case 5:
 						return tr( "Origin" );
 				}
+				
+				break;
+			}
+			case Qt::ToolTipRole: {
+				switch ( section ) {
+					case 0:
+						break; // nothing to sort
+					case 1:
+						return tr( "Sort by Id" );
+					case 2:
+						return tr( "Sort by Title" );
+					case 3:
+						return tr( "Sort by Size" );
+					case 4:
+						return tr( "Sort by Region" );
+					case 5:
+						break; // nothing to sort
+				}
+				
+				break;
 			}
 		}
 	}

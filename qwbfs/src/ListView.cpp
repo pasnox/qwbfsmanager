@@ -43,6 +43,9 @@ void ListView::initialize( QWBFS::Driver* driver, pNetworkAccessManager* manager
 	setItemDelegate( mDelegate );
 	mHeader->setModel( mModel );
 	
+	mHeader->setSectionHidden( 0, true );
+	mHeader->setSectionHidden( 5, true );
+	
 	for ( int i = 0; i < mModel->columnCount(); i++ ) {
 		mHeader->setResizeMode( i, QHeaderView::ResizeToContents );
 	}
