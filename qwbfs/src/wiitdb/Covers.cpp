@@ -99,7 +99,7 @@ QPixmap WiiTDB::coverBoxPixmap( const QString& id, pNetworkAccessManager* cache,
 	const QString key = pGuiUtils::cacheKey( url, size );
 	QPixmap pixmap;
 	
-	if ( !QPixmapCache::find( key, pixmap ) ) {
+	if ( !id.isEmpty() && !QPixmapCache::find( key, pixmap ) ) {
 		if ( !cache->hasCacheData( url ) ) {
 			cache->get( QNetworkRequest( url ) );
 			return pGuiUtils::scaledPixmap( ":/wii/cover.png", size );
@@ -132,7 +132,7 @@ QPixmap WiiTDB::coverDiscPixmap( const QString& id, pNetworkAccessManager* cache
 	const QString key = pGuiUtils::cacheKey( url, size );
 	QPixmap pixmap;
 	
-	if ( !QPixmapCache::find( key, pixmap ) ) {
+	if ( !id.isEmpty() && !QPixmapCache::find( key, pixmap ) ) {
 		if ( !cache->hasCacheData( url ) ) {
 			cache->get( QNetworkRequest( url ) );
 			return pGuiUtils::scaledPixmap( ":/wii/disc.png", size );
