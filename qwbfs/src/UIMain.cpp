@@ -358,11 +358,6 @@ void UIMain::networkAccessManager_cached( const QUrl& url )
 		view->viewport()->update();
 	}
 	
-	// update preview dock
-	if ( mLastDiscId.isEmpty() ) {
-		return;
-	}
-	
 	lCDCover->setPixmap( QWBFS::WiiTDB::coverDiscPixmap( mLastDiscId, mCache, COVER_DISC_SIZE ) );
 	lCover->setPixmap( QWBFS::WiiTDB::coverBoxPixmap( mLastDiscId, mCache, COVER_SIZE ) );
 }
