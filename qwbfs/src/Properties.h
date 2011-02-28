@@ -99,8 +99,8 @@ public:
 	QListView::ViewMode viewMode() const;
 	void setViewMode( QListView::ViewMode mode );
 	
-	QWBFS::WiiTDB::Covers::Type viewIconType() const;
-	void setViewIconType( QWBFS::WiiTDB::Covers::Type type );
+	QWBFS::WiiTDB::Scan viewIconType() const;
+	void setViewIconType( QWBFS::WiiTDB::Scan scan );
 	
 	void restoreState( UIMain* window ) const;
 	void saveState( UIMain* window );

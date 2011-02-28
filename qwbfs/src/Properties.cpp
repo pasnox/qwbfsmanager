@@ -80,7 +80,14 @@ Properties::~Properties()
 
 QString Properties::temporaryPath() const
 {
-	return QDir::tempPath();
+	const QString path = QDir::tempPath()
+	.append(
+		QString( "/%1" ).arg( qApp->applicationName() )
+	);
+	
+	QDir().mkpath( path );
+	
+	return path;
 }
 
 QString Properties::cacheWorkingPath() const
@@ -260,14 +267,14 @@ void Properties::setViewMode( QListView::ViewMode mode )
 	mSettings->setValue( SETTINGS_VIEW_MODE, mode );
 }
 
-QWBFS::WiiTDB::Covers::Type Properties::viewIconType() const
+QWBFS::WiiTDB::Scan Properties::viewIconType() const
 {
-	return QWBFS::WiiTDB::Covers::Type( mSettings->value( SETTINGS_VIEW_ICON_TYPE, QWBFS::WiiTDB::Covers::Cover ).toInt() );
+	return QWBFS::WiiTDB::Scan( mSettings->value( SETTINGS_VIEW_ICON_TYPE, QWBFS::WiiTDB::Cover ).toInt() );
 }
 
-void Properties::setViewIconType( QWBFS::WiiTDB::Covers::Type type )
+void Properties::setViewIconType( QWBFS::WiiTDB::Scan scan )
 {
-	mSettings->setValue( SETTINGS_VIEW_ICON_TYPE, type );
+	mSettings->setValue( SETTINGS_VIEW_ICON_TYPE, scan );
 }
 
 void Properties::restoreState( UIMain* window ) const

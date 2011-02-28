@@ -36,104 +36,142 @@
 #include "Covers.h"
 #include "../qwbfsdriver/Driver.h"
 
+#include <FreshCore/pNetworkAccessManager>
+#include <FreshGui/pGuiUtils>
+
 #include <QFileInfo>
+#include <QPixmapCache>
 #include <QDebug>
 
-using namespace QWBFS::WiiTDB;
+using namespace QWBFS;
 
-Covers::Covers( const QString& id )
+QUrl WiiTDB::checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAccessManager* cache )
 {
-	mId = id;
-	Q_ASSERT( !id.isEmpty() );
-}
-
-Covers::Covers( const QUrl& url )
-{
-	Q_ASSERT( !url.isEmpty() );
-	Q_ASSERT( url.isValid() );
-	mId = QFileInfo( url.path() ).baseName();
-	Q_ASSERT( !mId.isEmpty() );
-}
-
-Covers::~Covers()
-{
-}
-
-Covers::Covers( const Covers& other )
-{
-	operator=( other );
-}
-
-Covers& Covers::operator=( const Covers& other )
-{
-	if( *this != other ) {
-		mId = other.mId;
+	QUrl url = coverUrl( scan, id );
+	
+	if ( !cache->hasCacheData( url ) ) {
+		QUrl u = coverUrl( scan, id, "EN" ).toString();
+		
+		if ( !cache->hasCacheData( u ) ) {
+			u = coverUrl( scan, id, "other" ).toString();
+			
+			if ( cache->hasCacheData( u ) ) {
+				url = u;
+			}
+		}
+		else {
+			url = u;
+		}
 	}
-
-	return *this;
+	
+	return url;
 }
 
-bool Covers::operator==( const Covers& other ) const
-{
-	return mId == other.mId;
-}
-
-bool Covers::operator!=( const Covers& other ) const
-{
-	return !operator==( other );
-}
-
-QUrl Covers::url( Covers::Type type ) const
-{
-	return url( type, mId );
-}
-
-QUrl Covers::url( Covers::Type type, const QString& id )
+QUrl WiiTDB::coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local )
 {
 	Q_ASSERT( !id.isEmpty() );
 	
-	const QString language = QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() );
+	const QString language = local.isNull() ? QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() ) : local;
 	
-	switch ( type ) {
-		case Covers::HQ:
+	switch ( scan ) {
+		case WiiTDB::CoverHQ:
 			return QUrl( QString( "%3/wiitdb/artwork/coverfullHQ/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Covers::Cover:
+		case WiiTDB::Cover:
 			return QUrl( QString( "%3/wiitdb/artwork/cover/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Covers::_3D:
+		case WiiTDB::Cover3D:
 			return QUrl( QString( "%3/wiitdb/artwork/coverfull3D/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Covers::Disc:
+		case WiiTDB::CoverDisc:
 			return QUrl( QString( "%3/wiitdb/artwork/disc/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Covers::DiscCustom:
+		case WiiTDB::CoverDiscCustom:
 			return QUrl( QString( "%3/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Covers::Full:
+		case WiiTDB::CoverFull:
 			return QUrl( QString( "%3/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-		case Covers::Invalid:
+		case WiiTDB::CoverInvalid:
 			break;
 	}
 	
 	return QUrl();
 }
 
-Covers::Type Covers::type( const QUrl& url )
+QPixmap WiiTDB::coverBoxPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size )
 {
-	if ( Covers( url ).url( Covers::HQ ) == url ) {
-		return Covers::HQ;
-	}
-	else if ( Covers( url ).url( Covers::Cover ) == url ) {
-		return Covers::Cover;
-	}
-	else if ( Covers( url ).url( Covers::_3D ) == url ) {
-		return Covers::_3D;
-	}
-	else if ( Covers( url ).url( Covers::Disc ) == url ) {
-		return Covers::Disc;
-	}
-	else if ( Covers( url ).url( Covers::DiscCustom ) == url ) {
-		return Covers::DiscCustom;
-	}
-	else if ( Covers( url ).url( Covers::Full ) == url ) {
-		return Covers::Full;
+	const QString url = checkPixmapCache( QWBFS::WiiTDB::Cover, id, cache ).toString();
+	const QString key = pGuiUtils::cacheKey( url, size );
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		if ( !cache->hasCacheData( url ) ) {
+			cache->get( QNetworkRequest( url ) );
+			return pGuiUtils::scaledPixmap( ":/wii/cover.png", size );
+		}
+		
+		QIODevice* data = cache->cacheData( url );
+		
+		if ( data && pixmap.loadFromData( data->readAll() ) ) {
+			pixmap = pGuiUtils::scaledPixmap( pixmap, url, size );
+		}
+		
+		delete data;
 	}
 	
-	return Covers::Invalid;
+	return pixmap;
+}
+
+QPixmap WiiTDB::coverDiscPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size )
+{
+	QString url = checkPixmapCache( QWBFS::WiiTDB::CoverDisc, id, cache ).toString();
+	
+	if ( !cache->hasCacheData( url ) ) {
+		const QString u = checkPixmapCache( QWBFS::WiiTDB::CoverDiscCustom, id, cache ).toString();
+		
+		if ( cache->hasCacheData( u ) ) {
+			url = u;
+		}
+	}
+	
+	const QString key = pGuiUtils::cacheKey( url, size );
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		if ( !cache->hasCacheData( url ) ) {
+			cache->get( QNetworkRequest( url ) );
+			return pGuiUtils::scaledPixmap( ":/wii/disc.png", size );
+		}
+		
+		QIODevice* data = cache->cacheData( url );
+		
+		if ( data && pixmap.loadFromData( data->readAll() ) ) {
+			pixmap = pGuiUtils::scaledPixmap( pixmap, url, size );
+		}
+		
+		delete data;
+	}
+	
+	return pixmap;
+}
+
+WiiTDB::Scan WiiTDB::urlCover( const QUrl& url )
+{
+	const QString path = url.path();
+	
+	if ( path.contains( "coverfullHQ", Qt::CaseInsensitive ) ) {
+		return WiiTDB::CoverHQ;
+	}
+	else if ( path.contains( "coverfull3D", Qt::CaseInsensitive ) ) {
+		return WiiTDB::Cover3D;
+	}
+	else if ( path.contains( "coverfull", Qt::CaseInsensitive ) ) {
+		return WiiTDB::CoverFull;
+	}
+	else if ( path.contains( "cover", Qt::CaseInsensitive ) ) {
+		return WiiTDB::Cover;
+	}
+	else if ( path.contains( "disccustom", Qt::CaseInsensitive ) ) {
+		return WiiTDB::CoverDiscCustom;
+	}
+	else if ( path.contains( "disc", Qt::CaseInsensitive ) ) {
+		return WiiTDB::CoverDisc;
+	}
+	
+	return WiiTDB::CoverInvalid;
 }

@@ -42,7 +42,6 @@
 
 #include <FreshCore/pNetworkAccessManager>
 #include <FreshGui/pIconManager>
-#include <FreshGui/pGuiUtils>
 #include <FreshCore/pCoreUtils>
 
 #include <QPainter>
@@ -104,52 +103,11 @@ QSize DiscDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIn
 
 QPixmap DiscDelegate::coverPixmap( const QString& id, const QSize& size ) const
 {
-	const QWBFS::WiiTDB::Covers cover( id );
-	QString url;
-	QPixmap pixmap;
-	
-	if ( mModel->view()->viewIconType() == QWBFS::WiiTDB::Covers::Cover ) {
-		url = cover.url( QWBFS::WiiTDB::Covers::Cover ).toString();
-	}
-	else {
-		if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
-			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
-		}
-		else if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
-			url = cover.url( QWBFS::WiiTDB::Covers::DiscCustom ).toString();
-		}
-		else {
-			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
-		}
+	if ( mModel->view()->viewIconType() == QWBFS::WiiTDB::Cover ) {
+		return QWBFS::WiiTDB::coverBoxPixmap( id, mCache, size );
 	}
 	
-	const QString key = QString( "%1-%2-%3" ).arg( url ).arg( size.width() ).arg( size.height() );
-	
-	if ( !QPixmapCache::find( key, pixmap ) ) {
-		if ( !mCache->hasCacheData( url ) ) {
-			mCache->get( QNetworkRequest( url ) );
-			
-			if ( mModel->view()->viewIconType() == QWBFS::WiiTDB::Covers::Cover ) {
-				pixmap = pGuiUtils::scaledPixmap( ":/wii/cover.png", size );
-			}
-			else {
-				pixmap = pGuiUtils::scaledPixmap( ":/wii/disc.png", size );
-			}
-			
-			return pixmap;
-		}
-		
-		QIODevice* data = mCache->cacheData( url );
-		
-		if ( data && pixmap.loadFromData( data->readAll() ) ) {
-			pixmap = pixmap.scaled( size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
-			QPixmapCache::insert( key, pixmap );
-		}
-		
-		delete data;
-	}
-	
-	return pixmap;
+	return QWBFS::WiiTDB::coverDiscPixmap( id, mCache, size );
 }
 
 QPixmap DiscDelegate::statePixmap( int state, const QSize& size ) const

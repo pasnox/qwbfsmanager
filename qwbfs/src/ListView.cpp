@@ -10,7 +10,7 @@
 ListView::ListView( QWidget* parent )
 	: QListView( parent )
 {
-	mIconType = QWBFS::WiiTDB::Covers::Cover;
+	mIconType = QWBFS::WiiTDB::Cover;
 	mDriver = 0;
 	mModel = 0;
 	mDelegate = 0;
@@ -78,13 +78,13 @@ void ListView::setViewMode( QListView::ViewMode mode )
 	viewport()->setAcceptDrops( wasViewportAcceptDrops );
 }
 
-void ListView::setViewIconType( QWBFS::WiiTDB::Covers::Type type )
+void ListView::setViewIconType( QWBFS::WiiTDB::Scan scan )
 {
-	mIconType = type;
+	mIconType = scan;
 	updateGeometries();
 }
 
-QWBFS::WiiTDB::Covers::Type ListView::viewIconType() const
+QWBFS::WiiTDB::Scan ListView::viewIconType() const
 {
 	return mIconType;
 }

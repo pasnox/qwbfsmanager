@@ -58,8 +58,8 @@ PropertiesDialog::PropertiesDialog( QWidget* parent )
 	cbViewMode->addItem( QString::null, QListView::ListMode );
 	cbViewMode->addItem( QString::null, QListView::IconMode );
 	
-	cbViewIconType->addItem( QString::null, QWBFS::WiiTDB::Covers::Disc );
-	cbViewIconType->addItem( QString::null, QWBFS::WiiTDB::Covers::Cover );
+	cbViewIconType->addItem( QString::null, QWBFS::WiiTDB::CoverDisc );
+	cbViewIconType->addItem( QString::null, QWBFS::WiiTDB::Cover );
 	
 	cbProxyType->addItem( QString::null, QNetworkProxy::NoProxy );
 	cbProxyType->addItem( QString::null, QNetworkProxy::Socks5Proxy );
@@ -106,8 +106,8 @@ void PropertiesDialog::localeChanged()
 	cbViewMode->setItemText( cbViewMode->findData( QListView::ListMode ), tr( "List" ) );
 	cbViewMode->setItemText( cbViewMode->findData( QListView::IconMode ), tr( "Icon" ) );
 	
-	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Covers::Disc ), tr( "Disc" ) );
-	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Covers::Cover ), tr( "Cover" ) );
+	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::CoverDisc ), tr( "Disc" ) );
+	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Cover ), tr( "Box" ) );
 	
 	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::NoProxy ), tr( "No Proxy" ) );
 	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::Socks5Proxy ), tr( "Socks5" ) );
@@ -177,7 +177,7 @@ void PropertiesDialog::accept()
 	mProperties->setLocaleAccepted( true );
 	mProperties->setLocale( QLocale( lCurrentLocale->text() ) );
 	mProperties->setViewMode( QListView::ViewMode( cbViewMode->itemData( cbViewMode->currentIndex() ).toInt() ) );
-	mProperties->setViewIconType( QWBFS::WiiTDB::Covers::Type( cbViewIconType->itemData( cbViewIconType->currentIndex() ).toInt() ) );
+	mProperties->setViewIconType( QWBFS::WiiTDB::Scan( cbViewIconType->itemData( cbViewIconType->currentIndex() ).toInt() ) );
 	
 	QDialog::accept();
 	

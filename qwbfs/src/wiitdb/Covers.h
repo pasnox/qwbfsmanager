@@ -38,42 +38,30 @@
 
 #include <QString>
 #include <QUrl>
+#include <QPixmap>
+
+class pNetworkAccessManager;
 
 #define WIITDB_DOMAIN "http://wiitdb.com"
 
 namespace QWBFS {
 namespace WiiTDB {
-
-class Covers
-{
-public:
-	enum Type {
-		Invalid,
-		HQ,
+	enum Scan {
+		CoverInvalid,
+		CoverFull,
+		CoverHQ,
 		Cover,
-		_3D,
-		Disc,
-		DiscCustom,
-		Full
+		Cover3D,
+		CoverDisc,
+		CoverDiscCustom
 	};
 	
-	Covers( const QString& id );
-	Covers( const QUrl& url );
-	virtual ~Covers();
-
-	Covers( const Covers& other );
-	Covers& operator=( const Covers& other );
-	bool operator==( const Covers& other ) const;
-	bool operator!=( const Covers& other ) const;
+	QUrl checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAccessManager* cache );
 	
-	QUrl url( Covers::Type type ) const;
-	static QUrl url( Covers::Type type, const QString& id );
-	static Type type( const QUrl& url );
-
-protected:
-	QString mId;
-};
-
+	QUrl coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local = QString::null );
+	QPixmap coverBoxPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
+	QPixmap coverDiscPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
+	WiiTDB::Scan urlCover( const QUrl& url );
 }; // WiiTDB
 }; // QWBDFS
 

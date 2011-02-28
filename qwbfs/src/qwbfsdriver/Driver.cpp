@@ -102,11 +102,7 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 			Dans ce cas on essaye la langue préférée, puis EN, puis other en tout dernier.
 		*/
 		
-		// channel regions:
-		/*mRegions[ 'L' ] = QLatin1String( "PAL-R" );
-		mRegions[ 'M' ] = QLatin1String( "PAL-R" );
-		mRegions[ 'N' ] = QLatin1String( "NTSC-T" );*/
-		
+		// Regions
 		mRegions.insert( 'A', "World" ); // All regions. System channels like the Mii channel use it.
 		mRegions.insert( 'E', "NTSC-U" ); // USA and other NTSC regions except Japan.
 		mRegions.insert( 'J', "NTSC-J" ); // Japan
@@ -120,10 +116,16 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 		mRegions.insert( 'D', "PAL" ); // German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
 		mRegions.insert( 'I', "PAL" ); // Italien-speaking regions. Only if separate versions exist.
 		mRegions.insert( 'H', "PAL" ); // Dutch-speaking regions. Only if separate versions exist.
-		mRegions.insert( 'S', "PAL" ); // Dutch-speaking regions. Only if separate versions exist.
+		mRegions.insert( 'S', "PAL" ); // Spanish-speaking regions. Only if separate versions exist.
 		mRegions.insert( 'X', "PAL" ); // ??
+		mRegions.insert( 'Y', "PAL" ); // ??
+		mRegions.insert( 'Z', "PAL" ); // ??
+		// Custom disc / Channels
+		mRegions.insert( 'L', "CUSTOM" );
+		mRegions.insert( 'M', "CUSTOM" );
+		mRegions.insert( 'N', "CUSTOM" );
 		
-		// languages
+		// Languages
 		/*mLanguages[ 'L' ] = QLatin1String( "EN" ); // Japanese Import to Europe, Australia and other PAL regions
 		mLanguages[ 'M' ] = QLatin1String( "EN" ); // American Import to Europe, Australia and other PAL regions
 		mLanguages[ 'N' ] = QLatin1String( "JA" ); // Japanese Import to USA and other NTSC regions*/
@@ -134,13 +136,13 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 		mLanguages.insert( 'K', "KO" ); // Korea
 		mLanguages.insert( 'R', "RU" ); // Russia
 		mLanguages.insert( 'W', "ZH" ); // Taiwan
-		mLanguages.insert( 'Q', "JA" ); // Korea with Japanese language.
+		/*mLanguages.insert( 'Q', "JA" ); // Korea with Japanese language.
 		mLanguages.insert( 'T', "EN" ); // Korea with English language.
 		mLanguages.insert( 'F', "FR" ); // French-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
 		mLanguages.insert( 'D', "DE" ); // German-speaking regions. Only if separate versions exist, e.g. Zelda: A Link to the Past.
 		mLanguages.insert( 'I', "IT" ); // Italian-speaking regions. Only if separate versions exist.
 		mLanguages.insert( 'H', "NL" ); // Dutch-speaking regions. Only if separate versions exist.
-		mLanguages.insert( 'S', "ES" ); // Dutch-speaking regions. Only if separate versions exist.
+		mLanguages.insert( 'S', "ES" ); // Spanish-speaking regions. Only if separate versions exist.*/
 		
 		//insert( 'P', "" ); // Europe, Australia and other PAL regions.
 	}

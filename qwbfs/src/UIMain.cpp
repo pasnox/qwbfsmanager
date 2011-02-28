@@ -59,6 +59,9 @@
 #include <QNetworkReply>
 #include <QDebug>
 
+#define COVER_DISC_SIZE QSize( 160, 160 )
+#define COVER_SIZE QSize( 160, 224 )
+
 UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
@@ -327,24 +330,9 @@ void UIMain::coverRequested( const QString& id )
 {
 	mLastDiscId = id;
 	
-	const QUrl urlCD = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, id );
-	const QUrl urlCDCustom = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, id );
-	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, id );
-	
-	lCDCover->clear();
-	lCover->clear();
-	
-	if ( mCache->hasCacheData( urlCD ) || mCache->hasCacheData( urlCDCustom ) || mCache->hasCacheData( urlCover ) ) {
-		networkAccessManager_cached( QUrl( WIITDB_DOMAIN ) );
-	}
-	
-	if ( !lCDCover->pixmap() ) {
-		mCache->get( QNetworkRequest( urlCD ) );
-	}
-	
-	if ( !lCover->pixmap() ) {
-		mCache->get( QNetworkRequest( urlCover ) );
-	}
+	networkAccessManager_cached( QUrl( WIITDB_DOMAIN ) );
+	QWBFS::WiiTDB::coverDiscPixmap( id, mCache, COVER_DISC_SIZE );
+	QWBFS::WiiTDB::coverBoxPixmap( id, mCache, COVER_SIZE );
 }
 
 void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
@@ -359,14 +347,14 @@ void UIMain::networkAccessManager_finished( QNetworkReply* reply )
 
 void UIMain::networkAccessManager_cached( const QUrl& url )
 {
-	if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) ) {
+	if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) && url != QUrl() ) {
 		return;
 	}
 	
 	// update all views
-	const QList<QAbstractItemView*> views = findChildren<QAbstractItemView*>();
+	const QList<ListView*> views = findChildren<ListView*>();
 	
-	foreach ( QAbstractItemView* view, views ) {
+	foreach ( ListView* view, views ) {
 		view->viewport()->update();
 	}
 	
@@ -375,36 +363,60 @@ void UIMain::networkAccessManager_cached( const QUrl& url )
 		return;
 	}
 	
-	const QUrl urlCD = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Disc, mLastDiscId );
-	const QUrl urlCDCustom = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, mLastDiscId );
-	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, mLastDiscId );
-	
-	if ( mCache->hasCacheData( urlCD ) ) {
-		lCDCover->setPixmap( mCache->cachedPixmap( urlCD ) );
-	}
-	
-	if ( mCache->hasCacheData( urlCDCustom ) ) {
-		lCDCover->setPixmap( mCache->cachedPixmap( urlCDCustom ) );
-	}
-	
-	if ( mCache->hasCacheData( urlCover ) ) {
-		lCover->setPixmap( mCache->cachedPixmap( urlCover ) );
-	}
+	lCDCover->setPixmap( QWBFS::WiiTDB::coverDiscPixmap( mLastDiscId, mCache, COVER_DISC_SIZE ) );
+	lCover->setPixmap( QWBFS::WiiTDB::coverBoxPixmap( mLastDiscId, mCache, COVER_SIZE ) );
 }
 
 void UIMain::networkAccessManager_error( const QUrl& url, const QString& message )
 {
-	switch ( QWBFS::WiiTDB::Covers::type( url ) )
+	if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) ) {
+		return;
+	}
+	
+	const QString id = QFileInfo( url.path() ).baseName();
+	
+	switch ( QWBFS::WiiTDB::urlCover( url ) )
 	{
-		case QWBFS::WiiTDB::Covers::Disc:
-			mCache->get( QNetworkRequest( QWBFS::WiiTDB::Covers( url ).url( QWBFS::WiiTDB::Covers::DiscCustom ) ) );
+		case QWBFS::WiiTDB::CoverDisc: {
+			const QUrl enUrl = QWBFS::WiiTDB::coverUrl( QWBFS::WiiTDB::CoverDisc, id, "EN" );
+			
+			// request english
+			if ( url != enUrl ) {
+				mCache->get( QNetworkRequest( enUrl ) );
+			}
+			// or custom disk
+			else {
+				mCache->get( QNetworkRequest( QWBFS::WiiTDB::coverUrl( QWBFS::WiiTDB::CoverDiscCustom, id ) ) );
+			}
+			
 			return;
-		case QWBFS::WiiTDB::Covers::HQ:
-		case QWBFS::WiiTDB::Covers::Cover:
-		case QWBFS::WiiTDB::Covers::_3D:
-		case QWBFS::WiiTDB::Covers::DiscCustom:
-		case QWBFS::WiiTDB::Covers::Full:
-		case QWBFS::WiiTDB::Covers::Invalid:
+		}
+		case QWBFS::WiiTDB::CoverDiscCustom: {
+			const QUrl enUrl = QWBFS::WiiTDB::coverUrl( QWBFS::WiiTDB::CoverDiscCustom, id, "EN" );
+			
+			// request english
+			if ( url != enUrl ) {
+				mCache->get( QNetworkRequest( enUrl ) );
+				return;
+			}
+			
+			break;
+		}
+		case QWBFS::WiiTDB::Cover: {
+			const QUrl enUrl = QWBFS::WiiTDB::coverUrl( QWBFS::WiiTDB::Cover, id, "EN" );
+			
+			// request english
+			if ( url != enUrl ) {
+				mCache->get( QNetworkRequest( enUrl ) );
+				return;
+			}
+			
+			break;
+		}
+		case QWBFS::WiiTDB::CoverHQ:
+		case QWBFS::WiiTDB::Cover3D:
+		case QWBFS::WiiTDB::CoverFull:
+		case QWBFS::WiiTDB::CoverInvalid:
 			break;
 	}
 	

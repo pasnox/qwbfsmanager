@@ -32,9 +32,9 @@ public:
 	
 	void initialize( QWBFS::Driver* driver, pNetworkAccessManager* manager );
 	void setViewMode( QListView::ViewMode mode );
-	void setViewIconType( QWBFS::WiiTDB::Covers::Type type );
+	void setViewIconType( QWBFS::WiiTDB::Scan scan );
 	
-	QWBFS::WiiTDB::Covers::Type viewIconType() const;
+	QWBFS::WiiTDB::Scan viewIconType() const;
 	QWBFS::Driver* driver() const;
 	QWBFS::Model::DiscModel* model() const;
 
@@ -42,7 +42,7 @@ protected slots:
 	void header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
 
 protected:
-	QWBFS::WiiTDB::Covers::Type mIconType;
+	QWBFS::WiiTDB::Scan mIconType;
 	QWBFS::Driver* mDriver;
 	QWBFS::Model::DiscModel* mModel;
 	QWBFS::Model::DiscDelegate* mDelegate;
