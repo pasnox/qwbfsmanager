@@ -502,6 +502,26 @@ all data will be erased permanently, are you sure?</source>
         <source>Origin</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="325"/>
+        <source>Sort by Id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="327"/>
+        <source>Sort by Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="329"/>
+        <source>Sort by Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="331"/>
+        <source>Sort by Region</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SplashScreen</name>
