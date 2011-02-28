@@ -203,11 +203,9 @@ void PartitionWidget::views_selectionChanged()
 {
 	const QItemSelectionModel* sm = qobject_cast<const QItemSelectionModel*>( sender() );
 	const QWBFS::Model::DiscModel* model = qobject_cast<const QWBFS::Model::DiscModel*>( sm->model() );
+	const QModelIndexList indexes = sm->selectedIndexes();
 	
-	foreach ( const QModelIndex& index, sm->selectedIndexes() ) {
-		const QString discId = model->discId( index );
-		emit coverRequested( discId );
-	}
+	emit coverRequested( indexes.isEmpty() ? QString::null : model->discId( indexes.last() ) );
 }
 
 void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )
