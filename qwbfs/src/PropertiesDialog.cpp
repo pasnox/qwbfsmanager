@@ -107,7 +107,7 @@ void PropertiesDialog::localeChanged()
 	cbViewMode->setItemText( cbViewMode->findData( QListView::IconMode ), tr( "Icon" ) );
 	
 	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::CoverDisc ), tr( "Disc" ) );
-	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Cover ), tr( "Box" ) );
+	cbViewIconType->setItemText( cbViewIconType->findData( QWBFS::WiiTDB::Cover ), tr( "Cover" ) );
 	
 	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::NoProxy ), tr( "No Proxy" ) );
 	cbProxyType->setItemText( cbProxyType->findData( QNetworkProxy::Socks5Proxy ), tr( "Socks5" ) );
