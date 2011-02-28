@@ -11,7 +11,7 @@
 ##
 ###########################################################################################
 
-CONFIG	-= debug_and_release release debug warn_off warn_on
+CONFIG	-= debug_and_release release debug warn_off warn_on x86 ppc universal
 CONFIG	*= release warn_on
 
 CONFIG(debug, debug|release) {
@@ -36,8 +36,8 @@ CONFIG(debug, debug|release) {
 }
 
 # Mac universal build from 10.3 to up to 10.5
-mac {
+mac:universal {
 	QMAKE_MACOSX_DEPLOYMENT_TARGET	= 10.3
 	QMAKE_MAC_SDK	= /Developer/SDKs/MacOSX10.4u.sdk
-	CONFIG	+= x86 ppc
+	CONFIG	*= x86 ppc
 }

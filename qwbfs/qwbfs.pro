@@ -15,12 +15,14 @@ TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfsmanager)
 mac:TARGET	= $$quote(QWBFSManager)
-CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
-QT	*= core gui network xml
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
 include( ../shared.pri )
+
+CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
+QT	*= core gui network xml
+
 include( ../libwbfs/libwbfs.pri )
 
 exists( "/usr/lib/libfresh*.a" ):CONFIG *= fresh_static
@@ -60,7 +62,8 @@ fresh_static|fresh_shared {
 	PRE_TARGETDEPS	*= $${FRESH_PATH}
 
 	QT	*= xml network
-	qtAddLibrary( fresh )
+	!mac:qtAddLibrary( fresh )
+	mac:LIBS	*= -lfresh
 }
 
 # define some usefull values
