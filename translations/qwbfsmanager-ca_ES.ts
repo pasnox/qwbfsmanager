@@ -506,22 +506,22 @@ totes les dades seran esborrades de forma permanent. Està segur?</translation>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="325"/>
         <source>Sort by Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar per Id</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="327"/>
         <source>Sort by Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar per Títol</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="329"/>
         <source>Sort by Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar per Mida</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/DiscModel.cpp" line="331"/>
         <source>Sort by Region</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar per Regió</translation>
     </message>
 </context>
 <context>
