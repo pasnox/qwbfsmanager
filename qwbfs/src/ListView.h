@@ -37,6 +37,7 @@ public:
 	QWBFS::WiiTDB::Scan viewIconType() const;
 	QWBFS::Driver* driver() const;
 	QWBFS::Model::DiscModel* model() const;
+	pNetworkAccessManager* cacheManager() const;
 
 protected slots:
 	void header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
@@ -46,6 +47,7 @@ protected:
 	QWBFS::Driver* mDriver;
 	QWBFS::Model::DiscModel* mModel;
 	QWBFS::Model::DiscDelegate* mDelegate;
+	pNetworkAccessManager* mCacheManager;
 	QHeaderView* mHeader;
 	
 	virtual void resizeEvent( QResizeEvent* event );

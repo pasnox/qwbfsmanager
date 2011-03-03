@@ -15,6 +15,7 @@ ListView::ListView( QWidget* parent )
 	mModel = 0;
 	mDelegate = 0;
 	mHeader = new QHeaderView( Qt::Horizontal, this );
+	mCacheManager = 0;
 	
 	QPalette pal = viewport()->palette();
 	pal.setColor( viewport()->backgroundRole(), pal.color( viewport()->backgroundRole() ).darker() );
@@ -38,6 +39,7 @@ void ListView::initialize( QWBFS::Driver* driver, pNetworkAccessManager* manager
 	mDriver = driver;
 	mModel = new QWBFS::Model::DiscModel( this, mDriver );
 	mDelegate = new QWBFS::Model::DiscDelegate( mModel, manager );
+	mCacheManager = manager;
 	
 	setModel( mModel );
 	setItemDelegate( mDelegate );
@@ -100,6 +102,11 @@ QWBFS::Driver* ListView::driver() const
 QWBFS::Model::DiscModel* ListView::model() const
 {
 	return mModel;
+}
+
+pNetworkAccessManager* ListView::cacheManager() const
+{
+	return mCacheManager;
 }
 
 void ListView::header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
