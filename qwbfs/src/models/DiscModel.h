@@ -57,6 +57,12 @@ class DiscModel : public QAbstractItemModel
 public:
 	typedef QPair<int, int> PairIntInt;
 	
+	enum CustomRole {
+		ListModeSizeHintRole = Qt::UserRole,
+		IconModeSizeHintRole,
+		CoverFlowModeSizeHintRole
+	};
+	
 	DiscModel( ListView* parent = 0, QWBFS::Driver* driver = 0 );
 	virtual ~DiscModel();
 	
@@ -78,6 +84,9 @@ public:
 	virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
 	virtual QStringList mimeTypes() const;
 	
+	QPixmap coverPixmap( const QString& id, const QSize& size, bool coverFlow = false ) const;
+	QPixmap statePixmap( int state, const QSize& size ) const;
+	
 	ListView* view() const;
 	
 	void insertDiscs( int index, const QWBFS::Model::DiscList& discs );
@@ -88,6 +97,7 @@ public:
 	QWBFS::Model::DiscList discs( const QModelIndexList& indexes );
 	QWBFS::Model::DiscList discs( const QItemSelection& selection );
 	QWBFS::Model::Disc disc( const QModelIndex& index ) const;
+	QModelIndex index( const QString& id ) const;
 	QModelIndex index( const QWBFS::Model::Disc& disc, int column = 0 ) const;
 	QString discId( const QModelIndex& index ) const;
 	void removeSelection( const QItemSelection& selection );
@@ -101,6 +111,7 @@ protected:
 	ListView* mListView;
 	Driver* mDriver;
 	QWBFS::Model::DiscList mDiscs;
+	QHash<QString, QPersistentModelIndex> mIndexes;
 	
 	static QStringList mMimeTypes;
 

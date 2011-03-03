@@ -45,7 +45,6 @@
 #include <FreshCore/pCoreUtils>
 
 #include <QPainter>
-#include <QPixmapCache>
 #include <QDebug>
 
 using namespace QWBFS::Model;
@@ -90,40 +89,15 @@ QSize DiscDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIn
 	if ( mModel ) {
 		switch ( mModel->view()->viewMode() ) {
 			case QListView::ListMode: {
-				return QSize( -1, 37 );
+				return mModel->data( index, DiscModel::ListModeSizeHintRole ).toSize();
 			}
 			case QListView::IconMode: {
-				return QSize( 120, 120 );
+				return mModel->data( index, DiscModel::IconModeSizeHintRole ).toSize();
 			}
 		}
 	}
 	
 	return QStyledItemDelegate::sizeHint( option, index );
-}
-
-QPixmap DiscDelegate::coverPixmap( const QString& id, const QSize& size ) const
-{
-	if ( mModel->view()->viewIconType() == QWBFS::WiiTDB::Cover ) {
-		return QWBFS::WiiTDB::coverBoxPixmap( id, mCache, size );
-	}
-	
-	return QWBFS::WiiTDB::coverDiscPixmap( id, mCache, size );
-}
-
-QPixmap DiscDelegate::statePixmap( int state, const QSize& size ) const
-{
-	const QString url = state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png";
-	const QString key = QString( "%1-%2-%3" ).arg( url ).arg( size.width() ).arg( size.height() );
-	QPixmap pixmap;
-	
-	if ( !QPixmapCache::find( key, pixmap ) ) {
-		if ( pixmap.load( url ) ) {
-			pixmap = pixmap.scaled( size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
-			QPixmapCache::insert( key, pixmap );
-		}
-	}
-	
-	return pixmap;
 }
 
 void DiscDelegate::paintFrame( QPainter* painter, const QStyleOptionViewItemV4& option, bool pair ) const
@@ -171,7 +145,7 @@ void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& o
 	{
 		rect = option.rect;
 		rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
-		QPixmap pixmap = disc.state == QWBFS::Driver::None ? coverPixmap( disc.id, rect.size() ) : statePixmap( disc.state, rect.size() );
+		QPixmap pixmap = disc.state == QWBFS::Driver::None ? mModel->coverPixmap( disc.id, rect.size() ) : mModel->statePixmap( disc.state, rect.size() );
 		
 		if ( !pixmap.isNull() ) {
 			painter->drawPixmap( rect.topLeft(), pixmap );
@@ -225,8 +199,8 @@ void DiscDelegate::paintIcon( QPainter* painter, const QStyleOptionViewItemV4& o
 	const int spacing = 5;
 	const QString text = disc.title;
 	QRect rect = option.rect.adjusted( margin, margin, -margin, -margin );
-	QPixmap cover = coverPixmap( disc.id, rect.size() -QSize( 0, painter->font().pointSize() +spacing ) );
-	QPixmap state = statePixmap( disc.state, QSize( 24, 24 ) );
+	QPixmap cover = mModel->coverPixmap( disc.id, rect.size() -QSize( 0, painter->font().pointSize() +spacing ) );
+	QPixmap state = mModel->statePixmap( disc.state, QSize( 24, 24 ) );
 	
 	// selection
 	if ( selected ) {

@@ -41,6 +41,7 @@
 #include <QMimeData>
 #include <QUrl>
 #include <QFileInfo>
+#include <QPixmapCache>
 #include <QDebug>
 
 #define URLS_FORMAT "text/uri-list"
@@ -149,14 +150,29 @@ int DiscModel::columnCount( const QModelIndex& parent ) const
 
 QVariant DiscModel::data( const QModelIndex& index, int role ) const
 {
+	switch ( role ) {
+		case DiscModel::ListModeSizeHintRole:
+			return QSize( -1, 37 );
+		case DiscModel::IconModeSizeHintRole:
+			return QSize( 120, 120 );
+		case DiscModel::CoverFlowModeSizeHintRole:
+			return QSize( 180, 240 );
+	}
+	
 	if ( !index.isValid() || index.row() < 0 || index.row() >= mDiscs.count() || index.column() < 0 || index.column() >= DISC_MODEL_COLUMN_COUNT ) {
 		return QVariant();
 	}
 	
 	const QWBFS::Model::Disc disc = mDiscs.value( index.row() );
 	
-	switch ( role )
-	{
+	switch ( role ) {
+		case Qt::DecorationRole: {
+			if ( index.column() == 0 ) {
+				return coverPixmap( disc.id, data( index, DiscModel::CoverFlowModeSizeHintRole ).toSize() );
+			}
+			
+			break;
+		}
 		case Qt::DisplayRole: {
 			switch ( index.column() ) {
 				case 0:
@@ -172,9 +188,10 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 				case 5:
 					return disc.origin;
 			}
+			
+			break;
 		}
-		case Qt::ToolTipRole:
-		{
+		case Qt::ToolTipRole: {
 			QStringList values;
 			
 			if ( !disc.id.isEmpty() ) {
@@ -189,11 +206,7 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 			values << tr( "Error: %1" ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
 			
 			return values.join( "\n" );
-			
-			break;
 		}
-		default:
-			break;
 	}
 	
 	return QVariant();
@@ -248,6 +261,7 @@ bool DiscModel::removeRows( int row, int count, const QModelIndex& parent )
 	
 	beginRemoveRows( QModelIndex(), row, row +count -1 );
 	for ( int i = 0; i < count; i++ ) {
+		mIndexes.remove( mDiscs.at( i ).id );
 		mDiscs.removeAt( row );
 	}
 	endRemoveRows();
@@ -265,10 +279,20 @@ bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int ro
 	
 	switch ( role )
 	{
-		case Qt::DisplayRole:
+		case Qt::DecorationRole: {
 			switch ( index.column() ) {
 				case 0:
 					break;
+				default:
+					return false;
+			}
+			
+			break;
+		}
+		case Qt::DisplayRole: {
+			switch ( index.column() ) {
+				case 0:
+					return false;
 				case 1:
 					mDiscs[ index.row() ].id = value.toString();
 					break;
@@ -287,6 +311,7 @@ bool DiscModel::setData( const QModelIndex& index, const QVariant& value, int ro
 			}
 			
 			break;
+		}
 		default:
 			return false;
 	}
@@ -467,6 +492,31 @@ QStringList DiscModel::mimeTypes() const
 	return mMimeTypes;
 }
 
+QPixmap DiscModel::coverPixmap( const QString& id, const QSize& size, bool coverFlow ) const
+{
+	if ( view()->viewIconType() == QWBFS::WiiTDB::Cover || coverFlow ) {
+		return QWBFS::WiiTDB::coverBoxPixmap( id, view()->cacheManager(), size );
+	}
+	
+	return QWBFS::WiiTDB::coverDiscPixmap( id, view()->cacheManager(), size );
+}
+
+QPixmap DiscModel::statePixmap( int state, const QSize& size ) const
+{
+	const QString url = state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png";
+	const QString key = QString( "%1-%2-%3" ).arg( url ).arg( size.width() ).arg( size.height() );
+	QPixmap pixmap;
+	
+	if ( !QPixmapCache::find( key, pixmap ) ) {
+		if ( pixmap.load( url ) ) {
+			pixmap = pixmap.scaled( size, Qt::KeepAspectRatio, Qt::SmoothTransformation );
+			QPixmapCache::insert( key, pixmap );
+		}
+	}
+	
+	return pixmap;
+}
+
 ListView* DiscModel::view() const
 {
 	return mListView;
@@ -482,7 +532,9 @@ void DiscModel::insertDiscs( int index, const QWBFS::Model::DiscList& discs )
 	
 	beginInsertRows( QModelIndex(), index, discs.count() -1 );
 	for ( int i = 0; i < discs.count(); i++ ) {
+		const QWBFS::Model::Disc& disc = discs.at( i );
 		mDiscs.insert( i +index, discs.at( i ) );
+		mIndexes[ disc.id ] = this->index( disc );
 	}
 	endInsertRows();
 	
@@ -507,6 +559,7 @@ void DiscModel::setDisc( const QModelIndex& index, const QWBFS::Model::Disc& dis
 	}
 	
 	mDiscs[ index.row() ] = disc;
+	mIndexes[ disc.id ] = this->index( disc );
 	emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), DISC_MODEL_COLUMN_COUNT -1 ) );
 }
 
@@ -538,6 +591,11 @@ QWBFS::Model::DiscList DiscModel::discs( const QItemSelection& selection )
 QWBFS::Model::Disc DiscModel::disc( const QModelIndex& index ) const
 {
 	return mDiscs.value( index.row() );
+}
+
+QModelIndex DiscModel::index( const QString& id ) const
+{
+	return mIndexes.value( id );
 }
 
 QModelIndex DiscModel::index( const QWBFS::Model::Disc& disc, int column ) const
@@ -600,6 +658,7 @@ void DiscModel::clear()
 	
 	beginRemoveRows( QModelIndex(), 0, mDiscs.count() -1 );
 	mDiscs.clear();
+	mIndexes.clear();
 	endRemoveRows();
 	
 	emit countChanged( mDiscs.count() );
