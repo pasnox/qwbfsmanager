@@ -81,6 +81,7 @@ protected:
 protected slots:
 	void models_countChanged();
 	void views_selectionChanged();
+	void coverFlow_centerIndexChanged( const QModelIndex& index );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
 	void progress_finished();
 	

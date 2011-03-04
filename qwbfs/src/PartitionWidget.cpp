@@ -62,9 +62,21 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	lvDiscs->initialize( mDriver, window->cache() );
 	lvDiscs->setViewMode( properties.viewMode() );
 	lvDiscs->setViewIconType( properties.viewIconType() );
+	cfvDiscs->setModel( lvDiscs->model() );
+	cfvDiscs->setColumn( 0 );
+	cfvDiscs->setDisplayTextColumn( 2 );
 	lvImport->initialize( mDriver, window->cache() );
 	lvImport->setViewMode( properties.viewMode() );
 	lvImport->setViewIconType( properties.viewIconType() );
+	
+	QPalette pal = cfvDiscs->palette();
+	pal.setColor( QPalette::WindowText, QColor( 255, 255, 255 ) );
+	cfvDiscs->setPalette( pal );
+	
+	QFont font = cfvDiscs->font();
+	font.setBold( true );
+	font.setPixelSize( 18 );
+	cfvDiscs->setFont( font );
 	
 	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
 	
@@ -72,6 +84,7 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	
 	connect( lvDiscs->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
 	connect( lvImport->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+	connect( cfvDiscs, SIGNAL( centerIndexChanged( const QModelIndex& ) ), this, SLOT( coverFlow_centerIndexChanged( const QModelIndex& ) ) );
 	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( cbPartitions->lineEdit(), SIGNAL( textChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
@@ -206,6 +219,11 @@ void PartitionWidget::views_selectionChanged()
 	const QModelIndexList indexes = sm->selectedIndexes();
 	
 	emit coverRequested( indexes.isEmpty() ? QString::null : model->discId( indexes.last() ) );
+}
+
+void PartitionWidget::coverFlow_centerIndexChanged( const QModelIndex& index )
+{
+	emit coverRequested( index.isValid() ? lvDiscs->model()->discId( index ) : QString::null );
 }
 
 void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )

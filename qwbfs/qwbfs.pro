@@ -25,21 +25,21 @@ QT	*= core gui network xml
 
 include( ../libwbfs/libwbfs.pri )
 
-exists( "/usr/lib/libfresh*.a" ):CONFIG *= fresh_static
-else:exists( "/usr/lib/libfresh*.so" ):CONFIG *= fresh_shared
+exists( "/usr/lib/libfresh*.a" ):CONFIG	*= fresh_static
+else:exists( "/usr/lib/libfresh*.so" ):CONFIG	*= fresh_shared
 
 fresh_static|fresh_shared {
-	!build_pass:message( "Using system fresh library." )
+	!build_pass:	message( "Using system fresh library." )
 } else {
 	exists( ../fresh/fresh.pro ) {
 		FRESH_PATH	= ../fresh
-		!build_pass:message( "Using bundled fresh library." )
+		!build_pass:		message( "Using bundled fresh library." )
 	} else:exists( ../../../fresh/fresh.pro ) {
 		FRESH_PATH	= ../../../fresh
-		!build_pass:message( "Using external fresh library." )
+		!build_pass:		message( "Using external fresh library." )
 	}
 	else {
-		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+		!build_pass:		error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
 	}
 
 	include( $$FRESH_PATH/functions.pri )
@@ -58,11 +58,11 @@ fresh_static|fresh_shared {
 
 	DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
 	INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
-	
+
 	PRE_TARGETDEPS	*= $${FRESH_PATH}
 
 	QT	*= xml network
-	!mac:qtAddLibrary( fresh )
+	!mac:	qtAddLibrary( fresh )
 	mac:LIBS	*= -lfresh
 }
 
@@ -156,7 +156,9 @@ HEADERS	*= src/main.h \
 	src/wiitdb/Covers.h \
 	src/PropertiesDialog.h \
 	src/Properties.h \
-	src/ListView.h
+	src/ListView.h \
+	src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h \
+	src/CoverFlowView.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -176,6 +178,8 @@ SOURCES	*= src/main.cpp \
 	src/wiitdb/Covers.cpp \
 	src/PropertiesDialog.cpp \
 	src/Properties.cpp \
-	src/ListView.cpp
+	src/ListView.cpp \
+	src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.cpp \
+	src/CoverFlowView.cpp
 
 include( installs.pri )

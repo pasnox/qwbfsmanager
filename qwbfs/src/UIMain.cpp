@@ -351,11 +351,14 @@ void UIMain::networkAccessManager_cached( const QUrl& url )
 		return;
 	}
 	
-	// update all views
-	const QList<ListView*> views = findChildren<ListView*>();
+	// update all models
+	const QString id = QFileInfo( url.path() ).baseName();
+	const QList<QWBFS::Model::DiscModel*> models = findChildren<QWBFS::Model::DiscModel*>();
 	
-	foreach ( ListView* view, views ) {
-		view->viewport()->update();
+	foreach ( QWBFS::Model::DiscModel* model, models ) {
+		const QModelIndex index = model->index( id );
+		
+		model->setData( index, QVariant(), Qt::DecorationRole );
 	}
 	
 	lCDCover->setPixmap( QWBFS::WiiTDB::coverDiscPixmap( mLastDiscId, mCache, COVER_DISC_SIZE ) );
