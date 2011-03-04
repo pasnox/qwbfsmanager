@@ -1,0 +1,7 @@
+
+PictureFlow version 0.1.0 (initial release)
+
+  basic functionality similar to Apple's Cover Flow
+  optimized software renderer
+  optional blur effect for the reflection
+  single code base for Qt 4/3/2
