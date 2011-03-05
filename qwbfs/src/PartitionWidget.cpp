@@ -41,6 +41,7 @@
 #include "UIMain.h"
 
 #include <FreshCore/pNetworkAccessManager>
+#include "models/pPartitionModel.h"
 
 #include <QLineEdit>
 #include <QInputDialog>
@@ -69,14 +70,14 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	lvImport->setViewMode( properties.viewMode() );
 	lvImport->setViewIconType( properties.viewIconType() );
 	
-	QPalette pal = cfvDiscs->palette();
-	pal.setColor( QPalette::WindowText, QColor( 255, 255, 255 ) );
-	cfvDiscs->setPalette( pal );
+	QPalette cfvPal = cfvDiscs->palette();
+	cfvPal.setColor( QPalette::WindowText, QColor( 255, 255, 255 ) );
+	cfvDiscs->setPalette( cfvPal );
 	
-	QFont font = cfvDiscs->font();
-	font.setBold( true );
-	font.setPixelSize( 18 );
-	cfvDiscs->setFont( font );
+	QFont cfvFont = cfvDiscs->font();
+	cfvFont.setBold( true );
+	cfvFont.setPixelSize( 18 );
+	cfvDiscs->setFont( cfvFont );
 	
 	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
 	
@@ -87,8 +88,7 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	connect( cfvDiscs, SIGNAL( centerIndexChanged( const QModelIndex& ) ), this, SLOT( coverFlow_centerIndexChanged( const QModelIndex& ) ) );
 	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
-	connect( cbPartitions->lineEdit(), SIGNAL( textChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
-	connect( cbPartitions->lineEdit(), SIGNAL( returnPressed() ), tbLoad, SLOT( click() ) );
+	connect( cbPartitions, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
 }
 
 PartitionWidget::~PartitionWidget()
@@ -131,7 +131,7 @@ QToolButton* PartitionWidget::showHideImportViewButton() const
 
 QString PartitionWidget::currentPartition() const
 {
-	return cbPartitions->currentText();
+	return cbPartitions->itemText( cbPartitions->currentIndex() );
 }
 
 void PartitionWidget::setMainView( bool main )
@@ -140,21 +140,13 @@ void PartitionWidget::setMainView( bool main )
 	tbClose->setVisible( !main );
 }
 
-void PartitionWidget::setPartitions( const QStringList& partitions )
-{
-	const QString current = currentPartition();
-
-	const bool locked = cbPartitions->blockSignals( true );
-	cbPartitions->clear();
-	cbPartitions->addItems( partitions );
-	cbPartitions->setEditText( current );
-	cbPartitions->blockSignals( locked );
-}
-
 void PartitionWidget::setCurrentPartition( const QString& partition )
 {
-	mDriver->setPartition( partition );
-	cbPartitions->setEditText( partition );
+	if ( mDriver->partition() != partition || currentPartition() != partition ) {
+		mDriver->setPartition( partition );
+		cbPartitions->setCurrentIndex( cbPartitions->findText( partition ) );
+		tbLoad->click();
+	}
 }
 
 void PartitionWidget::showError( const QString& error )
@@ -233,6 +225,7 @@ void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )
 
 void PartitionWidget::progress_finished()
 {
+	PartitionComboBox::partitionModel()->update();
 	tbLoad->click();
 }
 

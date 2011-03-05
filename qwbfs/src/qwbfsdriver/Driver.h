@@ -89,6 +89,7 @@ public:
 	};
 	
 	Driver( QObject* parent = 0, const QWBFS::Partition::Handle& partitionHandle = QWBFS::Partition::Handle() );
+	Driver( const QWBFS::Partition::Handle& partitionHandle );
 	virtual ~Driver();
 	
 	void setPartition( const QString& partition );
@@ -304,6 +305,8 @@ protected:
 	static QHash<QString, QWBFS::Partition::Handle> mHandles;
 	static QHash<int, QString> mLanguages;
 	static QHash<int, QString> mRegions;
+	
+	void init();
 	
 	static int u8StrLength( u8* str );
 	

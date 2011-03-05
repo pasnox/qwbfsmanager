@@ -35,6 +35,8 @@
 ****************************************************************************/
 #include "Gauge.h"
 
+#include <FreshCore/pCoreUtils>
+
 #include <QStyleFactory>
 #include <QStyleOptionProgressBarV2>
 #include <QPainter>
@@ -133,11 +135,11 @@ void Gauge::paintEvent( QPaintEvent* event )
 	option.minimum = 0;
 	option.progress = 0;
 	option.text = option.text = tr( "Usage %1 (%2%) / %3 - Free %4 (%5%)" )
-		.arg( fileSizeToString( used ) )
-		.arg( fileSizeAdaptString( available != 0 ? used /available *cent : 0 ) )
-		.arg( fileSizeToString( available ) )
-		.arg( fileSizeToString( free ) )
-		.arg( fileSizeAdaptString( available != 0 ? free /available *cent : 0 ) );
+		.arg( pCoreUtils::fileSizeToString( used ) )
+		.arg( pCoreUtils::fileSizeAdaptString( available != 0 ? used /available *cent : 0 ) )
+		.arg( pCoreUtils::fileSizeToString( available ) )
+		.arg( pCoreUtils::fileSizeToString( free ) )
+		.arg( pCoreUtils::fileSizeAdaptString( available != 0 ? free /available *cent : 0 ) );
 	option.textAlignment = Qt::AlignCenter;
 	option.textVisible = true;
 	option.direction = layoutDirection();
@@ -183,44 +185,4 @@ void Gauge::paintEvent( QPaintEvent* event )
 	painter.setBrush( Qt::NoBrush );
 	painter.drawText( rect(), flags, option.text );
 	//style()->drawControl( QStyle::CE_ProgressBarLabel, &option, &painter, this );
-}
-
-QString Gauge::fileSizeAdaptString( qreal nb )
-{
-	return nb >= 100 ? QString::number( nb, 'f', 0 ) : QString::number( nb, 'g', 3 );
-}
-
-QString Gauge::fileSizeToString( qreal nb )
-{
-	if ( nb < 1024 )
-	{
-		return QString::number( nb ) +" " +QObject::tr( "B"  );
-	}
-
-	if ( ( nb = nb / 1024 ) < 1024 )
-	{
-		return fileSizeAdaptString( nb ) +" " +QObject::tr( "KB" );
-	}
-
-	if ( ( nb = nb / 1024 ) < 1024 )
-	{
-		return fileSizeAdaptString( nb ) +" " +QObject::tr( "MB" );
-	}
-
-	if ( ( nb = nb / 1024 ) < 1024 )
-	{
-		return fileSizeAdaptString( nb ) +" " +QObject::tr( "GB" );
-	}
-
-	if ( ( nb = nb / 1024 ) < 1024 )
-	{
-		return fileSizeAdaptString( nb ) +" " +QObject::tr( "TB" );
-	}
-
-	if ( ( nb = nb / 1024 ) < 1024 )
-	{
-		return fileSizeAdaptString( nb ) +" " +QObject::tr( "PB" );
-	}
-
-	return QObject::tr( "Too big" );
 }

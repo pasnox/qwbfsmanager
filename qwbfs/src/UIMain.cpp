@@ -48,6 +48,7 @@
 #include <FreshGui/pTranslationDialog>
 #include <FreshGui/pUpdateChecker>
 #include <FreshGui/pPaypalButton>
+#include "models/pPartitionModel.h"
 
 #include <QMenu>
 #include <QFileSystemModel>
@@ -131,8 +132,6 @@ UIMain::UIMain( QWidget* parent )
 	pwMainView->setMainView( true );
 	pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
-	tbReloadDrives->click();
-	aReloadPartitions->trigger();
 	
 	qmtbInfos->installEventFilter( this );
 	
@@ -230,6 +229,11 @@ void UIMain::loadProperties( bool firstInit )
 {
 	Properties properties( this );
 	
+	PartitionComboBox::partitionModel()->addPartitions( properties.customPartitions() );
+	
+	tbReloadDrives->click();
+	aReloadPartitions->trigger();
+	
 	mCache->setMaximumCacheSize( properties.cacheDiskSize() );
 	mCache->setCacheDirectory( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
 	
@@ -252,10 +256,6 @@ void UIMain::loadProperties( bool firstInit )
 		tvFolders->scrollTo( index );
 		on_tvFolders_activated( index );
 		pwMainView->setCurrentPartition( properties.selectedPartition() );
-		
-		if ( !properties.selectedPartition().isEmpty() ) {
-			pwMainView->tbLoad->click();
-		}
 	}
 	
 	pTranslationManager* translationManager = pTranslationManager::instance();
@@ -288,6 +288,7 @@ void UIMain::saveProperties()
 	properties.setUpdateLastChecked( mUpdateChecker->lastChecked() );
 	properties.setSelectedPath( selectedPath );
 	properties.setSelectedPartition( pwMainView->currentPartition() );
+	properties.setCustomPartitions( PartitionComboBox::partitionModel()->customPartitions() );
 	properties.saveState( this );
 }
 
@@ -315,7 +316,6 @@ void UIMain::openViewRequested()
 {
 	PartitionWidget* pw = new PartitionWidget( this );
 	pw->setMainView( false );
-	pw->setPartitions( mPartitions );
 	pw->showHideImportViewButton()->setChecked( false );
 	connectView( pw );
 	sViews->addWidget( pw );
@@ -428,68 +428,14 @@ void UIMain::networkAccessManager_cacheCleared()
 
 void UIMain::on_aReloadPartitions_triggered()
 {
-	mPartitions.clear();
-
-#if defined( Q_OS_WIN )
-	foreach ( const QFileInfo& drive, QDir::drives() ) {
-		mPartitions << drive.absoluteFilePath().remove( ":" ).remove( "/" ).remove( "\\" );
-	}
-#elif defined( Q_OS_MAC )
-	QProcess process;
-	process.start( "diskutil list" );
-	process.waitForFinished();
+	PartitionComboBox::partitionModel()->update();
 	
-	const QStringList partitions = QString::fromLocal8Bit( process.readAll() ).split( "\n" );
-	
-	foreach ( QString partition, partitions ) {
-		partition = partition.trimmed();
-		
-		if ( partition.startsWith( "/" ) || partition.startsWith( "#" ) || partition.isEmpty() ) {
-			continue;
-		}
-		
-		partition = partition.simplified().section( ' ', -1 );
-		
-		// skip disks
-		if ( partition[ partition.size() -2 ].toLower() != 's' ) {
-			continue;
-		}
-		
-		mPartitions << QString( "/dev/%1" ).arg( partition );
-	}
-#elif defined( __linux__ )
-	QProcess process;
-	process.start( "cat /proc/partitions" );
-	process.waitForFinished();
-	
-	const QStringList partitions = QString::fromLocal8Bit( process.readAll() ).split( "\n" );
-	
-	foreach ( QString partition, partitions ) {
-		if ( partition.startsWith( "major" ) || partition.isEmpty() ) {
-			continue;
-		}
-		
-		partition = partition.simplified().section( ' ', -1 );
-		
-		// skip disks
-		if ( !partition[ partition.size() -1 ].isDigit() ) {
-			continue;
-		}
-		
-		mPartitions << QString( "/dev/%1" ).arg( partition );
-	}
-#else
-	QMessageBox::information( this, QString::null,
-		tr(
-			"I don't know how to list partition for this platform.\n"
-			"You will have to set the correct partition path yourself for mounting partitions."
-		) );
-#endif
-	
-	const QList<PartitionWidget*> widgets = sViews->findChildren<PartitionWidget*>();
-	
-	foreach ( PartitionWidget* widget, widgets ) {
-		widget->setPartitions( mPartitions );
+	if ( PartitionComboBox::partitionModel()->rowCount() == 0 ) {
+		QMessageBox::information( this, QString::null,
+			tr(
+				"I don't know how to list partition for this platform.\n"
+				"You will have to set the correct partition path yourself for mounting partitions."
+			) );
 	}
 }
 

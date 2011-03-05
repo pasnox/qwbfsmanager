@@ -3,7 +3,7 @@
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
-** FileName  : PartitionWidget.h
+** FileName  : PartitionDelegate.h
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
 ** Home Page : http://code.google.com/p/qwbfs
@@ -33,75 +33,29 @@
 ** wish to do so, delete this exception statement from your version.
 **
 ****************************************************************************/
-#ifndef PARTITIONWIDGET_H
-#define PARTITIONWIDGET_H
+#ifndef PARTITIONDELEGATE_H
+#define PARTITIONDELEGATE_H
 
-#include "ui_PartitionWidget.h"
+#include <QStyledItemDelegate>
 
-namespace QWBFS {
-class Driver;
-namespace Model {
-struct Disc;
-class DiscModel;
-}; // Model
-}; // QWBFS
+#include "models/pPartitionModel.h"
 
-class PartitionWidget : public QWidget, public Ui::PartitionWidget
+class PartitionDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
-
+	
 public:
-	PartitionWidget( QWidget* parent = 0 );
-	virtual ~PartitionWidget();
+	PartitionDelegate( pPartitionModel* parent );
+	virtual ~PartitionDelegate();
 	
-	virtual bool event( QEvent* event );
-	
-	const QWBFS::Driver* driver() const;
-	QWBFS::Model::DiscModel* discModel() const;
-	QWBFS::Model::DiscModel* importModel() const;
-	QToolButton* showHideImportViewButton() const;
-	QString currentPartition() const;
-	
-	void setMainView( bool main );
-
-public slots:
-	void setCurrentPartition( const QString& partition );
-	void showError( const QString& error );
-	void showError( int error );
+	virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+	virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
 protected:
-	QWBFS::Driver* mDriver;
+	pPartitionModel* mModel;
+	QStyle* mStyle;
 	
-	virtual void dragEnterEvent( QDragEnterEvent* event );
-	virtual void dropEvent( QDropEvent* event );
-	
-	void localeChanged();
-
-protected slots:
-	void models_countChanged();
-	void views_selectionChanged();
-	void coverFlow_centerIndexChanged( const QModelIndex& index );
-	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void progress_finished();
-	
-	void on_cbPartitions_currentIndexChanged( int index );
-	
-	void on_tbLoad_clicked();
-	void on_tbFormat_clicked();
-	void on_tbOpen_clicked();
-	void on_tbClose_clicked();
-	
-	void on_tbRemoveDiscs_clicked();
-	void on_tbRenameDisc_clicked();
-	
-	void on_tbClearImport_clicked();
-	void on_tbRemoveImport_clicked();
-	void on_tbImport_clicked();
-
-signals:
-	void openViewRequested();
-	void closeViewRequested();
-	void coverRequested( const QString& id );
+	void paintFrame( QPainter* painter, const QStyleOption* option, bool pair = true ) const;
 };
 
-#endif // PARTITIONWIDGET_H
+#endif // PARTITIONDELEGATE_H

@@ -61,8 +61,28 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 {
 	mProperties = partitionHandle.properties();
 	mHandle = partitionHandle;
-	mHasCreatedHandle = false;
+	mHasCreatedHandle = !partitionHandle.isValid();
 	
+	init();
+}
+
+Driver::Driver( const QWBFS::Partition::Handle& partitionHandle )
+	: QObject( 0 )
+{
+	mProperties = partitionHandle.properties();
+	mHandle = partitionHandle;
+	mHasCreatedHandle = !partitionHandle.isValid();
+	
+	init();
+}
+
+Driver::~Driver()
+{
+	close();
+}
+
+void Driver::init()
+{
 	if ( mRegions.isEmpty() && mLanguages.isEmpty() )
 	{
 		/*
@@ -146,11 +166,6 @@ Driver::Driver( QObject* parent, const QWBFS::Partition::Handle& partitionHandle
 		
 		//insert( 'P', "" ); // Europe, Australia and other PAL regions.
 	}
-}
-
-Driver::~Driver()
-{
-	close();
 }
 
 void Driver::setPartition( const QString& partition )

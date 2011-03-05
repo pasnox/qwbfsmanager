@@ -36,6 +36,7 @@
 #include <QApplication>
 #include <QSplashScreen>
 #include <QWeakPointer>
+#include <QDateTime>
 #include <QTimer>
 #include <QDebug>
 
@@ -93,6 +94,8 @@ int main( int argc, char** argv )
 	app.setOrganizationName( APPLICATION_ORGANIZATION );
 	app.setOrganizationDomain( APPLICATION_DOMAIN );
 	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
+	
+	qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
 	
 	Q_INIT_RESOURCE( fresh );
 	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );

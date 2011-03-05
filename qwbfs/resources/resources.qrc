@@ -31,5 +31,10 @@
     <file>256/rename.png</file>
     <file>256/success.png</file>
     <file>256/tree.png</file>
+    <file>256/linux.png</file>
+    <file>256/mac.png</file>
+    <file>256/windows.png</file>
+    <file>256/wii.png</file>
+    <file>256/hdd.png</file>
   </qresource>
 </RCC>

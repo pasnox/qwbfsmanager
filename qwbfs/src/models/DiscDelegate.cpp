@@ -161,7 +161,7 @@ void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& o
 		QFontMetrics metrics( font );
 		rect = option.rect.adjusted( 40, 2, -10, -( metrics.height() -2 ) );
 		
-		QString text = QString( "%1 - %2 (%3 - %4)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( disc.region ) ).arg( QWBFS::Driver::regionToLanguageString( disc.region ) );
+		QString text = QString( "%1 - %2 (%3 - %4)" ).arg( disc.id ).arg( pCoreUtils::toTitleCase( disc.title ) ).arg( QWBFS::Driver::regionToString( disc.region ) ).arg( QWBFS::Driver::regionToLanguageString( disc.region ) );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
 		painter->setFont( font );
@@ -179,7 +179,7 @@ void DiscDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV4& o
 		QFontMetricsF metrics( font );
 		rect = option.rect.adjusted( 40, rect.height(), -10, -2 );
 		
-		QString text = tr( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
+		QString text = tr( "Estimated size: %1 - Origin: %2" ).arg( pCoreUtils::fileSizeToString( disc.size ) ).arg( disc.origin );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
 		painter->setFont( font );

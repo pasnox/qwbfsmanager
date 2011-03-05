@@ -36,7 +36,8 @@
 #include "DiscModel.h"
 #include "qwbfsdriver/Driver.h"
 #include "ListView.h"
-#include "Gauge.h"
+
+#include <FreshCore/pCoreUtils>
 
 #include <QMimeData>
 #include <QUrl>
@@ -180,9 +181,9 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 				case 1:
 					return disc.id;
 				case 2:
-					return disc.title;
+					return pCoreUtils::toTitleCase( disc.title );
 				case 3:
-					return Gauge::fileSizeToString( disc.size );
+					return pCoreUtils::fileSizeToString( disc.size );
 				case 4:
 					return QWBFS::Driver::regionToString( disc.region );
 				case 5:
@@ -198,8 +199,8 @@ QVariant DiscModel::data( const QModelIndex& index, int role ) const
 				values << tr( "Id: %1" ).arg( disc.id );
 			}
 			
-			values << tr( "Title: %1" ).arg( disc.title );
-			values << tr( "Size: %1" ).arg( Gauge::fileSizeToString( disc.size ) );
+			values << tr( "Title: %1" ).arg( pCoreUtils::toTitleCase( disc.title ) );
+			values << tr( "Size: %1" ).arg( pCoreUtils::fileSizeToString( disc.size ) );
 			values << tr( "Origin: %1" ).arg( disc.origin );
 			values << tr( "Region: %1" ).arg( QWBFS::Driver::regionToString( disc.region ) );
 			values << tr( "State: %1" ).arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) );

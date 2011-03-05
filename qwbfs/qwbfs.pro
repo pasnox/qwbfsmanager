@@ -29,17 +29,17 @@ exists( "/usr/lib/libfresh*.a" ):CONFIG	*= fresh_static
 else:exists( "/usr/lib/libfresh*.so" ):CONFIG	*= fresh_shared
 
 fresh_static|fresh_shared {
-	!build_pass:	message( "Using system fresh library." )
+	!build_pass:message( "Using system fresh library." )
 } else {
 	exists( ../fresh/fresh.pro ) {
 		FRESH_PATH	= ../fresh
-		!build_pass:		message( "Using bundled fresh library." )
+		!build_pass:message( "Using bundled fresh library." )
 	} else:exists( ../../../fresh/fresh.pro ) {
 		FRESH_PATH	= ../../../fresh
-		!build_pass:		message( "Using external fresh library." )
+		!build_pass:message( "Using external fresh library." )
 	}
 	else {
-		!build_pass:		error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
 	}
 
 	include( $$FRESH_PATH/functions.pri )
@@ -62,7 +62,7 @@ fresh_static|fresh_shared {
 	PRE_TARGETDEPS	*= $${FRESH_PATH}
 
 	QT	*= xml network
-	!mac:	qtAddLibrary( fresh )
+	!mac:qtAddLibrary( fresh )
 	mac:LIBS	*= -lfresh
 }
 
@@ -158,7 +158,10 @@ HEADERS	*= src/main.h \
 	src/Properties.h \
 	src/ListView.h \
 	src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h \
-	src/CoverFlowView.h
+	src/CoverFlowView.h \
+	src/models/pPartitionModel.h \
+	src/models/PartitionDelegate.h \
+	src/PartitionComboBox.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -180,6 +183,9 @@ SOURCES	*= src/main.cpp \
 	src/Properties.cpp \
 	src/ListView.cpp \
 	src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.cpp \
-	src/CoverFlowView.cpp
+	src/CoverFlowView.cpp \
+	src/models/pPartitionModel.cpp \
+	src/models/PartitionDelegate.cpp \
+	src/PartitionComboBox.cpp
 
 include( installs.pri )

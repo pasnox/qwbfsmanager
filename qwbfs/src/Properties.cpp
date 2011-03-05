@@ -66,6 +66,7 @@
 #define SETTINGS_WINDOW_SELECTED_PATH "window/selectedPath"
 #define SETTINGS_PARTITION_WIDGET_STATE "partitionWidget/state"
 #define SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION "partitionWidget/selectedPartition"
+#define SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS "partitionWidget/customPartitions"
 
 Properties::Properties( QObject* parent )
 	: QObject( parent )
@@ -319,6 +320,16 @@ QString Properties::selectedPartition() const
 void Properties::setSelectedPartition( const QString& partition )
 {
 	mSettings->setValue( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION, partition );
+}
+
+QStringList Properties::customPartitions() const
+{
+	return mSettings->value( SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS ).toStringList();
+}
+
+void Properties::setCustomPartitions( const QStringList& partitions )
+{
+	mSettings->setValue( SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS, partitions );
 }
 
 QString Properties::decrypt( const QByteArray& data )

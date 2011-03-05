@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>276</width>
-    <height>451</height>
+    <width>272</width>
+    <height>447</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -17,12 +17,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QComboBox" name="cbPartitions">
+      <widget class="PartitionComboBox" name="cbPartitions">
        <property name="toolTip">
         <string>Set the current partition</string>
-       </property>
-       <property name="editable">
-        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -436,6 +433,11 @@
    <extends>QWidget</extends>
    <header>CoverFlowView.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PartitionComboBox</class>
+   <extends>QComboBox</extends>
+   <header>PartitionComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

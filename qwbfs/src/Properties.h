@@ -111,6 +111,9 @@ public:
 	QString selectedPartition() const;
 	void setSelectedPartition( const QString& partition );
 	
+	QStringList customPartitions() const;
+	void setCustomPartitions( const QStringList& partitions );
+	
 	static QString decrypt( const QByteArray& data );
 	static QByteArray crypt( const QString& string );
 
