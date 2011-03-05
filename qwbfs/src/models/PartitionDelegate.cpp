@@ -59,9 +59,13 @@ PartitionDelegate::~PartitionDelegate()
 
 void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option, const QModelIndex& index ) const
 {
-	const bool selected = _option.state & QStyle::State_Selected;
-	const bool hovered = _option.state & QStyle::State_MouseOver;
-	const int margin = 3;
+	QStyleOptionViewItemV4 option = _option;
+    initStyleOption( &option, index );
+	option.palette = mStyle->standardPalette();
+	
+	const bool selected = option.state & QStyle::State_Selected;
+	const bool hovered = option.state & QStyle::State_MouseOver;
+	const int margin = option.widget->inherits( "QAbstractItemView" ) ? 3 : 0;
 	pPartitionModel::Partition partition = mModel->partition( index );
 	
 	if ( QWBFS::Driver::isWBFSPartitionOrFile( partition.origin ) ) {
@@ -89,10 +93,6 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	
 	int total = 100;
 	int used = ( (qreal)partition.used /(qreal)partition.total ) *(qreal)100;
-	
-	QStyleOptionViewItemV4 option = _option;
-    initStyleOption( &option, index );
-	option.palette = mStyle->standardPalette();
 	
 	QStyleOptionProgressBarV2 pbOption;
 	pbOption.initFrom( option.widget );

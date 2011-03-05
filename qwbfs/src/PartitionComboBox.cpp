@@ -65,7 +65,7 @@ void PartitionComboBox::paintEvent( QPaintEvent* event )
 	initStyleOption( &option );
 	option.rect.setWidth( layout()->itemAt( 0 )->geometry().width() -layout()->spacing() );
 	
-	if ( option.state & QStyle::State_MouseOver || option.state & QStyle::State_HasFocus || currentIndex() == -1 || isEditable() ) {
+	if ( option.state & QStyle::State_MouseOver || currentIndex() == -1 ) {
 		style()->drawComplexControl( QStyle::CC_ComboBox, &option, &painter, this );
 		style()->drawControl( QStyle::CE_ComboBoxLabel, &option, &painter, this );
 	}
