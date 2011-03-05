@@ -281,7 +281,7 @@ pPartitionModel::Partitions pPartitionModel::windowsPartitions() const
 	foreach ( const QFileInfo& drive, QDir::drives() ) {
 		pPartitionModel::Partition partition;
 		
-		partition.label = QString( "Partition %1" ).arg( i );
+		partition.label = QString::null;
 		partition.origin = drive.absoluteFilePath().remove( ":" ).remove( "/" ).remove( "\\" );
 		partition.type = QString::null;
 		partition.total = -1;
@@ -375,7 +375,7 @@ pPartitionModel::Partitions pPartitionModel::linuxPartitions() const
 pPartitionModel::Partitions pPartitionModel::partitions() const
 {
 #if defined( Q_OS_WIN )
-	return windowsPartition();
+	return windowsPartitions();
 #elif defined( Q_OS_MAC )
 	return macPartitions();
 #elif defined( __linux__ )

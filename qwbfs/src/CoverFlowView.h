@@ -1,7 +1,7 @@
 #ifndef COVERFLOWVIEW_H
 #define COVERFLOWVIEW_H
 
-#include "src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h"
+#include "ofi-labs-pictureflow/pictureflow-qt/pictureflow.h"
 
 #include <QPersistentModelIndex>
 
