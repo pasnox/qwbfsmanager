@@ -273,28 +273,7 @@ void pPartitionModel::update()
 	emit dataChanged( index( 0, 0 ), index( rowCount() -1, columnCount() -1 ) );
 }
 
-#if defined( Q_OS_WIN )
-pPartitionModel::Partitions pPartitionModel::windowsPartitions() const
-{
-	pPartitionModel::Partitions partitions;
-	
-	foreach ( const QFileInfo& drive, QDir::drives() ) {
-		pPartitionModel::Partition partition;
-		
-		partition.label = QString::null;
-		partition.origin = drive.absoluteFilePath().remove( ":" ).remove( "/" ).remove( "\\" );
-		partition.type = QString::null;
-		partition.total = -1;
-		partition.free = -1;
-		partition.used = -1;
-		partition.lastCheck = QDateTime::currentDateTime();
-		
-		partitions << partition;
-	}
-	
-	return partitions;
-}
-#elif defined( Q_OS_MAC )
+#if defined( Q_OS_MAC )
 pPartitionModel::Partitions pPartitionModel::macPartitions() const
 {
 	pPartitionModel::Partitions partitions;

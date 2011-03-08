@@ -12,9 +12,21 @@ class pPartitionModel : public QAbstractTableModel
 	
 public:
 	struct Partition {
+		enum Type {
+			Unknown = 0,
+			NotMounted = 1,
+			Removable = 2,
+			Fixed = 3,
+			Remote = 4,
+			CdRom = 5,
+			RamDisk = 6
+		};
+		
 		Partition( const QString& _origin = QString::null )
 		{
 			origin = _origin;
+			ctype = 0x0;
+			device = Unknown;
 			free = -1;
 			used = -1;
 			total = -1;
@@ -44,6 +56,8 @@ public:
 		QString label;
 		QString origin;
 		QString type;
+		int ctype; // partition hex mark
+		Type device;
 		qint64 free;
 		qint64 used;
 		qint64 total;

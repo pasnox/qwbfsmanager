@@ -188,4 +188,8 @@ SOURCES	*= src/main.cpp \
 	src/models/PartitionDelegate.cpp \
 	src/PartitionComboBox.cpp
 
+win32 {
+	SOURCES	*= src/models/pPartitionModel_win.cpp
+}
+
 include( installs.pri )
