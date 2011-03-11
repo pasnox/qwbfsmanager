@@ -188,7 +188,11 @@ SOURCES	*= src/main.cpp \
 	src/models/PartitionDelegate.cpp \
 	src/PartitionComboBox.cpp
 
-win32 {
+linux* {
+	SOURCES	*= src/models/pPartitionModel_linux.cpp
+}
+
+win* {
 	SOURCES	*= src/models/pPartitionModel_win.cpp
 }
 
