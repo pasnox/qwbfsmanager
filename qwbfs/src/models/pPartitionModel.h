@@ -56,7 +56,7 @@ public:
 		QString label;
 		QString origin;
 		QString type;
-		int ctype; // partition hex mark
+		qint64 ctype; // partition hex mark
 		Type device;
 		qint64 free;
 		qint64 used;

@@ -313,42 +313,6 @@ pPartitionModel::Partitions pPartitionModel::macPartitions() const
 	
 	return partitions;
 }
-#elif defined( __linux__ )
-pPartitionModel::Partitions pPartitionModel::linuxPartitions() const
-{
-	pPartitionModel::Partitions partitions;
-	QProcess process;
-	
-	process.start( "fdisk -l" );
-	process.waitForFinished();
-	
-	const QStringList entries = QString::fromLocal8Bit( process.readAll() ).split( "\n" );
-	
-	foreach ( QString entry, entries ) {
-		if ( !entry.startsWith( "/dev" ) ) {
-			continue;
-		}
-		
-		entry = entry
-			.replace( "*", QString::null )
-			//.replace( "+", QString::null )
-			.simplified();
-		
-		pPartitionModel::Partition partition;
-		
-		partition.label = QString::null;
-		partition.origin = entry.section( ' ', 0, 0 );
-		partition.type = entry.section( ' ', 5 );
-		partition.total = Q_INT64_C( entry.section( ' ', 3, 3 ).replace( "+", QString::null ).toLongLong() *1024 );
-		partition.free = -1;
-		partition.used = -1;
-		partition.lastCheck = QDateTime::currentDateTime();
-		
-		partitions << partition;
-	}
-	
-	return partitions;
-}
 #endif
 
 pPartitionModel::Partitions pPartitionModel::partitions() const
