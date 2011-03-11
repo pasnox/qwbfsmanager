@@ -66,6 +66,7 @@ void ListView::setViewMode( QListView::ViewMode mode )
 	QListView::setViewMode( mode );
 	setMovement( QListView::Static );
 	setResizeMode( QListView::Adjust );
+	setAlternatingRowColors( false );
 	
 	switch ( mode ) {
 		case QListView::ListMode: {
