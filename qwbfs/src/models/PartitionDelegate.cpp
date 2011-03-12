@@ -78,10 +78,23 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 			
 			driver.status( status );
 			
-			partition.type = "WBFS";
+			partition.fileSystem = "WBFS";
 			partition.total = status.size;
 			partition.used = status.used;
 			partition.free = status.free;
+			
+			const QString vendorModel = QString( "%1 %2" )
+				.arg( partition.extendedAttributes[ "ID_VENDOR" ] )
+				.arg( partition.extendedAttributes[ "ID_MODEL" ] )
+				.replace( "_", " " )
+				.simplified()
+				;
+			
+			partition.name = QString( "%1 %2 (%3)" )
+				.arg( partition.label )
+				.arg( partition.fileSystem.toUpper() )
+				.arg( vendorModel )
+				;
 			
 			mModel->updatePartition( partition );
 			
@@ -116,12 +129,11 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	bOption.state = option.state;
 	bOption.palette = option.palette;
 	bOption.rect = option.rect.adjusted( margin, margin, -margin, -margin );
-	bOption.icon = partition.type == "WBFS" ? QIcon( ":/icons/256/wii.png" ) : partition.icon();
+	bOption.icon = partition.fileSystem == "WBFS" ? QIcon( ":/icons/256/wii.png" ) : partition.icon();
 	bOption.iconSize = QSize( bOption.rect.height() -5, bOption.rect.height() -5 );
-	bOption.text = partition.label.isEmpty() ? QFileInfo( partition.origin ).fileName() : partition.label;
-	bOption.text = QString( "%1 (%2) - %3 / %4 Used - %5 Free" )
+	bOption.text = partition.name;
+	bOption.text = QString( "%1 - %2 / %3 Used - %4 Free" )
 		.arg( bOption.text )
-		.arg( partition.type.isEmpty() ? tr( "Unknown" ) : partition.type )
 		.arg( pCoreUtils::fileSizeToString( partition.used ) )
 		.arg( pCoreUtils::fileSizeToString( partition.total ) )
 		.arg( pCoreUtils::fileSizeToString( partition.free ) )

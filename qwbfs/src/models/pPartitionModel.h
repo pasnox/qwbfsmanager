@@ -25,11 +25,11 @@ public:
 		Partition( const QString& _origin = QString::null )
 		{
 			origin = _origin;
-			ctype = 0x0;
-			device = Unknown;
 			free = -1;
 			used = -1;
 			total = -1;
+			type = Unknown;
+			fileSystemMark = 0x0;
 		}
 		
 		bool operator==( const Partition& other ) const
@@ -39,13 +39,13 @@ public:
 		
 		QIcon icon() const
 		{
-			if ( type.contains( "swap", Qt::CaseInsensitive ) || type.contains( "linux", Qt::CaseInsensitive ) ) {
+			if ( fileSystem.contains( "swap", Qt::CaseInsensitive ) || fileSystem.contains( "linux", Qt::CaseInsensitive ) ) {
 				return QIcon( ":/icons/256/linux.png" );
 			}
-			else if ( type.contains( "hfs", Qt::CaseInsensitive ) || type.contains( "hpfs", Qt::CaseInsensitive ) ) {
+			else if ( fileSystem.contains( "hfs", Qt::CaseInsensitive ) || fileSystem.contains( "hpfs", Qt::CaseInsensitive ) ) {
 				return QIcon( ":/icons/256/mac.png" );
 			}
-			else if ( type.contains( "ntfs", Qt::CaseInsensitive ) || type.contains( "fat", Qt::CaseInsensitive ) ) {
+			else if ( fileSystem.contains( "ntfs", Qt::CaseInsensitive ) || fileSystem.contains( "fat", Qt::CaseInsensitive ) ) {
 				return QIcon( ":/icons/256/windows.png" );
 			}
 			else {
@@ -53,22 +53,26 @@ public:
 			}
 		}
 		
+		QString name;
 		QString label;
 		QString origin;
-		QString type;
-		qint64 ctype; // partition hex mark
-		Type device;
+		QString model;
 		qint64 free;
 		qint64 used;
 		qint64 total;
 		QDateTime lastCheck;
+		
+		Type type;
+		QString fileSystem;
+		qint64 fileSystemMark;
+		QMap<QString, QString> extendedAttributes;
 	};
 	
 	enum Column {
 		Icon = 0,
 		Label,
 		Origin,
-		Type,
+		FileSystem,
 		Free,
 		Used,
 		Total,
@@ -108,8 +112,8 @@ protected:
 	pPartitionModel::Partitions windowsPartitions() const;
 #elif defined( Q_OS_MAC )
 	pPartitionModel::Partitions macPartitions() const;
-#elif defined( __linux__ )
-	pPartitionModel::Partitions linuxPartitions() const;
+#elif defined( HAVE_UDEV )
+	pPartitionModel::Partitions udevPartitions() const;
 #endif
 	
 	pPartitionModel::Partitions partitions() const;

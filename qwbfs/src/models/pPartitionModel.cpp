@@ -46,8 +46,8 @@ QVariant pPartitionModel::data( const QModelIndex& index, int role ) const
 					return partition.label.isEmpty() ? partition.origin : partition.label;
 				case pPartitionModel::Origin:
 					return partition.origin;
-				case pPartitionModel::Type:
-					return partition.type;
+				case pPartitionModel::FileSystem:
+					return partition.fileSystem;
 				case pPartitionModel::Free:
 					return pCoreUtils::fileSizeToString( partition.free );
 				case pPartitionModel::Used:
@@ -81,8 +81,8 @@ QVariant pPartitionModel::headerData( int section, Qt::Orientation orientation, 
 						return tr( "Label" );
 					case pPartitionModel::Origin:
 						return tr( "Origin" );
-					case pPartitionModel::Type:
-						return tr( "Type" );
+					case pPartitionModel::FileSystem:
+						return tr( "File System" );
 					case pPartitionModel::Free:
 						return tr( "Free" );
 					case pPartitionModel::Used:
@@ -146,8 +146,8 @@ bool pPartitionModel::setData( const QModelIndex& index, const QVariant& value, 
 				case pPartitionModel::Origin:
 					partition.origin = value.toString();
 					break;
-				case pPartitionModel::Type:
-					partition.type = value.toString();
+				case pPartitionModel::FileSystem:
+					partition.fileSystem = value.toString();
 					break;
 				case pPartitionModel::Free:
 					partition.free = value.toLongLong();
@@ -321,8 +321,8 @@ pPartitionModel::Partitions pPartitionModel::partitions() const
 	return windowsPartitions();
 #elif defined( Q_OS_MAC )
 	return macPartitions();
-#elif defined( __linux__ )
-	return linuxPartitions();
+#elif defined( HAVE_UDEV )
+	return udevPartitions();
 #else
 #endif
 	

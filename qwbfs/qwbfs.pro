@@ -14,7 +14,7 @@
 TEMPLATE	= app
 LANGUAGE	= C++/Qt4
 TARGET	= $$quote(qwbfsmanager)
-mac:TARGET	= $$quote(QWBFSManager)
+macx:TARGET	= $$quote(QWBFSManager)
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
@@ -62,8 +62,8 @@ fresh_static|fresh_shared {
 	PRE_TARGETDEPS	*= $${FRESH_PATH}
 
 	QT	*= xml network
-	!mac:qtAddLibrary( fresh )
-	mac:LIBS	*= -lfresh
+	!macx:qtAddLibrary( fresh )
+	macx:LIBS	*= -lfresh
 }
 
 # define some usefull values
@@ -107,7 +107,7 @@ DEPENDPATH	*= src \
 	src/qwbfsdriver \
 	src/wiitdb
 
-mac:ICON	= resources/qwbfsmanager.icns
+macx:ICON	= resources/qwbfsmanager.icns
 win32:RC_FILE	= resources/qwbfsmanager.rc
 
 RESOURCES	= resources/resources.qrc
@@ -188,8 +188,10 @@ SOURCES	*= src/main.cpp \
 	src/models/PartitionDelegate.cpp \
 	src/PartitionComboBox.cpp
 
-linux* {
-	SOURCES	*= src/models/pPartitionModel_linux.cpp
+unix:!macx {
+	DEFINES *= HAVE_UDEV
+	LIBS *= -ludev
+	SOURCES	*= src/models/pPartitionModel_udev.cpp
 }
 
 win* {
