@@ -302,7 +302,7 @@ pPartitionModel::Partitions pPartitionModel::macPartitions() const
 		
 		partition.label = QString::null;
 		partition.origin = QString( "/dev/%1" ).arg( entry );
-		partition.type = QString::null;
+		partition.fileSystem = QString::null;
 		partition.total = -1;
 		partition.free = -1;
 		partition.used = -1;
