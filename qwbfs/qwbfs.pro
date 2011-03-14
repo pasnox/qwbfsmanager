@@ -189,6 +189,7 @@ SOURCES	*= src/main.cpp \
 	src/PartitionComboBox.cpp
 
 linux* {
+	QT	*= dbus
 	LIBS *= -ludev
 	SOURCES	*= src/models/pPartitionModel_linux.cpp
 }

@@ -2,6 +2,9 @@
 
 #if defined( __linux__ )
 #include <libudev.h>
+#include <sys/statfs.h>
+
+#include <QtDBus>
 
 void fillPartitionInformations( struct udev_device* device, pPartitionModel::Partition& partition )
 {
@@ -17,12 +20,37 @@ void fillPartitionInformations( struct udev_device* device, pPartitionModel::Par
         partition.extendedAttributes[ name ] = value;
     }
 	
+	const QString devName = QFileInfo( partition.extendedAttributes[ "DEVNAME" ] ).fileName();
+	QDBusMessage question = QDBusMessage::createMethodCall( "org.freedesktop.UDisks", QString( "/org/freedesktop/UDisks/devices/%1" ).arg( devName ), "org.freedesktop.DBus.Properties", "Get" );
+	question << "org.freedesktop.UDisks.Device" << "DeviceMountPaths";
+	QDBusMessage answer = QDBusConnection::systemBus().call( question, QDBus::Block, 1 );
+	QString mount;
+	
+	foreach ( const QVariant& variant, answer.arguments() ) {
+		const QDBusVariant v = variant.value<QDBusVariant>();
+		mount = v.variant().toStringList().value( 0 );
+		
+		if ( !mount.isEmpty() ) {
+			break;
+		}
+	}
+	
 	partition.label = partition.extendedAttributes[ "ID_FS_LABEL" ];
     partition.origin = partition.extendedAttributes[ "DEVNAME" ];
     partition.model = partition.extendedAttributes[ "ID_MODEL" ];
     partition.total = partition.extendedAttributes[ "UDISKS_PARTITION_SIZE" ].toLongLong();
 	partition.fileSystem = partition.extendedAttributes[ "ID_FS_TYPE" ];
 	partition.fileSystemMark = partition.extendedAttributes[ "UDISKS_PARTITION_TYPE" ].toLongLong( 0, 0 );
+	
+	if ( !mount.isEmpty() ) {
+		struct statfs stats;
+		
+		if ( statfs( qPrintable( mount ), &stats ) == 0 ) {
+			const qint64 total = stats.f_blocks *stats.f_bsize;
+			partition.used = total -( stats.f_bfree *stats.f_bsize );
+			partition.free = partition.total -partition.used;
+		}
+	}
 	
 	if ( partition.label.isEmpty() ) {
 		partition.label = QString( partition.origin ).replace( "\\", "/" ).section( '/', -1, -1 );
