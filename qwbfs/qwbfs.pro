@@ -188,10 +188,13 @@ SOURCES	*= src/main.cpp \
 	src/models/PartitionDelegate.cpp \
 	src/PartitionComboBox.cpp
 
-unix:!macx {
-	DEFINES *= HAVE_UDEV
+linux* {
 	LIBS *= -ludev
-	SOURCES	*= src/models/pPartitionModel_udev.cpp
+	SOURCES	*= src/models/pPartitionModel_linux.cpp
+}
+
+macx {
+	OBJECTIVE_SOURCES	*= src/models/pPartitionModel_mac.mm
 }
 
 win* {

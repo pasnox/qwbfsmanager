@@ -108,14 +108,6 @@ public slots:
 protected:
 	pPartitionModel::Partitions mPartitions;
 	
-#if defined( Q_OS_WIN )
-	pPartitionModel::Partitions windowsPartitions() const;
-#elif defined( Q_OS_MAC )
-	pPartitionModel::Partitions macPartitions() const;
-#elif defined( HAVE_UDEV )
-	pPartitionModel::Partitions udevPartitions() const;
-#endif
-	
 	pPartitionModel::Partitions partitions() const;
 };
 

@@ -2,8 +2,6 @@
 
 #include <FreshCore/pCoreUtils>
 
-#include <QIcon>
-#include <QProcess>
 #include <QDebug>
 
 #define COLUMN_COUNT 8
@@ -273,59 +271,10 @@ void pPartitionModel::update()
 	emit dataChanged( index( 0, 0 ), index( rowCount() -1, columnCount() -1 ) );
 }
 
-#if defined( Q_OS_MAC )
-pPartitionModel::Partitions pPartitionModel::macPartitions() const
-{
-	pPartitionModel::Partitions partitions;
-	QProcess process;
-	
-	process.start( "diskutil list" );
-	process.waitForFinished();
-	
-	const QStringList entries = QString::fromLocal8Bit( process.readAll() ).split( "\n" );
-	
-	foreach ( QString entry, entries ) {
-		entry = entry.trimmed();
-		
-		if ( entry.startsWith( "/" ) || entry.startsWith( "#" ) || entry.isEmpty() ) {
-			continue;
-		}
-		
-		entry = entry.simplified().section( ' ', -1 );
-		
-		// skip disks
-		if ( entry[ entry.size() -2 ].toLower() != 's' ) {
-			continue;
-		}
-		
-		pPartitionModel::Partition partition;
-		
-		partition.label = QString::null;
-		partition.origin = QString( "/dev/%1" ).arg( entry );
-		partition.fileSystem = QString::null;
-		partition.total = -1;
-		partition.free = -1;
-		partition.used = -1;
-		partition.lastCheck = QDateTime::currentDateTime();
-		
-		partitions << partition;
-	}
-	
-	return partitions;
-}
-#endif
-
+#if defined( Q_OS_WIN ) || defined( Q_OS_MAC ) || defined( __linux__ )
+#else
 pPartitionModel::Partitions pPartitionModel::partitions() const
 {
-#if defined( Q_OS_WIN )
-	return windowsPartitions();
-#elif defined( Q_OS_MAC )
-	return macPartitions();
-#elif defined( HAVE_UDEV )
-	return udevPartitions();
-#else
-#endif
-	
 	pPartitionModel::Partitions partitions;
 	
 	// debug
@@ -347,3 +296,4 @@ pPartitionModel::Partitions pPartitionModel::partitions() const
 	
 	return partitions;
 }
+#endif

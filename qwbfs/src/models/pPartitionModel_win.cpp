@@ -1,7 +1,6 @@
 #include "pPartitionModel.h"
 
 #if defined( Q_OS_WIN )
-
 // in case of need
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
@@ -9,13 +8,12 @@
 
 // force use of xxxxA version of functon instead of xxxxxxW to avoid to deal with boring wchar_t
 #undef UNICODE
-
 #include <qt_windows.h>
 
-#define ASCII_CHAR_A	65
-#define ASCII_CHAR_Z	90
+#define ASCII_CHAR_A 65
+#define ASCII_CHAR_Z 90
 
-pPartitionModel::Partitions pPartitionModel::windowsPartitions() const
+pPartitionModel::Partitions pPartitionModel::partitions() const
 {
 	pPartitionModel::Partitions partitions;
 	

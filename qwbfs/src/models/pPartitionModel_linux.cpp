@@ -1,6 +1,6 @@
 #include "pPartitionModel.h"
 
-#if defined( HAVE_UDEV )
+#if defined( __linux__ )
 #include <libudev.h>
 
 void fillPartitionInformations( struct udev_device* device, pPartitionModel::Partition& partition )
@@ -64,7 +64,7 @@ void fillPartitionInformations( struct udev_device* device, pPartitionModel::Par
 	partition.lastCheck = QDateTime::currentDateTime();
 }
 
-pPartitionModel::Partitions pPartitionModel::udevPartitions() const
+pPartitionModel::Partitions pPartitionModel::partitions() const
 {
 	pPartitionModel::Partitions partitions;
 	udev* _udev = udev_new();
