@@ -37,7 +37,6 @@ void fillPartitionInformations( struct udev_device* device, pPartitionModel::Par
 	
 	partition.label = partition.extendedAttributes[ "ID_FS_LABEL" ];
     partition.origin = partition.extendedAttributes[ "DEVNAME" ];
-    partition.model = partition.extendedAttributes[ "ID_MODEL" ];
     partition.total = partition.extendedAttributes[ "UDISKS_PARTITION_SIZE" ].toLongLong();
 	partition.fileSystem = partition.extendedAttributes[ "ID_FS_TYPE" ];
 	partition.fileSystemMark = partition.extendedAttributes[ "UDISKS_PARTITION_TYPE" ].toLongLong( 0, 0 );
@@ -52,22 +51,12 @@ void fillPartitionInformations( struct udev_device* device, pPartitionModel::Par
 		}
 	}
 	
-	if ( partition.label.isEmpty() ) {
-		partition.label = QString( partition.origin ).replace( "\\", "/" ).section( '/', -1, -1 );
-	}
-	
-	const QString vendorModel = QString( "%1 %2" )
-		.arg( partition.extendedAttributes[ "ID_VENDOR" ] )
-		.arg( partition.extendedAttributes[ "ID_MODEL" ] )
-		.replace( "_", " " )
-		.simplified()
-		;
-	
-	partition.name = QString( "%1 %2 (%3)" )
-		.arg( partition.label )
-		.arg( partition.fileSystem.isEmpty() ? pPartitionModel::tr( "Unknown FS" ) : partition.fileSystem.toUpper() )
-		.arg( vendorModel )
-		;
+	partition.name = pPartitionModel::Partition::displayText(
+		partition.origin, 
+		partition.label, 
+		partition.fileSystemMark, 
+		partition.extendedAttributes[ "ID_VENDOR" ], 
+		partition.extendedAttributes[ "ID_MODEL" ] );
 	
     partition.extendedAttributes[ "REMOVABLE" ] = "0";
 

@@ -53,16 +53,34 @@ public:
 			}
 		}
 		
+		static QString displayText( const QString& origin, const QString& label, qint64 fileSystemMark, const QString& vendor = QString::null, const QString& model = QString::null )
+		{
+			const QString fsMark = fileSystemMark == 0 ? QString::null : QString( "0x%1" ).arg( fileSystemMark, 0, 16 );
+			const QString vendorModel = QString( "%1 %2" )
+				.arg( vendor )
+				.arg( model )
+				.replace( "_", " " )
+				.simplified()
+				;
+			
+			return QString( "%1 %2 %3" )
+				.arg( label.isEmpty() ? origin : label )
+				.arg( fsMark )
+				.arg( vendorModel.isEmpty() ? QString::null : "(" +vendorModel +")" )
+				.simplified()
+				;
+		}
+		
 		QString name;
 		QString label;
 		QString origin;
-		QString model;
 		qint64 free;
 		qint64 used;
 		qint64 total;
 		QDateTime lastCheck;
 		
 		Type type;
+		QStringList mountPoints;
 		QString fileSystem;
 		qint64 fileSystemMark;
 		QMap<QString, QString> extendedAttributes;

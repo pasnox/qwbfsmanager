@@ -195,6 +195,7 @@ linux* {
 }
 
 macx {
+	LIBS	*= "-framework IOKit" "-framework CoreFoundation" "-framework CoreServices"
 	OBJECTIVE_SOURCES	*= src/models/pPartitionModel_mac.mm
 }
 
