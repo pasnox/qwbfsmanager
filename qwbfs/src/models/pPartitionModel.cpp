@@ -29,31 +29,32 @@ QVariant pPartitionModel::data( const QModelIndex& index, int role ) const
 		return QVariant();
 	}
 	
-	const pPartitionModel::Partition& partition = mPartitions[ index.row() ];
+	const pPartition& partition = mPartitions[ index.row() ];
 	
 	switch ( role ) {
 		case Qt::DecorationRole: {
-			return index.column() == pPartitionModel::Icon ? partition.icon() : QVariant();
+			#warning Fix me
+			return QVariant(); //index.column() == pPartitionModel::Icon ? partition.icon() : QVariant();
 		}
 		case Qt::DisplayRole:
-		case Qt::ToolTipRole: {
+		/*case Qt::ToolTipRole:*/ {
 			switch ( index.column() ) {
 				case pPartitionModel::Icon:
 					return QVariant();
 				case pPartitionModel::Label:
-					return partition.label.isEmpty() ? partition.origin : partition.label;
-				case pPartitionModel::Origin:
-					return partition.origin;
+					return partition.property( pPartition::Label );
+				case pPartitionModel::Device:
+					return partition.property( pPartition::DevicePath );
 				case pPartitionModel::FileSystem:
-					return partition.fileSystem;
+					return partition.property( pPartition::FileSystem );
 				case pPartitionModel::Free:
-					return pCoreUtils::fileSizeToString( partition.free );
+					return pCoreUtils::fileSizeToString( partition.property( pPartition::FreeSize ).toLongLong() );
 				case pPartitionModel::Used:
-					return pCoreUtils::fileSizeToString( partition.used );
+					return pCoreUtils::fileSizeToString( partition.property( pPartition::UsedSize ).toLongLong() );
 				case pPartitionModel::Total:
-					return pCoreUtils::fileSizeToString( partition.total );
+					return pCoreUtils::fileSizeToString( partition.property( pPartition::TotalSize ).toLongLong() );
 				case pPartitionModel::LastCheck:
-					return partition.lastCheck.toString( Qt::SystemLocaleShortDate );
+					return partition.property( pPartition::LastCheck ).toDateTime().toString( Qt::SystemLocaleShortDate );
 			}
 		}
 	}
@@ -77,8 +78,8 @@ QVariant pPartitionModel::headerData( int section, Qt::Orientation orientation, 
 						return tr( "Icon" );
 					case pPartitionModel::Label:
 						return tr( "Label" );
-					case pPartitionModel::Origin:
-						return tr( "Origin" );
+					case pPartitionModel::Device:
+						return tr( "Device" );
 					case pPartitionModel::FileSystem:
 						return tr( "File System" );
 					case pPartitionModel::Free:
@@ -88,7 +89,7 @@ QVariant pPartitionModel::headerData( int section, Qt::Orientation orientation, 
 					case pPartitionModel::Total:
 						return tr( "Total" );
 					case pPartitionModel::LastCheck:
-						return tr( "Last check" );
+						return tr( "Last Check" );
 				}
 			}
 		}
@@ -99,7 +100,7 @@ QVariant pPartitionModel::headerData( int section, Qt::Orientation orientation, 
 
 bool pPartitionModel::insertRow( int row, const QModelIndex& parent )
 {
-	const pPartitionModel::Partition partition( QString::null );
+	const pPartition partition( QString::null );
 	const int index = mPartitions.indexOf( partition );
 	
 	if ( index == -1 && !parent.isValid() ) {
@@ -133,36 +134,24 @@ bool pPartitionModel::setData( const QModelIndex& index, const QVariant& value, 
 	switch ( role ) {
 		case Qt::DisplayRole:
 		case Qt::EditRole: {
-			pPartitionModel::Partition& partition = mPartitions[ index.row() ];
+			pPartition& partition = mPartitions[ index.row() ];
 			
 			switch ( index.column() ) {
 				case pPartitionModel::Icon:
 					break;
 				case pPartitionModel::Label:
-					partition.label = value.toString();
-					break;
-				case pPartitionModel::Origin:
-					partition.origin = value.toString();
-					break;
+				case pPartitionModel::Device:
 				case pPartitionModel::FileSystem:
-					partition.fileSystem = value.toString();
-					break;
 				case pPartitionModel::Free:
-					partition.free = value.toLongLong();
-					break;
 				case pPartitionModel::Used:
-					partition.used = value.toLongLong();
-					break;
 				case pPartitionModel::Total:
-					partition.total = value.toLongLong();
-					break;
 				case pPartitionModel::LastCheck:
-					partition.lastCheck = value.toDateTime();
+					partition.setProperty( pPartition::Property( index.column() ), value );
 					break;
 			}
 			
 			if ( index.column() != pPartitionModel::LastCheck ) {
-				partition.lastCheck = QDateTime::currentDateTime();
+				partition.setProperty( pPartition::LastCheck, QDateTime::currentDateTime() );
 			}
 			
 			emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), columnCount( index.parent() ) ) );
@@ -173,26 +162,26 @@ bool pPartitionModel::setData( const QModelIndex& index, const QVariant& value, 
 	return false;
 }
 
-pPartitionModel::Partition pPartitionModel::partition( const QModelIndex& index ) const
+pPartition pPartitionModel::partition( const QModelIndex& index ) const
 {
 	return mPartitions.value( index.row() );
 }
 
 QStringList pPartitionModel::customPartitions() const
 {
-	const pPartitionModel::Partitions systemPartitions = partitions();
+	const pPartitionList systemPartitions = partitions();
 	QStringList custom;
 	
-	foreach ( const pPartitionModel::Partition& partition, mPartitions ) {
+	foreach ( const pPartition& partition, mPartitions ) {
 		if ( !systemPartitions.contains( partition ) ) {
-			custom << partition.origin;
+			custom << partition.property( pPartition::DevicePath ).toString();
 		}
 	}
 	
 	return custom;
 }
 
-void pPartitionModel::updatePartition( const pPartitionModel::Partition& partition )
+void pPartitionModel::updatePartition( const pPartition& partition )
 {
 	const int id = mPartitions.indexOf( partition );
 	
@@ -218,7 +207,7 @@ void pPartitionModel::addPartitions( const QStringList& partitions )
 
 void pPartitionModel::addPartition( const QString& partition )
 {
-	updatePartition( pPartitionModel::Partition( partition ) );
+	updatePartition( pPartition( partition ) );
 }
 
 void pPartitionModel::dump() const
@@ -237,22 +226,22 @@ void pPartitionModel::dump() const
 void pPartitionModel::update()
 {
 	const QModelIndexList oldIndexes = persistentIndexList();
-	pPartitionModel::Partitions partitions = this->partitions();
+	pPartitionList partitions = this->partitions();
 	QHash<int, int> mapping;
 	QModelIndexList newIndexes;
 	
 	// manually added partitions
 	for ( int i = 0; i < mPartitions.count(); i++ ) {
-		const pPartitionModel::Partition& partition = mPartitions[ i ];
+		const pPartition& partition = mPartitions[ i ];
 		
-		if ( !partitions.contains( partition ) && QFile::exists( partition.origin ) ) {
+		if ( !partitions.contains( partition ) && QFile::exists( partition.property( pPartition::DevicePath ).toString() ) ) {
 			partitions << partition;
 		}
 	}
 	
 	// build mapping
 	for ( int i = 0; i < mPartitions.count(); i++ ) {
-		const pPartitionModel::Partition& partition = mPartitions[ i ];
+		const pPartition& partition = mPartitions[ i ];
 		mapping[ i ] = partitions.indexOf( partition );
 	}
 	
@@ -273,15 +262,15 @@ void pPartitionModel::update()
 
 #if defined( Q_OS_WIN ) || defined( Q_OS_MAC ) || defined( __linux__ )
 #else
-pPartitionModel::Partitions pPartitionModel::partitions() const
+pPartitionList pPartitionModel::partitions() const
 {
-	pPartitionModel::Partitions partitions;
+	pPartitionList partitions;
 	
 	// debug
 	/*const QStringList types = QStringList( "EXT3" ) << "EXT4" << "FAT16" << "FAT32" << "ExFAT" << "NTFS" << "HFS" << "HFS+";
 	
 	for ( int i = 0; i < 10; i++ ) {
-		pPartitionModel::Partition partition;
+		pPartition partition;
 		
 		partition.label = QString( "Partition %1" ).arg( i );
 		partition.origin = QString( "/dev/sdz%1" ).arg( i );

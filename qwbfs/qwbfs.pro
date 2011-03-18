@@ -161,7 +161,8 @@ HEADERS	*= src/main.h \
 	src/CoverFlowView.h \
 	src/models/pPartitionModel.h \
 	src/models/PartitionDelegate.h \
-	src/PartitionComboBox.h
+	src/PartitionComboBox.h \
+	src/models/pPartition.h
 
 SOURCES	*= src/main.cpp \
 	src/UIMain.cpp \
@@ -186,11 +187,12 @@ SOURCES	*= src/main.cpp \
 	src/CoverFlowView.cpp \
 	src/models/pPartitionModel.cpp \
 	src/models/PartitionDelegate.cpp \
-	src/PartitionComboBox.cpp
+	src/PartitionComboBox.cpp \
+	src/models/pPartition.cpp
 
 linux* {
 	QT	*= dbus
-	LIBS *= -ludev
+	LIBS	*= -ludev
 	SOURCES	*= src/models/pPartitionModel_linux.cpp
 }
 

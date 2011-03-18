@@ -6,7 +6,7 @@
 
 #include <QtDBus>
 
-void fillPartitionInformations( struct udev_device* device, pPartitionModel::Partition& partition )
+void fillPartitionInformations( struct udev_device* device, pPartition& partition )
 {
     struct udev_list_entry* entries = udev_device_get_properties_list_entry( device );
     struct udev_list_entry* entry = 0;
@@ -51,7 +51,7 @@ void fillPartitionInformations( struct udev_device* device, pPartitionModel::Par
 		}
 	}
 	
-	partition.name = pPartitionModel::Partition::displayText(
+	partition.name = pPartition::displayText(
 		partition.origin, 
 		partition.label, 
 		partition.fileSystemMark, 
@@ -81,9 +81,9 @@ void fillPartitionInformations( struct udev_device* device, pPartitionModel::Par
 	partition.lastCheck = QDateTime::currentDateTime();
 }
 
-pPartitionModel::Partitions pPartitionModel::partitions() const
+pPartitionList pPartitionModel::partitions() const
 {
-	pPartitionModel::Partitions partitions;
+	pPartitionList partitions;
 	udev* _udev = udev_new();
 	
 	if ( !_udev ) {
@@ -112,7 +112,7 @@ pPartitionModel::Partitions pPartitionModel::partitions() const
             continue;
         }
 		
-        pPartitionModel::Partition partition;
+        pPartition partition;
         fillPartitionInformations( device, partition );
 		
 		if ( partition.extendedAttributes[ "DEVTYPE" ] == "partition"

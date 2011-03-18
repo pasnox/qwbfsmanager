@@ -13,39 +13,39 @@
 #define ASCII_CHAR_A 65
 #define ASCII_CHAR_Z 90
 
-pPartitionModel::Partitions pPartitionModel::partitions() const
+pPartitionList pPartitionModel::partitions() const
 {
-	pPartitionModel::Partitions partitions;
+	pPartitionList partitions;
 	
 	// may need a better way to list available partitions...
 	for ( char i = ASCII_CHAR_A; i <= ASCII_CHAR_Z; i++ ) {
 		QString drive = QString( "%1:" ).arg( QChar( i ) );
 		HRESULT hr = GetDriveType( qPrintable( drive ) );
-		pPartitionModel::Partition partition;
+		pPartition partition;
 		
 		drive.append( "\\" );
 		
 		switch ( hr ) {
 			case DRIVE_UNKNOWN:
-				partition.device = pPartitionModel::Partition::Unknown;
+				partition.device = pPartition::Unknown;
 				break;
 			case DRIVE_NO_ROOT_DIR:
-				partition.device = pPartitionModel::Partition::NotMounted;
+				partition.device = pPartition::NotMounted;
 				continue;
 			case DRIVE_REMOVABLE:
-				partition.device = pPartitionModel::Partition::Removable;
+				partition.device = pPartition::Removable;
 				break;
 			case DRIVE_FIXED:
-				partition.device = pPartitionModel::Partition::Fixed;
+				partition.device = pPartition::Fixed;
 				break;
 			case DRIVE_REMOTE:
-				partition.device = pPartitionModel::Partition::Remote;
+				partition.device = pPartition::Remote;
 				break;
 			case DRIVE_CDROM:
-				partition.device = pPartitionModel::Partition::CdRom;
+				partition.device = pPartition::CdRom;
 				break;
 			case DRIVE_RAMDISK:
-				partition.device = pPartitionModel::Partition::RamDisk;
+				partition.device = pPartition::RamDisk;
 				break;
 		}
 		

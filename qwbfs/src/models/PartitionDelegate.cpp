@@ -66,35 +66,25 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	const bool selected = option.state & QStyle::State_Selected;
 	const bool hovered = option.state & QStyle::State_MouseOver;
 	const int margin = option.widget->inherits( "QAbstractItemView" ) ? 3 : 0;
-	pPartitionModel::Partition partition = mModel->partition( index );
+	const qint64 wbfsFSId = 0x25;
+	pPartition partition = mModel->partition( index );
 	
-	if ( QWBFS::Driver::isWBFSPartitionOrFile( partition.origin ) ) {
+	if ( partition.property( pPartition::FileSystemId ).toLongLong() == wbfsFSId ) {
 		// update wbfs partitions informations
-		if ( partition.lastCheck < QDateTime::currentDateTime() && ( partition.used == -1 || partition.free == -1 ) ) {
+		if ( partition.property( pPartition::LastCheck ).toDateTime() < QDateTime::currentDateTime()
+			&& ( partition.property( pPartition::UsedSize ).isNull() || partition.property( pPartition::FreeSize ).isNull() ) ) {
 			bool created = false;
-			QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( partition.origin, &created );
+			QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( partition.property( pPartition::DevicePath ).toString(), &created );
 			QWBFS::Driver driver( handle );
 			QWBFS::Partition::Status status;
 			
 			driver.status( status );
 			
-			partition.fileSystem = "WBFS";
-			partition.total = status.size;
-			partition.used = status.used;
-			partition.free = status.free;
-			
-			const QString vendorModel = QString( "%1 %2" )
-				.arg( partition.extendedAttributes[ "ID_VENDOR" ] )
-				.arg( partition.extendedAttributes[ "ID_MODEL" ] )
-				.replace( "_", " " )
-				.simplified()
-				;
-			
-			partition.name = QString( "%1 %2 (%3)" )
-				.arg( partition.label )
-				.arg( partition.fileSystem.toUpper() )
-				.arg( vendorModel )
-				;
+			partition.setProperty( pPartition::FileSystem, pPartition::fileSystemIdToString( wbfsFSId ) );
+			partition.setProperty( pPartition::TotalSize, status.size );
+			partition.setProperty( pPartition::UsedSize, status.used );
+			partition.setProperty( pPartition::FreeSize, status.free );
+			partition.setProperty( pPartition::DisplayText, partition.generateDisplayText() );
 			
 			mModel->updatePartition( partition );
 			
@@ -105,7 +95,7 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	}
 	
 	int total = 100;
-	int used = ( (qreal)partition.used /(qreal)partition.total ) *(qreal)100;
+	int used = ( (qreal)partition.property( pPartition::UsedSize ).toLongLong() /(qreal)partition.property( pPartition::TotalSize ).toLongLong() ) *(qreal)100;
 	
 	QStyleOptionProgressBarV2 pbOption;
 	pbOption.initFrom( option.widget );
@@ -129,14 +119,13 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	bOption.state = option.state;
 	bOption.palette = option.palette;
 	bOption.rect = option.rect.adjusted( margin, margin, -margin, -margin );
-	bOption.icon = partition.fileSystem == "WBFS" ? QIcon( ":/icons/256/wii.png" ) : partition.icon();
+	//bOption.icon = partition.fileSystem == "WBFS" ? QIcon( ":/icons/256/wii.png" ) : partition.icon();
 	bOption.iconSize = QSize( bOption.rect.height() -5, bOption.rect.height() -5 );
-	bOption.text = partition.name;
 	bOption.text = QString( "%1 - %2 / %3 Used - %4 Free" )
-		.arg( bOption.text )
-		.arg( pCoreUtils::fileSizeToString( partition.used ) )
-		.arg( pCoreUtils::fileSizeToString( partition.total ) )
-		.arg( pCoreUtils::fileSizeToString( partition.free ) )
+		.arg( partition.property( pPartition::DisplayText ).toString() )
+		.arg( pCoreUtils::fileSizeToString( partition.property( pPartition::UsedSize ).toLongLong() ) )
+		.arg( pCoreUtils::fileSizeToString( partition.property( pPartition::TotalSize ).toLongLong() ) )
+		.arg( pCoreUtils::fileSizeToString( partition.property( pPartition::FreeSize ).toLongLong() ) )
 		;
 	
 	if ( selected || hovered ) {

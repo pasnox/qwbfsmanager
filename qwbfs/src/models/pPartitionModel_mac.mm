@@ -6,6 +6,8 @@ http://developer.apple.com/library/mac/#samplecode/VolumeToBSDNode/Listings/Volu
 */
 
 #if defined( Q_OS_MAC )
+#include <sys/param.h>
+
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h>
 #include <IOKit/IOKitLib.h>
@@ -19,6 +21,158 @@ http://developer.apple.com/library/mac/#samplecode/VolumeToBSDNode/Listings/Volu
 #ifndef IO_OBJECT_NULL
 #define IO_OBJECT_NULL  ((io_object_t)0)
 #endif
+
+QVariant toQVariant( CFTypeRef r );
+
+void mergeMaps( const QVariantMap& in, QVariantMap& out )
+{
+	foreach ( const QString& key, in.keys() ) {
+		if ( out.contains( key ) ) {
+			continue;
+		}
+		
+		out[ key ] = in[ key ];
+	}
+}
+
+QVariantMap toQVariantMap( CFDictionaryRef dict )
+{
+	QVariantMap map;
+	
+	if ( dict ) {
+		const CFIndex count = CFDictionaryGetCount( dict );
+		const void* keys[ count ];
+		const void* values[ count ];
+		
+		CFDictionaryGetKeysAndValues( dict, keys, values );
+		
+		for ( CFIndex i = 0; i < count; i++ ) {
+			const QVariant key = toQVariant( (CFTypeRef)keys[ i ] );
+			const QVariant value = toQVariant( (CFTypeRef)values[ i ] );
+			
+			map[ key.toString() ] = value;
+		}
+	}
+	
+	return map;
+}
+
+QVariantList toQVariantList( CFArrayRef array )
+{
+	QVariantList list;
+	
+	if ( array ) {
+		const CFIndex count = CFArrayGetCount( array );
+		
+		for ( CFIndex i = 0; i < count; i++ ) {
+			list << toQVariant( CFArrayGetValueAtIndex( array, i ) );
+		}
+	}
+	
+	qWarning() << "*** list" << list;
+	
+	return list;
+}
+
+QVariant toQVariant( CFStringRef string )
+{
+	if ( string ) {
+		const CFIndex length = 2 *( CFStringGetLength( string ) +1 ); // Worst case for UTF8
+		char buffer[ length ];
+		
+		if ( CFStringGetCString( string, buffer, length, kCFStringEncodingUTF8 ) ) {
+			return QString::fromUtf8( buffer );
+		}
+		else {
+			qWarning() << Q_FUNC_INFO << "CFStringRef conversion failed";
+		}
+	}
+	
+	return QVariant();
+}
+
+QVariant toQVariant( CFBooleanRef value )
+{
+	return value ? (bool)CFBooleanGetValue( value ) : QVariant();
+}
+
+QVariant toQVariant( CFNumberRef number )
+{
+	switch ( CFNumberGetType( number ) ) {
+		case kCFNumberSInt8Type:
+		case kCFNumberSInt16Type:
+		case kCFNumberSInt32Type:
+		case kCFNumberSInt64Type:
+		case kCFNumberCharType:
+		case kCFNumberShortType:
+		case kCFNumberIntType:
+		case kCFNumberLongType:
+		case kCFNumberLongLongType:
+		case kCFNumberCFIndexType:
+		case kCFNumberNSIntegerType: {
+			qint64 value = 0;
+			if ( CFNumberGetValue( number, kCFNumberSInt64Type, &value ) ) {
+				return value;
+			}
+			break;
+		}
+		case kCFNumberFloat32Type:
+		case kCFNumberFloat64Type:
+		case kCFNumberFloatType:
+		case kCFNumberDoubleType:
+		case kCFNumberCGFloatType: {
+			qreal value = 0;
+			if ( CFNumberGetValue( number, kCFNumberFloat64Type, &value ) ) {
+				return value;
+			}
+			break;
+		}
+	}
+	
+	return QVariant();
+}
+
+QVariant toQVariant( CFDataRef _data )
+{
+	if ( _data ) {
+		const CFIndex size = CFDataGetLength( _data );
+		return QByteArray( (const char*)CFDataGetBytePtr( _data ), size );
+	}
+	
+	return QVariant();
+}
+
+QVariant toQVariant( CFTypeRef ref )
+{
+	const CFTypeID id = CFGetTypeID( ref );
+	
+	if ( id == CFStringGetTypeID() ) {
+		return toQVariant( (CFStringRef)ref );
+	}
+	else if ( id == CFBooleanGetTypeID() ) {
+		return toQVariant( (CFBooleanRef)ref );
+	}
+	else if ( id == CFBundleGetTypeID() ) {
+		return toQVariant( CFBundleGetIdentifier( (CFBundleRef)ref ) );
+	}
+	else if ( id == CFNumberGetTypeID() ) {
+		return toQVariant( (CFNumberRef)ref );
+	}
+	else if ( id == CFDictionaryGetTypeID() ) {
+		return toQVariantMap( (CFDictionaryRef)ref );
+	}
+	else if ( id == CFArrayGetTypeID() ) {
+		return toQVariantList( (CFArrayRef)ref );
+	}
+	else if ( id == CFDataGetTypeID() ) {
+		return toQVariant( (CFDataRef)ref );
+	}
+	
+	qWarning() << Q_FUNC_INFO << "Unknow ID" << id;
+	CFShow( ref );
+	
+	return QVariant();
+}
 
 Boolean IsWholeMedia( io_service_t service )
 {
@@ -40,53 +194,27 @@ Boolean IsWholeMedia( io_service_t service )
     return isWholeMedia;
 }
 
-void wholeMedia( io_service_t service, io_iterator_t iter, pPartitionModel::Partition& partition )
+void wholeMedia( io_service_t service, io_iterator_t iter, pPartition& partition )
 {
 	Boolean isWhole;
-	io_name_t className;
 	
 	// A reference on the initial service object is released in the do-while loop below, so add a reference to balance
 	IOObjectRetain( service );
 	
-	partition.extendedAttributes[ "IS_CD" ] = "0";
-	partition.extendedAttributes[ "IS_DVD" ] = "0";
-	partition.extendedAttributes[ "IS_BLOCK" ] = "0";
-	
 	do {
 		isWhole = IsWholeMedia( service );
 		
-		if ( isWhole ) {
-			IOObjectGetClass( service, className );
-			
-			if ( IOObjectConformsTo( service, kIOCDMediaClass ) ) {
-				if ( partition.extendedAttributes[ "IS_CD" ] == "0" ) {
-					partition.extendedAttributes[ "IS_CD" ] = "1";
-				}
-			}
-			else if ( IOObjectConformsTo( service, kIODVDMediaClass ) ) {
-				if ( partition.extendedAttributes[ "IS_DVD" ] == "0" ) {
-					partition.extendedAttributes[ "IS_DVD" ] = "1";
-				}
-			}
-			else {
-				if ( partition.extendedAttributes[ "IS_BLOCK" ] == "0" ) {
-					partition.extendedAttributes[ "IS_BLOCK" ] = QString( "IOMedia" ) == className ? "1" : "0";
-				}
-			}
-			
-			partition.extendedAttributes[ "SERVICE_CLASSNAME" ] = className;
+		CFMutableDictionaryRef properties;
+		if ( IORegistryEntryCreateCFProperties( service, &properties, kCFAllocatorDefault, 0 ) == noErr ) {
+			mergeMaps( toQVariantMap( (CFDictionaryRef)properties ), partition.properties() );
+			CFRelease( properties );
 		}
 		
 		IOObjectRelease( service );
 	} while ( ( service = IOIteratorNext( iter ) ) && !isWhole );
 }
 
-/*
-FSCopyDiskIDForVolume
-FSCopyURLForVolume
-*/
-
-void fillPartitionInformations( FSVolumeRefNum volume, pPartitionModel::Partition& partition )
+void fillPartitionInformations( FSVolumeRefNum volume, pPartition& partition )
 {
 	OSStatus result = noErr;
 	HFSUniStr255 volumeName;
@@ -133,51 +261,81 @@ void fillPartitionInformations( FSVolumeRefNum volume, pPartitionModel::Partitio
 			
 				if ( service == IO_OBJECT_NULL ) {
 					qWarning() << "IOServiceGetMatchingService returned IO_OBJECT_NULL.";
+					return;
+				}
+				
+				CFMutableDictionaryRef properties;
+				if ( IORegistryEntryCreateCFProperties( service, &properties, kCFAllocatorDefault, 0 ) == noErr ) {
+					mergeMaps( toQVariantMap( (CFDictionaryRef)properties ), partition.properties() );
+					CFRelease( properties );
+				}
+
+				io_iterator_t iter;
+				result = IORegistryEntryCreateIterator( service, kIOServicePlane, kIORegistryIterateRecursively | kIORegistryIterateParents, &iter );
+				
+				if ( result != KERN_SUCCESS ) {
+					qWarning() << QString( "IORegistryEntryCreateIterator returned 0x%18x" ).arg( result );
+				}
+				else if ( iter == IO_OBJECT_NULL ) {
+					qWarning() << "IORegistryEntryCreateIterator returned a NULL iterator.";
 				}
 				else {
-					io_iterator_t iter;
-					kern_return_t kernResult = IORegistryEntryCreateIterator( service, kIOServicePlane, kIORegistryIterateRecursively | kIORegistryIterateParents, &iter );
-					
-					if ( kernResult != KERN_SUCCESS ) {
-						qWarning() << QString( "IORegistryEntryCreateIterator returned 0x%18x" ).arg( kernResult );
-					}
-					else if ( iter == IO_OBJECT_NULL ) {
-						qWarning() << "IORegistryEntryCreateIterator returned a NULL iterator.";
-					}
-					else {
-						wholeMedia( service, iter, partition );
-						IOObjectRelease( iter );
-					}
-					
-					IOObjectRelease( service );
+					wholeMedia( service, iter, partition );
+					IOObjectRelease( iter );
 				}
+				
+				IOObjectRelease( service );
 			}
 		}
 		
-		partition.label = QString::fromUtf16( volumeName.unicode, volumeName.length );
-		partition.origin = QString( "/dev/%1" ).arg( (char*)volumeParms.vMDeviceID );
-		partition.fileSystem = QString::null;
-		partition.total = volumeInfo.totalBytes;
-		partition.free = volumeInfo.freeBytes;
-		partition.used = partition.total -partition.free;
-		partition.fileSystem = volumeInfo.filesystemID == 0 ? "HFS/HFS+" : "";
-		partition.fileSystemMark = volumeInfo.filesystemID; // seem to be bad :(
-		partition.name = pPartitionModel::Partition::displayText(
-			partition.origin, 
-			partition.label, 
-			partition.fileSystemMark, 
-			QString::null, 
-			QString::null );
-		partition.extendedAttributes[ "REMOVABLE" ] = volumeParms.vMExtendedAttributes & bIsRemovable ? "1" : "0";
-		partition.lastCheck = QDateTime::currentDateTime();
+		QString mountPoint;
 		
-		//qWarning() << partition.origin << partition.extendedAttributes;
+		{
+			char path[ MAXPATHLEN ];
+			
+			if ( FSRefMakePath( &rootDirectory, (UInt8*)path, MAXPATHLEN ) != noErr ) {
+				return;
+			}
+			
+			mountPoint = QString::fromUtf8( path );
+		}
+		
+		const QString ch = partition.properties().value( "Content Hint" ).toString();
+		const qint64 ct = partition.properties().value( "Content Table" ).toMap().key( ch ).toLongLong( 0, 16 );
+		const qint64 fsId = volumeInfo.filesystemID == 0 ? 0xAF : ct;
+		pPartition::Type type = pPartition::Fixed;
+		
+		if ( partition.properties().value( "IOProviderClass" ) == "IOMedia" ) {
+			type = pPartition::Fixed;
+		}
+		else if ( partition.properties().value( "IOProviderClass" ) == "IODVDMedia" ) {
+			type = pPartition::CdRom;
+		}
+		else if ( partition.properties().value( "IOProviderClass" ) == "IOCDMedia" ) {
+			type = pPartition::CdRom;
+		}
+		
+		partition.setProperty( pPartition::Label, QString::fromUtf16( volumeName.unicode, volumeName.length ) );
+		partition.setProperty( pPartition::DevicePath,  QString( "/dev/%1" ).arg( (char*)volumeParms.vMDeviceID ) );
+		partition.setProperty( pPartition::TotalSize, volumeInfo.totalBytes );
+		partition.setProperty( pPartition::FreeSize, volumeInfo.freeBytes );
+		partition.setProperty( pPartition::UsedSize, volumeInfo.totalBytes -volumeInfo.freeBytes );
+		partition.setProperty( pPartition::MountPoints, mountPoint );
+		partition.setProperty( pPartition::FileSystemId, fsId );
+		partition.setProperty( pPartition::FileSystem, pPartition::fileSystemIdToString( fsId, type ) );
+		partition.setProperty( pPartition::DisplayText, partition.generateDisplayText() );
+		partition.setProperty( pPartition::LastCheck, QDateTime::currentDateTime() );
+		
+		/*qWarning() << "********" << partition.property( pPartition::DevicePath ) << partition.property( pPartition::Label );
+		foreach ( const QString& key, partition.properties().keys() ) {
+			qWarning() << key << " -- " << partition.properties()[ key ];
+		}*/
 	}
 }
 
-pPartitionModel::Partitions pPartitionModel::partitions() const
+pPartitionList pPartitionModel::partitions() const
 {
-	pPartitionModel::Partitions partitions;
+	pPartitionList partitions;
     OSStatus result = noErr;
     ItemCount volumeIndex;
 	
@@ -187,14 +345,18 @@ pPartitionModel::Partitions pPartitionModel::partitions() const
 		result = FSGetVolumeInfo( kFSInvalidVolumeRefNum, volumeIndex, &volume, kFSVolInfoNone, 0, 0, 0 ); 
         
         if ( result == noErr ) {
-			pPartitionModel::Partition partition;
+			pPartition partition;
 			fillPartitionInformations( volume, partition );
 			
-			if ( !partition.origin.isEmpty() ) {
+			if ( partition.isValid() ) {
 				partitions << partition;
 			}
         }
+		
+		//exit( 0 );
     }
+	
+	//exit( 0 );
 	
 	return partitions;
 }

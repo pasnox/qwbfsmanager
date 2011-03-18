@@ -31,7 +31,7 @@ PartitionComboBox::PartitionComboBox( QWidget* parent )
 	hl->addWidget( button );
 	
 	setModel( partitionModel() );
-	setModelColumn( pPartitionModel::Origin );
+	setModelColumn( pPartitionModel::Device );
 	setItemDelegate( new PartitionDelegate( partitionModel() ) );
 	
 	connect( button, SIGNAL( clicked() ), this, SLOT( addPartition() ) );
