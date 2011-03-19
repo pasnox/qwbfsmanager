@@ -36,18 +36,29 @@ public:
 	
 	bool operator==( const pPartition& other ) const;
 	
-	void setProperty( pPartition::Property property, const QVariant& content );
+	void setProperties( const QVariantMap& properties );
+	QVariantMap properties() const;
+	
 	QVariant property( pPartition::Property property ) const;
+	QVariant property( const QString& property ) const;
+	
+	void updateSizes( qint64 total, qint64 used, qint64 free );
 	
 	bool isValid() const;
-	QVariantMap& properties();
-	QString generateDisplayText() const;
+	bool isCustom() const;
+	QString devicePath() const;
 	
 	static bool isWBFSPartition( const QString& devicePath );
+	static bool isValidDevicePath( const QString& devicePath );
 	static QString fileSystemIdToString( qint64 id, pPartition::Type type = pPartition::Fixed, bool full = false );
 	
 protected:
 	QVariantMap mProperties;
+	QString mDevicePath;
+	
+	void updateLastChecked();
+	QString generateDisplayText() const;
+	QString value( const QString& key ) const;
 };
 
 typedef QList<pPartition> pPartitionList;

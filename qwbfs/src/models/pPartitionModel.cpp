@@ -9,11 +9,14 @@
 pPartitionModel::pPartitionModel( QObject* parent )
 	: QAbstractTableModel( parent )
 {
+	mData = 0;
+	platformInit();
 	update();
 }
 
 pPartitionModel::~pPartitionModel()
 {
+	platformDeInit();
 }
 
 int pPartitionModel::columnCount( const QModelIndex& parent ) const
@@ -29,6 +32,7 @@ QVariant pPartitionModel::data( const QModelIndex& index, int role ) const
 		return QVariant();
 	}
 	
+	//qWarning() << index << mPartitions.count() << mPartitions.value( index.row() ).devicePath();
 	const pPartition& partition = mPartitions[ index.row() ];
 	
 	switch ( role ) {
@@ -123,70 +127,35 @@ bool pPartitionModel::insertRows( int row, int count, const QModelIndex& parent 
 	return insertRow( row, parent );
 }
 
-bool pPartitionModel::setData( const QModelIndex& index, const QVariant& value, int role )
-{
-	if ( !index.isValid() ||
-		index.row() < 0 || index.row() >= rowCount( index.parent() ) ||
-		index.column() < 0 || index.column() >= columnCount( index.parent() ) ) {
-		return false;
-	}
-	
-	switch ( role ) {
-		case Qt::DisplayRole:
-		case Qt::EditRole: {
-			pPartition& partition = mPartitions[ index.row() ];
-			
-			switch ( index.column() ) {
-				case pPartitionModel::Icon:
-					break;
-				case pPartitionModel::Label:
-				case pPartitionModel::Device:
-				case pPartitionModel::FileSystem:
-				case pPartitionModel::Free:
-				case pPartitionModel::Used:
-				case pPartitionModel::Total:
-				case pPartitionModel::LastCheck:
-					partition.setProperty( pPartition::Property( index.column() ), value );
-					break;
-			}
-			
-			if ( index.column() != pPartitionModel::LastCheck ) {
-				partition.setProperty( pPartition::LastCheck, QDateTime::currentDateTime() );
-			}
-			
-			emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), columnCount( index.parent() ) ) );
-			return true;
-		}
-	}
-	
-	return false;
-}
-
 pPartition pPartitionModel::partition( const QModelIndex& index ) const
 {
 	return mPartitions.value( index.row() );
 }
 
-QStringList pPartitionModel::customPartitions() const
+QModelIndex pPartitionModel::index( const pPartition& partition, int column ) const
 {
-	const pPartitionList systemPartitions = partitions();
-	QStringList custom;
-	
-	foreach ( const pPartition& partition, mPartitions ) {
-		if ( !systemPartitions.contains( partition ) ) {
-			custom << partition.property( pPartition::DevicePath ).toString();
-		}
-	}
-	
-	return custom;
+	const int id = mPartitions.indexOf( partition );
+	return QAbstractTableModel::index( id, column, QModelIndex() );
+}
+
+void pPartitionModel::addPartition( const QString& partition )
+{
+qWarning() << partition;
+	updatePartition( pPartition( partition ) );
 }
 
 void pPartitionModel::updatePartition( const pPartition& partition )
 {
+	if ( !partition.isValid() ) {
+		return;
+	}
+	
+	qWarning() << partition.devicePath();
+	
 	const int id = mPartitions.indexOf( partition );
 	
 	if ( id != -1 ) {
-		const QModelIndex index = this->index( id, 0, QModelIndex() );
+		const QModelIndex index = QAbstractTableModel::index( id, 0, QModelIndex() );
 		mPartitions[ id ] = partition;
 		
 		emit dataChanged( index.sibling( index.row(), 0 ), index.sibling( index.row(), columnCount( index.parent() ) ) );
@@ -198,16 +167,35 @@ void pPartitionModel::updatePartition( const pPartition& partition )
 	}
 }
 
+void pPartitionModel::removePartition( const QString& partition )
+{
+	const int id = mPartitions.indexOf( partition );
+	
+	if ( id != -1 ) {
+		beginRemoveRows( QModelIndex(), id, id );
+		mPartitions.removeAt( id );
+		endRemoveRows();
+	}
+}
+
+QStringList pPartitionModel::customPartitions() const
+{
+	QStringList custom;
+	
+	foreach ( const pPartition& partition, mPartitions ) {
+		if ( partition.isCustom() ) {
+			custom << partition.devicePath();
+		}
+	}
+	
+	return custom;
+}
+
 void pPartitionModel::addPartitions( const QStringList& partitions )
 {
 	foreach ( const QString& partition, partitions ) {
 		addPartition( partition );
 	}
-}
-
-void pPartitionModel::addPartition( const QString& partition )
-{
-	updatePartition( pPartition( partition ) );
 }
 
 void pPartitionModel::dump() const
@@ -216,7 +204,7 @@ void pPartitionModel::dump() const
 		QStringList entries;
 		
 		for ( int x = 0; x < columnCount(); x++ ) {
-			entries << index( y, x ).data().toString();
+			entries << QAbstractTableModel::index( y, x ).data().toString();
 		}
 		
 		qWarning() << entries.join( "\t" );
@@ -225,6 +213,10 @@ void pPartitionModel::dump() const
 
 void pPartitionModel::update()
 {
+#ifdef Q_OS_MAC
+	// this will delete / create the disk session tracker
+	Q_UNUSED( partitions() );
+#else
 	const QModelIndexList oldIndexes = persistentIndexList();
 	pPartitionList partitions = this->partitions();
 	QHash<int, int> mapping;
@@ -234,7 +226,7 @@ void pPartitionModel::update()
 	for ( int i = 0; i < mPartitions.count(); i++ ) {
 		const pPartition& partition = mPartitions[ i ];
 		
-		if ( !partitions.contains( partition ) && QFile::exists( partition.property( pPartition::DevicePath ).toString() ) ) {
+		if ( !partitions.contains( partition ) && partition.isValid() ) {
 			partitions << partition;
 		}
 	}
@@ -250,14 +242,15 @@ void pPartitionModel::update()
 	foreach ( const QModelIndex& idx, oldIndexes ) {
 		const int i = idx.row();
 		
-		newIndexes << index( mapping[ i ], idx.column(), idx.parent()  );
+		newIndexes << QAbstractTableModel::index( mapping[ i ], idx.column(), idx.parent()  );
 	}
 	
 	mPartitions = partitions;
 	changePersistentIndexList( oldIndexes, newIndexes );
 	
 	emit layoutChanged();
-	emit dataChanged( index( 0, 0 ), index( rowCount() -1, columnCount() -1 ) );
+	//emit dataChanged( QAbstractTableModel::index( 0, 0 ), QAbstractTableModel::index( rowCount() -1, columnCount() -1 ) );
+#endif
 }
 
 #if defined( Q_OS_WIN ) || defined( Q_OS_MAC ) || defined( __linux__ )

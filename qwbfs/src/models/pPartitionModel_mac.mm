@@ -3,10 +3,17 @@
 /*
 http://www.datarecovery.com/hexcodes.asp
 http://developer.apple.com/library/mac/#samplecode/VolumeToBSDNode/Listings/VolumeToBSDNode_c.html#//apple_ref/doc/uid/DTS10000434-VolumeToBSDNode_c-DontLinkElementID_4
+http://stackoverflow.com/questions/1515068/list-all-drives-partitions-and-get-dev-rdisc-device-with-cocoa
 */
 
 #if defined( Q_OS_MAC )
-#include <sys/param.h>
+#import <Foundation/Foundation.h>
+#import <DiskArbitration/DiskArbitration.h>
+#import <CoreFoundation/CFDictionary.h>
+
+#include <QDebug>
+
+/*#include <sys/param.h>
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <CoreServices/CoreServices.h>
@@ -33,7 +40,9 @@ void mergeMaps( const QVariantMap& in, QVariantMap& out )
 		
 		out[ key ] = in[ key ];
 	}
-}
+}*/
+
+QVariant toQVariant( CFTypeRef r );
 
 QVariantMap toQVariantMap( CFDictionaryRef dict )
 {
@@ -68,8 +77,6 @@ QVariantList toQVariantList( CFArrayRef array )
 			list << toQVariant( CFArrayGetValueAtIndex( array, i ) );
 		}
 	}
-	
-	qWarning() << "*** list" << list;
 	
 	return list;
 }
@@ -142,6 +149,30 @@ QVariant toQVariant( CFDataRef _data )
 	return QVariant();
 }
 
+QVariant toQVariant( CFURLRef url )
+{
+	if ( url ) {
+		CFStringRef string = CFURLCopyFileSystemPath( url, kCFURLPOSIXPathStyle );
+		QVariant variant = toQVariant( string );
+		CFRelease( string );
+		return variant;
+	}
+	
+	return QVariant();
+}
+
+QVariant toQVariant( CFUUIDRef uuid )
+{
+	if ( uuid ) {
+		CFStringRef string = CFUUIDCreateString( kCFAllocatorDefault, uuid );
+		QVariant variant = toQVariant( string );
+		CFRelease( string );
+		return variant;
+	}
+	
+	return QVariant();
+}
+
 QVariant toQVariant( CFTypeRef ref )
 {
 	const CFTypeID id = CFGetTypeID( ref );
@@ -167,6 +198,12 @@ QVariant toQVariant( CFTypeRef ref )
 	else if ( id == CFDataGetTypeID() ) {
 		return toQVariant( (CFDataRef)ref );
 	}
+	else if ( id == CFURLGetTypeID() ) {
+		return toQVariant( (CFURLRef)ref );
+	}
+	else if ( id == CFUUIDGetTypeID() ) {
+		return toQVariant( (CFUUIDRef)ref );
+	}
 	
 	qWarning() << Q_FUNC_INFO << "Unknow ID" << id;
 	CFShow( ref );
@@ -174,7 +211,7 @@ QVariant toQVariant( CFTypeRef ref )
 	return QVariant();
 }
 
-Boolean IsWholeMedia( io_service_t service )
+/*Boolean IsWholeMedia( io_service_t service )
 {
 	// Check that service is a IOMedia checking recursively the parents if needed and get its informations.
     Boolean isWholeMedia = false;
@@ -326,10 +363,10 @@ void fillPartitionInformations( FSVolumeRefNum volume, pPartition& partition )
 		partition.setProperty( pPartition::DisplayText, partition.generateDisplayText() );
 		partition.setProperty( pPartition::LastCheck, QDateTime::currentDateTime() );
 		
-		/*qWarning() << "********" << partition.property( pPartition::DevicePath ) << partition.property( pPartition::Label );
+		/qWarning() << "********" << partition.property( pPartition::DevicePath ) << partition.property( pPartition::Label );
 		foreach ( const QString& key, partition.properties().keys() ) {
 			qWarning() << key << " -- " << partition.properties()[ key ];
-		}*/
+		}/
 	}
 }
 
@@ -359,6 +396,85 @@ pPartitionList pPartitionModel::partitions() const
 	//exit( 0 );
 	
 	return partitions;
+}*/
+
+class DADisksSession
+{
+public:
+	DADisksSession( pPartitionModel* model )
+	{
+		mModel = model;
+		
+		// init session
+		mSession = DASessionCreate( kCFAllocatorDefault );
+		DARegisterDiskAppearedCallback( mSession, 0/*all disks*/, diskAppeared, mModel );
+		DARegisterDiskDescriptionChangedCallback( mSession, 0/*all disks*/, 0/*all keys*/, diskChanged, mModel );
+		DARegisterDiskDisappearedCallback( mSession, 0/*all disks*/, diskDisappeared, mModel );
+		DASessionScheduleWithRunLoop( mSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode );
+	}
+	
+	~DADisksSession()
+	{
+		// deinit session
+		DASessionUnscheduleFromRunLoop( mSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode );
+		CFRelease( mSession );
+	}
+	
+	static pPartition createPartition( DADiskRef disk )
+	{
+		const CFDictionaryRef dict = DADiskCopyDescription( disk );
+		const QVariantMap properties = toQVariantMap( dict );
+		pPartition partition;
+		
+		CFRelease( dict );
+		
+		// set properties on partitions only
+		if ( !properties.value( "DAMediaWhole" ).toBool() ) {
+			partition.setProperties( properties );
+		}
+		
+		return partition;
+	}
+	
+	static void diskAppeared( DADiskRef disk, void* context )
+	{
+		pPartitionModel* model = static_cast<pPartitionModel*>( context );
+		model->updatePartition( createPartition( disk ) );
+	}
+	
+	static void diskChanged( DADiskRef disk, CFArrayRef keys, void* context )
+	{
+		Q_UNUSED( keys );
+		pPartitionModel* model = static_cast<pPartitionModel*>( context );
+		model->updatePartition( createPartition( disk ) );
+	}
+	
+	static void diskDisappeared( DADiskRef disk, void* context )
+	{
+		pPartitionModel* model = static_cast<pPartitionModel*>( context );
+		model->removePartition( createPartition( disk ).devicePath() );
+	}
+
+protected:
+	pPartitionModel* mModel;
+	DASessionRef mSession;
+};
+
+void pPartitionModel::platformInit()
+{
+	mData = 0;
+}
+
+void pPartitionModel::platformDeInit()
+{
+	delete (DADisksSession*)mData;
+}
+
+pPartitionList pPartitionModel::partitions() const
+{
+	delete (DADisksSession*)mData;
+	mData = new DADisksSession( const_cast<pPartitionModel*>( this ) );
+	return pPartitionList();
 }
 
 #endif

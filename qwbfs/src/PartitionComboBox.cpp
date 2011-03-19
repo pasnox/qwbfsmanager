@@ -70,7 +70,7 @@ void PartitionComboBox::paintEvent( QPaintEvent* event )
 		style()->drawControl( QStyle::CE_ComboBoxLabel, &option, &painter, this );
 	}
 	else {
-		const QModelIndex index = partitionModel()->index( currentIndex(), modelColumn(), rootModelIndex() );
+		const QModelIndex index = partitionModel()->QAbstractTableModel::index( currentIndex(), modelColumn(), rootModelIndex() );
 		
 		QStyleOptionViewItemV4 o;
 		o.initFrom( this );

@@ -62,6 +62,9 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	QStyleOptionViewItemV4 option = _option;
     initStyleOption( &option, index );
 	option.palette = mStyle->standardPalette();
+#if defined( Q_OS_MAC )
+	option.font.setPointSize( option.font.pointSize() -2 );
+#endif
 	
 	const bool selected = option.state & QStyle::State_Selected;
 	const bool hovered = option.state & QStyle::State_MouseOver;
@@ -79,13 +82,7 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 			QWBFS::Partition::Status status;
 			
 			driver.status( status );
-			
-			partition.setProperty( pPartition::FileSystem, pPartition::fileSystemIdToString( wbfsFSId ) );
-			partition.setProperty( pPartition::TotalSize, status.size );
-			partition.setProperty( pPartition::UsedSize, status.used );
-			partition.setProperty( pPartition::FreeSize, status.free );
-			partition.setProperty( pPartition::DisplayText, partition.generateDisplayText() );
-			
+			partition.updateSizes( status.size, status.used, status.free );
 			mModel->updatePartition( partition );
 			
 			if ( created ) {
@@ -131,6 +128,8 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	if ( selected || hovered ) {
 		paintFrame( painter, &option, selected );
 	}
+	
+	painter->setFont( option.font );
 	
 	mStyle->drawControl( QStyle::CE_ProgressBar, &pbOption, painter, option.widget );
 	mStyle->drawControl( QStyle::CE_PushButtonLabel, &bOption, painter, option.widget );

@@ -32,14 +32,17 @@ public:
 	virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 	virtual bool insertRow( int row, const QModelIndex& parent = QModelIndex() );
 	virtual bool insertRows( int row, int count, const QModelIndex& parent = QModelIndex() );
-	virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 	//virtual void	sort ( int column, Qt::SortOrder order = Qt::AscendingOrder )
 	
 	pPartition partition( const QModelIndex& index ) const;
-	QStringList customPartitions() const;
-	void updatePartition( const pPartition& partition );
-	void addPartitions( const QStringList& partitions );
+	QModelIndex index( const pPartition& partition, int column = 0 ) const;
+	
 	void addPartition( const QString& partition );
+	void updatePartition( const pPartition& partition );
+	void removePartition( const QString& partition );
+	
+	QStringList customPartitions() const;
+	void addPartitions( const QStringList& partitions );
 	
 	void dump() const;
 
@@ -48,8 +51,11 @@ public slots:
 
 protected:
 	pPartitionList mPartitions;
+	mutable void* mData;
 	
-	pPartitionList partitions() const;
+	virtual void platformInit();
+	virtual void platformDeInit();
+	virtual pPartitionList partitions() const;
 };
 
 #endif // PPARTITIONMODEL_H

@@ -197,7 +197,7 @@ linux* {
 }
 
 macx {
-	LIBS	*= "-framework IOKit" "-framework CoreFoundation" "-framework CoreServices"
+	LIBS	*= "-framework DiskArbitration" "-framework CoreFoundation"
 	OBJECTIVE_SOURCES	*= src/models/pPartitionModel_mac.mm
 }
 
