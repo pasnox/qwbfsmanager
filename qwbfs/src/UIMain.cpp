@@ -50,6 +50,7 @@
 #include <FreshGui/pPaypalButton>
 #include "models/pPartitionModel.h"
 
+#include <QMenuBar>
 #include <QMenu>
 #include <QFileSystemModel>
 #include <QFileDialog>
@@ -66,6 +67,9 @@
 UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
+#if defined( Q_OS_MAC )
+	mMenuBar = new QMenuBar;
+#endif
 	mCache = pNetworkAccessManager::instance();
 	mUpdateChecker = new pUpdateChecker( this );
 	mUpdateChecker->setDownloadsFeedUrl( QUrl( APPLICATION_DOWNLOADS_FEED ) );
@@ -76,6 +80,10 @@ UIMain::UIMain( QWidget* parent )
 	setWindowTitle( QString( "%1 v%2" ).arg( APPLICATION_NAME ).arg( APPLICATION_VERSION_STR ) );
 	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
+
+#if defined( Q_OS_MAC )
+	mMenuBar->addMenu( "Fake" )->addAction( aProperties );
+#endif
 	
 	QFont font = this->font();
 #ifdef Q_OS_MAC
@@ -145,12 +153,20 @@ UIMain::UIMain( QWidget* parent )
 
 UIMain::~UIMain()
 {
+#if defined( Q_OS_MAC )
+	delete mMenuBar;
+#endif
 	//qWarning() << Q_FUNC_INFO;
 }
 
 pNetworkAccessManager* UIMain::cache() const
 {
 	return mCache;
+}
+
+pQueuedMessageToolBar* UIMain::messageToolBar() const
+{
+	return qmtbInfos;
 }
 
 bool UIMain::event( QEvent* event )
@@ -431,11 +447,9 @@ void UIMain::on_aReloadPartitions_triggered()
 	PartitionComboBox::partitionModel()->update();
 	
 	if ( PartitionComboBox::partitionModel()->rowCount() == 0 ) {
-		QMessageBox::information( this, QString::null,
-			tr(
+		qmtbInfos->appendMessage( tr(
 				"I don't know how to list partition for this platform.\n"
-				"You will have to set the correct partition path yourself for mounting partitions."
-			) );
+				"You will have to set the correct partition path yourself for mounting partitions." ) );
 	}
 }
 

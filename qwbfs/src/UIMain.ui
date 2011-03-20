@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>621</width>
-    <height>351</height>
+    <height>385</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -277,13 +277,13 @@
    <property name="minimumSize">
     <size>
      <width>184</width>
-     <height>107</height>
+     <height>109</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>184</width>
-     <height>16777215</height>
+     <height>524287</height>
     </size>
    </property>
    <property name="features">
@@ -373,6 +373,9 @@
    </property>
    <property name="text">
     <string>Properties</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
    </property>
   </action>
   <action name="aConvertToWBFSFiles">

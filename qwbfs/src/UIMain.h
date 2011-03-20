@@ -38,6 +38,7 @@
 
 #include "ui_UIMain.h"
 
+class QMenuBar;
 class QFileSystemModel;
 class QNetworkReply;
 class pNetworkAccessManager;
@@ -61,8 +62,12 @@ public:
 	virtual bool event( QEvent* event );
 	
 	pNetworkAccessManager* cache() const;
+	pQueuedMessageToolBar* messageToolBar() const;
 
 protected:
+#if defined( Q_OS_MAC )
+	QMenuBar* mMenuBar;
+#endif
 	QMenu* mActions;
 	pPaypalButton* mDonationWidget;
 	QFileSystemModel* mFoldersModel;
