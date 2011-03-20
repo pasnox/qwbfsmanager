@@ -4,6 +4,7 @@
 #include <QComboBox>
 
 class pPartitionModel;
+class QToolButton;
 
 class PartitionComboBox : public QComboBox
 {
@@ -16,9 +17,12 @@ public:
 	static pPartitionModel* partitionModel();
 
 protected slots:
+	void modelChanged();
 	void addPartition();
 
 protected:
+	QToolButton* mButton;
+	
 	void paintEvent( QPaintEvent* event );
 };
 

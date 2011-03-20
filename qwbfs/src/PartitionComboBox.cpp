@@ -19,28 +19,47 @@ pPartitionModel* PartitionComboBox::partitionModel()
 PartitionComboBox::PartitionComboBox( QWidget* parent )
 	: QComboBox( parent )
 {
-	QToolButton* button = new QToolButton( this );
-	button->setAutoRaise( true );
-	button->setIcon( QIcon( ":/icons/256/properties.png" ) );
-	button->setToolTip( tr( "Add a partition" ) );
+	mButton = new QToolButton( this );
+	mButton->setAutoRaise( true );
+	mButton->setIcon( QIcon( ":/icons/256/properties.png" ) );
+	mButton->setToolTip( tr( "Add a partition" ) );
 	
 	QHBoxLayout* hl = new QHBoxLayout( this );
 	hl->setMargin( 0 );
 	hl->setSpacing( 5 );
 	hl->addStretch();
-	hl->addWidget( button );
+	hl->addWidget( mButton );
 	
+	setAttribute( Qt::WA_Hover, true );
 	setModel( partitionModel() );
 	setModelColumn( pPartition::DevicePath );
 	setItemDelegate( new PartitionDelegate( partitionModel() ) );
 	
-	connect( button, SIGNAL( clicked() ), this, SLOT( addPartition() ) );
+	connect( partitionModel(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ), this, SLOT( modelChanged() ) );
+	connect( partitionModel(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ), this, SLOT( modelChanged() ) );
+	connect( partitionModel(), SIGNAL( layoutChanged() ), this, SLOT( modelChanged() ) );
+	connect( partitionModel(), SIGNAL( modelReset() ), this, SLOT( modelChanged() ) );
+	connect( mButton, SIGNAL( clicked() ), this, SLOT( addPartition() ) );
 	
-	button->setVisible( partitionModel()->partitions().isEmpty() );
+	modelChanged();
 }
 
 PartitionComboBox::~PartitionComboBox()
 {
+}
+
+void PartitionComboBox::modelChanged()
+{
+	bool custom = false;
+	
+	foreach ( const pPartition& partition, partitionModel()->partitions() ) {
+		if ( partition.isCustom() ) {
+			custom = true;
+			break;
+		}
+	}
+	
+	mButton->setVisible( custom );
 }
 
 void PartitionComboBox::addPartition()
