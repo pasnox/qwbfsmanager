@@ -85,14 +85,9 @@ UIMain::UIMain( QWidget* parent )
 	mMenuBar->addMenu( "Fake" )->addAction( aProperties );
 #endif
 	
-	QFont font = this->font();
-#ifdef Q_OS_MAC
-	font.setPointSize( font.pointSize() +2 );
-#endif
-	
 	centralVerticalLayout->setMenuBar( qmtbInfos );
 	qmtbInfos->layout()->setMargin( 5 );
-	qmtbInfos->setFont( font );
+	qmtbInfos->queuedMessageWidget()->setContentsMargins( 5, 0, 5, 0 );
 	qmtbInfos->setVisible( false );
 	
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
@@ -210,15 +205,15 @@ bool UIMain::eventFilter( QObject* object, QEvent* event )
 	if ( object == qmtbInfos ) {
 		if ( event->type() == QEvent::Paint ) {
 			if ( qmtbInfos->queuedMessageWidget()->pendingMessageCount() > 0 ) {
-				QBrush brush;
-				qmtbInfos->queuedMessageWidget()->currentMessageInformations( 0, &brush, 0 );
-				
 				QPainter painter( qmtbInfos );
+				QBrush brush;
+				
+				qmtbInfos->queuedMessageWidget()->currentMessageInformations( 0, &brush, 0 );
 				
 				painter.setRenderHint( QPainter::Antialiasing );
 				painter.setPen( QPen( brush.color().darker( 150 ), 0.5 ) );
 				painter.setBrush( brush );
-				painter.drawRoundedRect( qmtbInfos->rect().adjusted( 1, -9, -1, -1 ), 9, 9 );
+				painter.drawRoundedRect( qmtbInfos->rect().adjusted( 10 -4, -9, -10 +4, -1 ), 9, 9 );
 				
 				return true;
 			}
