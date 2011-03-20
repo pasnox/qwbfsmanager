@@ -4,6 +4,8 @@
 #include "models/pPartitionModel.h"
 
 #include <QPainter>
+#include <QHelpEvent>
+#include <QToolTip>
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -73,6 +75,24 @@ void PartitionComboBox::addPartition()
 	if ( !partition.isNull() ) {
 		setCurrentIndex( findText( partition ) );
 	}
+}
+
+bool PartitionComboBox::event( QEvent* event )
+{
+	if ( event->type() == QEvent::ToolTip ) {
+		QHelpEvent* he = static_cast<QHelpEvent*>( event );
+		QStringList tooltip( toolTip() );
+		
+		if ( currentIndex() != -1 ) {
+			tooltip << QString( "<center><b>%1</b></center>" ).arg( tr( "Current Partition" ) );
+			tooltip << itemData( currentIndex(), Qt::ToolTipRole ).toString();
+		}
+		
+		QToolTip::showText( he->globalPos(), tooltip.join( "<br />" ), this );
+		return true;
+	}
+	
+	return QComboBox::event( event );
 }
 
 void PartitionComboBox::paintEvent( QPaintEvent* event )

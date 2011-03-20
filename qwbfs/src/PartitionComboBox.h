@@ -23,7 +23,8 @@ protected slots:
 protected:
 	QToolButton* mButton;
 	
-	void paintEvent( QPaintEvent* event );
+	virtual bool event( QEvent* event );
+	virtual void paintEvent( QPaintEvent* event );
 };
 
 #endif // PARTITIONCOMBOBOX_H
