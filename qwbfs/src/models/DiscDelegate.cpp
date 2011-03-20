@@ -228,7 +228,7 @@ void DiscDelegate::paintIcon( QPainter* painter, const QStyleOptionViewItemV4& o
 	{
 		QStyleOptionViewItemV4 o = option;
 		o.displayAlignment = Qt::AlignCenter;
-		o.rect = option.rect.adjusted( 0, option.rect.height() -( margin *2 ), 0, 0 );
+		o.rect = option.rect.adjusted( 1, option.rect.height() -( margin *2 ), 0, 0 );
 		o.icon = QIcon();
 		o.text = painter->fontMetrics().elidedText( pCoreUtils::toTitleCase( text ), Qt::ElideRight, o.rect.width() -margin );
 		
