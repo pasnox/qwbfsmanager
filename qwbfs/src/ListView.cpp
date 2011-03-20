@@ -21,6 +21,7 @@ ListView::ListView( QWidget* parent )
 	pal.setColor( viewport()->backgroundRole(), pal.color( viewport()->backgroundRole() ).darker() );
 	
 	setMouseTracking( true );
+	setAttribute( Qt::WA_MacShowFocusRect, false );
 	setViewportMargins( 0, HEADER_HEIGHT, 0, 0 );
 	viewport()->setPalette( pal );
 	viewport()->setAutoFillBackground( true );
