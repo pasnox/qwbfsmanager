@@ -3,21 +3,18 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QFile>
+#include <QDebug>
 
-#define PROPERTY_DISPLAY_TEXT "_DISPLAY_TEXT"
-#define PROPERTY_LAST_CHECK "_LAST_CHECK"
-#define PROPERTY_FILE_SYSTEM_ID "_FILE_SYSTEM_ID"
-
-pPartition::pPartition( const QString& devicePath )
+pPartition::pPartition( const QString& devicePath, bool checkValidity )
 {
-	if ( isValidDevicePath( devicePath ) ) {
-		mDevicePath == devicePath;
+	if ( !checkValidity || ( checkValidity && isValidDevicePath( devicePath ) ) ) {
+		mDevicePath = devicePath;
 	}
 }
 
 bool pPartition::operator==( const pPartition& other ) const
 {
-	return property( pPartition::DevicePath ) == other.property( pPartition::DevicePath );
+	return devicePath() == other.devicePath();
 }
 
 void pPartition::setProperties( const QVariantMap& properties )
@@ -48,31 +45,31 @@ QVariant pPartition::property( pPartition::Property property ) const
 #if defined( Q_OS_MAC )
 	switch ( property ) {
 		case Label:
-			return mProperties.value( "DAVolumeName", value( "DAMediaName" ) );
+			return mProperties.value( "DAVolumeName", value( "DAMediaName" ) ).toString().simplified();
 		case DevicePath:
-			return mDevicePath.isEmpty() ? QString( "/dev/%1" ).arg( value( "DAMediaBSDName" ) ) : mDevicePath;
+			return ( mDevicePath.isEmpty() ? QString( "/dev/%1" ).arg( value( "DAMediaBSDName" ) ) : mDevicePath ).simplified();
 		case TotalSize:
-			return mProperties.value( "DAMediaSize" );
+			return mProperties.value( "DAMediaSize", -1 );
 		case UsedSize:
-			return mProperties.value( "DAMediaUsed" );
+			return mProperties.value( "DAMediaUsed", -1 );
 		case FreeSize:
-			return mProperties.value( "DAMediaFree" );
+			return mProperties.value( "DAMediaFree", -1 );
 		/*case DeviceType:
 			return mProperties.value( PROPERTY_DEVICE_TYPE );*/
 		case MountPoints:
-			return mProperties.value( "DAVolumePath" );
+			return mProperties.value( "DAVolumePath" ).toString().simplified();
 		case FileSystem: {
-			const QString fs = mProperties.value( "DAVolumeKind", value( "DAMediaContent" ) ).toString().toUpper().replace( "_", " " );
+			const QString fs = mProperties.value( "DAVolumeKind", value( "DAMediaContent" ) ).toString().toUpper().replace( "_", " " ).simplified();
 			return fs.contains( "-" ) ? QObject::tr( QT_TRANSLATE_NOOP( "pPartition", "Unknown FS" ) ) : fs;
 		}
 		case FileSystemId:
 			return mProperties.value( PROPERTY_FILE_SYSTEM_ID );
 		case DeviceVendor:
-			return mProperties.value( "DADeviceVendor" );
+			return mProperties.value( "DADeviceVendor" ).toString().simplified();
 		case DeviceModel:
-			return mProperties.value( "DADeviceModel" );
+			return mProperties.value( "DADeviceModel" ).toString().simplified();
 		case DisplayText:
-			return mProperties.value( PROPERTY_DISPLAY_TEXT );
+			return mProperties.value( PROPERTY_DISPLAY_TEXT ).toString().simplified();
 		case LastCheck:
 			return mProperties.value( PROPERTY_LAST_CHECK );
 	}
@@ -88,11 +85,11 @@ QVariant pPartition::property( const QString& property ) const
 	return mProperties.value( property );
 }
 
-void pPartition::updateSizes( qint64 total, qint64 used, qint64 free )
+void pPartition::updateSizes( qint64 total, qint64 free )
 {
 #if defined( Q_OS_MAC )
 	mProperties[ "DAMediaSize" ] = total;
-	mProperties[ "DAMediaUsed" ] = used;
+	mProperties[ "DAMediaUsed" ] = total -free;
 	mProperties[ "DAMediaFree" ] = free;
 #elif defined( Q_OS_LINUX )
 #elif defined( Q_OS_WIN )

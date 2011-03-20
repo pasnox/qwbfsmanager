@@ -4,7 +4,13 @@
 #include <QVariant>
 #include <QDateTime>
 
+#define PROPERTY_DISPLAY_TEXT "_DISPLAY_TEXT"
+#define PROPERTY_LAST_CHECK "_LAST_CHECK"
+#define PROPERTY_FILE_SYSTEM_ID "_FILE_SYSTEM_ID"
+
 class pPartition {
+	friend class DADisksSession;
+	
 public:
 	enum Type {
 		Unknown = 0,
@@ -17,22 +23,23 @@ public:
 	};
 	
 	enum Property {
-		DisplayText = 0,
 		Label,
 		DevicePath,
+		FileSystem,
 		TotalSize,
 		UsedSize,
 		FreeSize,
-		LastCheck,
-		//DeviceType,
 		MountPoints,
-		FileSystem,
-		FileSystemId,
+		//DeviceType,
 		DeviceVendor,
-		DeviceModel
+		DeviceModel,
+		FileSystemId,
+		LastCheck,
+		DisplayText,
+		LastProperty = DisplayText
 	};
 	
-	pPartition( const QString& devicePath = QString::null );
+	pPartition( const QString& devicePath = QString::null, bool checkValidity = true );
 	
 	bool operator==( const pPartition& other ) const;
 	
@@ -42,7 +49,7 @@ public:
 	QVariant property( pPartition::Property property ) const;
 	QVariant property( const QString& property ) const;
 	
-	void updateSizes( qint64 total, qint64 used, qint64 free );
+	void updateSizes( qint64 total, qint64 free );
 	
 	bool isValid() const;
 	bool isCustom() const;

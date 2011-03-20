@@ -11,17 +11,6 @@ class pPartitionModel : public QAbstractTableModel
 	friend class PartitionComboBox;
 	
 public:
-	enum Column {
-		Icon = 0,
-		Label = pPartition::Label,
-		Device = pPartition::DevicePath,
-		FileSystem = pPartition::FileSystem,
-		Free = pPartition::FreeSize,
-		Used = pPartition::UsedSize,
-		Total = pPartition::TotalSize,
-		LastCheck = pPartition::LastCheck
-	};
-	
 	pPartitionModel( QObject* parent = 0 );
 	virtual ~pPartitionModel();
 	
@@ -38,11 +27,11 @@ public:
 	QModelIndex index( const pPartition& partition, int column = 0 ) const;
 	
 	void addPartition( const QString& partition );
+	void addPartitions( const QStringList& partitions );
 	void updatePartition( const pPartition& partition );
 	void removePartition( const QString& partition );
-	
+	pPartitionList partitions() const;
 	QStringList customPartitions() const;
-	void addPartitions( const QStringList& partitions );
 	
 	void dump() const;
 
@@ -55,7 +44,7 @@ protected:
 	
 	virtual void platformInit();
 	virtual void platformDeInit();
-	virtual pPartitionList partitions() const;
+	virtual void platformUpdate();
 };
 
 #endif // PPARTITIONMODEL_H

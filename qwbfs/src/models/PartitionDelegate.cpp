@@ -75,14 +75,14 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	if ( partition.property( pPartition::FileSystemId ).toLongLong() == wbfsFSId ) {
 		// update wbfs partitions informations
 		if ( partition.property( pPartition::LastCheck ).toDateTime() < QDateTime::currentDateTime()
-			&& ( partition.property( pPartition::UsedSize ).isNull() || partition.property( pPartition::FreeSize ).isNull() ) ) {
+			&& ( partition.property( pPartition::UsedSize ).toLongLong() == -1 || partition.property( pPartition::FreeSize ).toLongLong() == -1 ) ) {
 			bool created = false;
 			QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( partition.property( pPartition::DevicePath ).toString(), &created );
 			QWBFS::Driver driver( handle );
 			QWBFS::Partition::Status status;
 			
 			driver.status( status );
-			partition.updateSizes( status.size, status.used, status.free );
+			partition.updateSizes( status.size, status.free );
 			mModel->updatePartition( partition );
 			
 			if ( created ) {
