@@ -88,7 +88,6 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	connect( cfvDiscs, SIGNAL( centerIndexChanged( const QModelIndex& ) ), this, SLOT( coverFlow_centerIndexChanged( const QModelIndex& ) ) );
 	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 	connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
-	connect( cbPartitions, SIGNAL( editTextChanged( const QString& ) ), this, SLOT( setCurrentPartition( const QString& ) ) );
 }
 
 PartitionWidget::~PartitionWidget()
@@ -151,7 +150,7 @@ void PartitionWidget::setCurrentPartition( const QString& partition )
 
 void PartitionWidget::showError( const QString& error )
 {
-	QMessageBox::information( this, QString::null, error );
+	mainWindow()->messageToolBar()->appendMessage( error );
 }
 
 void PartitionWidget::showError( int error )
@@ -180,6 +179,11 @@ void PartitionWidget::dropEvent( QDropEvent* event )
 	
 	importModel()->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
 	event->acceptProposedAction();
+}
+
+UIMain* PartitionWidget::mainWindow() const
+{
+	return qobject_cast<UIMain*>( window() );
 }
 
 void PartitionWidget::localeChanged()
@@ -231,7 +235,9 @@ void PartitionWidget::progress_finished()
 
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 {
-	setCurrentPartition( cbPartitions->itemText( index ) );
+	if ( window()->isVisible() ) { // dirty hack because qcombobox automatically set the current index to the first item on model set and this can produce errors (partition is not wbfs)
+		setCurrentPartition( cbPartitions->itemText( index ) );
+	}
 }
 
 void PartitionWidget::on_tbLoad_clicked()

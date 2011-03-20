@@ -38,6 +38,8 @@
 
 #include "ui_PartitionWidget.h"
 
+class UIMain;
+
 namespace QWBFS {
 class Driver;
 namespace Model {
@@ -75,6 +77,7 @@ protected:
 	virtual void dragEnterEvent( QDragEnterEvent* event );
 	virtual void dropEvent( QDropEvent* event );
 	
+	UIMain* mainWindow() const;
 	void localeChanged();
 
 protected slots:
