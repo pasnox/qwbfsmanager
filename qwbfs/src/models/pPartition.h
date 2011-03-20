@@ -9,8 +9,6 @@
 #define PROPERTY_FILE_SYSTEM_ID "_FILE_SYSTEM_ID"
 
 class pPartition {
-	friend class DADisksSession;
-	
 public:
 	enum Type {
 		Unknown = 0,

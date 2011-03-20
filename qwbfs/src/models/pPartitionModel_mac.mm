@@ -39,16 +39,23 @@ public:
 	static pPartition createPartition( DADiskRef disk )
 	{
 		const CFDictionaryRef dict = DADiskCopyDescription( disk );
-		const QVariantMap properties = pMacHelpers::toQVariantMap( dict );
+		QVariantMap properties = pMacHelpers::toQVariantMap( dict );
 		pPartition partition;
 		
 		CFRelease( dict );
 		
 		// set properties on partitions only
 		if ( !properties.value( "DAMediaWhole" ).toBool() ) {
-			partition.setProperties( properties );
+			const QString devicePath = QString( "/dev/%1" ).arg( properties.value( "DAMediaBSDName" ).toString() );
+			
+			if ( pPartition::isWBFSPartition( devicePath ) ) {
+				properties[ PROPERTY_FILE_SYSTEM_ID ] = 0x25;
+				properties[ "DAVolumeKind" ] = pPartition::fileSystemIdToString( 0x25 );
+			}
 			
 			FSVolumeRefNum volume;
+			qint64 total = properties.value( "DAMediaSize", -1 ).toLongLong();
+			qint64 free = -1;
 			
 			// get volume infos, like total bytes, free bytes...
 			if ( FSGetVolumeForDADisk( disk, &volume ) == noErr ) {
@@ -70,11 +77,15 @@ public:
 					<< properties.value( "DAMediaContent" ).toString().toUpper()
 					<< test;*/
 				
-				if ( FSGetVolumeInfo( volume, 0, 0, kFSVolInfoSizes | kFSVolInfoFSInfo, &volumeInfo, 0, 0 ) == noErr ) {
-					partition.mProperties[ PROPERTY_FILE_SYSTEM_ID ] = volumeInfo.filesystemID == 0 ? 0xAF : volumeInfo.filesystemID;
-					partition.updateSizes( volumeInfo.totalBytes, volumeInfo.freeBytes );
+				if ( properties[ PROPERTY_FILE_SYSTEM_ID ] != 0x25 && FSGetVolumeInfo( volume, 0, 0, kFSVolInfoSizes | kFSVolInfoFSInfo, &volumeInfo, 0, 0 ) == noErr ) {
+					properties[ PROPERTY_FILE_SYSTEM_ID ] = volumeInfo.filesystemID == 0 ? 0xAF : volumeInfo.filesystemID;
+					total = volumeInfo.totalBytes;
+					free = volumeInfo.freeBytes;
 				}
 			}
+			
+			partition.setProperties( properties );
+			partition.updateSizes( total, free );
 		}
 		
 		return partition;

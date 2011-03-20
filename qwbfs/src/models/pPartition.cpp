@@ -21,16 +21,6 @@ void pPartition::setProperties( const QVariantMap& properties )
 {
 	mProperties = properties;
 	mDevicePath.clear();
-	
-	if ( isWBFSPartition( devicePath() ) ) {
-#if defined( Q_OS_MAC )
-		mProperties[ PROPERTY_FILE_SYSTEM_ID ] = 0x25;
-		mProperties[ "DAVolumeKind" ] = fileSystemIdToString( 0x25 );
-#elif defined( Q_OS_LINUX )
-#elif defined( Q_OS_WIN )
-#endif
-	}
-	
 	mProperties[ PROPERTY_DISPLAY_TEXT ] = generateDisplayText();
 	updateLastChecked();
 }
