@@ -118,11 +118,9 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	bOption.rect = option.rect.adjusted( margin, margin, -margin, -margin );
 	//bOption.icon = partition.fileSystem == "WBFS" ? QIcon( ":/icons/256/wii.png" ) : partition.icon();
 	bOption.iconSize = QSize( bOption.rect.height() -5, bOption.rect.height() -5 );
-	bOption.text = QString( "%1 - %2 / %3 Used - %4 Free" )
+	bOption.text = QString( "%1 - %2" )
 		.arg( partition.property( pPartition::DisplayText ).toString() )
-		.arg( pCoreUtils::fileSizeToString( partition.property( pPartition::UsedSize ).toLongLong() ) )
 		.arg( pCoreUtils::fileSizeToString( partition.property( pPartition::TotalSize ).toLongLong() ) )
-		.arg( pCoreUtils::fileSizeToString( partition.property( pPartition::FreeSize ).toLongLong() ) )
 		;
 	
 	if ( selected || hovered ) {
