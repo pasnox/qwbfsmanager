@@ -29,7 +29,7 @@ public:
 		DASessionScheduleWithRunLoop( mSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode );
 	}
 	
-	~DADisksSession()
+	virtual ~DADisksSession()
 	{
 		// deinit session
 		DASessionUnscheduleFromRunLoop( mSession, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode );

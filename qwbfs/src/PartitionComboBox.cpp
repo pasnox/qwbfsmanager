@@ -52,11 +52,11 @@ PartitionComboBox::~PartitionComboBox()
 
 void PartitionComboBox::modelChanged()
 {
-	bool custom = false;
+	bool custom = true;
 	
 	foreach ( const pPartition& partition, partitionModel()->partitions() ) {
-		if ( partition.isCustom() ) {
-			custom = true;
+		if ( !partition.isCustom() ) {
+			custom = false;
 			break;
 		}
 	}

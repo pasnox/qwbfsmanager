@@ -47,7 +47,7 @@ QVariant pPartition::property( pPartition::Property property ) const
 		/*case DeviceType:
 			return mProperties.value( PROPERTY_DEVICE_TYPE );*/
 		case MountPoints:
-			return mProperties.value( "DAVolumePath" ).toString().simplified();
+			return mProperties.value( "DAVolumePath" );
 		case FileSystem: {
 			const QString fs = mProperties.value( "DAVolumeKind", value( "DAMediaContent" ) ).toString().toUpper().replace( "_", " " ).simplified();
 			return fs.contains( "-" ) ? QObject::tr( QT_TRANSLATE_NOOP( "pPartition", "Unknown FS" ) ) : fs;
@@ -55,15 +55,43 @@ QVariant pPartition::property( pPartition::Property property ) const
 		case FileSystemId:
 			return mProperties.value( PROPERTY_FILE_SYSTEM_ID );
 		case DeviceVendor:
-			return mProperties.value( "DADeviceVendor" ).toString().simplified();
+			return mProperties.value( "DADeviceVendor" ).replace( "_", " " ).toString().simplified();
 		case DeviceModel:
-			return mProperties.value( "DADeviceModel" ).toString().simplified();
+			return mProperties.value( "DADeviceModel" ).replace( "_", " " ).toString().simplified();
 		case DisplayText:
 			return mProperties.value( PROPERTY_DISPLAY_TEXT ).toString().simplified();
 		case LastCheck:
 			return mProperties.value( PROPERTY_LAST_CHECK );
 	}
 #elif defined( Q_OS_LINUX )
+	switch ( property ) {
+		case Label:
+			return mProperties.value( "ID_FS_LABEL" ).toString().simplified();
+		case DevicePath:
+			return ( mDevicePath.isEmpty() ? value( "DEVNAME" ) : mDevicePath ).simplified();
+		case TotalSize:
+			return mProperties.value( "UDISKS_PARTITION_SIZE", -1 );
+		case UsedSize:
+			return mProperties.value( "UDISKS_PARTITION_USED", -1 );
+		case FreeSize:
+			return mProperties.value( "UDISKS_PARTITION_FREE", -1 );
+		/*case DeviceType:
+			return mProperties.value( PROPERTY_DEVICE_TYPE );*/
+		case MountPoints:
+			return mProperties.value( "UDISKS_PARTITION_MOUNT_POINTS" );
+		case FileSystem:
+			return mProperties.value( "ID_FS_TYPE" ).toString().toUpper().replace( "_", " " ).simplified();
+		case FileSystemId:
+			return mProperties.value( "UDISKS_PARTITION_TYPE" ).toString().toLongLong( 0, 16 );
+		case DeviceVendor:
+			return mProperties.value( "ID_VENDOR" ).toString().replace( "_", " " ).simplified();
+		case DeviceModel:
+			return mProperties.value( "ID_MODEL" ).toString().replace( "_", " " ).simplified();
+		case DisplayText:
+			return mProperties.value( PROPERTY_DISPLAY_TEXT ).toString().simplified();
+		case LastCheck:
+			return mProperties.value( PROPERTY_LAST_CHECK );
+	}
 #elif defined( Q_OS_WIN )
 #endif
 	
@@ -79,9 +107,12 @@ void pPartition::updateSizes( qint64 total, qint64 free )
 {
 #if defined( Q_OS_MAC )
 	mProperties[ "DAMediaSize" ] = total;
-	mProperties[ "DAMediaUsed" ] = total -free;
+	mProperties[ "DAMediaUsed" ] = free == -1 ? -1 : total -free;
 	mProperties[ "DAMediaFree" ] = free;
 #elif defined( Q_OS_LINUX )
+	mProperties[ "UDISKS_PARTITION_SIZE" ] = total;
+	mProperties[ "UDISKS_PARTITION_USED" ] = free == -1 ? -1 : total -free;
+	mProperties[ "UDISKS_PARTITION_FREE" ] = free;
 #elif defined( Q_OS_WIN )
 #endif
 	updateLastChecked();
@@ -113,7 +144,6 @@ QString pPartition::generateDisplayText() const
 	const QString vendorModel = QString( "%1 %2" )
 		.arg( property( pPartition::DeviceVendor ).toString() )
 		.arg( property( pPartition::DeviceModel ).toString() )
-		.replace( "_", " " )
 		.simplified()
 		;
 	
