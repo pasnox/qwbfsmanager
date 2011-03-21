@@ -82,7 +82,7 @@ QVariant pPartition::property( pPartition::Property property ) const
 		case FileSystem:
 			return mProperties.value( "ID_FS_TYPE" ).toString().toUpper().replace( "_", " " ).simplified();
 		case FileSystemId:
-			return mProperties.value( "UDISKS_PARTITION_TYPE" ).toString().toLongLong( 0, 16 );
+			return mProperties.value( "UDISKS_PARTITION_TYPE" ).toString().toLongLong();
 		case DeviceVendor:
 			return mProperties.value( "ID_VENDOR" ).toString().replace( "_", " " ).simplified();
 		case DeviceModel:

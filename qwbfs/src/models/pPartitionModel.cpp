@@ -49,7 +49,7 @@ QVariant pPartitionModel::data( const QModelIndex& index, int role ) const
 				case pPartition::DisplayText:
 					return partition.property( pPartition::Property( index.column() ) );
 				case pPartition::FileSystemId:
-					return QString( "%1" ).arg( partition.property( pPartition::Property( index.column() ) ).toLongLong(), 0, 16 ).toUpper().prepend( "0x" );
+					return QString::number( partition.property( pPartition::Property( index.column() ) ).toLongLong(), 16 ).toUpper().prepend( "0x" );
 				case pPartition::TotalSize:
 				case pPartition::UsedSize:
 				case pPartition::FreeSize:

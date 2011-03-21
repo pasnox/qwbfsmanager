@@ -5,7 +5,6 @@ http://www.datarecovery.com/hexcodes.asp
 http://stackoverflow.com/questions/1515068/list-all-drives-partitions-and-get-dev-rdisc-device-with-cocoa
 */
 
-#if defined( Q_OS_MAC )
 #import <DiskArbitration/DiskArbitration.h>
 #import <CoreServices/CoreServices.h>
 
@@ -141,5 +140,3 @@ void pPartitionModel::platformUpdate()
 	mData = new DADisksSession( this );
 	emit layoutChanged();*/
 }
-
-#endif

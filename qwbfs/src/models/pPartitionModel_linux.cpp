@@ -2,12 +2,16 @@
 
 //http://svn.openpilot.org/browse/OpenPilot/trunk/ground/openpilotgcs/src/plugins/rawhid/usbmonitor.h?r=3021
 
-//#if defined( Q_OS_LINUX )
-#include <QThread>
 #include <libudev.h>
 #include <sys/statfs.h>
 
-#include <QtDBus>
+#include <QStringList>
+#include <QFileInfo>
+#include <QSocketNotifier>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusVariant>
+#include <QDebug>
 
 class DisksSession : public QObject
 {
@@ -65,8 +69,6 @@ public:
 			properties[ "UDISKS_PARTITION_TYPE" ] = properties[ "UDISKS_PARTITION_TYPE" ].toString().toLongLong( 0, 16 );
 		}
 		
-		//qWarning() << properties;
-		
 		const QString devName = QFileInfo( properties[ "DEVNAME" ].toString() ).fileName();
 		QDBusMessage question = QDBusMessage::createMethodCall( "org.freedesktop.UDisks", QString( "/org/freedesktop/UDisks/devices/%1" ).arg( devName ), "org.freedesktop.DBus.Properties", "Get" );
 		question << "org.freedesktop.UDisks.Device" << "DeviceMountPaths";
@@ -82,7 +84,7 @@ public:
 		}
 		
 		if ( pPartition::isWBFSPartition( properties[ "DEVNAME" ].toString() ) ) {
-			properties[ "UDISKS_PARTITION_TYPE" ] = QString( "0x%1" ).arg( QString::number( 0x25, 16 ) );
+			properties[ "UDISKS_PARTITION_TYPE" ] = 0x25;
 			properties[ "ID_FS_TYPE" ] = pPartition::fileSystemIdToString( 0x25 );
 		}
 		
@@ -174,6 +176,9 @@ protected slots:
 			if ( action == "add" ) {
 				diskAppeared( device );
 			}
+			else if ( action == "change" ) {
+				diskChanged( device );
+			}
 			else if ( action == "remove" ){
 				diskDisappeared( device );
 			}
@@ -184,7 +189,7 @@ protected slots:
 			udev_device_unref( device );
 		}
 		else {
-			qWarning( "%s: No Device from receive_device(). An error occured.", Q_FUNC_INFO );
+			qWarning( "%s: No Device. An error occured.", Q_FUNC_INFO );
 		}
 	}
 	
@@ -231,51 +236,17 @@ void pPartitionModel::platformDeInit()
 
 void pPartitionModel::platformUpdate()
 {
-	/*pPartitionList partitions;
-	udev* _udev = udev_new();
+	// Code commented as the linux implementation has the concept of live auto update, thanks to UDev librarie :)
+	/*const QStringList partitions = customPartitions();
 	
-	if ( !_udev ) {
-		qWarning( "%s: UDev not valid.", Q_FUNC_INFO );
-		return;
+	emit layoutAboutToBeChanged();
+	delete (DisksSession*)mData;
+	mPartitions.clear();
+	foreach ( const QString& partition, partitions ) {
+		mPartitions << pPartition( partition );
 	}
-	
-    struct udev_enumerate* enumerate  = udev_enumerate_new( _udev );
-	
-    if ( !enumerate ) {
-		qWarning( "%s: Can't enumerate.", Q_FUNC_INFO );
-        return;
-    }
-	
-    udev_enumerate_add_match_subsystem( enumerate, "block" );
-    udev_enumerate_scan_devices( enumerate );
-	
-    struct udev_device* device = 0;
-    struct udev_list_entry* entries = udev_enumerate_get_list_entry( enumerate );
-    struct udev_list_entry* entry = 0;
-	
-    udev_list_entry_foreach( entry, entries ) {
-        device = udev_device_new_from_syspath( _udev, udev_list_entry_get_name( entry ) );
-		
-        if ( !device ) {
-            continue;
-        }
-		
-        pPartition partition;
-        fillPartitionInformations( device, partition );
-		
-		if ( partition.extendedAttributes[ "DEVTYPE" ] == "partition"
-			|| ( partition.extendedAttributes[ "ID_TYPE" ] == "cd" 
-				&& partition.extendedAttributes[ "ID_FS_USAGE" ] == "filesystem" ) ) {
-			partitions << partition;
-		}
-		
-        udev_device_unref( device );
-    }
-
-    udev_enumerate_unref( enumerate );
-	udev_unref( _udev );*/
+	mData = new DisksSession( this );
+	emit layoutChanged();*/
 }
 
 #include "pPartitionModel_linux.moc"
-
-//#endif
