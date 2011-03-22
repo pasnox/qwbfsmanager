@@ -53,7 +53,7 @@ QVariant pPartition::property( pPartition::Property property ) const
 			return fs.contains( "-" ) ? QObject::tr( QT_TRANSLATE_NOOP( "pPartition", "Unknown FS" ) ) : fs;
 		}
 		case FileSystemId:
-			return mProperties.value( PROPERTY_FILE_SYSTEM_ID );
+			return mProperties.value( "DAVolumeKindId" );
 		case DeviceVendor:
 			return mProperties.value( "DADeviceVendor" ).replace( "_", " " ).toString().simplified();
 		case DeviceModel:
@@ -93,6 +93,34 @@ QVariant pPartition::property( pPartition::Property property ) const
 			return mProperties.value( PROPERTY_LAST_CHECK );
 	}
 #elif defined( Q_OS_WIN )
+	switch ( property ) {
+		case Label:
+			return mProperties.value( "LABEL" ).toString().simplified();
+		case DevicePath:
+			return ( mDevicePath.isEmpty() ? value( "DEVICE" ) : mDevicePath ).simplified();
+		case TotalSize:
+			return mProperties.value( "SIZE", -1 );
+		case UsedSize:
+			return mProperties.value( "USED", -1 );
+		case FreeSize:
+			return mProperties.value( "FREE", -1 );
+		/*case DeviceType:
+			return mProperties.value( PROPERTY_DEVICE_TYPE );*/
+		case MountPoints:
+			return mProperties.value( "MOUNT_POINTS" );
+		case FileSystem:
+			return mProperties.value( "FS_TYPE" ).toString().toUpper().replace( "_", " " ).simplified();
+		case FileSystemId:
+			return mProperties.value( "FS_TYPE_ID" ).toString().toLongLong();
+		case DeviceVendor:
+			return mProperties.value( "ID_VENDOR" ).toString().replace( "_", " " ).simplified();
+		case DeviceModel:
+			return mProperties.value( "ID_MODEL" ).toString().replace( "_", " " ).simplified();
+		case DisplayText:
+			return mProperties.value( PROPERTY_DISPLAY_TEXT ).toString().simplified();
+		case LastCheck:
+			return mProperties.value( PROPERTY_LAST_CHECK );
+	}
 #endif
 	
 	return QVariant();
@@ -114,6 +142,9 @@ void pPartition::updateSizes( qint64 total, qint64 free )
 	mProperties[ "UDISKS_PARTITION_USED" ] = free == -1 ? -1 : total -free;
 	mProperties[ "UDISKS_PARTITION_FREE" ] = free;
 #elif defined( Q_OS_WIN )
+	mProperties[ "SIZE" ] = total;
+	mProperties[ "USED" ] = free == -1 ? -1 : total -free;
+	mProperties[ "FREE" ] = free;
 #endif
 	updateLastChecked();
 }

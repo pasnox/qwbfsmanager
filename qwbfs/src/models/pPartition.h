@@ -6,7 +6,6 @@
 
 #define PROPERTY_DISPLAY_TEXT "_DISPLAY_TEXT"
 #define PROPERTY_LAST_CHECK "_LAST_CHECK"
-#define PROPERTY_FILE_SYSTEM_ID "_FILE_SYSTEM_ID"
 
 class pPartition {
 public:

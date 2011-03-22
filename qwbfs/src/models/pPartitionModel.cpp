@@ -235,7 +235,7 @@ void pPartitionModel::dump() const
 
 void pPartitionModel::update()
 {
-#ifdef Q_OS_MAC
+#if defined( Q_OS_MAC ) || defined( Q_OS_WIN ) || defined( Q_OS_LINUX )
 	platformUpdate();
 #else
 	const QModelIndexList oldIndexes = persistentIndexList();

@@ -1,31 +1,75 @@
 #include "pPartitionModel.h"
 
-#if defined( Q_OS_WIN )
+#define ASCII_CHAR_A 65
+#define ASCII_CHAR_Z 90
+
+#ifdef UNICODE
+#define WCHAR_T               wchar_t
+#define QStringToTCHAR(x)     (wchar_t*) x.utf16()
+#define PQStringToTCHAR(x)    (wchar_t*) x->utf16()
+#define TCHARToQString(x)     QString::fromUtf16((ushort*)(x))
+#define TCHARToQStringN(x,y)  QString::fromUtf16((ushort*)(x),(y))
+#else
+#define WCHAR_T               char
+#define QStringToTCHAR(x)     x.local8Bit().constData()
+#define PQStringToTCHAR(x)    x->local8Bit().constData()
+#define TCHARToQString(x)     QString::fromLocal8Bit((x))
+#define TCHARToQStringN(x,y)  QString::fromLocal8Bit((x),(y))
+#endif /*UNICODE*/
+
 // in case of need
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
 #endif
 
-// force use of xxxxA version of functon instead of xxxxxxW to avoid to deal with boring wchar_t
-#undef UNICODE
 #include <qt_windows.h>
+#include <QStringList>
+#include <QDebug>
 
-#define ASCII_CHAR_A 65
-#define ASCII_CHAR_Z 90
-
-pPartitionList pPartitionModel::partitions() const
+void pPartitionModel::platformInit()
 {
-	pPartitionList partitions;
+	emit layoutAboutToBeChanged();
+	mData = 0;
+	emit layoutChanged();
+}
+
+void pPartitionModel::platformDeInit()
+{
+}
+
+void pPartitionModel::platformUpdate()
+{
+	// Code commented as the linux implementation has the concept of live auto update, thanks to UDev librarie :)
+	/*const QStringList partitions = customPartitions();
+	
+	emit layoutAboutToBeChanged();
+	delete (DisksSession*)mData;
+	mPartitions.clear();
+	foreach ( const QString& partition, partitions ) {
+		mPartitions << pPartition( partition );
+	}
+	mData = new DisksSession( this );
+	emit layoutChanged();*/
+	
+	const QStringList partitions = customPartitions();
+	
+	emit layoutAboutToBeChanged();
+	
+	mPartitions.clear();
+	foreach ( const QString& partition, partitions ) {
+		mPartitions << pPartition( partition );
+	}
+	
+	mData = 0;
 	
 	// may need a better way to list available partitions...
 	for ( char i = ASCII_CHAR_A; i <= ASCII_CHAR_Z; i++ ) {
 		QString drive = QString( "%1:" ).arg( QChar( i ) );
-		HRESULT hr = GetDriveType( qPrintable( drive ) );
-		pPartition partition;
+		HRESULT hr = GetDriveType( QStringToTCHAR( drive ) );
 		
 		drive.append( "\\" );
 		
-		switch ( hr ) {
+		/*switch ( hr ) {
 			case DRIVE_UNKNOWN:
 				partition.device = pPartition::Unknown;
 				break;
@@ -47,10 +91,10 @@ pPartitionList pPartitionModel::partitions() const
 			case DRIVE_RAMDISK:
 				partition.device = pPartition::RamDisk;
 				break;
-		}
+		}*/
 		
-		char volume[ MAX_PATH +1 ]; // volumne name
-		char fs[ MAX_PATH +1 ]; // file system type ( FAT/NTFS...)
+		WCHAR_T volume[ MAX_PATH +1 ]; // volumne name
+		WCHAR_T fs[ MAX_PATH +1 ]; // file system type ( FAT/NTFS...)
 		ulong serial; // partition serial
 		ulong max; // max filename length
 		ulong flags; // flags
@@ -59,7 +103,7 @@ pPartitionList pPartitionModel::partitions() const
 		qint64 free; // system free
 		
 		if ( !GetVolumeInformation(
-			qPrintable( drive ),
+			QStringToTCHAR( drive ),
 			volume,
 			MAX_PATH +1,
 			&serial,
@@ -72,7 +116,7 @@ pPartitionList pPartitionModel::partitions() const
 		}
 		
 		if ( !GetDiskFreeSpaceEx(
-			qPrintable( drive ),
+			QStringToTCHAR( drive ),
 			(PULARGE_INTEGER)&available,
 			(PULARGE_INTEGER)&total,
 			(PULARGE_INTEGER)&free ) ) {
@@ -80,19 +124,20 @@ pPartitionList pPartitionModel::partitions() const
 			continue;
 		}
 		
-		partition.label = QString::fromLocal8Bit( volume );
-		partition.origin = drive;
-		partition.type = fs;
-		partition.ctype = 0;
-		partition.total = total;
-		partition.free = free;
-		partition.used = total -free;
-		partition.lastCheck = QDateTime::currentDateTime();
+		pPartition partition;
+		QVariantMap properties;
 		
-		partitions << partition;
+		properties[ "LABEL" ] = TCHARToQString( volume );
+		properties[ "DEVICE" ] = drive;
+		properties[ "MOUNT_POINTS" ] = drive;
+		properties[ "FS_TYPE" ] = TCHARToQString( fs );
+		properties[ "FS_TYPE_ID" ] = 0;
+		
+		partition.setProperties( properties );
+		partition.updateSizes( total, free );
+		
+		mPartitions << partition;
 	}
 	
-	return partitions;
+	emit layoutChanged();
 }
-
-#endif
