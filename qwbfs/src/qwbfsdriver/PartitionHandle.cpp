@@ -45,7 +45,12 @@ using namespace QWBFS::Partition::Internal;
 HandleData::HandleData( const QWBFS::Partition::Properties& _properties )
 {
 	properties = _properties;
-	handle = _properties.partition.isEmpty() ? 0 : wbfs_try_open_partition( properties.partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
+	
+	QString partition = properties.partition;
+#if defined( Q_OS_WIN )
+	partition.remove( ":\\" ).remove( ":/" );
+#endif
+	handle = partition.isEmpty() ? 0 : wbfs_try_open_partition( partition.toLocal8Bit().data(), properties.reset ? 1 : 0 );
 	
 	if ( handle ) {
 		qWarning() << QString( "*** Opened partition: %1" ).arg( properties.partition ).toLocal8Bit().constData();
@@ -60,7 +65,7 @@ HandleData::HandleData( const HandleData& other )
 }
 
 HandleData::~HandleData()
-{	
+{
 	if ( handle ) {
 		wbfs_close( handle );
 		qWarning() << QString( "*** Closed partition: %1" ).arg( properties.partition ).toLocal8Bit().constData();

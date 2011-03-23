@@ -45,6 +45,12 @@
 #include <QApplication>
 #include <QDebug>
 
+#if defined( Q_OS_WIN )
+#include <FreshCore/pWinHelpers>
+#include <qt_windows.h>
+#include <WinIoCtl.h>
+#endif
+
 using namespace QWBFS;
 
 #define WBFS_FILE_MINIMUM_SIZE 1024 *1024 *16
@@ -524,13 +530,37 @@ int Driver::trim() const
 	return Driver::Ok;
 }
 
-bool Driver::isWBFSPartitionOrFile( const QString& fileName )
+bool Driver::isWBFSPartitionOrFile( const QString& _fileName )
 {
-	if ( !QFile::exists( fileName ) ) {
+	QString filePath = _fileName;
+	
+#if defined( Q_OS_WIN )
+	if ( !filePath.isEmpty() && filePath.length() <= 3 ) {
+		filePath = QString( "\\\\?\\%1:" ).arg( filePath[ 0 ] );
+		DISK_GEOMETRY diskGeometry;
+		HANDLE handle = CreateFile( QStringToTCHAR( filePath ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL );
+		
+		if ( handle != INVALID_HANDLE_VALUE ) {
+			DWORD bytes;
+			
+			if ( DeviceIoControl( handle, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &diskGeometry, sizeof(DISK_GEOMETRY), &bytes, NULL ) ) {
+				const DWORD sectorSize = diskGeometry.BytesPerSector;
+				char buffer[ sectorSize  ];
+				DWORD read;
+				
+				if ( ReadFile( handle, buffer, sectorSize, &read, NULL ) ) {
+					CloseHandle( handle );
+					return QByteArray( buffer ).left( 4 ).toLower() == "wbfs";
+				}
+			}
+		}
+		
+		CloseHandle( handle );
 		return false;
 	}
+#endif
 	
-	QFile file( fileName );
+	QFile file( filePath );
 	
 	if ( file.open( QIODevice::ReadOnly ) ) {
 		return file.read( 4 ).toLower() == "wbfs";

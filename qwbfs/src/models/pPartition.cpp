@@ -5,6 +5,12 @@
 #include <QFile>
 #include <QDebug>
 
+#if defined( Q_OS_WIN )
+#include <FreshCore/pWinHelpers>
+#include <qt_windows.h>
+#include <WinIoCtl.h>
+#endif
+
 pPartition::pPartition( const QString& devicePath, bool checkValidity )
 {
 	if ( !checkValidity || ( checkValidity && isValidDevicePath( devicePath ) ) ) {
@@ -188,7 +194,35 @@ QString pPartition::generateDisplayText() const
 
 bool pPartition::isWBFSPartition( const QString& devicePath )
 {
-	QFile file( devicePath );
+	QString filePath = devicePath;
+	
+#if defined( Q_OS_WIN )
+	if ( !filePath.isEmpty() && filePath.length() <= 3 ) {
+		filePath = QString( "\\\\?\\%1:" ).arg( filePath[ 0 ] );
+		DISK_GEOMETRY diskGeometry;
+		HANDLE handle = CreateFile( QStringToTCHAR( filePath ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL );
+		
+		if ( handle != INVALID_HANDLE_VALUE ) {
+			DWORD bytes;
+			
+			if ( DeviceIoControl( handle, IOCTL_DISK_GET_DRIVE_GEOMETRY, NULL, 0, &diskGeometry, sizeof(DISK_GEOMETRY), &bytes, NULL ) ) {
+				const DWORD sectorSize = diskGeometry.BytesPerSector;
+				char buffer[ sectorSize  ];
+				DWORD read;
+				
+				if ( ReadFile( handle, buffer, sectorSize, &read, NULL ) ) {
+					CloseHandle( handle );
+					return QByteArray( buffer ).left( 4 ).toLower() == "wbfs";
+				}
+			}
+		}
+		
+		CloseHandle( handle );
+		return false;
+	}
+#endif
+	
+	QFile file( filePath );
 	
 	if ( file.open( QIODevice::ReadOnly ) ) {
 		return file.read( 4 ).toLower() == "wbfs";
@@ -199,8 +233,24 @@ bool pPartition::isWBFSPartition( const QString& devicePath )
 
 bool pPartition::isValidDevicePath( const QString& devicePath )
 {
-	const QFileInfo file( devicePath );
-	return !devicePath.trimmed().isEmpty() && file.exists() && !file.isDir();
+	QString filePath = devicePath;
+	
+#if defined( Q_OS_WIN )
+	if ( !filePath.isEmpty() && filePath.length() <= 3 ) {
+		filePath = QString( "\\\\?\\%1:" ).arg( filePath[ 0 ] );
+		HANDLE handle = CreateFile( QStringToTCHAR( filePath ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL );
+		
+		if ( handle != INVALID_HANDLE_VALUE ) {
+			CloseHandle( handle );
+			return true;
+		}
+		
+		return false;
+	}
+#endif
+
+	const QFileInfo file( filePath );
+	return !filePath.isEmpty() && file.exists() && !file.isDir();
 }
 
 QString pPartition::value( const QString& key ) const

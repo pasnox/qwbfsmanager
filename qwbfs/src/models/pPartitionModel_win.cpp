@@ -1,30 +1,12 @@
 #include "pPartitionModel.h"
 
-#define ASCII_CHAR_A 65
-#define ASCII_CHAR_Z 90
-
-#ifdef UNICODE
-#define WCHAR_T               wchar_t
-#define QStringToTCHAR(x)     (wchar_t*) x.utf16()
-#define PQStringToTCHAR(x)    (wchar_t*) x->utf16()
-#define TCHARToQString(x)     QString::fromUtf16((ushort*)(x))
-#define TCHARToQStringN(x,y)  QString::fromUtf16((ushort*)(x),(y))
-#else
-#define WCHAR_T               char
-#define QStringToTCHAR(x)     x.local8Bit().constData()
-#define PQStringToTCHAR(x)    x->local8Bit().constData()
-#define TCHARToQString(x)     QString::fromLocal8Bit((x))
-#define TCHARToQStringN(x,y)  QString::fromLocal8Bit((x),(y))
-#endif /*UNICODE*/
-
-// in case of need
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0501
-#endif
+#include <FreshCore/pWinHelpers>
 
 #include <qt_windows.h>
 #include <QStringList>
 #include <QDebug>
+
+#include <tchar.h>
 
 void pPartitionModel::platformInit()
 {
@@ -62,14 +44,14 @@ void pPartitionModel::platformUpdate()
 	
 	mData = 0;
 	
-	// may need a better way to list available partitions...
-	for ( char i = ASCII_CHAR_A; i <= ASCII_CHAR_Z; i++ ) {
-		QString drive = QString( "%1:" ).arg( QChar( i ) );
-		HRESULT hr = GetDriveType( QStringToTCHAR( drive ) );
+	TCHAR drives[ MAX_PATH +1 ];
+	GetLogicalDriveStrings( MAX_PATH +1, drives );
+	TCHAR* drive = drives;
+	
+	while ( *drive ) {
+		/*HRESULT hr = GetDriveType( drive );
 		
-		drive.append( "\\" );
-		
-		/*switch ( hr ) {
+		switch ( hr ) {
 			case DRIVE_UNKNOWN:
 				partition.device = pPartition::Unknown;
 				break;
@@ -93,17 +75,17 @@ void pPartitionModel::platformUpdate()
 				break;
 		}*/
 		
-		WCHAR_T volume[ MAX_PATH +1 ]; // volumne name
-		WCHAR_T fs[ MAX_PATH +1 ]; // file system type ( FAT/NTFS...)
+		TCHAR volume[ MAX_PATH +1 ] = {0}; // volumne name
+		TCHAR fs[ MAX_PATH +1 ] = {0}; // file system type ( FAT/NTFS...)
 		ulong serial; // partition serial
 		ulong max; // max filename length
 		ulong flags; // flags
-		qint64 available; // user quota
-		qint64 total; // system total
-		qint64 free; // system free
+		qint64 available = -1; // user quota
+		qint64 total = -1; // system total
+		qint64 free = -1; // system free
 		
-		if ( !GetVolumeInformation(
-			QStringToTCHAR( drive ),
+		if ( GetVolumeInformation(
+			drive,
 			volume,
 			MAX_PATH +1,
 			&serial,
@@ -111,32 +93,38 @@ void pPartitionModel::platformUpdate()
 			&flags,
 			fs,
 			MAX_PATH +1 ) ) {
-			qWarning( "GetVolumeInformation Error: %i", i );
-			continue;
+			if ( !GetDiskFreeSpaceEx(
+				drive,
+				(PULARGE_INTEGER)&available,
+				(PULARGE_INTEGER)&total,
+				(PULARGE_INTEGER)&free ) ) {
+				qWarning( "GetDiskFreeSpaceEx Error: %s", qPrintable( TCHARToQString( drive ) ) );
+			}
 		}
-		
-		if ( !GetDiskFreeSpaceEx(
-			QStringToTCHAR( drive ),
-			(PULARGE_INTEGER)&available,
-			(PULARGE_INTEGER)&total,
-			(PULARGE_INTEGER)&free ) ) {
-			qWarning( "GetDiskFreeSpaceEx Error: %i", i );
-			continue;
+		else {
+			qWarning( "GetVolumeInformation Error: %s", qPrintable( TCHARToQString( drive ) ) );
 		}
 		
 		pPartition partition;
 		QVariantMap properties;
 		
 		properties[ "LABEL" ] = TCHARToQString( volume );
-		properties[ "DEVICE" ] = drive;
-		properties[ "MOUNT_POINTS" ] = drive;
+		properties[ "DEVICE" ] = TCHARToQString( drive );
+		properties[ "MOUNT_POINTS" ] = TCHARToQString( drive );
 		properties[ "FS_TYPE" ] = TCHARToQString( fs );
 		properties[ "FS_TYPE_ID" ] = 0;
+		
+		if ( pPartition::isWBFSPartition( TCHARToQString( drive ) ) ) {
+			properties[ "FS_TYPE_ID" ] = 0x25;
+			properties[ "FS_TYPE" ] = pPartition::fileSystemIdToString( 0x25 );
+		}
 		
 		partition.setProperties( properties );
 		partition.updateSizes( total, free );
 		
 		mPartitions << partition;
+		
+		drive = &drive[ _tcslen( drive ) +1 ];
 	}
 	
 	emit layoutChanged();
