@@ -538,7 +538,7 @@ bool Driver::isWBFSPartitionOrFile( const QString& _fileName )
 	if ( !filePath.isEmpty() && filePath.length() <= 3 ) {
 		filePath = QString( "\\\\?\\%1:" ).arg( filePath[ 0 ] );
 		DISK_GEOMETRY diskGeometry;
-		HANDLE handle = CreateFile( QStringToTCHAR( filePath ), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL );
+		HANDLE handle = CreateFile( QStringToTCHAR( filePath ), GENERIC_READ | FILE_SHARE_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL );
 		
 		if ( handle != INVALID_HANDLE_VALUE ) {
 			DWORD bytes;

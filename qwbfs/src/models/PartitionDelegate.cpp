@@ -76,18 +76,22 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 		// update wbfs partitions informations
 		if ( partition.property( pPartition::LastCheck ).toDateTime() < QDateTime::currentDateTime()
 			&& ( partition.property( pPartition::UsedSize ).toLongLong() == -1 || partition.property( pPartition::FreeSize ).toLongLong() == -1 ) ) {
-			bool created = false;
-			QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( partition.property( pPartition::DevicePath ).toString(), &created );
-			QWBFS::Driver driver( handle );
-			QWBFS::Partition::Status status;
-			
-			driver.status( status );
-			partition.updateSizes( status.size, status.free );
-			mModel->updatePartition( partition );
-			
-			if ( created ) {
-				QWBFS::Driver::closeHandle( handle );
+			// use a scope to avoid problems with windows partition read locked
+			{
+				bool created = false;
+				QWBFS::Partition::Handle handle = QWBFS::Driver::getHandle( partition.property( pPartition::DevicePath ).toString(), &created );
+				QWBFS::Driver driver( handle );
+				QWBFS::Partition::Status status;
+				
+				driver.status( status );
+				partition.updateSizes( status.size, status.free );
+				
+				if ( created ) {
+					QWBFS::Driver::closeHandle( handle );
+				}
 			}
+			
+			mModel->updatePartition( partition );
 		}
 	}
 	
