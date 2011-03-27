@@ -201,7 +201,7 @@ macx {
 	OBJECTIVE_SOURCES	*= src/models/pPartitionModel_mac.mm
 }
 
-win* {
+win32 {
 	SOURCES	*= src/models/pPartitionModel_win.cpp
 }
 
