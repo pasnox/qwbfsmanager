@@ -27,10 +27,8 @@ BUILD_PATH	= build
 include( shared.pri )
 
 win32_crossbuild {
-message( "cross build" )
 	exists( "$(QT_WIN32_PATH)/lib/*fresh*" ):CONFIG *= fresh
 } else {
-message( "native build" )
 	exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
 }
 
