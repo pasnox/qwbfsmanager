@@ -107,12 +107,11 @@ protected:
 	virtual void run();
 	
 	void connectDriver( QWBFS::Driver* driver );
-	QString cleanupGameTitle( const QString& string, const QString& invalidChars ) const;
 	void renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern, const QString& invalidChars );
-	void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
-	void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
-	void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target );
-	void wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS );
+	void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS, const QString& invalidChars );
+	void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& invalidChars );
+	void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& invalidChars );
+	void wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS, const QString& invalidChars );
 
 signals:
 	void currentProgressChanged( int value, int maximum, const QTime& remaining );

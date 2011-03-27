@@ -168,17 +168,17 @@ void WorkerThread::run()
 					case QWBFS::Driver::WBFSPartitionFile: {
 						switch ( QWBFS::Driver::fileType( work.target ) ) {
 							case QWBFS::Driver::WBFSPartitionFile: {
-								wbfsToWBFS( work.task, disc, work.target, false );
+								wbfsToWBFS( work.task, disc, work.target, false, work.invalidChars );
 								break;
 							}
 							case QWBFS::Driver::WBFSFile:
 							case QWBFS::Driver::ISOFile:
 							case QWBFS::Driver::UnknownFile: {
 								if ( work.task & WorkerThread::WBFS ) {
-									wbfsToWBFS( work.task, disc, work.target, true );
+									wbfsToWBFS( work.task, disc, work.target, true, work.invalidChars );
 								}
 								else if ( work.task & WorkerThread::ISO ) {
-									wbfsToISO( work.task, disc, work.target );
+									wbfsToISO( work.task, disc, work.target, work.invalidChars );
 								}
 								else {
 									if ( work.task & WorkerThread::Import ) {
@@ -204,17 +204,17 @@ void WorkerThread::run()
 					case QWBFS::Driver::ISOFile: {
 						switch ( QWBFS::Driver::fileType( work.target ) ) {
 							case QWBFS::Driver::WBFSPartitionFile: {
-								isoToWBFS( work.task, disc, work.target, false );
+								isoToWBFS( work.task, disc, work.target, false, work.invalidChars );
 								break;
 							}
 							case QWBFS::Driver::WBFSFile:
 							case QWBFS::Driver::ISOFile:
 							case QWBFS::Driver::UnknownFile: {
 								if ( work.task & WorkerThread::WBFS ) {
-									isoToWBFS( work.task, disc, work.target, true );
+									isoToWBFS( work.task, disc, work.target, true, work.invalidChars );
 								}
 								else if ( work.task & WorkerThread::ISO ) {
-									isoToISO( work.task, disc, work.target );
+									isoToISO( work.task, disc, work.target, work.invalidChars );
 								}
 								else {
 									if ( work.task & WorkerThread::Import ) {
@@ -267,27 +267,6 @@ void WorkerThread::connectDriver( QWBFS::Driver* driver )
 	connect( driver, SIGNAL( globalProgressChanged( int, int ) ), this, SIGNAL( globalProgressChanged( int, int ) ) );
 }
 
-QString WorkerThread::cleanupGameTitle( const QString& string, const QString& invalidChars ) const
-{
-	QString title = pCoreUtils::toTitleCase( string );
-	
-	foreach ( const QChar& c, invalidChars ) {
-		QString r;
-		
-		/*switch ( c.toAscii() ) {
-			case '\'':
-				r = " ";
-				break;
-			case ':':
-				r = "-";
-		}*/
-		
-		title.replace( c, r );
-	}
-	
-	return title;
-}
-
 void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern, const QString& invalidChars )
 {
 	if ( !source.isValid() ) {
@@ -300,22 +279,40 @@ void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& sour
 		%id = Game ID
 		%suffix = File Suffix
 	*/
-	const QString filePath = QString( "%1/%2" )
+	QString filePath = QString( "%1/%2" )
 		.arg( target )
 		.arg( pattern )
-		.replace( "%title", cleanupGameTitle( source.title, invalidChars ), Qt::CaseInsensitive )
+		.replace( "%title", QWBFS::Model::Disc::cleanupGameTitle( source.title, invalidChars ), Qt::CaseInsensitive )
 		.replace( "%id", source.id.toUpper(), Qt::CaseInsensitive )
 		.replace( "%suffix", QFileInfo( source.origin ).suffix(), Qt::CaseInsensitive )
 		;
 	
-	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName( invalidChars ) ) );
 	emit currentProgressChanged( 0, 1, QTime( 0, 0, 0 ) );
 	
 	if ( source.origin != filePath ) {
 		source.error = QDir( target ).mkpath( QFileInfo( filePath ).absolutePath() ) ? QWBFS::Driver::Ok : QWBFS::Driver::UnknownError;
 		
 		if ( !source.hasError() ) {
+			const bool exists = QFile::exists( filePath );
+			
+			if ( exists ) {
+				const QFileInfo file( filePath );
+				const QString path = file.absolutePath();
+				const QString fileName = file.fileName();
+				filePath = QString( "%1/Existing/%2.%3" )
+					.arg( path )
+					.arg( fileName )
+					.arg( QDateTime::currentDateTime().toString( "yyyy-MM-dd hh'h'mm" ) );
+				
+				QDir( path ).mkpath( "Existing" );
+			}
+			
 			source.error = QFile::rename( source.origin, filePath ) ? QWBFS::Driver::Ok : QWBFS::Driver::DiscRenameFailed;
+			
+			if ( exists ) {
+				source.error = QWBFS::Driver::DiscFound;
+			}
 			
 			if ( !source.hasError() ) {
 				const QString sourcePath = QFileInfo( source.origin ).absolutePath();
@@ -333,7 +330,7 @@ void WorkerThread::renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	emit currentProgressChanged( 1, 1, QTime( 0, 0, 0 ) );
 }
 
-void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
+void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS, const QString& invalidChars )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -346,7 +343,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	QWBFS::Partition::Handle handle;
 	
 	if ( trimWBFS && file.isDir() ) {
-		target = QDir::cleanPath( target.append( QString( "/%1.wbfs" ).arg( source.baseName() ) ) );
+		target = QDir::cleanPath( target.append( QString( "/%1.wbfs" ).arg( source.baseName( invalidChars ) ) ) );
 	}
 	
 	if ( trimWBFS ) {
@@ -356,7 +353,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 			return;
 		}
 		
-		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName() ) );
+		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName( invalidChars ) ) );
 		source.error = QWBFS::Driver::allocateFile( target );
 		
 		if ( source.hasError() ) {
@@ -367,7 +364,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 		QWBFS::Partition::Properties properties( target );
 		properties.reset = true;
 		
-		emit message( tr( "Formating WBFS disc '%1'..." ).arg( source.baseName() ) );
+		emit message( tr( "Formating WBFS disc '%1'..." ).arg( source.baseName( invalidChars ) ) );
 		
 		handle = QWBFS::Partition::Handle( properties );
 	}
@@ -391,7 +388,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	QWBFS::Driver driver( 0, handle );
 	connectDriver( &driver );
 	
-	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName( invalidChars ) ) );
 	source.error = driver.addDiscImage( source.origin );
 	
 	if ( source.hasError() ) {
@@ -415,7 +412,7 @@ void WorkerThread::isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	}
 }
 
-void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
+void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, const QString& invalidChars )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -426,7 +423,7 @@ void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	QString target = _target;
 	
 	if ( file.isDir() ) {
-		target = QDir::cleanPath( target.append( QString( "/%1.iso" ).arg( source.baseName() ) ) );
+		target = QDir::cleanPath( target.append( QString( "/%1.iso" ).arg( source.baseName( invalidChars ) ) ) );
 	}
 	
 	if ( QFile::exists( target ) ) {
@@ -452,7 +449,7 @@ void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	QWBFS::Driver driver( 0, handle );
 	connectDriver( &driver );
 	
-	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName( invalidChars ) ) );
 	source.error = driver.extractDisc( source.id, file.absolutePath(), file.fileName() );
 	
 	if ( source.hasError() ) {
@@ -464,7 +461,7 @@ void WorkerThread::wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& sourc
 	}
 }
 
-void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target )
+void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, const QString& invalidChars )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -475,7 +472,7 @@ void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source
 	QString target = _target;
 	
 	if ( file.isDir() ) {
-		target = QDir::cleanPath( target.append( QString( "/%1.iso" ).arg( source.baseName() ) ) );
+		target = QDir::cleanPath( target.append( QString( "/%1.iso" ).arg( source.baseName( invalidChars ) ) ) );
 	}
 	
 	if ( QFile::exists( target ) ) {
@@ -483,7 +480,7 @@ void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source
 		return;
 	}
 	
-	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+	emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName( invalidChars ) ) );
 	
 	// copying the file chunk by chunk instead of using QFile::copy() to be able to see progression
 	QFile in( source.origin );
@@ -539,7 +536,7 @@ void WorkerThread::isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source
 	out.close();
 }
 
-void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS )
+void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& _target, bool trimWBFS, const QString& invalidChars )
 {
 	if ( !source.isValid() ) {
 		source.error = QWBFS::Driver::InvalidDisc;
@@ -563,7 +560,7 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	}
 	
 	if ( trimWBFS && file.isDir() ) {
-		target = QDir::cleanPath( target.append( QString( "/%1.wbfs" ).arg( source.baseName() ) ) );
+		target = QDir::cleanPath( target.append( QString( "/%1.wbfs" ).arg( source.baseName( invalidChars ) ) ) );
 	}
 	
 	if ( trimWBFS ) {
@@ -577,7 +574,7 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 			return;
 		}
 		
-		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName() ) );
+		emit message( tr( "Initializing WBFS disc '%1'..." ).arg( source.baseName( invalidChars ) ) );
 		source.error = QWBFS::Driver::allocateFile( target );
 		
 		if ( source.hasError() ) {
@@ -592,7 +589,7 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 		QWBFS::Partition::Properties properties( target );
 		properties.reset = true;
 		
-		emit message( tr( "Formating WBFS disc '%1'..." ).arg( source.baseName() ) );
+		emit message( tr( "Formating WBFS disc '%1'..." ).arg( source.baseName( invalidChars ) ) );
 		
 		targetHandle = QWBFS::Partition::Handle( properties );
 	}
@@ -622,15 +619,15 @@ void WorkerThread::wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& sour
 	
 	// direct drive2drive
 	if ( targetDriver.canDrive2Drive( sourceHandle ) == QWBFS::Driver::Ok ) {
-		emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName() ) );
+		emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task ) ).arg( source.baseName( invalidChars ) ) );
 		
 		source.error = targetDriver.addDisc( source.id, sourceHandle );
 	}
 	// indirect drive2drive
 	else {
-		emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task, true ) ).arg( source.baseName() ) );
+		emit message( QString( "%1 '%2'..." ).arg( taskToLabel( task, true ) ).arg( source.baseName( invalidChars ) ) );
 		
-		const QFileInfo tmpFile( QString( "%1/%2.iso" ).arg( QDir::tempPath() ).arg( source.baseName() ) );
+		const QFileInfo tmpFile( QString( "%1/%2.iso" ).arg( QDir::tempPath() ).arg( source.baseName( invalidChars ) ) );
 		QWBFS::Driver sourceDriver( 0, sourceHandle );
 		connectDriver( &sourceDriver );
 		
