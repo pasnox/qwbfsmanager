@@ -4,9 +4,27 @@
 <context>
     <name>Gauge</name>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="135"/>
+        <location filename="../qwbfs/src/Gauge.cpp" line="137"/>
         <source>Usage %1 (%2%) / %3 - Free %4 (%5%)</source>
         <translation>Utilisation %1 (%2%) / %3 - Libre %4 (%5%)</translation>
+    </message>
+</context>
+<context>
+    <name>PartitionComboBox</name>
+    <message>
+        <location filename="../qwbfs/src/PartitionComboBox.cpp" line="62"/>
+        <source>Add a partition</source>
+        <translation>Ajouter une partition</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/PartitionComboBox.cpp" line="104"/>
+        <source>Enter a partition path</source>
+        <translation>Entrer le chemin de la partition</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/PartitionComboBox.cpp" line="122"/>
+        <source>Current Partition</source>
+        <translation>Partition Courante</translation>
     </message>
 </context>
 <context>
@@ -17,101 +35,111 @@
         <translation>Définir la partition courante</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="32"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="29"/>
         <source>Load/Reload the discs from the current partition</source>
         <translation>Charger/ReCharger les disques depuis la partition courante</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="52"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="49"/>
         <source>Format the partition</source>
         <translation>Formater la partition</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="72"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="69"/>
         <source>Add a new view</source>
         <translation>Ajouter une nouvelle vue</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="92"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="89"/>
         <source>Remove the view</source>
         <translation>Enlever la vue</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="126"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="123"/>
         <source>WBFS View</source>
         <translation>Vue WBFS</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="146"/>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="285"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="143"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="339"/>
         <source>Remove the selected discs</source>
         <translation>Enlever les disques sélectionnés</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="166"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="163"/>
         <source>Rename the selected disc</source>
         <translation>Renommer le disque sélectionné</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="186"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="183"/>
         <source>Show/Hide Import View</source>
         <translation>Afficher/Cacher la Vue d&apos;Importation</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="245"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="218"/>
+        <source>List</source>
+        <translation>Liste</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="256"/>
+        <source>CoverFlow</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="299"/>
         <source>Import View</source>
         <translation>Vue d&apos;Importation</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="265"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="319"/>
         <source>Clear the discs</source>
         <translation>Vider les disques</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.ui" line="305"/>
+        <location filename="../qwbfs/src/PartitionWidget.ui" line="359"/>
         <source>Import the discs to the WBFS partition</source>
         <translation>Importer les disques dans la partition WBFS</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="183"/>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="195"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="192"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="204"/>
         <source>%1 disc(s) on the partition - %2 disc(s) to import.</source>
         <translation>%1 disque(s) sur la partition - %2 disque(s) à importer.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="229"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="246"/>
         <source>Can&apos;t open partition.</source>
         <translation>Impossible d&apos;ouvrir la partition.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="258"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="275"/>
         <source>The partition &apos;%1&apos; will be formatted,
 all data will be erased permanently, are you sure?</source>
         <translation>La partition &apos;%1&apos; va être formatée,
 toutes les données vont être supprimées de façon permanente, êtes-vous sûr ?</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="270"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="287"/>
         <source>Can&apos;t format partition.</source>
         <translation>Impossible de formater la partition.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="288"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="305"/>
         <source>You are about to permanently delete %1 disc(s) on partition &apos;%2&apos;, are you sure?</source>
         <translation>Vous êtes sur le point de supprimer définitivement %1 disque(s) sur la partition &apos;%2&apos;, êtes-vous sûr ?</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="311"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="328"/>
         <source>One or more discs have failed to be removed.</source>
         <translation>Un ou plusieurs disques n&apos;ont pu être supprimés.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="324"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="341"/>
         <source>Choose a new name for the disc</source>
         <translation>Choisissez le nouveau nom pour le disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="334"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="351"/>
         <source>Can&apos;t rename disc id #%1 (%2) to &apos;%3&apos;</source>
         <translation>Impossible de renommer le disque #%1 (%2) en &apos;%3&apos;</translation>
     </message>
@@ -290,42 +318,35 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="197"/>
         <source>B</source>
-        <translation>octet(s)</translation>
+        <translation type="obsolete">octet(s)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="202"/>
         <source>KB</source>
-        <translation>ko</translation>
+        <translation type="obsolete">ko</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="207"/>
         <source>MB</source>
-        <translation>Mo</translation>
+        <translation type="obsolete">Mo</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="212"/>
         <source>GB</source>
-        <translation>Go</translation>
+        <translation type="obsolete">Go</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="217"/>
         <source>TB</source>
-        <translation>To</translation>
+        <translation type="obsolete">To</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="222"/>
         <source>PB</source>
-        <translation>Po</translation>
+        <translation type="obsolete">Po</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/Gauge.cpp" line="225"/>
         <source>Too big</source>
-        <translation>Trop grand</translation>
+        <translation type="obsolete">Trop grand</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="98"/>
+        <location filename="../qwbfs/src/main.cpp" line="101"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
         <translation>Le gestionnaire de Systéme de Fichier de Sauvegarde Wii multi-platforme Libre, Rapide et Puissant</translation>
     </message>
@@ -333,97 +354,97 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>QWBFS::Driver</name>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="646"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="691"/>
         <source>No error</source>
         <translation>Aucune erreur</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="648"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="693"/>
         <source>Partition not opened</source>
         <translation>La partition n&apos;est pas ouverte</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="650"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="695"/>
         <source>Source partition not opened</source>
         <translation>La partition source n&apos;est pas ouverte</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="652"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="697"/>
         <source>Disc read failed</source>
         <translation>Impossible de lire le disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="654"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="699"/>
         <source>Disc write failed</source>
         <translation>Impossible d&apos;écrire sur le disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="656"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="701"/>
         <source>Disc extract failed</source>
         <translation>Extraction du disque impossible</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="658"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="703"/>
         <source>Disc add failed</source>
         <translation>Ajout du disque impossible</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="660"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="705"/>
         <source>Disc convert failed</source>
         <translation>Conversion du disque impossible</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="662"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="707"/>
         <source>Disc rename failed</source>
         <translation>Renommage du disque impossible</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="664"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="709"/>
         <source>Disc found</source>
         <translation>Disque présent</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="666"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="711"/>
         <source>Disc not found (or not exists)</source>
         <translation>Disque introuvable (ou n&apos;existe pas)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="668"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="713"/>
         <source>Invalid disc index</source>
         <translation>Index de disque invalide</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="670"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="715"/>
         <source>Invalid disc id</source>
         <translation>Id de disque invalide</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="672"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="717"/>
         <source>Invalid disc</source>
         <translation>Disque invalide</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="674"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="719"/>
         <source>Can&apos;t drive to drive copy</source>
         <translation>Impossible de copier de disque à disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="676"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="721"/>
         <source>Unknown error</source>
         <translation>Erreur inconnue</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="697"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="742"/>
         <source>None</source>
         <translation>Aucun</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="699"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="744"/>
         <source>Success</source>
         <translation>Succès</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="701"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="746"/>
         <source>Failed</source>
         <translation>Erreur</translation>
     </message>
@@ -431,7 +452,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>QWBFS::Model::DiscDelegate</name>
     <message>
-        <location filename="../qwbfs/src/models/DiscDelegate.cpp" line="208"/>
+        <location filename="../qwbfs/src/models/DiscDelegate.cpp" line="182"/>
         <source>Estimated size: %1 - Origin: %2</source>
         <translation>Taille estimée: %1 - Origine: %2</translation>
     </message>
@@ -439,87 +460,87 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>QWBFS::Model::DiscModel</name>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="181"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="199"/>
         <source>Id: %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="184"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="202"/>
         <source>Title: %1</source>
         <translation>Titre: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="185"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="203"/>
         <source>Size: %1</source>
         <translation>Taille: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="186"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="204"/>
         <source>Origin: %1</source>
         <translation>Origine: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="187"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="205"/>
         <source>Region: %1</source>
         <translation>Région: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="188"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="206"/>
         <source>State: %1</source>
         <translation>État: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="189"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="207"/>
         <source>Error: %1</source>
         <translation>Erreur: %1</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="305"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="331"/>
         <source>Image</source>
         <translation>Image</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="307"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="333"/>
         <source>Id</source>
         <translation>Id</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="309"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="335"/>
         <source>Title</source>
         <translation>Titre</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="311"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="337"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="313"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="339"/>
         <source>Region</source>
         <translation>Région</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="315"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="341"/>
         <source>Origin</source>
         <translation>Origine</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="325"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="351"/>
         <source>Sort by Id</source>
         <translation>Trier par Id</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="327"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="353"/>
         <source>Sort by Title</source>
         <translation>Trier par Titre</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="329"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="355"/>
         <source>Sort by Size</source>
         <translation>Trier par Taille</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/models/DiscModel.cpp" line="331"/>
+        <location filename="../qwbfs/src/models/DiscModel.cpp" line="357"/>
         <source>Sort by Region</source>
         <translation>Trier par Région</translation>
     </message>
@@ -527,7 +548,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
 <context>
     <name>SplashScreen</name>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="62"/>
+        <location filename="../qwbfs/src/main.cpp" line="63"/>
         <source>Version %1</source>
         <translation></translation>
     </message>
@@ -558,6 +579,11 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <location filename="../qwbfs/src/UIAbout.ui" line="309"/>
         <source>I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
         <translation>JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIAbout.ui" line="326"/>
+        <source>3rd Party</source>
+        <translation>Ressources Tiers</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIAbout.cpp" line="82"/>
@@ -623,17 +649,17 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Recharger la liste des partitions</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="384"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="387"/>
         <source>Convert ISO Files</source>
         <translation>Convertir des fichiers ISO</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="393"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="396"/>
         <source>Convert WBFS Files</source>
         <translation>Convertir des fichiers WBFS</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="402"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="405"/>
         <source>Rename Discs in folder</source>
         <translation>Renommer les disques d&apos;un dossier</translation>
     </message>
@@ -653,34 +679,34 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="226"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="236"/>
         <source>Actions</source>
         <translation>Actions</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="180"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="190"/>
         <source>Welcome to %1, the cross-platform WBFS Manager. Report bugs &lt;a href=&quot;%2&quot;&gt;here&lt;/a&gt;, discuss &lt;a href=&quot;%3&quot;&gt;here&lt;/a&gt;.</source>
         <translation>Bienvenue dans %1, le Gestionnaire WBFS multi-platforme. Reportez les bugs &lt;a href=&quot;%2&quot;&gt;ici&lt;/a&gt;, discutez &lt;a href=&quot;%3&quot;&gt;ici&lt;/a&gt;.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="480"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="445"/>
         <source>I don&apos;t know how to list partition for this platform.
 You will have to set the correct partition path yourself for mounting partitions.</source>
         <translation>Je ne sais pas comment charger la liste des partitions pour cette plateforme.
 Vous devrez renseigner vous même le chemin des partitions pour les points de montage.</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="516"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="474"/>
         <source>Choose ISO files to convert</source>
         <translation>Choisissez les fichiers ISO à convertir</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="562"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="520"/>
         <source>Choose the folder to scan for ISOs/WBFSs files</source>
         <translation>Choisissez le dossier à analyser pour la découverte de fichier ISO/WBFS</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="580"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="538"/>
         <source>Choose the pattern to apply:
 %1
 %2
@@ -693,42 +719,42 @@ Vous devrez renseigner vous même le chemin des partitions pour les points de mo
 </translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="679"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="637"/>
         <source>Which format do you want to use to export the discs ?</source>
         <translation>Quel format voulez vous utiliser pour exporter les disques ?</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="516"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="474"/>
         <source>ISO Files (*.iso)</source>
         <translation>Fichiers ISO (*.iso)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="539"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="497"/>
         <source>WBFS Files (*.wbfs)</source>
         <translation>Fichiers WBFS (*.wbfs)</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="539"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="497"/>
         <source>Choose WBFS files to convert</source>
         <translation>Choisissez les fichiers WBFS à convertir</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="581"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="539"/>
         <source>%1 = Game Title</source>
         <translation>%1 = Titre du Jeu</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="582"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="540"/>
         <source>%1 = Game Id</source>
         <translation>%1 = ID du Jeu</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="583"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="541"/>
         <source>%1 = File Suffix</source>
         <translation>%1 = Extension du Fichier</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="664"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="622"/>
         <source>Choose a folder to export the discs</source>
         <translation>Choisissez un dossier pour exporter les disques</translation>
     </message>
@@ -801,16 +827,93 @@ Vous devrez renseigner vous même le chemin des partitions pour les points de mo
         <translation>Renommage du Disque</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="359"/>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="580"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="356"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="577"/>
         <source>Initializing WBFS disc &apos;%1&apos;...</source>
         <translation>Initialisation du disque WBFS &apos;%1&apos;...</translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="370"/>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="595"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="367"/>
+        <location filename="../qwbfs/src/WorkerThread.cpp" line="592"/>
         <source>Formating WBFS disc &apos;%1&apos;...</source>
         <translation>Formatage du disque WBFS &apos;%1&apos;...</translation>
+    </message>
+</context>
+<context>
+    <name>pPartition</name>
+    <message>
+        <location filename="../qwbfs/src/models/pPartition.cpp" line="87"/>
+        <location filename="../qwbfs/src/models/pPartition.cpp" line="479"/>
+        <source>Unknown FS</source>
+        <translation>SF Inconnu</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartition.cpp" line="218"/>
+        <source>Unknown Vendor/Model</source>
+        <translation>Fabriquant/Modèle Inconnu</translation>
+    </message>
+</context>
+<context>
+    <name>pPartitionModel</name>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="119"/>
+        <source>Label</source>
+        <translation>Étiquette</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="121"/>
+        <source>Path</source>
+        <translation>Chemin</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="123"/>
+        <source>File System</source>
+        <translation>Système de Fichier</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="125"/>
+        <source>Mount Points</source>
+        <translation>Points de Montage</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="127"/>
+        <source>Vendor</source>
+        <translation>Fabriquant</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="129"/>
+        <source>Model</source>
+        <translation>Modèle</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="131"/>
+        <source>File System Id</source>
+        <translation>Id du Système de Fichier</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="133"/>
+        <source>Display Text</source>
+        <translation>Texte d&apos;affichage</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="135"/>
+        <source>Size</source>
+        <translation>Taille</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="137"/>
+        <source>Used</source>
+        <translation>Utilisé</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="139"/>
+        <source>Free</source>
+        <translation>Libre</translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="141"/>
+        <source>Last Check</source>
+        <translation>Dernière Vérification</translation>
     </message>
 </context>
 </TS>
