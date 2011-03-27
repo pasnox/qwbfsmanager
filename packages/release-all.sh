@@ -80,7 +80,7 @@ svnExport()
 {
 	echo "*** Exporting repository: $1 to $2"
 	startCommand "svn export \"$1\" \"$2\" > /dev/null 2>&1"
-	startCommand "ln -s \"$1/../../../fresh\" \"$2/fresh\"  > /dev/null 2>&1"
+	startCommand "cp -fr \"$1/../../fresh\" \"$2\"  > /dev/null 2>&1"
 }
 
 # create a tar.gz file $1 from path $2
