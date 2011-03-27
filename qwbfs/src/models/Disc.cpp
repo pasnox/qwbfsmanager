@@ -36,6 +36,8 @@
 #include "Disc.h"
 #include "qwbfsdriver/Driver.h"
 
+#include <FreshCore/pCoreUtils>
+
 #include <QFileInfo>
 
 #define WBFS_DISC_XML_NAME "WBFS-Discs"
@@ -86,9 +88,9 @@ bool Disc::hasError() const
 	return error != QWBFS::Driver::Ok;
 }
 
-QString Disc::baseName() const
+QString Disc::baseName( const QString& invalidChars ) const
 {
-	return isValid() ? QString( "%1 [%2]" ).arg( title ).arg( id ) : QString::null;
+	return isValid() ? QString( "%1 [%2]" ).arg( cleanupGameTitle( title, invalidChars ) ).arg( id ) : QString::null;
 }
 
 void Disc::addToDocument( QDomDocument& document ) const
@@ -113,6 +115,27 @@ void Disc::readFromElement( const QDomElement& element )
 	region = element.attribute( "region", 0 ).toInt();
 	state = element.attribute( "state", QString::number( QWBFS::Driver::None ) ).toInt();
 	error = element.attribute( "error", QString::number( QWBFS::Driver::Ok ) ).toInt();
+}
+
+QString Disc::cleanupGameTitle( const QString& _title, const QString& invalidChars )
+{
+	QString title = pCoreUtils::toTitleCase( _title );
+	
+	foreach ( const QChar& c, invalidChars ) {
+		QString r;
+		
+		/*switch ( c.toAscii() ) {
+			case '\'':
+				r = " ";
+				break;
+			case ':':
+				r = "-";
+		}*/
+		
+		title.replace( c, r );
+	}
+	
+	return title;
 }
 
 QDomDocument Disc::toDocument( const DiscList& discs )

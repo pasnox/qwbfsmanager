@@ -54,10 +54,12 @@ struct Disc
 	
 	bool isValid() const;
 	bool hasError() const;
-	QString baseName() const;
+	QString baseName( const QString& invalidChars = QString::null ) const;
 	
 	void addToDocument( QDomDocument& document ) const;
 	void readFromElement( const QDomElement& element );
+	
+	static QString cleanupGameTitle( const QString& title, const QString& invalidChars );
 	
 	static QDomDocument toDocument( const DiscList& discs );
 	static DiscList fromDocument( const QDomDocument& document );
