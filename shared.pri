@@ -11,6 +11,8 @@
 ##
 ###########################################################################################
 
+win32:!isEqual( $$lower( $$QMAKE_HOST.os ), "windows" ):CONFIG	*= win32_crossbuild
+
 CONFIG	-= debug_and_release release debug warn_off warn_on x86 ppc universal
 CONFIG	*= release warn_on
 
