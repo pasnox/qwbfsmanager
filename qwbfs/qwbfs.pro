@@ -25,7 +25,11 @@ QT	*= core gui network xml
 
 include( ../libwbfs/libwbfs.pri )
 
-exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
+win32_crossbuild {
+	exists( "$(QT_WIN32_PATH)/lib/*fresh*" ):CONFIG *= fresh
+} else {
+	exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
+}
 
 fresh {
 	!build_pass:message( "Using system fresh library." )
