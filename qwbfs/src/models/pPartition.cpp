@@ -1,3 +1,28 @@
+/****************************************************************************
+**
+** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
+** Project   : Fresh Library
+** FileName  : pPartition.cpp
+** Date      : 2011-02-20T00:41:35
+** License   : LGPL v3
+** Home Page : http://bettercodes.org/projects/fresh
+** Comment   : Fresh Library is a Qt 4 extension library providing set of new core & gui classes.
+**
+** This program is free software: you can redistribute it and/or modify
+** it under the terms of the GNU Leser General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This package is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program. If not, see <http://www.gnu.org/licenses/>.
+**
+****************************************************************************/
 #include "pPartition.h"
 
 #include <QStringList>
@@ -10,6 +35,9 @@
 #include <qt_windows.h>
 #include <WinIoCtl.h>
 #endif
+
+#define PROPERTY_DISPLAY_TEXT "_DISPLAY_TEXT"
+#define PROPERTY_LAST_CHECK "_LAST_CHECK"
 
 pPartition::pPartition( const QString& devicePath, bool checkValidity )
 {
@@ -264,7 +292,7 @@ QString pPartition::fileSystemIdToString( qint64 id, pPartition::Type type, bool
 	typedef QList<Info> InfoList;
 	QHash<qint64, InfoList> hash;
 	
-	if ( type == pPartition::CdRom ) {
+	if ( type == pPartition::Disc ) {
 		hash[ 0x00 ] << Info( "Unformatted", "NO-Partition empty partition-table entry" );
 		hash[ 0x01 ] << Info( "CD_DA", "CD_DA" );
 		hash[ 0x02 ] << Info( "CD_ROM_Mode_1", "CD_ROM_Mode_1" );

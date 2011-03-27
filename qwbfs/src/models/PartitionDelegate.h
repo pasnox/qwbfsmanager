@@ -1,6 +1,31 @@
 /****************************************************************************
 **
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
+** Project   : Fresh Library
+** FileName  : PartitionDelegate.h
+** Date      : 2011-02-20T00:41:09
+** License   : LGPL v3
+** Home Page : http://bettercodes.org/projects/fresh
+** Comment   : Fresh Library is a Qt 4 extension library providing set of new core & gui classes.
+**
+** This program is free software: you can redistribute it and/or modify
+** it under the terms of the GNU Leser General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** This package is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU Lesser General Public License for more details.
+**
+** You should have received a copy of the GNU Lesser General Public License
+** along with this program. If not, see <http://www.gnu.org/licenses/>.
+**
+****************************************************************************/
+/****************************************************************************
+**
+** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionDelegate.h
@@ -36,19 +61,41 @@
 #ifndef PARTITIONDELEGATE_H
 #define PARTITIONDELEGATE_H
 
+/*!
+	\file PartitionDelegate.h
+	\brief A delegate for drawing the representation of a pPartition.
+	\author Filipe Azevedo aka Nox P\@sNox <pasnox@gmail.com>
+*/
+
 #include <QStyledItemDelegate>
 
-#include "models/pPartitionModel.h"
+class pPartitionModel;
 
+/*!
+	\ingroup Gui
+	\class PartitionDelegate
+	\brief A delegate for drawing the representation of a pPartition.
+*/
 class PartitionDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 	
 public:
+	/*!
+		Create a instance of the delegate having \a parent as parent and model.
+	*/
 	PartitionDelegate( pPartitionModel* parent );
+	/*!
+		Destroys the instance of the delegate.
+	*/
 	virtual ~PartitionDelegate();
-	
+	/*!
+		Reimplemented.
+	*/
 	virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+	/*!
+		Reimplemented.
+	*/
 	virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
 protected:
