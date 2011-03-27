@@ -33,7 +33,7 @@
 #if defined( Q_OS_WIN )
 #include <FreshCore/pWinHelpers>
 #include <qt_windows.h>
-#include <WinIoCtl.h>
+#include <winioctl.h>
 #endif
 
 #define PROPERTY_DISPLAY_TEXT "_DISPLAY_TEXT"

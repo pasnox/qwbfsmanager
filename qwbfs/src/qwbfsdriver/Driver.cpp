@@ -48,7 +48,7 @@
 #if defined( Q_OS_WIN )
 #include <FreshCore/pWinHelpers>
 #include <qt_windows.h>
-#include <WinIoCtl.h>
+#include <winioctl.h>
 #endif
 
 using namespace QWBFS;
