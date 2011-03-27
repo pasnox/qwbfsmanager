@@ -25,45 +25,40 @@ QT	*= core gui network xml
 
 include( ../libwbfs/libwbfs.pri )
 
-exists( "/usr/lib/libfresh*.a" ):CONFIG	*= fresh_static
-else:exists( "/usr/lib/libfresh*.so" ):CONFIG	*= fresh_shared
+exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
 
-fresh_static|fresh_shared {
+fresh {
 	!build_pass:message( "Using system fresh library." )
 } else {
 	exists( ../fresh/fresh.pro ) {
-		FRESH_PATH	= ../fresh
 		!build_pass:message( "Using bundled fresh library." )
-	} else:exists( ../../../fresh/fresh.pro ) {
-		FRESH_PATH	= ../../../fresh
-		!build_pass:message( "Using external fresh library." )
-	}
-	else {
+		FRESH_PATH	= ../fresh
+		
+		include( $$FRESH_PATH/functions.pri )
+
+		FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
+
+		QMAKE_RPATHDIR	*= $$FRESH_PATH/build
+		macx:LIBS	*= -F$$FRESH_PATH/build
+		LIBS	*= -L$$FRESH_PATH/build
+		DEFINES	*= FRESH_CORE_BUILD
+
+		DEPENDPATH	*= $$FRESH_PATH/include/FreshCore \
+			$$FRESH_PATH/include/FreshGui
+
+		INCLUDEPATH	*= $$FRESH_PATH/include
+
+		DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
+		INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
+
+		PRE_TARGETDEPS	*= $${FRESH_PATH}
+
+		QT	*= xml network
+		!macx:qtAddLibrary( fresh )
+		macx:LIBS	*= -lfresh
+	} else {
 		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
 	}
-
-	include( $$FRESH_PATH/functions.pri )
-
-	FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
-
-	QMAKE_RPATHDIR	*= $$FRESH_PATH/build
-	macx:LIBS	*= -F$$FRESH_PATH/build
-	LIBS	*= -L$$FRESH_PATH/build
-	DEFINES	*= FRESH_CORE_BUILD
-
-	DEPENDPATH	*= $$FRESH_PATH/include/FreshCore \
-		$$FRESH_PATH/include/FreshGui
-
-	INCLUDEPATH	*= $$FRESH_PATH/include
-
-	DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
-	INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
-
-	PRE_TARGETDEPS	*= $${FRESH_PATH}
-
-	QT	*= xml network
-	!macx:qtAddLibrary( fresh )
-	macx:LIBS	*= -lfresh
 }
 
 # define some usefull values

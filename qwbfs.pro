@@ -26,18 +26,14 @@ CONFIG	*= ordered
 BUILD_PATH	= build
 include( shared.pri )
 
-exists( "/usr/lib/libfresh*.a" ):CONFIG *= fresh_static
-else:exists( "/usr/lib/libfresh*.so" ):CONFIG *= fresh_shared
+exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
 
-fresh_static|fresh_shared {
+fresh {
 	!build_pass:message( "Using system fresh library." )
 } else {
 	exists( fresh/fresh.pro ) {
 		SUBDIRS	*= fresh
 		!build_pass:message( "Using bundled fresh library." )
-	} else:exists( ../../fresh/fresh.pro ) {
-		!build_pass:message( "Using external fresh library." )
-		SUBDIRS	*= ../../fresh
 	} else {
 		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
 	}
