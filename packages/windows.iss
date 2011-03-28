@@ -80,7 +80,7 @@ Name: {group}\Home Page; Filename: {app}\Home Page.url; WorkingDir: {app}
 Name: {group}\Tracker; Filename: {app}\Tracker.url; WorkingDir: {app}
 
 [INI]
-Filename: {app}\Home Page.url; Section: InternetShortcut; Key: URL; String: {cm:QWBFS_URL}; Flags: createkeyifdoesntexist uninsdeleteentry uninsdeletesectionifempty; Components:
+Filename: {app}\Home Page.url; Section: InternetShortcut; Key: URL; String: {cm:QWBFS_URL}; Flags: createkeyifdoesntexist uninsdeleteentry uninsdeletesectionifempty; Components: 
 Filename: {app}\Tracker.url; Section: InternetShortcut; Key: URL; String: {cm:QWBFS_ISSUES_URL}; Flags: createkeyifdoesntexist uninsdeleteentry uninsdeletesectionifempty
 
 [UninstallDelete]
@@ -88,3 +88,5 @@ Name: {app}\Home Page.url; Type: files
 Name: {app}\Tracker.url; Type: files
 Name: {app}\*.ini; Type: files
 Name: {app}; Type: dirifempty
+[Run]
+Filename: {app}\qwbfsmanager.exe; WorkingDir: {app}; Flags: postinstall skipifsilent; Description: {cm:QWBFS_NAME}
