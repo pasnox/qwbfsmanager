@@ -3,6 +3,7 @@
     <file>../../GPL-2</file>
   </qresource>
   <qresource prefix="/wii">
+    <file alias="wiitdb.png">wiitdb.png</file>
     <file alias="cover.png">wii-cover.png</file>
     <file alias="disc.png">wii-disc.png</file>
   </qresource>

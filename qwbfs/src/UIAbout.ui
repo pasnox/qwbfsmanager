@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>419</width>
-    <height>504</height>
+    <width>418</width>
+    <height>503</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -345,8 +345,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>403</width>
-            <height>310</height>
+            <width>402</width>
+            <height>309</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -374,11 +374,11 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://bettercodes.org/projects/fresh&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;libfresh&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - A Qt 4 extension library providing new widgets/objects.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) 2005-2011 Filipe Azevedo (pasnox@gmail.com).&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/u/nagy.franto&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;Splash Screen&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Since version 1.2.0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Nagy Franto.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/u/nagy.franto&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;Splash Screen&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Version 1.2.0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) Nagy Franto.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;mailto:exilys@hotmail.fr&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;Application Icon&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Since version 1.2.0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Vasseur Jean-Baptiste (exilys@hotmail.fr)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;mailto:exilys@hotmail.fr&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;Application Icon&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Version 1.2.0&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) Jean-Baptiste &lt;/span&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Vasseur&lt;/span&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; (exilys@hotmail.fr)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

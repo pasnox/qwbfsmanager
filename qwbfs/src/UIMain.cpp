@@ -59,6 +59,7 @@
 #include <QInputDialog>
 #include <QPainter>
 #include <QNetworkReply>
+#include <QDesktopServices>
 #include <QDebug>
 
 #define COVER_DISC_SIZE QSize( 160, 160 )
@@ -137,6 +138,7 @@ UIMain::UIMain( QWidget* parent )
 	connectView( pwMainView );
 	
 	qmtbInfos->installEventFilter( this );
+	lWiiTDB->installEventFilter( this );
 	
 	localeChanged();
 	
@@ -217,6 +219,11 @@ bool UIMain::eventFilter( QObject* object, QEvent* event )
 				
 				return true;
 			}
+		}
+	}
+	else if ( object == lWiiTDB ) {
+		if ( event->type() == QEvent::MouseButtonPress ) {
+			QDesktopServices::openUrl( lWiiTDB->toolTip() );
 		}
 	}
 	

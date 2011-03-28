@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>621</width>
-    <height>385</height>
+    <width>619</width>
+    <height>383</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -277,7 +277,7 @@
    <property name="minimumSize">
     <size>
      <width>184</width>
-     <height>109</height>
+     <height>111</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -306,6 +306,46 @@
         <set>Qt::AlignCenter</set>
        </property>
        <property name="openExternalLinks">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lWiiTDB">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>60</height>
+        </size>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="toolTip">
+        <string notr="true">http://wiitdb.com</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+	background-image: url(:/wii/wiitdb.png);
+	background-repeat: no-repeat;
+	background-position:center bottom;
+	font: bold 13px &quot;Arial&quot;;
+}</string>
+       </property>
+       <property name="text">
+        <string>Covers By</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
         <bool>true</bool>
        </property>
       </widget>
