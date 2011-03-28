@@ -64,10 +64,8 @@ DiscDelegate::~DiscDelegate()
 
 void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option, const QModelIndex& index ) const
 {
-	QStyleOptionViewItemV4 option = _option;
-    initStyleOption( &option, index );
-	
 	// remove ugly focus rect
+	QStyleOptionViewItem option = _option;
 	option.state &= ~QStyle::State_HasFocus;
 	
 	if ( mModel ) {
