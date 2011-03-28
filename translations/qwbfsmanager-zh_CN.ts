@@ -317,7 +317,7 @@ all data will be erased permanently, are you sure?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="101"/>
+        <location filename="../qwbfs/src/main.cpp" line="105"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
         <translation type="unfinished"></translation>
     </message>
@@ -423,7 +423,7 @@ all data will be erased permanently, are you sure?</source>
 <context>
     <name>QWBFS::Model::DiscDelegate</name>
     <message>
-        <location filename="../qwbfs/src/models/DiscDelegate.cpp" line="182"/>
+        <location filename="../qwbfs/src/models/DiscDelegate.cpp" line="180"/>
         <source>Estimated size: %1 - Origin: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -519,7 +519,7 @@ all data will be erased permanently, are you sure?</source>
 <context>
     <name>SplashScreen</name>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="63"/>
+        <location filename="../qwbfs/src/main.cpp" line="65"/>
         <source>Version %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -610,73 +610,78 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="339"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="343"/>
+        <source>Covers By</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UIMain.ui" line="379"/>
         <source>Reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="342"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="382"/>
         <source>Reload the partitions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="351"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="391"/>
         <source>About...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="363"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="403"/>
         <source>Quit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="375"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="415"/>
         <source>Properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="387"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="427"/>
         <source>Convert ISO Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="396"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="436"/>
         <source>Convert WBFS Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="405"/>
+        <location filename="../qwbfs/src/UIMain.ui" line="445"/>
         <source>Rename Discs in folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="236"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="243"/>
         <source>Actions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="190"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="192"/>
         <source>Welcome to %1, the cross-platform WBFS Manager. Report bugs &lt;a href=&quot;%2&quot;&gt;here&lt;/a&gt;, discuss &lt;a href=&quot;%3&quot;&gt;here&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="445"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="452"/>
         <source>I don&apos;t know how to list partition for this platform.
 You will have to set the correct partition path yourself for mounting partitions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="474"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="481"/>
         <source>Choose ISO files to convert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="520"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="527"/>
         <source>Choose the folder to scan for ISOs/WBFSs files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="538"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="545"/>
         <source>Choose the pattern to apply:
 %1
 %2
@@ -685,42 +690,42 @@ You will have to set the correct partition path yourself for mounting partitions
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="637"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="644"/>
         <source>Which format do you want to use to export the discs ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="474"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="481"/>
         <source>ISO Files (*.iso)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="497"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>WBFS Files (*.wbfs)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="497"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>Choose WBFS files to convert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="539"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="546"/>
         <source>%1 = Game Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="540"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="547"/>
         <source>%1 = Game Id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="541"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="548"/>
         <source>%1 = File Suffix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="622"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="629"/>
         <source>Choose a folder to export the discs</source>
         <translation type="unfinished"></translation>
     </message>
