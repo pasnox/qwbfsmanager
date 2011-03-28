@@ -38,9 +38,11 @@
 #include <QWeakPointer>
 #include <QDateTime>
 #include <QTimer>
+#include <QPixmapCache>
 #include <QDebug>
 
 #include <FreshCore/pSettings>
+#include <FreshCore/pNetworkAccessManager>
 #include <FreshCore/pTranslationManager>
 #include <FreshGui/pIconManager>
 
@@ -96,6 +98,8 @@ int main( int argc, char** argv )
 	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
 	
 	qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
+	QPixmapCache::setCacheLimit( QPixmapCache::cacheLimit() *4 );
+	pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath() );
 	
 	Q_INIT_RESOURCE( fresh );
 	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
