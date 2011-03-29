@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
-    <height>503</height>
+    <width>416</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -345,8 +345,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>402</width>
-            <height>309</height>
+            <width>400</width>
+            <height>307</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -363,22 +363,22 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline;&quot;&gt;QWBFS Manager use unmodified/modified third party resources&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://github.com/kwiirk/wbfs&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;libwbfs&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - The Wii Backup File System library.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) 2009 kwiirk.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright &amp;copy; 2009 kwiirk.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://pictureflow.googlecode.com&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;PictureFlow&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Animated image show widget (coverflow like widget).&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) 2009 Ariya Hidayat (ariya@kde.org).&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright &amp;copy; 2009 Ariya Hidayat (ariya@kde.org).&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://wiitdb.com&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;WiiTDB&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Nintendo Wii games database.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) 2009-2011 WiiTDB.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright &amp;copy; 2009-2011 WiiTDB.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://bettercodes.org/projects/fresh&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;libfresh&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - A Qt 4 extension library providing new widgets/objects.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) 2005-2011 Filipe Azevedo (pasnox@gmail.com).&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright &amp;copy; 2005-2011 Filipe Azevedo (pasnox@gmail.com).&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://code.google.com/u/nagy.franto&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;Splash Screen&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Version 1.2.0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) Nagy Franto.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright &amp;copy; Nagy Franto.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Arial';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;mailto:exilys@hotmail.fr&quot;&gt;&lt;span style=&quot; font-family:'Arial'; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;Application Icon&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; - Version 1.2.0&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright (C) Jean-Baptiste &lt;/span&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Vasseur&lt;/span&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt; (exilys@hotmail.fr)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial';&quot;&gt;Copyright &amp;copy; Jean-Baptiste Vasseur (exilys@hotmail.fr)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

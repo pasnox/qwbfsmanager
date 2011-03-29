@@ -348,7 +348,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/main.cpp" line="105"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
-        <translation>Le gestionnaire de Systéme de Fichier de Sauvegarde Wii multi-platforme Libre, Rapide et Puissant</translation>
+        <translation>Le gestionnaire de Système de Fichier de Sauvegarde Wii multi-platforme Libre, Rapide et Puissant</translation>
     </message>
 </context>
 <context>
@@ -558,7 +558,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="20"/>
         <source>About...</source>
-        <translation>A Propos...</translation>
+        <translation>À Propos...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="162"/>
@@ -578,7 +578,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="309"/>
         <source>I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
-        <translation>JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS A VOTRE CONSOLE WII QUANT A L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
+        <translation>JE NE PREND AUCUNE RESPONSABILITÉ POUR LES DOMMAGES CAUSÉS À VOTRE CONSOLE WII QUANT À L&apos;UTILISATION INCORRECTE DE CE LOGICIEL.</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="326"/>
