@@ -202,7 +202,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="110"/>
         <source>View Icon Type</source>
-        <translation>Mode d&apos;affichage des icones</translation>
+        <translation>Mode d&apos;affichage des icônes</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="137"/>
