@@ -14,17 +14,17 @@
     <message>
         <location filename="../qwbfs/src/PartitionComboBox.cpp" line="62"/>
         <source>Add a partition</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir una partición</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionComboBox.cpp" line="104"/>
         <source>Enter a partition path</source>
-        <translation type="unfinished"></translation>
+        <translation>Indique la ruta de la partición</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionComboBox.cpp" line="122"/>
         <source>Current Partition</source>
-        <translation type="unfinished"></translation>
+        <translation>Partición actual</translation>
     </message>
 </context>
 <context>
@@ -78,12 +78,12 @@
     <message>
         <location filename="../qwbfs/src/PartitionWidget.ui" line="218"/>
         <source>List</source>
-        <translation type="unfinished">Lista</translation>
+        <translation>Lista</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionWidget.ui" line="256"/>
         <source>CoverFlow</source>
-        <translation type="unfinished"></translation>
+        <translation>Carátulas</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionWidget.ui" line="299"/>
@@ -584,7 +584,7 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="326"/>
         <source>3rd Party</source>
-        <translation type="unfinished"></translation>
+        <translation>3rd Party</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIAbout.cpp" line="82"/>
@@ -642,7 +642,7 @@ YO NO ME HAGO RESPONSABLE DE CUALQUIER DAÑO QUE SE PUEDA PRODUCIR EN SU CONSOLA
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="343"/>
         <source>Covers By</source>
-        <translation type="unfinished"></translation>
+        <translation>Carátulas</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="379"/>
@@ -852,12 +852,12 @@ mismo para el montaje de la partición.</translation>
         <location filename="../qwbfs/src/models/pPartition.cpp" line="87"/>
         <location filename="../qwbfs/src/models/pPartition.cpp" line="479"/>
         <source>Unknown FS</source>
-        <translation type="unfinished"></translation>
+        <translation>FS desconocida</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartition.cpp" line="218"/>
         <source>Unknown Vendor/Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Vendedor/Modelo Desconocido</translation>
     </message>
 </context>
 <context>
@@ -865,62 +865,62 @@ mismo para el montaje de la partición.</translation>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="119"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Etiqueta</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="121"/>
         <source>Path</source>
-        <translation type="unfinished">Ruta</translation>
+        <translation>Ruta</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="123"/>
         <source>File System</source>
-        <translation type="unfinished">Sistema de archivos</translation>
+        <translation>Sistema de archivos</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="125"/>
         <source>Mount Points</source>
-        <translation type="unfinished"></translation>
+        <translation>Puntos de Montaje</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="127"/>
         <source>Vendor</source>
-        <translation type="unfinished"></translation>
+        <translation>Vendedor</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="129"/>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modelo</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="131"/>
         <source>File System Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id Sistema de archivo</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="133"/>
         <source>Display Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualización de texto</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="135"/>
         <source>Size</source>
-        <translation type="unfinished">Tamaño</translation>
+        <translation>Tamaño</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="137"/>
         <source>Used</source>
-        <translation type="unfinished"></translation>
+        <translation>Usado</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="139"/>
         <source>Free</source>
-        <translation type="unfinished"></translation>
+        <translation>Libre</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="141"/>
         <source>Last Check</source>
-        <translation type="unfinished"></translation>
+        <translation>Última Comprovación</translation>
     </message>
 </context>
 </TS>
