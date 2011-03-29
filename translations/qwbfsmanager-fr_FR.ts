@@ -671,7 +671,7 @@ toutes les données vont être supprimées de façon permanente, êtes-vous sûr
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="391"/>
         <source>About...</source>
-        <translation>A Propos...</translation>
+        <translation>À Propos...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="403"/>
