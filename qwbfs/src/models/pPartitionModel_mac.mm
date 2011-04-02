@@ -73,7 +73,7 @@ public:
 			const QString devicePath = QString( "/dev/%1" ).arg( properties.value( "DAMediaBSDName" ).toString() );
 			
 			if ( pPartition::isWBFSPartition( devicePath ) ) {
-				properties[ PROPERTY_FILE_SYSTEM_ID ] = 0x25;
+				properties[ "DAVolumeKindId" ] = 0x25;
 				properties[ "DAVolumeKind" ] = pPartition::fileSystemIdToString( 0x25 );
 			}
 			
@@ -101,8 +101,8 @@ public:
 					<< properties.value( "DAMediaContent" ).toString().toUpper()
 					<< test;*/
 				
-				if ( properties[ PROPERTY_FILE_SYSTEM_ID ] != 0x25 && FSGetVolumeInfo( volume, 0, 0, kFSVolInfoSizes | kFSVolInfoFSInfo, &volumeInfo, 0, 0 ) == noErr ) {
-					properties[ PROPERTY_FILE_SYSTEM_ID ] = volumeInfo.filesystemID == 0 ? 0xAF : volumeInfo.filesystemID;
+				if ( properties[ "DAVolumeKindId" ] != 0x25 && FSGetVolumeInfo( volume, 0, 0, kFSVolInfoSizes | kFSVolInfoFSInfo, &volumeInfo, 0, 0 ) == noErr ) {
+					properties[ "DAVolumeKindId" ] = volumeInfo.filesystemID == 0 ? 0xAF : volumeInfo.filesystemID;
 					total = volumeInfo.totalBytes;
 					free = volumeInfo.freeBytes;
 				}

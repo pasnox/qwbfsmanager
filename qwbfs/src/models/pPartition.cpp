@@ -82,16 +82,14 @@ QVariant pPartition::property( pPartition::Property property ) const
 			return mProperties.value( PROPERTY_DEVICE_TYPE );*/
 		case MountPoints:
 			return mProperties.value( "DAVolumePath" );
-		case FileSystem: {
-			const QString fs = mProperties.value( "DAVolumeKind", value( "DAMediaContent" ) ).toString().toUpper().replace( "_", " " ).simplified();
-			return fs.contains( "-" ) ? QObject::tr( QT_TRANSLATE_NOOP( "pPartition", "Unknown FS" ) ) : fs;
-		}
+		case FileSystem:
+			return mProperties.value( "DAVolumeKind", value( "DAMediaContent" ) ).toString().toUpper().replace( "_", " " ).simplified();
 		case FileSystemId:
-			return mProperties.value( "DAVolumeKindId" );
+			return mProperties.value( "DAVolumeKindId" ).toString().toLongLong();
 		case DeviceVendor:
-			return mProperties.value( "DADeviceVendor" ).replace( "_", " " ).toString().simplified();
+			return mProperties.value( "DADeviceVendor" ).toString().replace( "_", " " ).simplified();
 		case DeviceModel:
-			return mProperties.value( "DADeviceModel" ).replace( "_", " " ).toString().simplified();
+			return mProperties.value( "DADeviceModel" ).toString().replace( "_", " " ).simplified();
 		case DisplayText:
 			return mProperties.value( PROPERTY_DISPLAY_TEXT ).toString().simplified();
 		case LastCheck:
