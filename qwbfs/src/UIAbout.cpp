@@ -44,15 +44,24 @@ UIAbout::UIAbout( QWidget* parent )
 {
 	setAttribute( Qt::WA_DeleteOnClose );
 	setupUi( this );
-/*#if defined( Q_OS_MAC )
-	const QList<QWidget*> widgets = QList<QWidget*>() << lName << lVersion << lDescription;
+#if !defined( Q_OS_MAC )
+	const QList<QWidget*> widgets = QList<QWidget*>()
+		<< lName
+		<< lVersion
+		<< lDescription
+		<< lCopyrights
+		<< lDomain
+		<< pteLicense
+		<< lWarning
+		<< lThirdParty
+		;
 	
 	foreach ( QWidget* widget, widgets ) {
 		QFont font = widget->font();
-		font.setPointSize( font.pointSize() +2 );
+		font.setPointSize( font.pointSize() -2 );
 		widget->setFont( font );
 	}
-#endif*/
+#endif
 	
 	foreach ( QScrollBar* sb, twPages->findChildren<QScrollBar*>() ) {
 		sb->setAttribute( Qt::WA_MacMiniSize );
@@ -85,5 +94,5 @@ void UIAbout::localeChanged()
 {
 	retranslateUi( this );
 	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
-	lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ) );
+	lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ).append( "." ) );
 }
