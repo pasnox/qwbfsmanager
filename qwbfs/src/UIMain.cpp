@@ -48,7 +48,7 @@
 #include <FreshGui/pTranslationDialog>
 #include <FreshGui/pUpdateChecker>
 #include <FreshGui/pPaypalButton>
-#include "models/pPartitionModel.h"
+#include "models/pPartitionModel.h" // will be part of fresh library in a next version
 
 #include <QMenuBar>
 #include <QMenu>

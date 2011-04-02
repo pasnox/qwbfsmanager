@@ -38,6 +38,7 @@
 
 #include <FreshCore/pSettings>
 #include <FreshCore/pNetworkAccessManager>
+#include <FreshGui/pGuiUtils>
 
 #include <QDir>
 #include <QCoreApplication>
@@ -283,19 +284,13 @@ void Properties::restoreState( UIMain* window ) const
 	const QRect geometry = mSettings->value( SETTINGS_WINDOW_GEOMETRY ).toRect();
 	const QByteArray state = mSettings->value( SETTINGS_WINDOW_STATE ).toByteArray();
 	
-	if ( geometry.isNull() ) {
-		window->showMaximized();
-	}
-	else {
-		window->setGeometry( geometry );
-	}
-	
+	pGuiUtils::restoreGeometry( window, geometry );
 	window->restoreState( state );
 }
 
 void Properties::saveState( UIMain* window )
 {
-	const QRect geometry = window->geometry();
+	const QRect geometry = pGuiUtils::saveGeometry( window );
 	const QByteArray state = window->saveState();
 	
 	mSettings->setValue( SETTINGS_WINDOW_GEOMETRY, geometry );
