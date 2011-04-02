@@ -37,13 +37,14 @@
 #include "main.h"
 
 #include <QFile>
+#include <QScrollBar>
 
 UIAbout::UIAbout( QWidget* parent )
 	: QDialog( parent )
 {
 	setAttribute( Qt::WA_DeleteOnClose );
 	setupUi( this );
-#if defined( Q_OS_MAC )
+/*#if defined( Q_OS_MAC )
 	const QList<QWidget*> widgets = QList<QWidget*>() << lName << lVersion << lDescription;
 	
 	foreach ( QWidget* widget, widgets ) {
@@ -51,7 +52,11 @@ UIAbout::UIAbout( QWidget* parent )
 		font.setPointSize( font.pointSize() +2 );
 		widget->setFont( font );
 	}
-#endif
+#endif*/
+	
+	foreach ( QScrollBar* sb, twPages->findChildren<QScrollBar*>() ) {
+		sb->setAttribute( Qt::WA_MacMiniSize );
+	}
 	
 	lName->setText( APPLICATION_NAME );
 	lCopyrights->setText( APPLICATION_COPYRIGHTS );
@@ -81,5 +86,4 @@ void UIAbout::localeChanged()
 	retranslateUi( this );
 	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
 	lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ) );
-	adjustSize();
 }
