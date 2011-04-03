@@ -69,6 +69,7 @@ Source: {#QT_PATH}\translations\qt*.qm; DestDir: {app}\qt\translations; Flags: p
 ; Dependencies related files
 Source: {#QT_PATH}\bin\mingwm10.dll; DestDir: {app}; Flags: promptifolder
 Source: {#QT_PATH}\bin\libgcc_s_dw2-1.dll; DestDir: {app}; Flags: promptifolder skipifsourcedoesntexist
+Source: {#QT_PATH}\bin\libstdc++-6.dll; DestDir: {app}; Flags: promptifolder skipifsourcedoesntexist
 Source: {#DLLS_PATH}\libeay32.dll; DestDir: {app}; Flags: promptifolder
 Source: {#DLLS_PATH}\libssl32.dll; DestDir: {app}; Flags: promptifolder
 Source: {#DLLS_PATH}\ssleay32.dll; DestDir: {app}; Flags: promptifolder
