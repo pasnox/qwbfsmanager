@@ -135,9 +135,9 @@ crossBuild()
 	fi
 
 	if [ $OS = "Darwin" ]; then
-		QT_VERSION="4.6.2-universal"
-		QT_WIN32_VERSION="4.6.0"
-		QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
+		QT_VERSION="4.7.0-lgpl"
+		QT_WIN32_VERSION="4.7.1"
+		QT_PATH="/usr/local/Trolltech/$QT_VERSION"
 		MKSPEC="$HOME/mkspecs/4.6.x/win32-osx-g++"
 		QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
 		ISCC="$WINE_PROGRAM_FILES/Inno_Setup_5_gpl/ISCC.exe"
