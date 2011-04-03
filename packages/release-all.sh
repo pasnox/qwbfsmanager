@@ -39,7 +39,7 @@ fi
 
 if [ $OS = "Darwin" ]; then
 	WINE="/Applications/Wine.app/Contents/Resources/bin/wine"
-	WINE_DRIVE="$HOME/.wine/drive_c"
+	WINE_DRIVE="$HOME/Wine Files/drive_c"
 	WINE_PROGRAM_FILES="$WINE_DRIVE/Program Files"
 fi
 
@@ -140,7 +140,7 @@ crossBuild()
 		QT_PATH="/usr/local/Trolltech/$QT_VERSION"
 		MKSPEC="$HOME/mkspecs/4.6.x/win32-osx-g++"
 		QT_WIN32_PATH="/usr/local/Trolltech/win32/$QT_WIN32_VERSION"
-		ISCC="$WINE_PROGRAM_FILES/Inno_Setup_5_gpl/ISCC.exe"
+		ISCC="$WINE_PROGRAM_FILES/Inno_Setup_5/ISCC.exe"
 		DLLS_PATH="$HOME/Win32Libraries/bin"
 
 	fi
@@ -190,18 +190,19 @@ macPackage()
 {
 	echo "*** Create Mac OS X package"
 
-	QT_VERSION="4.6.2-universal"
+	QT_VERSION="4.7.0-lgpl"
 	BUNDLE_NAME="QWBFSManager"
 	BUNDLE_PATH="./bin"
 	BUNDLE_APP_PATH="$BUNDLE_PATH/$BUNDLE_NAME.app"
-	QT_PATH="/usr/local/Trolltech/Qt-$QT_VERSION"
+	QT_PATH="/usr/local/Trolltech/$QT_VERSION"
+	QMAKE_FLAGS="\"CONFIG *= universal no_fresh_install\""
 
 	startCommand "cd \"./$FOLDER_NAME\""
 	startCommand "make distclean > /dev/null 2>&1" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -r > /dev/null 2>&1"
+	startCommand "\"$QT_PATH/bin/qmake\" $QMAKE_FLAGS -r > /dev/null 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0
-	startCommand "\"$QT_PATH/bin/qmake\" -r > /dev/null 2>&1"
-	startCommand "make -j4 release > \"$CUR_PATH/log/macbuild.log\" 2>&1"
+	startCommand "\"$QT_PATH/bin/qmake\" $QMAKE_FLAGS -r > /dev/null 2>&1"
+	startCommand "make -j4 > \"$CUR_PATH/log/macbuild.log\" 2>&1"
 	startCommand "make install > /dev/null 2>&1"
 	startCommand "\"$QT_PATH/bin/macdeployqt\" \"$BUNDLE_APP_PATH\" -dmg > /dev/null 2>&1"
 	startCommand "make distclean > /dev/null 2>&1" 0

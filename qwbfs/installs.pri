@@ -35,7 +35,7 @@ unix {
 	else:qwbfs_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
 	qwbfs_translations.files	= $$PWD/../translations/*.qm
 	
-	INSTALLS	*= qwbfs_translations
+	INSTALLS	= qwbfs_translations
 	
 	exists( ../fresh/fresh.pro ) {
 		FRESH_LIBRARY_PATH = ../fresh
@@ -75,7 +75,7 @@ unix:!macx {
 	qwbfs_desktopicon.path	= $${PACKAGE_PREFIX}/share/icons/hicolor/256x256/apps
 	qwbfs_desktopicon.files	= $$PWD/resources/qwbfsmanager.png
 
-	INSTALLS	+= qwbfs_target qwbfs_desktop qwbfs_desktopicon
+	INSTALLS	*= qwbfs_target qwbfs_desktop qwbfs_desktopicon
 }
 
 macx {
