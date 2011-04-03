@@ -14,28 +14,28 @@
 unix {
 	PACKAGE_PREFIX = $${PREFIX}
 	isEmpty( PACKAGE_PREFIX ) {
-		mac:PACKAGE_PREFIX	= /Applications
+		macx:PACKAGE_PREFIX	= /Applications
 		else:PACKAGE_PREFIX = /usr/local
 	}
 	
 	!build_pass {
-		unix:CAN_INSTALL	= 1
-		else:mac:isEqual( MAC_FULL_INSTALL, 1 ):CAN_INSTALL	= 1
+		unix:!macx:CAN_INSTALL	= 1
+		else:macx:isEqual( MAC_FULL_INSTALL, 1 ):CAN_INSTALL	= 1
 		
 		isEqual( CAN_INSTALL, 1 ) {
 				message( "The application will be installed to $${PACKAGE_PREFIX}" )
 				message( "You can overwrite the prefix calling qmake with parameter: qmake PREFIX=/usr" )
-		} else:mac {
+		} else:macx {
 			message( "The application bundle will not be installed into $${PACKAGE_PREFIX}." )
 			message( "Call: 'qmake MAC_FULL_INSTALL=1' for install the bundle." )
 		}
 	}
 	
-	mac:qwbfs_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
+	macx:qwbfs_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
 	else:qwbfs_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
 	qwbfs_translations.files	= $$PWD/../translations/*.qm
 	
-	INSTALLS	+= qwbfs_translations
+	INSTALLS	*= qwbfs_translations
 	
 	exists( ../fresh/fresh.pro ) {
 		FRESH_LIBRARY_PATH = ../fresh
@@ -44,28 +44,28 @@ unix {
 	}
 	
 	!isEmpty( FRESH_LIBRARY_PATH ) {
-		mac:fresh_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
+		macx:fresh_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
 		else:fresh_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
 		fresh_translations.files	= $${FRESH_LIBRARY_PATH}/translations/*.qm
 		
-		INSTALLS	+= fresh_translations
+		INSTALLS	*= fresh_translations
 	}
 	
-	mac {
+	macx {
 		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/qt/translations
 		#qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/qt_{\,[A-Za-z][A-Za-z]_}[A-Za-z][A-Za-z].qm
 		qwbfs_qt_translations.files	= $$[QT_INSTALL_TRANSLATIONS]/qt_??.qm
-		qwbfs_qt_translations.files	+= $$[QT_INSTALL_TRANSLATIONS]/qt_??_??.qm
+		qwbfs_qt_translations.files	*= $$[QT_INSTALL_TRANSLATIONS]/qt_??_??.qm
 		
-		INSTALLS	+= qwbfs_qt_translations
+		INSTALLS	*= qwbfs_qt_translations
 	}
 }
 
-unix:!mac {
+unix:!macx {
 	# binary
 	qwbfs_target.path	= $${PACKAGE_PREFIX}/bin
 	qwbfs_target.files	= $${DESTDIR}/$${TARGET}
-	qwbfs_target.CONFIG += no_check_exist
+	qwbfs_target.CONFIG *= no_check_exist
 
 	# desktop file
 	qwbfs_desktop.path	= $${PACKAGE_PREFIX}/share/applications
@@ -78,11 +78,11 @@ unix:!mac {
 	INSTALLS	+= qwbfs_target qwbfs_desktop qwbfs_desktopicon
 }
 
-mac {
+macx {
 	# binary
 	qwbfs_target.path	= $${PACKAGE_PREFIX}
 	qwbfs_target.files	= $${DESTDIR}/$${TARGET}.app
-	qwbfs_target.CONFIG += no_check_exist
+	qwbfs_target.CONFIG *= no_check_exist
 	
-	isEqual( MAC_FULL_INSTALL, 1 ):INSTALLS	+= qwbfs_target
+	isEqual( MAC_FULL_INSTALL, 1 ):INSTALLS	*= qwbfs_target
 }
