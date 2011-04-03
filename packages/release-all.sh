@@ -80,7 +80,7 @@ svnExport()
 {
 	echo "*** Exporting repository: $1 to $2"
 	startCommand "svn export \"$1\" \"$2\" > /dev/null 2>&1"
-	startCommand "git --git-dir=\"$1/../../fresh/.git\" checkout-index -a -f --prefix=\"$2/fresh/\" > /dev/null 2>&1"
+	startCommand "git --git-dir=\"../fresh/.git\" checkout-index -a -f --prefix=\"$2/fresh/\" > /dev/null 2>&1"
 }
 
 # create a tar.gz file $1 from path $2
