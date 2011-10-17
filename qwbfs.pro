@@ -24,6 +24,14 @@ TEMPLATE	= subdirs
 CONFIG	*= ordered
 
 BUILD_PATH	= build
+
+unix {
+    UNIX_RAM_DISK   = /media/ramdisk
+    exists( $${UNIX_RAM_DISK} ) {
+        BUILD_PATH    = $${UNIX_RAM_DISK}/$${TARGET}
+    }
+}
+
 include( shared.pri )
 
 win32_crossbuild {

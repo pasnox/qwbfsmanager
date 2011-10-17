@@ -10,12 +10,12 @@
 ##	Home Page   : http://code.google.com/p/qwbfs
 ##
 ###########################################################################################
-
 TEMPLATE	= lib
 LANGUAGE	= C++/Qt4
-TARGET	= $$quote(wbfs)
-CONFIG	*= staticlib
+CONFIG  -= debug_and_release release debug warn_off warn_on
+CONFIG  *= staticlib release warn_on
 include(shared.pri)
+TARGET  = $${LIB_WBFS_TARGET}
 BUILD_PATH	= $${LIB_WBFS_BUILD_PATH}
 DESTDIR	= $${BUILD_PATH}
 win32:DEFINES -= UNICODE

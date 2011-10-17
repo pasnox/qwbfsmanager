@@ -18,6 +18,13 @@ macx:TARGET	= $$quote(QWBFSManager)
 BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
+unix {
+    UNIX_RAM_DISK   = /media/ramdisk
+    exists( $${UNIX_RAM_DISK} ) {
+        BUILD_PATH    = $${UNIX_RAM_DISK}/$${TARGET}
+    }
+}
+
 include( ../shared.pri )
 
 CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
@@ -37,25 +44,35 @@ fresh {
 	exists( ../fresh/fresh.pro ) {
 		!build_pass:message( "Using bundled fresh library." )
 		FRESH_PATH	= ../fresh
-		
+
 		include( $$FRESH_PATH/functions.pri )
 
 		FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
 
-		QMAKE_RPATHDIR	*= $$FRESH_PATH/build
-		macx:LIBS	*= -F$$FRESH_PATH/build
-		LIBS	*= -L$$FRESH_PATH/build
-		DEFINES	*= FRESH_CORE_BUILD
+        DEFINES *= FRESH_CORE_BUILD
 
-		DEPENDPATH	*= $$FRESH_PATH/include/FreshCore \
-			$$FRESH_PATH/include/FreshGui
+        DEPENDPATH  *= $${FRESH_SOURCES_PATHS}
+        DEPENDPATH  *= $$FRESH_PATH/include/FreshCore \
+            $$FRESH_PATH/include/FreshGui
 
-		INCLUDEPATH	*= $$FRESH_PATH/include
+        INCLUDEPATH *= $$FRESH_PATH/include
+        INCLUDEPATH *= $${FRESH_SOURCES_PATHS}
 
-		DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
-		INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
+        PRE_TARGETDEPS  *= $${FRESH_PATH}
 
-		PRE_TARGETDEPS	*= $${FRESH_PATH}
+        QMAKE_RPATHDIR  *= $$FRESH_PATH/build
+        macx:LIBS   *= -F$$FRESH_PATH/build
+        LIBS    *= -L$$FRESH_PATH/build
+
+        unix {
+            UNIX_RAM_DISK   = /media/ramdisk
+            exists( $${UNIX_RAM_DISK} ) {
+                Q_FRESH_PATH = $${UNIX_RAM_DISK}/fresh
+                QMAKE_RPATHDIR  *= $$Q_FRESH_PATH
+                macx:LIBS   *= -F$$Q_FRESH_PATH
+                LIBS    *= -L$$Q_FRESH_PATH
+            }
+        }
 
 		QT	*= xml network
 		!macx:qtAddLibrary( fresh )
