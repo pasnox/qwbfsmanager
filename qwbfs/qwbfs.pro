@@ -92,7 +92,7 @@ PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
 PACKAGE_DOWNLOADS_FEED	= "http://code.google.com/feeds/p/qwbfs/downloads/basic"
 PACKAGE_REPORT_BUG_URL	= "http://code.google.com/p/qwbfs/issues/list"
 PACKAGE_DISCUSS_URL	= "http://groups.google.com/group/qwbfs-discuss"
-PACKAGE_VERSION	= 1.2.0
+PACKAGE_VERSION	= 1.2.2
 isEqual( OS, "windows" ):SVN_REVISION	= "N/C"
 else:SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
