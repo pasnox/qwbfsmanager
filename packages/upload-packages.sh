@@ -32,20 +32,20 @@ googleCodeUpload() {
 
 # source tar gz
 if [ -f "$NAME-$VERSION-src.tar.gz" ]; then
-  googleCodeUpload "$NAME-$VERSION-src.tar.gz" "Source Tgz Archive $VERSION", "OpSys-All,Type-Source,Featured"
+  googleCodeUpload "$NAME-$VERSION-src.tar.gz" "Source Tgz Archive $VERSION" "OpSys-All,Type-Source,Featured"
 fi
 
 # source zip
 if [ -f "$NAME-$VERSION-src.zip" ]; then
-  googleCodeUpload "$NAME-$VERSION-src.zip" "Source Zip Archive $VERSION", "OpSys-All,Type-Source,Featured"
+  googleCodeUpload "$NAME-$VERSION-src.zip" "Source Zip Archive $VERSION" "OpSys-All,Type-Source,Featured"
 fi
 
 # win32 zip
 if [ -f "$NAME-$VERSION-win32.zip" ]; then
-  googleCodeUpload "$NAME-$VERSION-win32.zip" "Windows Zip Archive $VERSION", "OpSys-Windows,Type-Archive,Featured"
+  googleCodeUpload "$NAME-$VERSION-win32.zip" "Windows Zip Archive $VERSION" "OpSys-Windows,Type-Archive,Featured"
 fi
 
 # win32 setup
 if [ -f "setup-$NAME-$VERSION-win32.exe" ]; then
-  googleCodeUpload "setup-$NAME-$VERSION-win32.exe" "Windows Installer $VERSION", "OpSys-Windows,Type-Installer,Featured"
+  googleCodeUpload "setup-$NAME-$VERSION-win32.exe" "Windows Installer $VERSION" "OpSys-Windows,Type-Installer,Featured"
 fi
