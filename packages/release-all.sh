@@ -125,10 +125,10 @@ crossBuild()
 
 	if [ $OS = "Linux" ]; then
 		QMAKE="qmake-qt4"
-		QT_VERSION="4.7.0"
-		QT_WIN32_VERSION="4.7.1"
+		QT_VERSION="4.8.0"
+		QT_WIN32_VERSION="4.8.0"
 		QT_PATH="/usr"
-		MKSPEC="$HOME/.qt/win32-x11-g++"
+		MKSPEC="$HOME/.qt/mkspecs/win32-x11-g++"
 		QT_WIN32_PATH="$WINE_DRIVE/Development/Qt/$QT_WIN32_VERSION"
 		ISCC="$WINE_PROGRAM_FILES/Inno Setup 5/ISCC.exe"
 		DLLS_PATH="$WINE_DRIVE/Development/OpenSSL"
@@ -149,6 +149,7 @@ crossBuild()
 	export QT_WIN32_VERSION
 	export DLLS_PATH
 	export CROSS_WIN32_QT_PATH="$QT_WIN32_PATH"
+	export QT_WINDOWS_PATH="$QT_WIN32_PATH"
 
 	startCommand "cd \"./$FOLDER_NAME\""
 	startCommand "make distclean > /dev/null 2>&1" 0
