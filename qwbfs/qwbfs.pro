@@ -1,13 +1,13 @@
 ###########################################################################################
 ##		Created using Monkey Studio v1.8.4.0 (1.8.4.0)
 ##
-##	Author    : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
-##	Project   : qwbfs
-##	FileName  : qwbfs.pro
-##	Date      : 2010-04-04T11:04:05
-##	License   : GPL2
-##	Comment   : Creating using Monkey Studio RAD
-##	Home Page   : http://code.google.com/p/qwbfs
+##	Author     : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
+##	Project    : qwbfs
+##	FileName   : qwbfs.pro
+##	Date       : 2010-04-04T11:04:05
+##	License    : GPL2
+##	Comment    : Creating using Monkey Studio RAD
+##	Home Page  : http://code.google.com/p/qwbfs
 ##
 ###########################################################################################
 
@@ -19,10 +19,10 @@ BUILD_PATH	= ../build
 DESTDIR	= ../bin
 
 unix {
-    UNIX_RAM_DISK   = /media/ramdisk
-    exists( $${UNIX_RAM_DISK} ) {
-        BUILD_PATH    = $${UNIX_RAM_DISK}/$${TARGET}
-    }
+	UNIX_RAM_DISK	= /media/ramdisk
+	exists( $${UNIX_RAM_DISK} ) {
+		BUILD_PATH	= $${UNIX_RAM_DISK}/$${TARGET}
+	}
 }
 
 include( ../shared.pri )
@@ -33,9 +33,9 @@ QT	*= core gui network xml
 include( ../libwbfs/libwbfs.pri )
 
 win32_crossbuild {
-	exists( "$(QT_WIN32_PATH)/lib/*fresh*" ):CONFIG *= fresh
+	exists( "$(QT_WIN32_PATH)/lib/*fresh*" ):CONFIG	*= fresh
 } else {
-	exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
+	exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG	*= fresh
 }
 
 fresh {
@@ -49,30 +49,30 @@ fresh {
 
 		FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
 
-        DEFINES *= FRESH_CORE_BUILD
+		DEFINES	*= FRESH_CORE_BUILD
 
-        DEPENDPATH  *= $${FRESH_SOURCES_PATHS}
-        DEPENDPATH  *= $$FRESH_PATH/include/FreshCore \
-            $$FRESH_PATH/include/FreshGui
+		DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
+		DEPENDPATH	*= $$FRESH_PATH/include/FreshCore \
+			$$FRESH_PATH/include/FreshGui
 
-        INCLUDEPATH *= $$FRESH_PATH/include
-        INCLUDEPATH *= $${FRESH_SOURCES_PATHS}
+		INCLUDEPATH	*= $$FRESH_PATH/include
+		INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
 
-        PRE_TARGETDEPS  *= $${FRESH_PATH}
+		PRE_TARGETDEPS	*= $${FRESH_PATH}
 
-        QMAKE_RPATHDIR  *= $$FRESH_PATH/build
-        macx:LIBS   *= -F$$FRESH_PATH/build
-        LIBS    *= -L$$FRESH_PATH/build
+		QMAKE_RPATHDIR	*= $$FRESH_PATH/build
+		macx:LIBS	*= -F$$FRESH_PATH/build
+		LIBS	*= -L$$FRESH_PATH/build
 
-        unix {
-            UNIX_RAM_DISK   = /media/ramdisk
-            exists( $${UNIX_RAM_DISK} ) {
-                Q_FRESH_PATH = $${UNIX_RAM_DISK}/fresh
-                QMAKE_RPATHDIR  *= $$Q_FRESH_PATH
-                macx:LIBS   *= -F$$Q_FRESH_PATH
-                LIBS    *= -L$$Q_FRESH_PATH
-            }
-        }
+		unix {
+			UNIX_RAM_DISK	= /media/ramdisk
+			exists( $${UNIX_RAM_DISK} ) {
+				Q_FRESH_PATH	= $${UNIX_RAM_DISK}/fresh
+				QMAKE_RPATHDIR	*= $$Q_FRESH_PATH
+				macx:LIBS	*= -F$$Q_FRESH_PATH
+				LIBS	*= -L$$Q_FRESH_PATH
+			}
+		}
 
 		QT	*= xml network
 		!macx:qtAddLibrary( fresh )
