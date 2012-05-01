@@ -16,7 +16,11 @@ Requirements
 
 - Build tool chain (GCC...)
 - Qt >= 4.5.x
+- libfresh (https://github.com/pasnox/fresh)
 - OpenSSL (Windows: http://www.slproweb.com/download/Win32OpenSSL-0_9_8q.exe)
+- Windows only: ws2_32, leay32
+- Unix only: crypto, udev
+- Mac OS only: crypto, DiskArbitration, CoreServices
 - A computer
 - A chair
 - A brain
