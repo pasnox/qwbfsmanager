@@ -2,7 +2,7 @@
 
 [CustomMessages]
 QWBFS_NAME=QWBFS Manager
-QWBFS_COPYRIGHTS=2010 Filipe AZEVEDO
+QWBFS_COPYRIGHTS=2010-2012 Filipe AZEVEDO
 QWBFS_URL=http://code.google.com/p/qwbfs/
 QWBFS_ISSUES_URL=http://code.google.com/p/qwbfs/issues/list
 
