@@ -11,214 +11,220 @@
 ##
 ###########################################################################################
 
-TEMPLATE	= app
-LANGUAGE	= C++/Qt4
-TARGET	= $$quote(qwbfsmanager)
-macx:TARGET	= $$quote(QWBFSManager)
-BUILD_PATH	= ../build
-DESTDIR	= ../bin
+TEMPLATE = app
+LANGUAGE = C++/Qt4
+TARGET = $$quote(qwbfsmanager)
+macx:TARGET = $$quote(QWBFSManager)
+BUILD_PATH = ../build
+DESTDIR = ../bin
 
 unix {
-	UNIX_RAM_DISK	= /media/ramdisk
-	exists( $${UNIX_RAM_DISK} ) {
-		BUILD_PATH	= $${UNIX_RAM_DISK}/$${TARGET}
-	}
+    UNIX_RAM_DISK = /media/ramdisk
+    exists( $${UNIX_RAM_DISK} ) {
+        BUILD_PATH = $${UNIX_RAM_DISK}/$${TARGET}
+    }
 }
 
 include( ../shared.pri )
 
-CONFIG	*= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
-QT	*= core gui network xml
+CONFIG *= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
+QT *= core gui network xml
 
 include( ../libwbfs/libwbfs.pri )
 
 win32_crossbuild {
-	exists( "$(QT_WIN32_PATH)/lib/*fresh*" ):CONFIG	*= fresh
+    exists( "$(QT_WIN32_PATH)/lib/*fresh*" ):CONFIG *= fresh
 } else {
-	exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG	*= fresh
+    exists( "$$[QT_INSTALL_LIBS]/*fresh*" ):CONFIG *= fresh
 }
 
 fresh {
-	!build_pass:message( "Using system fresh library." )
+    !build_pass:message( "Using system fresh library." )
 } else {
-	exists( ../fresh/fresh.pro ) {
-		!build_pass:message( "Using bundled fresh library." )
-		FRESH_PATH	= ../fresh
+    exists( ../fresh/fresh.pro ) {
+        !build_pass:message( "Using bundled fresh library." )
+        FRESH_PATH = ../fresh
 
-		include( $$FRESH_PATH/functions.pri )
+        include( $$FRESH_PATH/functions.pri )
 
-		FRESH_SOURCES_PATHS	= $$getFolders( $$FRESH_PATH/src )
+        FRESH_SOURCES_PATHS = $$getFolders( $$FRESH_PATH/src )
 
-		DEFINES	*= FRESH_CORE_BUILD
+        DEFINES *= FRESH_CORE_BUILD
 
-		DEPENDPATH	*= $${FRESH_SOURCES_PATHS}
-		DEPENDPATH	*= $$FRESH_PATH/include/FreshCore \
-			$$FRESH_PATH/include/FreshGui
+        DEPENDPATH *= $${FRESH_SOURCES_PATHS}
+        DEPENDPATH *= $$FRESH_PATH/include/FreshCore \
+            $$FRESH_PATH/include/FreshGui
 
-		INCLUDEPATH	*= $$FRESH_PATH/include
-		INCLUDEPATH	*= $${FRESH_SOURCES_PATHS}
+        INCLUDEPATH *= $$FRESH_PATH/include
+        INCLUDEPATH *= $${FRESH_SOURCES_PATHS}
 
-		PRE_TARGETDEPS	*= $${FRESH_PATH}
+        PRE_TARGETDEPS *= $${FRESH_PATH}
 
-		QMAKE_RPATHDIR	*= $$FRESH_PATH/build
-		macx:LIBS	*= -F$$FRESH_PATH/build
-		LIBS	*= -L$$FRESH_PATH/build
+        QMAKE_RPATHDIR *= $$FRESH_PATH/build
+        macx:LIBS *= -F$$FRESH_PATH/build
+        LIBS *= -L$$FRESH_PATH/build
 
-		unix {
-			UNIX_RAM_DISK	= /media/ramdisk
-			exists( $${UNIX_RAM_DISK} ) {
-				Q_FRESH_PATH	= $${UNIX_RAM_DISK}/fresh
-				QMAKE_RPATHDIR	*= $$Q_FRESH_PATH
-				macx:LIBS	*= -F$$Q_FRESH_PATH
-				LIBS	*= -L$$Q_FRESH_PATH
-			}
-		}
+        unix {
+            UNIX_RAM_DISK = /media/ramdisk
+            exists( $${UNIX_RAM_DISK} ) {
+                Q_FRESH_PATH = $${UNIX_RAM_DISK}/fresh
+                QMAKE_RPATHDIR *= $$Q_FRESH_PATH
+                macx:LIBS *= -F$$Q_FRESH_PATH
+                LIBS *= -L$$Q_FRESH_PATH
+            }
+        }
 
-		QT	*= xml network
-		!macx:qtAddLibrary( fresh )
-		macx:LIBS	*= -lfresh
-	} else {
-		!build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
-	}
+        QT *= xml network
+        !macx:qtAddLibrary( fresh )
+        macx:LIBS *= -lfresh
+    } else {
+        !build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+    }
 }
 
 # define some usefull values
-OS	= $$lower( $$QMAKE_HOST.os )
-QMAKE_TARGET_COMPANY	= "QWBFS Team"
-QMAKE_TARGET_PRODUCT	= "QWBFS Manager"
-QMAKE_TARGET_DESCRIPTION	= "The Free, Fast and Powerful cross platform Wii Backup File System manager"
-QMAKE_TARGET_COPYRIGHT	= "\\251 2010 - 2011 Filipe Azevedo"
-PACKAGE_DOMAIN	= "code.google.com/p/qwbfs"
-PACKAGE_DOWNLOADS_FEED	= "http://code.google.com/feeds/p/qwbfs/downloads/basic"
-PACKAGE_REPORT_BUG_URL	= "http://code.google.com/p/qwbfs/issues/list"
-PACKAGE_DISCUSS_URL	= "http://groups.google.com/group/qwbfs-discuss"
-PACKAGE_VERSION	= 1.2.3
-isEqual( OS, "windows" ):SVN_REVISION	= "N/C"
-else:SVN_REVISION	= $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
+OS = $$lower( $$QMAKE_HOST.os )
+QMAKE_TARGET_COMPANY = "QWBFS Team"
+QMAKE_TARGET_PRODUCT = "QWBFS Manager"
+QMAKE_TARGET_DESCRIPTION = "The Free, Fast and Powerful cross platform Wii Backup File System manager"
+QMAKE_TARGET_COPYRIGHT = "\\251 2010 - 2011 Filipe Azevedo"
+PACKAGE_DOMAIN = "code.google.com/p/qwbfs"
+PACKAGE_DOWNLOADS_FEED = "http://code.google.com/feeds/p/qwbfs/downloads/basic"
+PACKAGE_REPORT_BUG_URL = "http://code.google.com/p/qwbfs/issues/list"
+PACKAGE_DISCUSS_URL = "http://groups.google.com/group/qwbfs-discuss"
+PACKAGE_VERSION = 1.2.3
+isEqual( OS, "windows" ):SVN_REVISION = "N/C"
+else:SVN_REVISION = $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
 !isEqual( OS, "windows" ):system( touch $$PWD/src/main.h )
 
 CONFIG( debug, debug|release ) {
-	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION debug)
+    PACKAGE_VERSION_STR = $${PACKAGE_VERSION} (svn$$SVN_REVISION debug)
 } else {
-	PACKAGE_VERSION_STR	= $${PACKAGE_VERSION} (svn$$SVN_REVISION release)
+    PACKAGE_VERSION_STR = $${PACKAGE_VERSION} (svn$$SVN_REVISION release)
 }
 
 # define variable for source code
-DEFINES	*= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
-	"_APPLICATION_VERSION=\"\\\"$${PACKAGE_VERSION}\\\"\"" \
-	"_APPLICATION_VERSION_STR=\"\\\"$${PACKAGE_VERSION_STR}\\\"\"" \
-	"_APPLICATION_DOMAIN=\"\\\"$${PACKAGE_DOMAIN}\\\"\"" \
-	"_APPLICATION_COPYRIGHTS=\"\\\"$${QMAKE_TARGET_COPYRIGHT}\\\"\"" \
-	"_APPLICATION_DESCRIPTION=\"\\\"$${QMAKE_TARGET_DESCRIPTION}\\\"\"" \
-	"_APPLICATION_ORGANIZATION=\"\\\"$${QMAKE_TARGET_COMPANY}\\\"\"" \
-	"_APPLICATION_DOWNLOADS_FEED=\"\\\"$${PACKAGE_DOWNLOADS_FEED}\\\"\"" \
-	"_APPLICATION_REPORT_BUG_URL=\"\\\"$${PACKAGE_REPORT_BUG_URL}\\\"\"" \
-	"_APPLICATION_DISCUSS_URL=\"\\\"$${PACKAGE_DISCUSS_URL}\\\"\""
+DEFINES *= "_APPLICATION_NAME=\"\\\"$${QMAKE_TARGET_PRODUCT}\\\"\"" \
+    "_APPLICATION_VERSION=\"\\\"$${PACKAGE_VERSION}\\\"\"" \
+    "_APPLICATION_VERSION_STR=\"\\\"$${PACKAGE_VERSION_STR}\\\"\"" \
+    "_APPLICATION_DOMAIN=\"\\\"$${PACKAGE_DOMAIN}\\\"\"" \
+    "_APPLICATION_COPYRIGHTS=\"\\\"$${QMAKE_TARGET_COPYRIGHT}\\\"\"" \
+    "_APPLICATION_DESCRIPTION=\"\\\"$${QMAKE_TARGET_DESCRIPTION}\\\"\"" \
+    "_APPLICATION_ORGANIZATION=\"\\\"$${QMAKE_TARGET_COMPANY}\\\"\"" \
+    "_APPLICATION_DOWNLOADS_FEED=\"\\\"$${PACKAGE_DOWNLOADS_FEED}\\\"\"" \
+    "_APPLICATION_REPORT_BUG_URL=\"\\\"$${PACKAGE_REPORT_BUG_URL}\\\"\"" \
+    "_APPLICATION_DISCUSS_URL=\"\\\"$${PACKAGE_DISCUSS_URL}\\\"\""
 
-INCLUDEPATH	*= src
+INCLUDEPATH *= src
 
-DEPENDPATH	*= src \
-	src/models \
-	src/qwbfsdriver \
-	src/wiitdb
+DEPENDPATH *= src \
+    src/models \
+    src/qwbfsdriver \
+    src/wiitdb
 
-macx:ICON	= resources/qwbfsmanager.icns
-win32:RC_FILE	= resources/qwbfsmanager.rc
+macx:ICON = resources/qwbfsmanager.icns
+win32:RC_FILE = resources/qwbfsmanager.rc
 
-RESOURCES	= resources/resources.qrc
+RESOURCES = resources/resources.qrc
 
-TRANSLATIONS	*= ../translations/qwbfsmanager-ru_RU.ts \
-	../translations/qwbfsmanager-sl_SI.ts \
-	../translations/qwbfsmanager-pl_PL.ts \
-	../translations/qwbfsmanager-zh_CN.ts \
-	../translations/qwbfsmanager-he_IL.ts \
-	../translations/qwbfsmanager-da_DK.ts \
-	../translations/qwbfsmanager-sk_SK.ts \
-	../translations/qwbfsmanager-ja_JP.ts \
-	../translations/qwbfsmanager-uk_UA.ts \
-	../translations/qwbfsmanager-cs_CZ.ts \
-	../translations/qwbfsmanager-ca_ES.ts \
-	../translations/qwbfsmanager-ar_SA.ts \
-	../translations/qwbfsmanager-fr_FR.ts \
-	../translations/qwbfsmanager-zh_TW.ts \
-	../translations/qwbfsmanager-es_ES.ts \
-	../translations/qwbfsmanager-de_DE.ts \
-	../translations/qwbfsmanager-pt_PT.ts \
-	../translations/qwbfsmanager-sv_SE.ts \
-	../translations/qwbfsmanager-it_IT.ts
+TRANSLATIONS *= ../translations/qwbfsmanager-ru_RU.ts \
+    ../translations/qwbfsmanager-sl_SI.ts \
+    ../translations/qwbfsmanager-pl_PL.ts \
+    ../translations/qwbfsmanager-zh_CN.ts \
+    ../translations/qwbfsmanager-he_IL.ts \
+    ../translations/qwbfsmanager-da_DK.ts \
+    ../translations/qwbfsmanager-sk_SK.ts \
+    ../translations/qwbfsmanager-ja_JP.ts \
+    ../translations/qwbfsmanager-uk_UA.ts \
+    ../translations/qwbfsmanager-cs_CZ.ts \
+    ../translations/qwbfsmanager-ca_ES.ts \
+    ../translations/qwbfsmanager-ar_SA.ts \
+    ../translations/qwbfsmanager-fr_FR.ts \
+    ../translations/qwbfsmanager-zh_TW.ts \
+    ../translations/qwbfsmanager-es_ES.ts \
+    ../translations/qwbfsmanager-de_DE.ts \
+    ../translations/qwbfsmanager-pt_PT.ts \
+    ../translations/qwbfsmanager-sv_SE.ts \
+    ../translations/qwbfsmanager-it_IT.ts
 
-FORMS	*= src/UIMain.ui \
-	src/PartitionWidget.ui \
-	src/ProgressDialog.ui \
-	src/UIAbout.ui \
-	src/PropertiesDialog.ui
+FORMS *= src/UIMain.ui \
+    src/PartitionWidget.ui \
+    src/ProgressDialog.ui \
+    src/UIAbout.ui \
+    src/PropertiesDialog.ui
 
-HEADERS	*= src/main.h \
-	src/UIMain.h \
-	src/Gauge.h \
-	src/PartitionWidget.h \
-	src/ProgressDialog.h \
-	src/WorkerThread.h \
-	src/qwbfsdriver/PartitionDiscHandle.h \
-	src/qwbfsdriver/PartitionHandle.h \
-	src/qwbfsdriver/PartitionProperties.h \
-	src/qwbfsdriver/PartitionStatus.h \
-	src/models/Disc.h \
-	src/models/DiscDelegate.h \
-	src/models/DiscModel.h \
-	src/qwbfsdriver/Driver.h \
-	src/UIAbout.h \
-	src/wiitdb/Covers.h \
-	src/PropertiesDialog.h \
-	src/Properties.h \
-	src/ListView.h \
-	src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h \
-	src/CoverFlowView.h \
-	src/models/pPartitionModel.h \
-	src/models/PartitionDelegate.h \
-	src/PartitionComboBox.h \
-	src/models/pPartition.h
+HEADERS *= src/main.h \
+    src/UIMain.h \
+    src/Gauge.h \
+    src/PartitionWidget.h \
+    src/ProgressDialog.h \
+    src/WorkerThread.h \
+    src/qwbfsdriver/PartitionDiscHandle.h \
+    src/qwbfsdriver/PartitionHandle.h \
+    src/qwbfsdriver/PartitionProperties.h \
+    src/qwbfsdriver/PartitionStatus.h \
+    src/models/Disc.h \
+    src/models/DiscDelegate.h \
+    src/models/DiscModel.h \
+    src/qwbfsdriver/Driver.h \
+    src/UIAbout.h \
+    src/wiitdb/Covers.h \
+    src/PropertiesDialog.h \
+    src/Properties.h \
+    src/ListView.h \
+    src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h \
+    src/CoverFlowView.h \
+    src/models/pPartitionModel.h \
+    src/models/PartitionDelegate.h \
+    src/PartitionComboBox.h \
+    src/models/pPartition.h \
+    src/filesystem/AbstractFileSystem.h \
+    src/filesystem/NativeFileSystem.h \
+    src/filesystem/FileSystemManager.h
 
-SOURCES	*= src/main.cpp \
-	src/UIMain.cpp \
-	src/Gauge.cpp \
-	src/PartitionWidget.cpp \
-	src/ProgressDialog.cpp \
-	src/WorkerThread.cpp \
-	src/qwbfsdriver/PartitionDiscHandle.cpp \
-	src/qwbfsdriver/PartitionHandle.cpp \
-	src/qwbfsdriver/PartitionProperties.cpp \
-	src/qwbfsdriver/PartitionStatus.cpp \
-	src/models/Disc.cpp \
-	src/models/DiscDelegate.cpp \
-	src/models/DiscModel.cpp \
-	src/qwbfsdriver/Driver.cpp \
-	src/UIAbout.cpp \
-	src/wiitdb/Covers.cpp \
-	src/PropertiesDialog.cpp \
-	src/Properties.cpp \
-	src/ListView.cpp \
-	src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.cpp \
-	src/CoverFlowView.cpp \
-	src/models/pPartitionModel.cpp \
-	src/models/PartitionDelegate.cpp \
-	src/PartitionComboBox.cpp \
-	src/models/pPartition.cpp
+SOURCES *= src/main.cpp \
+    src/UIMain.cpp \
+    src/Gauge.cpp \
+    src/PartitionWidget.cpp \
+    src/ProgressDialog.cpp \
+    src/WorkerThread.cpp \
+    src/qwbfsdriver/PartitionDiscHandle.cpp \
+    src/qwbfsdriver/PartitionHandle.cpp \
+    src/qwbfsdriver/PartitionProperties.cpp \
+    src/qwbfsdriver/PartitionStatus.cpp \
+    src/models/Disc.cpp \
+    src/models/DiscDelegate.cpp \
+    src/models/DiscModel.cpp \
+    src/qwbfsdriver/Driver.cpp \
+    src/UIAbout.cpp \
+    src/wiitdb/Covers.cpp \
+    src/PropertiesDialog.cpp \
+    src/Properties.cpp \
+    src/ListView.cpp \
+    src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.cpp \
+    src/CoverFlowView.cpp \
+    src/models/pPartitionModel.cpp \
+    src/models/PartitionDelegate.cpp \
+    src/PartitionComboBox.cpp \
+    src/models/pPartition.cpp \
+    src/filesystem/AbstractFileSystem.cpp \
+    src/filesystem/NativeFileSystem.cpp \
+    src/filesystem/FileSystemManager.cpp
 
 linux* {
-	QT	*= dbus
-	LIBS	*= -ludev
-	SOURCES	*= src/models/pPartitionModel_linux.cpp
+    QT *= dbus
+    LIBS *= -ludev
+    SOURCES *= src/models/pPartitionModel_linux.cpp
 }
 
 macx {
-	LIBS	*= "-framework DiskArbitration" "-framework CoreServices"
-	OBJECTIVE_SOURCES	*= src/models/pPartitionModel_mac.mm
+    LIBS *= "-framework DiskArbitration" "-framework CoreServices"
+    OBJECTIVE_SOURCES *= src/models/pPartitionModel_mac.mm
 }
 
 win32 {
-	SOURCES	*= src/models/pPartitionModel_win.cpp
+    SOURCES *= src/models/pPartitionModel_win.cpp
 }
 
 include( installs.pri )
