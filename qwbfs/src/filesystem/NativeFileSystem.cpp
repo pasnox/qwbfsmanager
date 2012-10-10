@@ -1,34 +1,65 @@
 #include "NativeFileSystem.h"
 
-#include <pCoreUtils.h>
+#include <FreshCore/pCoreUtils>
 
 #include <QFileInfo>
+#include <QDebug>
 
 NativeFileSystem::NativeFileSystem( FileSystemManager* manager )
-    : AbstractFileSystem( manager )
+    : AbstractFileSystem( manager ),
+        mIsMounted( false )
 {
 }
 
 NativeFileSystem::~NativeFileSystem()
 {
+    umount();
 }
 
 bool NativeFileSystem::mount( const QString& filePath )
 {
+    if ( isMounted() ) {
+        if ( mFilePath == filePath ) {
+            return true;
+        }
+        
+        if ( !umount() ) {
+            return false;
+        }
+    }
+    
     // TODO: Add QFileSystemWatcher on the directory to track manual change / delete / add ( from file manager )
     const QFileInfo fileInfo( filePath );
     
-    if ( !fileInfo.isDir() || !fileInfo.isReadable() || !fileInfo.isWritable() ) {
+    if (
+        !fileInfo.isDir() ||
+        !fileInfo.isReadable() ||
+        !fileInfo.isWritable() /*||
+        fileInfo.fileName() != "wbfs"*/
+    ) {
         return false;
     }
     
     mFilePath = filePath;
+    buildCache();
     return true;
 }
 
 bool NativeFileSystem::umount()
 {
+    if ( isMounted() ) {
+        // TODO: add sync() member in abstract class and move mount/umount as non virtual in abstract
+        clear();
+        mFilePath.clear();
+        mIsMounted = false;
+    }
+    
     return true;
+}
+
+bool NativeFileSystem::isMounted() const
+{
+    return mIsMounted;
 }
 
 bool NativeFileSystem::format()
@@ -36,41 +67,42 @@ bool NativeFileSystem::format()
     return false;
 }
 
-FileSystemManager::Type NativeFileSystem::type() const
+QWBFS::FileSystemType NativeFileSystem::type() const
 {
-    return FileSystemManager::Native;
+    return QWBFS::FileSystemTypeNative;
 }
 
-FileSystemEntry::Formats NativeFileSystem::supportedFormats() const
+QWBFS::EntryTypes NativeFileSystem::supportedFormats() const
 {
-    return FileSystemEntry::ISO | FileSystemEntry::CISO | FileSystemEntry::WBFS;
+    return QWBFS::EntryTypeISO | QWBFS::EntryTypeCISO | QWBFS::EntryTypeWBFS;
 }
 
-FileSystemEntry::Format NativeFileSystem::preferredFormat() const
+QWBFS::EntryType NativeFileSystem::preferredFormat() const
 {
-    return FileSystemEntry::WBFS;
+    return QWBFS::EntryTypeWBFS;
 }
 
-FileSystemEntry::List NativeFileSystem::entries()
+FileSystemEntry::List NativeFileSystem::entries() const
 {
-    if ( mCache.isEmpty() ) {
-        buildCache();
-    }
-    
-    return mCache.values();
+    return mEntries;
 }
 
-FileSystemEntry NativeFileSystem::entry( const QString& id )
+FileSystemEntry NativeFileSystem::entry( int row ) const
 {
-    return mCache.value( id.toUpper() );
+    return mEntries.value( row );
 }
 
-bool NativeFileSystem::hasEntry( const QString& id )
+FileSystemEntry NativeFileSystem::entry( const QString& id ) const
+{
+    return *mCache.value( id.toUpper() );
+}
+
+bool NativeFileSystem::hasEntry( const QString& id ) const
 {
     return mCache.contains( id.toUpper() );
 }
 
-bool NativeFileSystem::addEntry( const FileSystemEntry& entry, FileSystemEntry::Format format )
+bool NativeFileSystem::addEntry( const FileSystemEntry& entry, QWBFS::EntryType format )
 {
     //dataChanged();
     return false;
@@ -82,9 +114,37 @@ bool NativeFileSystem::removeEntry( const FileSystemEntry& entry )
     return false;
 }
 
+void NativeFileSystem::clear()
+{
+    const int count = rowCount();
+    
+    if ( count == 0 ) {
+        return;
+    }
+    
+    beginRemoveRows( QModelIndex(), 0, count -1 );
+    mCache.clear();
+    mEntries.clear();
+    endRemoveRows();
+}
+
 FileSystemEntry NativeFileSystem::createEntry( const QString& filePath ) const
 {
-    return FileSystemEntry();
+    const QFileInfo fileInfo( filePath );
+    const QString suffix = fileInfo.suffix().toLower();
+    QWBFS::EntryType format = QWBFS::EntryTypeNone;
+    
+    if ( suffix.compare( "iso", Qt::CaseInsensitive ) == 0 ) {
+        format = QWBFS::EntryTypeISO;
+    }
+    else if ( suffix.compare( "ciso", Qt::CaseInsensitive ) == 0 ) {
+        format = QWBFS::EntryTypeCISO;
+    }
+    else if ( suffix.compare( "wbfs", Qt::CaseInsensitive ) == 0 ) {
+        format = QWBFS::EntryTypeWBFS;
+    }
+    
+    return FileSystemEntry( filePath, fileInfo.fileName(), fileInfo.size(), format );
 }
 
 void NativeFileSystem::buildCache()
@@ -97,12 +157,16 @@ void NativeFileSystem::buildCache()
     ;
     const QStringList filePaths = pCoreUtils::findFiles( dir, filters, true );
     
-    mCache.clear();
+    clear();
     
-    for ( int i = 0; i < filePaths.count(); i++ ) {
-        const FileSystemEntry entry = createEntry( filePaths[ i ] );
-        mCache[ entry.id() ] = entry;
+    if ( filePaths.isEmpty() ) {
+        return;
     }
     
-    dataChanged();
+    beginInsertRows( QModelIndex(), 0, filePaths.count() -1 );
+    for ( int i = 0; i < filePaths.count(); i++ ) {
+        mEntries << createEntry( filePaths[ i ] );
+        mCache[ mEntries.last().id() ] = &mEntries.last();
+    }
+    endInsertRows();
 }

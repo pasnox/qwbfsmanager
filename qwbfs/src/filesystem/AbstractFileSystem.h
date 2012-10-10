@@ -1,86 +1,63 @@
 #ifndef ABSTRACTFILESYSTEM_H
 #define ABSTRACTFILESYSTEM_H
 
-#include <QObject>
+#include <QAbstractTableModel>
 
-#include "FileSystemManager.h"
+#include "FileSystemEntry.h"
 
 class QTimer;
 
-// FileSystemEntry
+class FileSystemManager;
 
-class FileSystemEntry
-{
-    Q_GADGET
-    Q_FLAGS( Formats )
-    friend class AbstractFileSystem;
-    
-public:
-    enum Format {
-        None = 0x0,
-        ISO = 0x1,
-        CISO = 0x2,
-        WBFS = 0x4
-    };
-    
-    Q_DECLARE_FLAGS( Formats, Format )
-    
-    typedef QList<FileSystemEntry> List;
-    
-    FileSystemEntry();
-    virtual ~FileSystemEntry();
-    
-    bool operator==( const FileSystemEntry& other ) const;
-    bool operator!=( const FileSystemEntry& other ) const;
-    
-    QString filePath() const;
-    QString id() const;
-    qint64 size() const;
-    FileSystemEntry::Format format() const;
+#define AbstractFileSystemColumnCount 6
 
-protected:
-    QString mFilePath;
-    QString mId;
-    qint64 mSize;
-    FileSystemEntry::Format mFormat;
-    
-    FileSystemEntry( const QString& filePath, const QString& id, qint64 size, FileSystemEntry::Format format );
-};
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( FileSystemEntry::Formats )
-
-// AbstractFileSystem
-
-class AbstractFileSystem : public QObject
+class AbstractFileSystem : public QAbstractTableModel
 {
     Q_OBJECT
     friend class FileSystemManager;
     
 public:
+    typedef QPair<int, int> PairIntInt;
+	
+	enum CustomRole {
+		ListModeSizeHintRole = Qt::UserRole,
+		IconModeSizeHintRole,
+		CoverFlowModeSizeHintRole
+	};
+    
     AbstractFileSystem( FileSystemManager* manager );
     virtual ~AbstractFileSystem();
+    
+    virtual int columnCount( const QModelIndex& parent = QModelIndex() ) const;
+    virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
+    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    
+    
     
     QString filePath() const;
     
     virtual bool mount( const QString& filePath ) = 0;
     virtual bool umount() = 0;
+	virtual bool isMounted() const = 0;
     virtual bool format() = 0;
     
-    virtual FileSystemManager::Type type() const = 0;
-    virtual FileSystemEntry::Formats supportedFormats() const = 0;
-    virtual FileSystemEntry::Format preferredFormat() const = 0;
+    virtual QWBFS::FileSystemType type() const = 0;
+    virtual QWBFS::EntryTypes supportedFormats() const = 0;
+    virtual QWBFS::EntryType preferredFormat() const = 0;
     
-    virtual FileSystemEntry::List entries() = 0;
-    virtual FileSystemEntry entry( const QString& id ) = 0;
-    virtual bool hasEntry( const QString& id ) = 0;
+    virtual FileSystemEntry::List entries() const = 0;
+    virtual FileSystemEntry entry( int row ) const = 0;
+    virtual FileSystemEntry entry( const QString& id ) const = 0;
+    virtual bool hasEntry( const QString& id ) const = 0;
     
-    virtual bool addEntry( const FileSystemEntry& entry, FileSystemEntry::Format format = FileSystemEntry::None ) = 0;
+    virtual bool addEntry( const FileSystemEntry& entry, QWBFS::EntryType format = QWBFS::EntryTypeNone ) = 0;
     virtual bool removeEntry( const FileSystemEntry& entry ) = 0;
 
 protected:
     int ref();
     int unref();
-    int count();
+    int refCount() const;
     void dataChanged();
     
     virtual FileSystemEntry createEntry( const QString& filePath ) const = 0;

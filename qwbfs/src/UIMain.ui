@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>619</width>
-    <height>394</height>
+    <width>900</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -29,6 +29,9 @@
    <layout class="QVBoxLayout" name="centralVerticalLayout">
     <item>
      <widget class="pQueuedMessageToolBar" name="qmtbInfos"/>
+    </item>
+    <item>
+     <widget class="PartitionWidgetV2" name="widget" native="true"/>
     </item>
     <item>
      <widget class="QSplitter" name="sViews">
@@ -454,6 +457,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>ListView</class>
+   <extends>QListView</extends>
+   <header>ListView.h</header>
+  </customwidget>
+  <customwidget>
    <class>PartitionWidget</class>
    <extends>QWidget</extends>
    <header>PartitionWidget.h</header>
@@ -471,9 +479,10 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>ListView</class>
-   <extends>QListView</extends>
-   <header>ListView.h</header>
+   <class>PartitionWidgetV2</class>
+   <extends>QWidget</extends>
+   <header>widgets/view/PartitionWidgetV2.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

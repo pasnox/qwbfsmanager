@@ -27,7 +27,7 @@ unix {
 
 include( ../shared.pri )
 
-CONFIG *= qt resources warn_on thread x11 windows embed_manifest_exe app_bundle
+CONFIG *= warn_on thread x11 windows qt resources embed_manifest_exe app_bundle
 QT *= core gui network xml
 
 include( ../libwbfs/libwbfs.pri )
@@ -128,6 +128,9 @@ win32:RC_FILE = resources/qwbfsmanager.rc
 
 RESOURCES = resources/resources.qrc
 
+XUP.TRANSLATIONS_BASENAME = qwbfsmanager
+XUP.TRANSLATIONS_DIRECTORY = ../translations
+
 TRANSLATIONS *= ../translations/qwbfsmanager-ru_RU.ts \
     ../translations/qwbfsmanager-sl_SI.ts \
     ../translations/qwbfsmanager-pl_PL.ts \
@@ -152,7 +155,8 @@ FORMS *= src/UIMain.ui \
     src/PartitionWidget.ui \
     src/ProgressDialog.ui \
     src/UIAbout.ui \
-    src/PropertiesDialog.ui
+    src/PropertiesDialog.ui \
+    src/widgets/view/PartitionWidgetV2.ui
 
 HEADERS *= src/main.h \
     src/UIMain.h \
@@ -181,7 +185,12 @@ HEADERS *= src/main.h \
     src/models/pPartition.h \
     src/filesystem/AbstractFileSystem.h \
     src/filesystem/NativeFileSystem.h \
-    src/filesystem/FileSystemManager.h
+    src/filesystem/FileSystemManager.h \
+    src/widgets/view/PartitionWidgetV2.h \
+    src/filesystem/FileSystemEntry.h \
+    src/widgets/ListViewV2.h \
+    src/widgets/ListViewDelegate.h \
+    src/QWBFS.h
 
 SOURCES *= src/main.cpp \
     src/UIMain.cpp \
@@ -210,7 +219,12 @@ SOURCES *= src/main.cpp \
     src/models/pPartition.cpp \
     src/filesystem/AbstractFileSystem.cpp \
     src/filesystem/NativeFileSystem.cpp \
-    src/filesystem/FileSystemManager.cpp
+    src/filesystem/FileSystemManager.cpp \
+    src/widgets/view/PartitionWidgetV2.cpp \
+    src/filesystem/FileSystemEntry.cpp \
+    src/widgets/ListViewV2.cpp \
+    src/widgets/ListViewDelegate.cpp \
+    src/QWBFS.cpp
 
 linux* {
     QT *= dbus

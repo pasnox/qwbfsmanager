@@ -4,23 +4,18 @@
 #include <QObject>
 #include <QHash>
 
-class AbstractFileSystem;
+#include "QWBFS.h"
+#include "AbstractFileSystem.h"
 
 class FileSystemManager : public QObject
 {
     Q_OBJECT
     
 public:
-    enum Type {
-        NoChange = 0,
-        WBFS = 1,
-        Native = 2
-    };
-    
     FileSystemManager( QObject* parent = 0 );
     virtual ~FileSystemManager();
     
-    AbstractFileSystem* open( const QString& filePath, FileSystemManager::Type type );
+    AbstractFileSystem* open( const QString& filePath, QWBFS::FileSystemType type );
     int close( const QString& filePath );
 
 protected:

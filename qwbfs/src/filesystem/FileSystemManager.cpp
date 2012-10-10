@@ -13,7 +13,7 @@ FileSystemManager::~FileSystemManager()
 {
 }
 
-AbstractFileSystem* FileSystemManager::open( const QString& _filePath, FileSystemManager::Type type )
+AbstractFileSystem* FileSystemManager::open( const QString& _filePath, QWBFS::FileSystemType type )
 {
     const QString filePath = resolvedFilePath( _filePath );
     
@@ -25,11 +25,11 @@ AbstractFileSystem* FileSystemManager::open( const QString& _filePath, FileSyste
     
     if ( !fs ) {
         switch ( type ) {
-            case FileSystemManager::WBFS: {
+            case QWBFS::FileSystemTypeWBFS: {
                 break;
             }
             
-            case FileSystemManager::Native: {
+            case QWBFS::FileSystemTypeNative: {
                 fs = new NativeFileSystem( this );
                 
                 if ( fs->mount( filePath ) ) {
@@ -43,7 +43,7 @@ AbstractFileSystem* FileSystemManager::open( const QString& _filePath, FileSyste
                 break;
             }
             
-            case FileSystemManager::NoChange:
+            case QWBFS::FileSystemTypeNone:
                 break;
         }
     }
@@ -63,13 +63,13 @@ int FileSystemManager::close( const QString& _filePath )
     if ( fs ) {
         fs->unref();
         
-        if ( fs->count() == 0 ) {
+        if ( fs->refCount() == 0 ) {
             fs->umount();
             fs->deleteLater();
             mInstances.remove( filePath );
         }
         else {
-            return fs->count();
+            return fs->refCount();
         }
     }
     
