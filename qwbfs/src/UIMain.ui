@@ -31,9 +31,6 @@
      <widget class="pQueuedMessageToolBar" name="qmtbInfos"/>
     </item>
     <item>
-     <widget class="PartitionWidgetV2" name="widget" native="true"/>
-    </item>
-    <item>
      <widget class="QSplitter" name="sViews">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -476,12 +473,6 @@
    <class>pDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">FreshGui/pDockWidget</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>PartitionWidgetV2</class>
-   <extends>QWidget</extends>
-   <header>widgets/view/PartitionWidgetV2.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

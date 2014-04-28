@@ -45,7 +45,7 @@ fresh {
         !build_pass:message( "Using bundled fresh library." )
         FRESH_PATH = ../fresh
 
-        include( $$FRESH_PATH/functions.pri )
+        include( $$FRESH_PATH/qmake-extensions.git/functions.pri )
 
         FRESH_SOURCES_PATHS = $$getFolders( $$FRESH_PATH/src )
 
@@ -155,8 +155,7 @@ FORMS *= src/UIMain.ui \
     src/PartitionWidget.ui \
     src/ProgressDialog.ui \
     src/UIAbout.ui \
-    src/PropertiesDialog.ui \
-    src/widgets/view/PartitionWidgetV2.ui
+    src/PropertiesDialog.ui
 
 HEADERS *= src/main.h \
     src/UIMain.h \
@@ -182,15 +181,7 @@ HEADERS *= src/main.h \
     src/models/pPartitionModel.h \
     src/models/PartitionDelegate.h \
     src/PartitionComboBox.h \
-    src/models/pPartition.h \
-    src/filesystem/AbstractFileSystem.h \
-    src/filesystem/NativeFileSystem.h \
-    src/filesystem/FileSystemManager.h \
-    src/widgets/view/PartitionWidgetV2.h \
-    src/filesystem/FileSystemEntry.h \
-    src/widgets/ListViewV2.h \
-    src/widgets/ListViewDelegate.h \
-    src/QWBFS.h
+    src/models/pPartition.h
 
 SOURCES *= src/main.cpp \
     src/UIMain.cpp \
@@ -216,15 +207,7 @@ SOURCES *= src/main.cpp \
     src/models/pPartitionModel.cpp \
     src/models/PartitionDelegate.cpp \
     src/PartitionComboBox.cpp \
-    src/models/pPartition.cpp \
-    src/filesystem/AbstractFileSystem.cpp \
-    src/filesystem/NativeFileSystem.cpp \
-    src/filesystem/FileSystemManager.cpp \
-    src/widgets/view/PartitionWidgetV2.cpp \
-    src/filesystem/FileSystemEntry.cpp \
-    src/widgets/ListViewV2.cpp \
-    src/widgets/ListViewDelegate.cpp \
-    src/QWBFS.cpp
+    src/models/pPartition.cpp
 
 linux* {
     QT *= dbus
