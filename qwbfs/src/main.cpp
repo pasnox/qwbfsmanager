@@ -34,6 +34,7 @@
 **
 ****************************************************************************/
 #include <QApplication>
+#include <QProxyStyle>
 #include <QSplashScreen>
 #include <QWeakPointer>
 #include <QDateTime>
@@ -50,6 +51,41 @@
 #include "UIMain.h"
 
 #define SPLASHSCREEN_TIMEOUT 3000
+
+class IconSizeProxyStyle : public QProxyStyle
+{
+	Q_OBJECT
+
+public:
+	// Fix boggued icon size on mac os x / Qt 4.8.5 Cocoa / MacPort
+	virtual int pixelMetric( QStyle::PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0 ) const {
+		switch ( metric ) {
+			case QStyle::PM_ToolBarIconSize: // 64
+				return 36;
+
+			case QStyle::PM_SmallIconSize: // 32
+				return 16;
+
+			case QStyle::PM_LargeIconSize: // 64
+				break;
+
+			case QStyle::PM_IconViewIconSize: // 64
+				return 32;
+
+			case QStyle::PM_ListViewIconSize: // 32 - Use QStyle::PM_SmallIconSize
+				break;
+
+			case QStyle::PM_TabBarIconSize: // 32 - Use QStyle::PM_SmallIconSize
+				break;
+
+			case QStyle::PM_ButtonIconSize: // 32
+				return pixelMetric( QStyle::PM_SmallIconSize, option, widget );
+		}
+
+		return QProxyStyle::pixelMetric( metric, option, widget );
+	}
+};
+
 
 class SplashScreen : public QSplashScreen
 {
@@ -92,6 +128,9 @@ protected:
 int main( int argc, char** argv )
 {
 	QApplication app( argc, argv );
+#if defined( Q_OS_MACX )
+	app.setStyle( new IconSizeProxyStyle );
+#endif
 	app.setApplicationName( APPLICATION_NAME );
 	app.setOrganizationName( APPLICATION_ORGANIZATION );
 	app.setOrganizationDomain( APPLICATION_DOMAIN );
