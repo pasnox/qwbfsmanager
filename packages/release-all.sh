@@ -257,7 +257,7 @@ finish()
 	startCommand "cd \"$CUR_PATH\"" 0
 	
 	# delete exported repository
-	#startCommand "rm -fr \"./$FOLDER_NAME\"" 0
+	startCommand "rm -fr \"./$FOLDER_NAME\"" 0
 
 	echo "********** Processing release finished - Exit code: $1 **********"
 	
