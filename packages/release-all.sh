@@ -133,8 +133,8 @@ crossBuild()
 
 	if [ $OS = "Linux" ]; then
 		QMAKE="qmake-qt4"
-		QT_VERSION="4.8.0"
-		QT_WIN32_VERSION="4.8.0"
+		QT_VERSION="4.8.6"
+		QT_WIN32_VERSION="4.8.3"
 		QT_PATH="/usr"
 		MKSPEC="$HOME/.qt/mkspecs/win32-x11-g++"
 		QT_WIN32_PATH="$WINE_DRIVE/Development/Qt/$QT_WIN32_VERSION"
