@@ -45,7 +45,7 @@ fresh {
         !build_pass:message( "Using bundled fresh library." )
         FRESH_PATH = ../fresh
 
-        include( $$FRESH_PATH/qmake-extensions.git/functions.pri )
+        include( $$FRESH_PATH/qmake-extensions.git/qmake-extensions.pri )
 
         FRESH_SOURCES_PATHS = $$getFolders( $$FRESH_PATH/src )
 
