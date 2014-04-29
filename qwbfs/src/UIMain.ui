@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
+    <width>895</width>
     <height>400</height>
    </rect>
   </property>
@@ -454,17 +454,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ListView</class>
-   <extends>QListView</extends>
-   <header>ListView.h</header>
-  </customwidget>
-  <customwidget>
-   <class>PartitionWidget</class>
-   <extends>QWidget</extends>
-   <header>PartitionWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>pQueuedMessageToolBar</class>
    <extends>QToolBar</extends>
    <header location="global">FreshGui/pQueuedMessageToolBar</header>
@@ -474,6 +463,17 @@
    <extends>QDockWidget</extends>
    <header location="global">FreshGui/pDockWidget</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PartitionWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/PartitionWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ListView</class>
+   <extends>QListView</extends>
+   <header>widgets/ListView.h</header>
   </customwidget>
  </customwidgets>
  <resources>

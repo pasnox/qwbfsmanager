@@ -58,7 +58,7 @@ namespace WiiTDB {
 	
 	QUrl checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAccessManager* cache );
 	
-	QUrl coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local = QString::null );
+	QUrl coverUrl( WiiTDB::Scan scan, const QString& id, const QString& language = QString::null );
 	QPixmap coverBoxPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
 	QPixmap coverDiscPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
 	WiiTDB::Scan urlCover( const QUrl& url );

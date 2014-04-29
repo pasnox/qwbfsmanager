@@ -45,12 +45,6 @@ class pNetworkAccessManager;
 class pPaypalButton;
 class pUpdateChecker;
 
-namespace QWBFS {
-namespace Model {
-	class DiscModel;
-}; // Model
-}; // QWBFS
-
 class UIMain : public QMainWindow, public Ui::UIMain
 {
 	Q_OBJECT
@@ -91,7 +85,7 @@ protected slots:
 	void openViewRequested();
 	void closeViewRequested();
 	void coverRequested( const QString& id );
-	void progress_jobFinished( const QWBFS::Model::Disc& disc );
+	//void progress_jobFinished( const QWBFS::Model::Disc& disc );
 	void networkAccessManager_finished( QNetworkReply* reply );
 	void networkAccessManager_cached( const QUrl& url );
 	void networkAccessManager_error( const QUrl& url, const QString& message );

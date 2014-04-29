@@ -22,6 +22,3 @@ CONFIG(debug, debug|release) {
 	#Release
 	LIBS	*= -lwbfs
 }
-
-win32:LIBS	*= -lws2_32 -leay32
-else:LIBS	*=	-lcrypto

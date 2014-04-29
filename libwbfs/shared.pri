@@ -10,7 +10,25 @@
 ##	Home Page   : http://code.google.com/p/qwbfs
 ##
 ###########################################################################################
+
+# wit defines
 DEFINES *= LARGE_FILES _FILE_OFFSET_BITS=64
+DEFINES *= WIT
+DEFINES *= DEBUG_ASSERT
+DEFINES *= EXTENDED_ERRORS=1
+DEFINES *= _7ZIP_ST=1
+DEFINES *= _LZMA_PROB32=1
+DEFINES *= HAVE_POSIX_FALLOCATE=1 HAVE_FIEMAP=1
+
+CONFIG(debug, debug|release) {
+	#Debug
+	DEFINES *= DEBUG TEST
+} else {
+	#Release
+	DEFINES *= RELEASE IGNORE_DEBUG
+	#DEFINES *= DEBUG TEST
+}
+
 LIB_WBFS_TARGET = $$quote(wbfs)
 LIB_WBFS_PWD	= $$PWD
 LIB_WBFS_BUILD_PATH	= $${LIB_WBFS_PWD}/../build
@@ -22,18 +40,20 @@ unix {
     }
 }
 
-INCLUDEPATH	*= $${LIB_WBFS_PWD}
-DEPENDPATH	*= $${LIB_WBFS_PWD}
+INCLUDEPATH	*= \
+	$${LIB_WBFS_PWD} \
+    $${LIB_WBFS_PWD}/wit-src \
+    $${LIB_WBFS_PWD}/wit-src/crypto \
+    $${LIB_WBFS_PWD}/wit-src/libbz2 \
+    $${LIB_WBFS_PWD}/wit-src/libwbfs \
+    $${LIB_WBFS_PWD}/wit-src/lzma
+	
+DEPENDPATH	*= \
+	$${LIB_WBFS_PWD} \
+    $${LIB_WBFS_PWD}/wit-src \
+    $${LIB_WBFS_PWD}/wit-src/crypto \
+    $${LIB_WBFS_PWD}/wit-src/libbz2 \
+    $${LIB_WBFS_PWD}/wit-src/libwbfs \
+    $${LIB_WBFS_PWD}/wit-src/lzma
 
-win32 {
-	OS	= $$lower( $$QMAKE_HOST.os )
-	#OS=$$system( "uname -s" )
-
-	OPENSSL_INSTALL_DIR = D:/Tools/OpenSSL
-	isEqual( OS, "darwin" ):OPENSSL_INSTALL_DIR	= $(HOME)/Win32Libraries
-	else:isEqual( OS, "linux" ):OPENSSL_INSTALL_DIR	= $(HOME)/.wine/drive_c/Development/OpenSSL
-
-	*-g++*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/MinGW
-	*-msvc*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/VC
-	INCLUDEPATH	*= $${OPENSSL_INSTALL_DIR}/include
-}
+LIBS *= -lbz2

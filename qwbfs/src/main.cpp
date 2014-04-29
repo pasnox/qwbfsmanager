@@ -34,58 +34,18 @@
 **
 ****************************************************************************/
 #include <QApplication>
-#include <QProxyStyle>
 #include <QSplashScreen>
-#include <QWeakPointer>
-#include <QDateTime>
+#include <QPointer>
 #include <QTimer>
-#include <QPixmapCache>
 #include <QDebug>
 
-#include <FreshCore/pSettings>
-#include <FreshCore/pNetworkAccessManager>
-#include <FreshCore/pTranslationManager>
 #include <FreshGui/pIconManager>
 
 #include "main.h"
+#include "QWBFS.h"
 #include "UIMain.h"
 
 #define SPLASHSCREEN_TIMEOUT 3000
-
-class IconSizeProxyStyle : public QProxyStyle
-{
-	Q_OBJECT
-
-public:
-	// Fix boggued icon size on mac os x / Qt 4.8.5 Cocoa / MacPort
-	virtual int pixelMetric( QStyle::PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0 ) const {
-		switch ( metric ) {
-			case QStyle::PM_ToolBarIconSize: // 64
-				return 36;
-
-			case QStyle::PM_SmallIconSize: // 32
-				return 16;
-
-			case QStyle::PM_LargeIconSize: // 64
-				break;
-
-			case QStyle::PM_IconViewIconSize: // 64
-				return 32;
-
-			case QStyle::PM_ListViewIconSize: // 32 - Use QStyle::PM_SmallIconSize
-				break;
-
-			case QStyle::PM_TabBarIconSize: // 32 - Use QStyle::PM_SmallIconSize
-				break;
-
-			case QStyle::PM_ButtonIconSize: // 32
-				return pixelMetric( QStyle::PM_SmallIconSize, option, widget );
-		}
-
-		return QProxyStyle::pixelMetric( metric, option, widget );
-	}
-};
-
 
 class SplashScreen : public QSplashScreen
 {
@@ -111,16 +71,16 @@ public:
 	}
 
 protected:
-	QWeakPointer<QWidget> mWidget;
+	QPointer<QWidget> mWidget;
 	
 	virtual void hideEvent( QHideEvent* event )
 	{
 		QSplashScreen::hideEvent( event );
 		
-		if ( mWidget && !mWidget.data()->isVisible() )
+		if ( mWidget && !mWidget->isVisible() )
 		{
-			mWidget.data()->show();
-			mWidget.data()->raise();
+			mWidget->show();
+			mWidget->raise();
 		}
 	}
 };
@@ -128,29 +88,15 @@ protected:
 int main( int argc, char** argv )
 {
 	QApplication app( argc, argv );
-#if defined( Q_OS_MACX )
-	app.setStyle( new IconSizeProxyStyle );
-#endif
 	app.setApplicationName( APPLICATION_NAME );
 	app.setOrganizationName( APPLICATION_ORGANIZATION );
 	app.setOrganizationDomain( APPLICATION_DOMAIN );
 	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
 	
-	qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
-	QPixmapCache::setCacheLimit( QPixmapCache::cacheLimit() *4 );
-	pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath() );
-	
 	Q_INIT_RESOURCE( fresh );
+	QWBFS::init( argc, argv );
+	
 	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
-	
-	pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Auto ) );
-	
-	pTranslationManager* translationManager = pTranslationManager::instance();
-	translationManager->setFakeCLocaleEnabled( true );
-	translationManager->addTranslationsMask( "qt*.qm" );
-	translationManager->addTranslationsMask( "fresh*.qm" );
-	translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
-	translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
 	
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 	
@@ -158,7 +104,9 @@ int main( int argc, char** argv )
 	UIMain w;
 	
 	splash.handle( &w );	
-	return app.exec();
+	const int result = app.exec();
+	QWBFS::deInit();
+	return result;
 }
 
 #include "main.moc"

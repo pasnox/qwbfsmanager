@@ -10,7 +10,7 @@
 ##	Home Page   : http://code.google.com/p/qwbfs
 ##
 ###########################################################################################
-XUP.QT_VERSION = 7.7.0-lgpl
+XUP.QT_VERSION = 4.7.0-lgpl
 XUP.OTHERS_PLATFORM_TARGET_RELEASE = bin/qwbfsmanager
 XUP.OTHERS_PLATFORM_TARGET_DEBUG = bin/qwbfs_debug
 XUP.OTHERS_PLATFORM_TARGET_DEFAULT = bin/qwbfsmanager

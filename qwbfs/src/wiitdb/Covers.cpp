@@ -34,7 +34,7 @@
 **
 ****************************************************************************/
 #include "Covers.h"
-#include "../qwbfsdriver/Driver.h"
+#include "QWBFS.h"
 
 #include <FreshCore/pNetworkAccessManager>
 #include <FreshGui/pGuiUtils>
@@ -67,11 +67,12 @@ QUrl WiiTDB::checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAcc
 	return url;
 }
 
-QUrl WiiTDB::coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local )
+QUrl WiiTDB::coverUrl( WiiTDB::Scan scan, const QString& id, const QString& _language )
 {
 	Q_ASSERT( !id.isEmpty() );
 	
-	const QString language = local.isNull() ? QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() ) : local;
+	//const QString language = _language.isNull() ? QWBFS::regionToLanguageString( id.at( 3 ).unicode() ) : _language;
+	const QString language = ( _language.isEmpty() ? QLocale::system().name().section( '_', 0, 0 ) : _language ).toUpper();
 	
 	switch ( scan ) {
 		case WiiTDB::CoverHQ:

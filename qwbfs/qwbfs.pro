@@ -92,7 +92,7 @@ PACKAGE_DOMAIN = "code.google.com/p/qwbfs"
 PACKAGE_DOWNLOADS_FEED = "http://code.google.com/feeds/p/qwbfs/downloads/basic"
 PACKAGE_REPORT_BUG_URL = "http://code.google.com/p/qwbfs/issues/list"
 PACKAGE_DISCUSS_URL = "http://groups.google.com/group/qwbfs-discuss"
-PACKAGE_VERSION = 1.2.4
+PACKAGE_VERSION = 1.3.0
 isEqual( OS, "windows" ):SVN_REVISION = "N/C"
 else:SVN_REVISION = $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
 
@@ -120,7 +120,6 @@ INCLUDEPATH *= src
 
 DEPENDPATH *= src \
     src/models \
-    src/qwbfsdriver \
     src/wiitdb
 
 macx:ICON = resources/qwbfsmanager.icns
@@ -152,62 +151,60 @@ TRANSLATIONS *= ../translations/qwbfsmanager-ru_RU.ts \
     ../translations/qwbfsmanager-it_IT.ts
 
 FORMS *= src/UIMain.ui \
-    src/PartitionWidget.ui \
-    src/ProgressDialog.ui \
+#   src/ProgressDialog.ui \
     src/UIAbout.ui \
-    src/PropertiesDialog.ui
+    src/PropertiesDialog.ui \
+    src/widgets/PartitionWidget.ui
 
 HEADERS *= src/main.h \
     src/UIMain.h \
     src/Gauge.h \
-    src/PartitionWidget.h \
-    src/ProgressDialog.h \
-    src/WorkerThread.h \
-    src/qwbfsdriver/PartitionDiscHandle.h \
-    src/qwbfsdriver/PartitionHandle.h \
-    src/qwbfsdriver/PartitionProperties.h \
-    src/qwbfsdriver/PartitionStatus.h \
-    src/models/Disc.h \
-    src/models/DiscDelegate.h \
-    src/models/DiscModel.h \
-    src/qwbfsdriver/Driver.h \
+#   src/ProgressDialog.h \
+#   src/WorkerThread.h \
     src/UIAbout.h \
     src/wiitdb/Covers.h \
     src/PropertiesDialog.h \
     src/Properties.h \
-    src/ListView.h \
     src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h \
-    src/CoverFlowView.h \
     src/models/pPartitionModel.h \
     src/models/PartitionDelegate.h \
     src/PartitionComboBox.h \
-    src/models/pPartition.h
+    src/models/pPartition.h \
+    src/filesystem/AbstractFileSystem.h \
+    src/filesystem/NativeFileSystem.h \
+    src/filesystem/FileSystemManager.h \
+    src/filesystem/FileSystemEntry.h \
+    src/filesystem/StockFileSystem.h \
+    src/widgets/PartitionWidget.h \
+    src/widgets/ListView.h \
+    src/widgets/ListViewDelegate.h \
+    src/widgets/CoverFlowView.h \
+    src/QWBFS.h
 
 SOURCES *= src/main.cpp \
     src/UIMain.cpp \
     src/Gauge.cpp \
-    src/PartitionWidget.cpp \
-    src/ProgressDialog.cpp \
-    src/WorkerThread.cpp \
-    src/qwbfsdriver/PartitionDiscHandle.cpp \
-    src/qwbfsdriver/PartitionHandle.cpp \
-    src/qwbfsdriver/PartitionProperties.cpp \
-    src/qwbfsdriver/PartitionStatus.cpp \
-    src/models/Disc.cpp \
-    src/models/DiscDelegate.cpp \
-    src/models/DiscModel.cpp \
-    src/qwbfsdriver/Driver.cpp \
+#   src/ProgressDialog.cpp \
+#   src/WorkerThread.cpp \
     src/UIAbout.cpp \
     src/wiitdb/Covers.cpp \
     src/PropertiesDialog.cpp \
     src/Properties.cpp \
-    src/ListView.cpp \
     src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.cpp \
-    src/CoverFlowView.cpp \
     src/models/pPartitionModel.cpp \
     src/models/PartitionDelegate.cpp \
     src/PartitionComboBox.cpp \
-    src/models/pPartition.cpp
+    src/models/pPartition.cpp \
+    src/filesystem/AbstractFileSystem.cpp \
+    src/filesystem/NativeFileSystem.cpp \
+    src/filesystem/FileSystemManager.cpp \
+    src/filesystem/FileSystemEntry.cpp \
+    src/filesystem/StockFileSystem.cpp \
+    src/widgets/PartitionWidget.cpp \
+    src/widgets/ListView.cpp \
+    src/widgets/ListViewDelegate.cpp \
+    src/widgets/CoverFlowView.cpp \
+    src/QWBFS.cpp
 
 linux* {
     QT *= dbus

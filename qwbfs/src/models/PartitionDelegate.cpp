@@ -60,7 +60,6 @@
 ****************************************************************************/
 #include "PartitionDelegate.h"
 #include "models/pPartitionModel.h"
-#include "qwbfsdriver/Driver.h"
 
 #include <FreshCore/pCoreUtils>
 
@@ -98,7 +97,7 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 	const qint64 wbfsFSId = 0x25;
 	pPartition partition = mModel->partition( index );
 	
-	if ( partition.property( pPartition::FileSystemId ).toLongLong() == wbfsFSId ) {
+	/*if ( partition.property( pPartition::FileSystemId ).toLongLong() == wbfsFSId ) {
 		// update wbfs partitions informations
 		if ( partition.property( pPartition::LastCheck ).toDateTime() < QDateTime::currentDateTime()
 			&& ( partition.property( pPartition::UsedSize ).toLongLong() == -1 || partition.property( pPartition::FreeSize ).toLongLong() == -1 ) ) {
@@ -119,7 +118,7 @@ void PartitionDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _o
 			
 			mModel->updatePartition( partition );
 		}
-	}
+	}*/
 	
 	int total = 100;
 	int used = ( (qreal)partition.property( pPartition::UsedSize ).toLongLong() /(qreal)partition.property( pPartition::TotalSize ).toLongLong() ) *(qreal)100;

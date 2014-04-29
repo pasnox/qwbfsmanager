@@ -10,30 +10,30 @@
 ##	Home Page   : http://code.google.com/p/qwbfs
 ##
 ###########################################################################################
-TEMPLATE	= lib
-LANGUAGE	= C++/Qt4
-CONFIG  -= debug_and_release release debug warn_off warn_on
-CONFIG  *= staticlib release warn_on
-include(shared.pri)
-TARGET  = $${LIB_WBFS_TARGET}
-BUILD_PATH	= $${LIB_WBFS_BUILD_PATH}
-DESTDIR	= $${BUILD_PATH}
-win32:DEFINES -= UNICODE
+TEMPLATE = lib
+LANGUAGE = C++/Qt4
+CONFIG -= release debug debug_and_release warn_on warn_off qt
+CONFIG *= static release warn_on
+include( shared.pri )
+TARGET = $${LIB_WBFS_TARGET}
+BUILD_PATH = $${LIB_WBFS_BUILD_PATH}
+DESTDIR = $${BUILD_PATH}
+#win32:DEFINES -= UNICODE
 
-include(../shared.pri)
+QMAKE_CFLAGS_RELEASE *= -fomit-frame-pointer -fno-strict-aliasing -funroll-loops -Wall -Wno-parentheses -Wno-unused-function -O3
+QMAKE_CFLAGS_DEBUG *= -fomit-frame-pointer -fno-strict-aliasing -funroll-loops -Wall -Wno-parentheses -Wno-unused-function
 
-INCLUDEPATH	*= libwbfs
+QMAKE_CXXFLAGS_RELEASE *= -fomit-frame-pointer -fno-strict-aliasing -funroll-loops -Wall -Wno-parentheses -Wno-unused-function -O3
+QMAKE_CXXFLAGS_DEBUG *= -fomit-frame-pointer -fno-strict-aliasing -funroll-loops -Wall -Wno-parentheses -Wno-unused-function
 
-HEADERS	*= tools.h \
-	wiidisc.h \
-	libwbfs_os.h \
-	libwbfs.h
+include( ../shared.pri )
 
-SOURCES	*= tools.c \
-	ec.c \
-	bn.c \
-	rijndael.c \
-	wiidisc.c \
-	libwbfs.c \
-	libwbfs_unix.c \
-	libwbfs_win32.c
+INCLUDEPATH *= \
+    . \
+    wit-src \
+    wit-src/crypto \
+    wit-src/libbz2 \
+    wit-src/libwbfs \
+    wit-src/lzma
+
+include( wit-src.pri )

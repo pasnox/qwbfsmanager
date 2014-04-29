@@ -35,10 +35,8 @@
 ****************************************************************************/
 #include "UIMain.h"
 #include "UIAbout.h"
-#include "models/DiscModel.h"
-#include "models/DiscDelegate.h"
+#include "PartitionComboBox.h"
 #include "wiitdb/Covers.h"
-#include "ProgressDialog.h"
 #include "PropertiesDialog.h"
 #include "Properties.h"
 #include "main.h"
@@ -129,12 +127,12 @@ UIMain::UIMain( QWidget* parent )
 	
 	lvFiles->setModel( mFilesModel );
 	
-	lvExport->initialize( 0, mCache );
+	lvExport->setModel( 0 );
 	
 	mLastDiscId = -1;
 	
 	pwMainView->setMainView( true );
-	pwMainView->showHideImportViewButton()->setChecked( false );
+	//pwMainView->showHideImportViewButton()->setChecked( false );
 	connectView( pwMainView );
 	
 	qmtbInfos->installEventFilter( this );
@@ -334,7 +332,7 @@ void UIMain::openViewRequested()
 {
 	PartitionWidget* pw = new PartitionWidget( this );
 	pw->setMainView( false );
-	pw->showHideImportViewButton()->setChecked( false );
+	//pw->showHideImportViewButton()->setChecked( false );
 	connectView( pw );
 	sViews->addWidget( pw );
 }
@@ -353,10 +351,10 @@ void UIMain::coverRequested( const QString& id )
 	QWBFS::WiiTDB::coverBoxPixmap( id, mCache, COVER_SIZE );
 }
 
-void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
+/*void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 {
 	lvExport->model()->updateDisc( disc );
-}
+}*/
 
 void UIMain::networkAccessManager_finished( QNetworkReply* reply )
 {
@@ -365,7 +363,7 @@ void UIMain::networkAccessManager_finished( QNetworkReply* reply )
 
 void UIMain::networkAccessManager_cached( const QUrl& url )
 {
-	if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) && url != QUrl() ) {
+	/*if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) && url != QUrl() ) {
 		return;
 	}
 	
@@ -380,7 +378,7 @@ void UIMain::networkAccessManager_cached( const QUrl& url )
 	}
 	
 	lCDCover->setPixmap( QWBFS::WiiTDB::coverDiscPixmap( mLastDiscId, mCache, COVER_DISC_SIZE ) );
-	lCover->setPixmap( QWBFS::WiiTDB::coverBoxPixmap( mLastDiscId, mCache, COVER_SIZE ) );
+	lCover->setPixmap( QWBFS::WiiTDB::coverBoxPixmap( mLastDiscId, mCache, COVER_SIZE ) );*/
 }
 
 void UIMain::networkAccessManager_error( const QUrl& url, const QString& message )
@@ -478,7 +476,7 @@ void UIMain::on_aProperties_triggered()
 
 void UIMain::on_aConvertToWBFSFiles_triggered()
 {
-	const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose ISO files to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
+	/*const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose ISO files to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
 	
 	if ( filePaths.isEmpty() ) {
 		return;
@@ -496,12 +494,12 @@ void UIMain::on_aConvertToWBFSFiles_triggered()
 	work.target = QFileInfo( filePaths.first() ).absolutePath();
 	work.window = dlg;
 	
-	dlg->setWork( work );
+	dlg->setWork( work );*/
 }
 
 void UIMain::on_aConvertToISOFiles_triggered()
 {
-	const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose WBFS files to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
+	/*const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose WBFS files to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
 	
 	if ( filePaths.isEmpty() ) {
 		return;
@@ -519,22 +517,22 @@ void UIMain::on_aConvertToISOFiles_triggered()
 	work.target = QFileInfo( filePaths.first() ).absolutePath();
 	work.window = dlg;
 	
-	dlg->setWork( work );
+	dlg->setWork( work );*/
 }
 
 void UIMain::on_aRenameDiscsInFolder_triggered()
 {
-	const QString path = QFileDialog::getExistingDirectory( this, tr( "Choose the folder to scan for ISOs/WBFSs files" ) );
+	/*const QString path = QFileDialog::getExistingDirectory( this, tr( "Choose the folder to scan for ISOs/WBFSs files" ) );
 	
 	if ( path.isEmpty() ) {
 		return;
 	}
 	
-	/*
+	/
 		%title = Game Title
 		%id = Game ID
 		%suffix = File Suffix
-	*/
+	/
 	const QStringList patterns = QStringList()
 		<< "%id.%suffix" // GAMEID.wbfs
 		<< "%title [%id].%suffix" // Game Title [GAMEID].wbfs
@@ -562,7 +560,7 @@ void UIMain::on_aRenameDiscsInFolder_triggered()
 	work.target = path;
 	work.window = dlg;
 	
-	dlg->setWork( work );
+	dlg->setWork( work );*/
 }
 
 void UIMain::on_tvFolders_activated( const QModelIndex& index )
@@ -612,17 +610,17 @@ void UIMain::on_cbDrives_currentIndexChanged( const QString& text )
 
 void UIMain::on_tbClearExport_clicked()
 {
-	lvExport->model()->clear();
+	//lvExport->model()->clear();
 }
 
 void UIMain::on_tbRemoveExport_clicked()
 {
-	lvExport->model()->removeSelection( lvExport->selectionModel()->selection() );
+	//lvExport->model()->removeSelection( lvExport->selectionModel()->selection() );
 }
 
 void UIMain::on_tbExport_clicked()
 {
-	if ( lvExport->model()->rowCount() == 0 ) {
+	/*if ( lvExport->model()->rowCount() == 0 ) {
 		return;
 	}
 	
@@ -666,5 +664,5 @@ void UIMain::on_tbExport_clicked()
 	
 	work.window = dlg;
 	
-	dlg->setWork( work );
+	dlg->setWork( work );*/
 }

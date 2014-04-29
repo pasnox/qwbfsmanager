@@ -128,7 +128,7 @@ createZip()
 
 # crossbuild for windows
 crossBuild()
-{	
+{
 	QMAKE="qmake"
 
 	if [ $OS = "Linux" ]; then
