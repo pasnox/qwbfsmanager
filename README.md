@@ -1,8 +1,8 @@
 # Project Description
 QWBFS Manager provides a cross platform Qt 4 GUI for working with hard disk drives that have been formatted to the WBFS file system.
-This is a cross platform 32/64bits (Windows, Mac OS X, Linux/Unix like) alternative to [http://wbfsmanager.codeplex.com/ WBFS Manager].
+This is a cross platform 32/64bits (Windows, Mac OS X, Linux/Unix like) alternative to [WBFS Manager](http://wbfsmanager.codeplex.com/).
 
-[http://code.google.com/p/qwbfs/downloads/list Downloads] - [http://code.google.com/feeds/p/qwbfs/downloads/basic Downloads Feed]
+[Downloads](http://code.google.com/p/qwbfs/downloads/list) - [Downloads Feed](http://code.google.com/feeds/p/qwbfs/downloads/basic)
 
 # Features
   * Partitions combobox widget presenting their name, file system and size for a better and easy access to your drives. (1.2.0)
@@ -70,14 +70,14 @@ This is a cross platform 32/64bits (Windows, Mac OS X, Linux/Unix like) alternat
   * ~~Additional info from ISO (Game image shown in Disc Channel,...).~~
 
 # They speak about QWBFS Manager
-  * [http://ubuntu-cosillas.blogspot.com/2010/11/qwbfs-manager-gestor-de-particiones.html Ubuntu Cosillas]
-  * [http://www.wiigen.fr/qwbfs-manager-103-gestionnaire-disque-dur-multiplateforme-actualite-4543.html WiiGen]
-  * [http://www.wiihacks.com/customization-apps/61394-qwbfs-manager-win-os-x-operating-systems.html WiiHacks]
-  * [http://www.logic-sunrise.com/news-111351-qwbfs-manager-v110-un-gestionnaire-de-hdd-wbfs.html Logic Sunrise]
-  * [http://www.wii-addict.fr/forum/QWBFS-Manager-110-t20412.html Wii Addict]
-  * [http://wii.gx-mod.com/modules/news/article.php?storyid=2817 Wii GX Mod]
-  * [http://xav91wii.free.fr/forum/viewtopic.php?f=11&t=2462&start=0&sid=20d4ea529d285f11288084fd6b9c1a6a Xav91Wii]
-  * [http://www.wii-info.fr/download-637-qwbfs-1-1-0-gestionnaire-wbfs.htm Wii Info]
+  * [Ubuntu Cosillas](http://ubuntu-cosillas.blogspot.com/2010/11/qwbfs-manager-gestor-de-particiones.html)
+  * [WiiGen](http://www.wiigen.fr/qwbfs-manager-103-gestionnaire-disque-dur-multiplateforme-actualite-4543.html)
+  * [WiiHacks](http://www.wiihacks.com/customization-apps/61394-qwbfs-manager-win-os-x-operating-systems.html)
+  * [Logic Sunrise](http://www.logic-sunrise.com/news-111351-qwbfs-manager-v110-un-gestionnaire-de-hdd-wbfs.html)
+  * [Wii Addict](http://www.wii-addict.fr/forum/QWBFS-Manager-110-t20412.html)
+  * [Wii GX Mod](http://wii.gx-mod.com/modules/news/article.php?storyid=2817)
+  * [Xav91Wii](http://xav91wii.free.fr/forum/viewtopic.php?f=11&t=2462&start=0&sid=20d4ea529d285f11288084fd6b9c1a6a)
+  * [Wii Info](http://www.wii-info.fr/download-637-qwbfs-1-1-0-gestionnaire-wbfs.htm)
 
 DISCLAIMER
 THIS APPLICATION COMES WITH NO WARRANTY AT ALL, NEITHER EXPRESS NOR IMPLIED.
@@ -85,9 +85,9 @@ I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE
 BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.
 
 # Screenshots
-==Linux==
+## Linux
 <a href="http://qwbfs.googlecode.com/files/qwbfsmanager-1.2.1-linux.png"><img src="http://qwbfs.googlecode.com/files/qwbfsmanager-1.2.1-linux.png" width="800" height="468" /></a>
-==Mac OS X==
+## Mac OS X
 <a href="http://qwbfs.googlecode.com/files/qwbfsmanager-1.2.1-mac-os-x.png"><img src="http://qwbfs.googlecode.com/files/qwbfsmanager-1.2.1-mac-os-x.png" width="800" height="459" /></a>
-==Windows==
+## Windows
 <a href="http://qwbfs.googlecode.com/files/qwbfsmanager-1.2.1-windows-seven.png"><img src="http://qwbfs.googlecode.com/files/qwbfsmanager-1.2.1-windows-seven.png" width="800" height="410" /></a>
