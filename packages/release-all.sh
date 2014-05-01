@@ -1,23 +1,23 @@
 #!/bin/sh
 
+# get tag commit
+# git rev-list -1 v1.2.4
+
+# get tag version string
+# git describe --all --long v1.0.0
+
 VERSION=$1
 OS=`uname -s`
-SOURCE_FOLDER=../../tags/$VERSION
 
-if [ -z "$VERSION" ]; then
-    SOURCE_FOLDER=..
-fi
-
-SVN_REVISION=`export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $SOURCE_FOLDER`
+SVN_REVISION=`export LANG=C && [ -f /usr/bin/git ] && git --git-dir=../.git describe --long $VERSION`
 
 if [ '!' -z "$VERSION" ]; then
     VERSION_STR=$VERSION
 fi
 
 if [ -z "$VERSION" ]; then
-    #VERSION=`echo "$SVN_REVISION" | egrep -o '[0-9]+'`
-    VERSION=`echo "$SVN_REVISION" | egrep -o '[0-9]+' | xargs -n 2 printf '%s.%s\n'`
-    VERSION_STR="trunk-svn$VERSION"
+    VERSION=`echo "$SVN_REVISION" | cut -d'-' -f1`
+    VERSION_STR="git-$VERSION"
 fi
 
 BASE_NAME=qwbfsmanager-$VERSION_STR
@@ -54,7 +54,7 @@ startCommand()
     echo "    -Starting command: $1"
     error=0
     eval "$1" || error=1
-    
+
     if [ $error = 1 -a -z "$2" ]; then
         echo "***************************************************"
         echo "***  Error when evaluing command: $1"
@@ -76,21 +76,23 @@ deleteIfExists()
 }
 
 # export a svn path from source $1 to target $2
-svnExport()
+exportRepository()
 {
     echo "*** Exporting repository: $1 to $2"
-    startCommand "svn export \"$1\" \"$2\" > /dev/null 2>&1"
 
-    if [ ! -d "../fresh" ]; then
-        startCommand "git clone https://github.com/pasnox/fresh.git ../fresh > /dev/null 2>&1"
-    fi
-
-    startCommand "cd \"../fresh\""
+    startCommand "cd \"..\""
     startCommand "git submodule update --init --recursive > /dev/null 2>&1"
     startCommand "cd \"$CUR_PATH\""
 
-    startCommand "git --git-dir=\"../fresh/.git\" checkout-index -a -f --prefix=\"$2/fresh/\" > /dev/null 2>&1"
-    startCommand "git --git-dir=\"../fresh/qmake-extensions.git/.git\" checkout-index -a -f --prefix=\"../../packages/$2/fresh/qmake-extensions.git/\" > /dev/null 2>&1"
+    startCommand "rsync -a .. \"$2\" --exclude \"$2\" --exclude '*.pro.user*' > /dev/null 2>&1"
+
+    if [ '!' -z "$1" ]; then
+        startCommand "cd \"$2\""
+        startCommand "git clean -f -x && git reset --hard && git checkout \"$1\" > /dev/null 2>&1"
+        startCommand "cd \"$CUR_PATH\""
+    fi
+
+    startCommand "rm -fr \"$2/.git\""
 }
 
 # create a tar.gz file $1 from path $2
@@ -104,31 +106,31 @@ createTarGz()
 createZip()
 {
     echo "*** Creating zip package: $1"
-    
+
     params=
-    
+
     if [ '!' -z "$3" ]; then
         params="$params \"$3\""
     fi
-    
+
     if [ '!' -z "$1" ]; then
         params="$params \"$1\""
     fi
-    
+
     if [ '!' -z "$2" ]; then
         params="$params \"$2\""
     fi
-    
+
     if [ '!' -z "$4" ]; then
         params="$params $4"
     fi
-    
+
     startCommand "zip -q -r -9 $params"
 }
 
 # crossbuild for windows
 crossBuild()
-{   
+{
     QMAKE="qmake"
 
     if [ $OS = "Linux" ]; then
@@ -161,18 +163,18 @@ crossBuild()
         export CROSS_WIN32_QT_PATH="$QT_WIN32_PATH"
         export QT_WINDOWS_PATH="$QT_WIN32_PATH"
 
-        startCommand "cd \"./$FOLDER_NAME\""
+        startCommand "cd \"$FOLDER_NAME\""
         startCommand "make distclean > /dev/null 2>&1" 0
         startCommand "\"$QT_PATH/bin/$QMAKE\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
         startCommand "make distclean > /dev/null 2>&1" 0
         startCommand "\"$QT_PATH/bin/$QMAKE\" -spec \"$MKSPEC\" -win32 -r > /dev/null 2>&1"
         startCommand "make -j4 > \"$CUR_PATH/log/winbuild.log\" 2>&1"
-        startCommand "\"$WINE\" \"$ISCC\" \"./packages/windows.iss\" > \"$CUR_PATH/log/winpackage.log\" 2>&1"
+        startCommand "\"$WINE\" \"$ISCC\" \"packages/windows.iss\" > \"$CUR_PATH/log/winpackage.log\" 2>&1"
         startCommand "make distclean > /dev/null 2>&1" 0
         startCommand "cd \"$CUR_PATH\""
 
-        if [ -f "./$FOLDER_NAME/packages/releases/$WIN_SETUP" ]; then
-            startCommand "mv \"./$FOLDER_NAME/packages/releases/$WIN_SETUP\" \"./\""
+        if [ -f "$FOLDER_NAME/packages/releases/$WIN_SETUP" ]; then
+            startCommand "mv \"$FOLDER_NAME/packages/releases/$WIN_SETUP\" \".\""
         fi
     fi
 }
@@ -180,19 +182,19 @@ crossBuild()
 # create windows zip package
 windowsZipPackage()
 {
-    if [ -f "./$WIN_SETUP" ]; then
+    if [ -f "$WIN_SETUP" ]; then
         echo "*** Creating windows zip package"
 
         # uninstall previous package
         startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent > /dev/null 2>&1"
 
         # install the current one
-        startCommand "\"$WINE\" \"./$WIN_SETUP\" /silent > /dev/null 2>&1"
+        startCommand "\"$WINE\" \"$WIN_SETUP\" /silent > /dev/null 2>&1"
 
         # create zip
-        startCommand "cp -fr \"$WINE_PROGRAM_FILES/QWBFS Manager\" \"./$WIN_FOLDER\""
-        startCommand "createZip \"./$WIN_PACKAGE\" \"./$WIN_FOLDER\" \"\" \"-x *unins*.exe -x *unins*.dat\""
-        startCommand "deleteIfExists \"./$WIN_FOLDER\""
+        startCommand "cp -fr \"$WINE_PROGRAM_FILES/QWBFS Manager\" \"$WIN_FOLDER\""
+        startCommand "createZip \"$WIN_PACKAGE\" \"$WIN_FOLDER\" \"\" \"-x *unins*.exe -x *unins*.dat\""
+        startCommand "deleteIfExists \"$WIN_FOLDER\""
 
         # uninstall installed package
         startCommand "find \"$WINE_PROGRAM_FILES/QWBFS Manager\" -name \"unins*.exe\" -print0 | xargs -0 -I {} \"$WINE\" {} /silent > /dev/null 2>&1"
@@ -206,7 +208,7 @@ macPackage()
 
     QT_VERSION="4.7.0-lgpl"
     BUNDLE_NAME="QWBFSManager"
-    BUNDLE_PATH="./bin"
+    BUNDLE_PATH="bin"
     BUNDLE_APP_PATH="$BUNDLE_PATH/$BUNDLE_NAME.app"
     QT_PATH="/usr/local/Trolltech/$QT_VERSION"
     QMAKE_FLAGS="\"CONFIG *= universal no_fresh_install\""
@@ -218,7 +220,7 @@ macPackage()
         QMAKE_FLAGS="\"CONFIG *= no_fresh_install\""
     fi
 
-    startCommand "cd \"./$FOLDER_NAME\""
+    startCommand "cd \"$FOLDER_NAME\""
     startCommand "make distclean > /dev/null 2>&1" 0
     startCommand "\"$QT_PATH/bin/qmake\" $QMAKE_FLAGS -r > /dev/null 2>&1"
     startCommand "make distclean > /dev/null 2>&1" 0
@@ -229,8 +231,8 @@ macPackage()
     startCommand "make distclean > /dev/null 2>&1" 0
     startCommand "cd \"$CUR_PATH\""
 
-    if [ -f "./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
-        startCommand "mv \"./$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg\" \"./$MAC_PACKAGE\""
+    if [ -f "$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg" ]; then
+        startCommand "mv \"$FOLDER_NAME/$BUNDLE_PATH/$BUNDLE_NAME.dmg\" \"$MAC_PACKAGE\""
     fi
 }
 
@@ -252,38 +254,40 @@ finish()
         startCommand "killall WineBottler > /dev/null 2>&1" 0
         startCommand "killall X11.bin > /dev/null 2>&1" 0
     fi
-    
+
     # come back to start folder
     startCommand "cd \"$CUR_PATH\"" 0
-    
+
     # delete exported repository
-    startCommand "rm -fr \"./$FOLDER_NAME\"" 0
+    startCommand "rm -fr \"$FOLDER_NAME\"" 0
 
     echo "********** Processing release finished - Exit code: $1 **********"
-    
+
     exit $1
 }
 
 # startup call
 startup
 # delete source folder
-deleteIfExists "./$FOLDER_NAME"
+deleteIfExists "$FOLDER_NAME"
 # delete tar.gz source
-deleteIfExists "./$TAR_GZ_FILE"
+deleteIfExists "$TAR_GZ_FILE"
 # delete zip source
-deleteIfExists "./$ZIP_FILE"
+deleteIfExists "$ZIP_FILE"
 # delete win setup
-deleteIfExists "./$WIN_SETUP"
+deleteIfExists "$WIN_SETUP"
 # delete win package
-deleteIfExists "./$WIN_PACKAGE"
+deleteIfExists "$WIN_PACKAGE"
 # delete mac package
-deleteIfExists "./$MAC_PACKAGE"
+deleteIfExists "$MAC_PACKAGE"
 # export the taggued version to release
-svnExport "./$SOURCE_FOLDER" "./$FOLDER_NAME"
+exportRepository "$1" "$FOLDER_NAME"
+
+exit
 # create tar.gz source
-createTarGz "./$TAR_GZ_FILE" "./$FOLDER_NAME"
+createTarGz "$TAR_GZ_FILE" "$FOLDER_NAME"
 # create zip source
-createZip "./$ZIP_FILE" "./$FOLDER_NAME"
+createZip "$ZIP_FILE" "$FOLDER_NAME"
 # create win setup
 crossBuild
 # create windows zip package
