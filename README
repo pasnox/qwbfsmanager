@@ -1,10 +1,15 @@
 QWBFS Manager
 =============
 
-Home page: http://code.google.com/p/qwbfs
-IRC Channel: #qwbfs on irc.Abjects.net (irc://irc.Abjects.net/qwbfs)
+QWBFS Manager is a cross platform WBFS manager running on Windows, OS X, Linux & Unix like systems.
 
-QWBFS Manager is a cross platform WBFS manager running on Windows, Mac OS X, Linux & Unix like systems.
+Useful urls
+===========
+
+Home page: https://github.com/pasnox/qwbfsmanager
+Downloads: https://github.com/pasnox/qwbfsmanager/releases
+Report issue: https://github.com/pasnox/qwbfsmanager/issues
+Forum: http://groups.google.com/group/qwbfs-discuss
 
 IMPORTANT NOTICE
 ================
@@ -15,32 +20,52 @@ Requirements
 ============
 
 - Build tool chain (GCC...)
-- Qt >= 4.5.x
+- Qt >= 4.5.x, Qt >= 5.x.x
 - libfresh (https://github.com/pasnox/fresh)
-- OpenSSL (Windows: http://www.slproweb.com/download/Win32OpenSSL-0_9_8q.exe)
-- Windows only: ws2_32, leay32
+- Windows only: ws2_32, leay32 (OpenSSL: http://www.slproweb.com/download/Win32OpenSSL-0_9_8q.exe)
 - Unix only: crypto, udev
-- Mac OS only: crypto, DiskArbitration, CoreServices
+- OS X only: crypto, DiskArbitration, CoreServices
 - A computer
 - A chair
 - A brain
 - Some fingers
 
-Build instructions
-==================
+Build instructions from sources packages
+========================================
 
 - unpack the sources archive
-- cd in the uncompress folder
-- qmake PREFIX=/usr/local
-- make
+- create a folder named "qwbfs-build" somewhere on your disk (may be at the same level than the unpacked sources archives)
+- cd in the "qwbfs-build" folder
+- qmake -r PREFIX=/usr/local unpacked-sources-folder/qwbfs.pro
+- make -j 4
 - sudo make install
+
+Build instructions from git clone
+=================================
+
+- clone qwbfsmanager reporitory: git clone https://github.com/pasnox/qwbfsmanager.git
+- cd in the cloned folder and initialize submodules: init-repositories.sh (.bat for windows)
+- create a folder named "qwbfs-build" somewhere on your disk (may be at the same level than the git cloned folder)
+- cd in the "qwbfs-build" folder
+- qmake -r PREFIX=/usr/local cloned-git-folder/qwbfs.pro
+- make -j 4
+- sudo make install
+
+NOTES
+=====
+
+On some platform qmake can be named qmake-qt4 or qmake-qt5
+On some paltform, the make tool can be named gmake, nmake or mingw32-make
+The "make install" command is not mandatory for Windows platform
+You can change the prefix at your convenience
+
 
 License
 =======
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2 of the License, or
 (at your option) any later version.
 
 This package is distributed in the hope that it will be useful,
@@ -59,10 +84,5 @@ General Public License in all respects for all of the code used other than
 "OpenSSL".  If you modify file(s), you may extend this exception to your
 version of the file(s), but you are not obligated to do so. If you do not
 wish to do so, delete this exception statement from your version.
-
-Disclamer
-==========
-
-I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR HARDWARE OR YOUR DATA BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.
 
 Enjoy, P@sNox
