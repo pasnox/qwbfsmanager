@@ -6,7 +6,7 @@
 ** FileName  : ListView.cpp
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
-** Home Page : http://code.google.com/p/qwbfs
+** Home Page : https://github.com/pasnox/qwbfsmanager
 ** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
 ** It's currently working fine under Windows (XP to Seven, 32 & 64Bits), Mac OS X (10.4.x to 10.6.x), Linux & unix like.
 **
@@ -40,6 +40,7 @@
 #include <QMouseEvent>
 #include <QHeaderView>
 #include <QPainter>
+#include <QDrag>
 #include <QDebug>
 
 ListView::ListView( QWidget* parent )
@@ -85,11 +86,20 @@ void ListView::initialize( QWBFS::Driver* driver, pNetworkAccessManager* manager
 	mHeader->setSectionHidden( 5, true );
 	
 	for ( int i = 0; i < mModel->columnCount(); i++ ) {
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+        mHeader->setSectionResizeMode( i, QHeaderView::ResizeToContents );
+#else
 		mHeader->setResizeMode( i, QHeaderView::ResizeToContents );
+#endif
 	}
 	
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+    mHeader->setSectionResizeMode( 2, QHeaderView::Stretch );
+    mHeader->setSectionsClickable( true );
+#else
 	mHeader->setResizeMode( 2, QHeaderView::Stretch );
 	mHeader->setClickable( true );
+#endif
 	mHeader->setSortIndicatorShown( true );
 }
 

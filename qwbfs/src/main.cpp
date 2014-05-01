@@ -6,7 +6,7 @@
 ** FileName  : main.cpp
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
-** Home Page : http://code.google.com/p/qwbfs
+** Home Page : https://github.com/pasnox/qwbfsmanager
 ** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
 ** It's currently working fine under Windows (XP to Seven, 32 & 64Bits), Mac OS X (10.4.x to 10.6.x), Linux & unix like.
 **
@@ -36,7 +36,7 @@
 #include <QApplication>
 #include <QProxyStyle>
 #include <QSplashScreen>
-#include <QWeakPointer>
+#include <QPointer>
 #include <QDateTime>
 #include <QTimer>
 #include <QPixmapCache>
@@ -54,111 +54,117 @@
 
 class IconSizeProxyStyle : public QProxyStyle
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	// Fix boggued icon size on mac os x / Qt 4.8.5 Cocoa / MacPort
-	virtual int pixelMetric( QStyle::PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0 ) const {
-		switch ( metric ) {
-			case QStyle::PM_ToolBarIconSize: // 64
-				return 36;
+    // Fix boggued icon size on mac os x / Qt 4.8.5 Cocoa / MacPort
+    virtual int pixelMetric( QStyle::PixelMetric metric, const QStyleOption* option = 0, const QWidget* widget = 0 ) const {
+        switch ( metric ) {
+            case QStyle::PM_ToolBarIconSize: // 64
+                return 36;
 
-			case QStyle::PM_SmallIconSize: // 32
-				return 16;
+            case QStyle::PM_SmallIconSize: // 32
+                return 16;
 
-			case QStyle::PM_LargeIconSize: // 64
-				break;
+            case QStyle::PM_LargeIconSize: // 64
+                break;
 
-			case QStyle::PM_IconViewIconSize: // 64
-				return 32;
+            case QStyle::PM_IconViewIconSize: // 64
+                return 32;
 
-			case QStyle::PM_ListViewIconSize: // 32 - Use QStyle::PM_SmallIconSize
-				break;
+            case QStyle::PM_ListViewIconSize: // 32 - Use QStyle::PM_SmallIconSize
+                break;
 
-			case QStyle::PM_TabBarIconSize: // 32 - Use QStyle::PM_SmallIconSize
-				break;
+            case QStyle::PM_TabBarIconSize: // 32 - Use QStyle::PM_SmallIconSize
+                break;
 
-			case QStyle::PM_ButtonIconSize: // 32
-				return pixelMetric( QStyle::PM_SmallIconSize, option, widget );
-		}
+            case QStyle::PM_ButtonIconSize: // 32
+                return pixelMetric( QStyle::PM_SmallIconSize, option, widget );
 
-		return QProxyStyle::pixelMetric( metric, option, widget );
-	}
+            default:
+                break;
+        }
+
+        return QProxyStyle::pixelMetric( metric, option, widget );
+    }
 };
 
 
 class SplashScreen : public QSplashScreen
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	SplashScreen( const QPixmap& pixmap )
-		: QSplashScreen( pixmap )
-	{
-		QFont font = this->font();
-		font.setPixelSize( 9 );
-		setFont( font );
-		showMessage( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
-		
-		show();
-		raise();
-	}
-	
-	void handle( QWidget* widget )
-	{
-		mWidget = widget;
-		QTimer::singleShot( SPLASHSCREEN_TIMEOUT, this, SLOT( close() ) );
-	}
+    SplashScreen( const QPixmap& pixmap )
+        : QSplashScreen( pixmap )
+    {
+        QFont font = this->font();
+        font.setPixelSize( 9 );
+        setFont( font );
+        showMessage( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ), Qt::AlignRight | Qt::AlignBottom, QColor( 0, 0, 0 ) );
+
+        show();
+        raise();
+    }
+
+    void handle( QWidget* widget )
+    {
+        mWidget = widget;
+        QTimer::singleShot( SPLASHSCREEN_TIMEOUT, this, SLOT( close() ) );
+    }
 
 protected:
-	QWeakPointer<QWidget> mWidget;
-	
-	virtual void hideEvent( QHideEvent* event )
-	{
-		QSplashScreen::hideEvent( event );
-		
-		if ( mWidget && !mWidget.data()->isVisible() )
-		{
-			mWidget.data()->show();
-			mWidget.data()->raise();
-		}
-	}
+    QPointer<QWidget> mWidget;
+
+    virtual void hideEvent( QHideEvent* event )
+    {
+        QSplashScreen::hideEvent( event );
+
+        if ( mWidget && !mWidget->isVisible() )
+        {
+            mWidget->show();
+            mWidget->raise();
+        }
+    }
 };
 
 int main( int argc, char** argv )
 {
-	QApplication app( argc, argv );
+    QApplication app( argc, argv );
 #if defined( Q_OS_MACX )
-	app.setStyle( new IconSizeProxyStyle );
+    //app.setStyle( new IconSizeProxyStyle );
 #endif
-	app.setApplicationName( APPLICATION_NAME );
-	app.setOrganizationName( APPLICATION_ORGANIZATION );
-	app.setOrganizationDomain( APPLICATION_DOMAIN );
-	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
-	
-	qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
-	QPixmapCache::setCacheLimit( QPixmapCache::cacheLimit() *4 );
-	pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath() );
-	
-	Q_INIT_RESOURCE( fresh );
-	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
-	
-	pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Auto ) );
-	
-	pTranslationManager* translationManager = pTranslationManager::instance();
-	translationManager->setFakeCLocaleEnabled( true );
-	translationManager->addTranslationsMask( "qt*.qm" );
-	translationManager->addTranslationsMask( "fresh*.qm" );
-	translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
-	translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
-	
-	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
-	
-	SplashScreen splash( pIconManager::pixmap( "splashscreen.png", ":/icons" ) );
-	UIMain w;
-	
-	splash.handle( &w );	
-	return app.exec();
+    app.setApplicationName( APPLICATION_NAME );
+    app.setOrganizationName( APPLICATION_ORGANIZATION );
+    app.setOrganizationDomain( APPLICATION_DOMAIN );
+    app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
+
+    qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
+    QPixmapCache::setCacheLimit( QPixmapCache::cacheLimit() *4 );
+    pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath() );
+
+    Q_INIT_RESOURCE( fresh );
+    Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
+
+    pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Auto ) );
+
+    pTranslationManager* translationManager = pTranslationManager::instance();
+    translationManager->setFakeCLocaleEnabled( true );
+    translationManager->addTranslationsMask( "qt*.qm" );
+    translationManager->addTranslationsMask( "fresh*.qm" );
+    translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
+    translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
+
+    QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+
+    qWarning("ok");
+    //SplashScreen splash( pIconManager::pixmap( "splashscreen.png", ":/icons" ) );
+    UIMain w;
+qWarning("ok1");
+    //splash.handle( &w );
+    w.show();
+    qWarning("ok2");
+    return app.exec();
 }
 
 #include "main.moc"

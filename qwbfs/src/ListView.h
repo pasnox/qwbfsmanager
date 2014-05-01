@@ -6,7 +6,7 @@
 ** FileName  : ListView.h
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
-** Home Page : http://code.google.com/p/qwbfs
+** Home Page : https://github.com/pasnox/qwbfsmanager
 ** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
 ** It's currently working fine under Windows (XP to Seven, 32 & 64Bits), Mac OS X (10.4.x to 10.6.x), Linux & unix like.
 **

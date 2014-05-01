@@ -7,28 +7,22 @@
 ##	Date       : 2010-04-04T11:04:05
 ##	License    : GPL2
 ##	Comment    : Creating using Monkey Studio RAD
-##	Home Page  : http://code.google.com/p/qwbfs
+##	Home Page  : https://github.com/pasnox/qwbfsmanager
 ##
 ###########################################################################################
 
 TEMPLATE = app
 LANGUAGE = C++/Qt4
-TARGET = $$quote(qwbfsmanager)
-macx:TARGET = $$quote(QWBFSManager)
+TARGET = $$quote( qwbfsmanager )
+macx:TARGET = $$quote( QWBFSManager )
 BUILD_PATH = ../build
 DESTDIR = ../bin
-
-unix {
-    UNIX_RAM_DISK = /media/ramdisk
-    exists( $${UNIX_RAM_DISK} ) {
-        BUILD_PATH = $${UNIX_RAM_DISK}/$${TARGET}
-    }
-}
 
 include( ../shared.pri )
 
 CONFIG *= warn_on thread x11 windows qt resources embed_manifest_exe app_bundle
 QT *= core gui network xml
+greaterThan( QT_MAJOR_VERSION, 4 ):QT *= widgets
 
 include( ../libwbfs/libwbfs.pri )
 
@@ -41,13 +35,13 @@ win32_crossbuild {
 fresh {
     !build_pass:message( "Using system fresh library." )
 } else {
-    exists( ../fresh/fresh.pro ) {
+    exists( ../fresh.git/fresh.pro ) {
         !build_pass:message( "Using bundled fresh library." )
-        FRESH_PATH = ../fresh
+        FRESH_PATH = ../fresh.git
 
         include( $$FRESH_PATH/qmake-extensions.git/qmake-extensions.pri )
 
-        FRESH_SOURCES_PATHS = $$getFolders( $$FRESH_PATH/src )
+        FRESH_SOURCES_PATHS = $$getFolders( $$PWD/$$FRESH_PATH/src )
 
         DEFINES *= FRESH_CORE_BUILD
 
@@ -60,25 +54,16 @@ fresh {
 
         PRE_TARGETDEPS *= $${FRESH_PATH}
 
-        QMAKE_RPATHDIR *= $$FRESH_PATH/build
-        macx:LIBS *= -F$$FRESH_PATH/build
-        LIBS *= -L$$FRESH_PATH/build
-
-        unix {
-            UNIX_RAM_DISK = /media/ramdisk
-            exists( $${UNIX_RAM_DISK} ) {
-                Q_FRESH_PATH = $${UNIX_RAM_DISK}/fresh
-                QMAKE_RPATHDIR *= $$Q_FRESH_PATH
-                macx:LIBS *= -F$$Q_FRESH_PATH
-                LIBS *= -L$$Q_FRESH_PATH
-            }
-        }
+        QMAKE_RPATHDIR *= $$OUT_PWD/$$FRESH_PATH/build
+        macx:LIBS *= -F$$OUT_PWD/$$FRESH_PATH/build
+        LIBS *= -L$$OUT_PWD/$$FRESH_PATH/build
 
         QT *= xml network
-        !macx:qtAddLibrary( fresh )
+        #!macx:qtAddLibrary( fresh )
+        !macx:LIBS *= -lfresh
         macx:LIBS *= -lfresh
     } else {
-        !build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+        !build_pass:error( "Fresh library not found - initialize the submodules using the init-repositories script." )
     }
 }
 
@@ -87,10 +72,14 @@ OS = $$lower( $$QMAKE_HOST.os )
 QMAKE_TARGET_COMPANY = "QWBFS Team"
 QMAKE_TARGET_PRODUCT = "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION = "The Free, Fast and Powerful cross platform Wii Backup File System manager"
-QMAKE_TARGET_COPYRIGHT = "\\251 2010 - 2014 Filipe Azevedo"
-PACKAGE_DOMAIN = "code.google.com/p/qwbfs"
-PACKAGE_DOWNLOADS_FEED = "http://code.google.com/feeds/p/qwbfs/downloads/basic"
-PACKAGE_REPORT_BUG_URL = "http://code.google.com/p/qwbfs/issues/list"
+greaterThan( QT_MAJOR_VERSION, 4 ) {
+    QMAKE_TARGET_COPYRIGHT = "(C) 2010 - 2014 Filipe Azevedo"
+} else {
+    QMAKE_TARGET_COPYRIGHT = "\\251 2010 - 2014 Filipe Azevedo"
+}
+PACKAGE_DOMAIN = "github.com/pasnox/qwbfsmanager"
+PACKAGE_DOWNLOADS_FEED = "http://to-be-changed"
+PACKAGE_REPORT_BUG_URL = "https://github.com/pasnox/qwbfsmanager/issues"
 PACKAGE_DISCUSS_URL = "http://groups.google.com/group/qwbfs-discuss"
 PACKAGE_VERSION = 1.2.4
 isEqual( OS, "windows" ):SVN_REVISION = "N/C"

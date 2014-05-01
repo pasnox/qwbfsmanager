@@ -7,7 +7,7 @@
 ##	Date      : 2010-04-04T11:04:05
 ##	License   : GPL2
 ##	Comment   : Creating using Monkey Studio RAD
-##	Home Page   : http://code.google.com/p/qwbfs
+##	Home Page   : https://github.com/pasnox/qwbfsmanager
 ##
 ###########################################################################################
 

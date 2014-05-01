@@ -6,7 +6,7 @@
 ** FileName  : PartitionWidget.cpp
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
-** Home Page : http://code.google.com/p/qwbfs
+** Home Page : https://github.com/pasnox/qwbfsmanager
 ** Comment   : QWBFS Manager is a cross platform WBFS manager developed using C++/Qt4.
 ** It's currently working fine under Windows (XP to Seven, 32 & 64Bits), Mac OS X (10.4.x to 10.6.x), Linux & unix like.
 **
@@ -46,338 +46,343 @@
 #include <QLineEdit>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QDebug>
 
 PartitionWidget::PartitionWidget( QWidget* parent )
-	: QWidget( parent )
+    : QWidget( parent )
 {
-	Q_ASSERT( parent );
-	const UIMain* window = qobject_cast<UIMain*>( parent->window() );
-	const Properties properties( this );
-	
-	setupUi( this );
-	setAcceptDrops( true );
-	
-	mDriver = new QWBFS::Driver( this );
-	
-	lvDiscs->initialize( mDriver, window->cache() );
-	lvDiscs->setViewMode( properties.viewMode() );
-	lvDiscs->setViewIconType( properties.viewIconType() );
-	cfvDiscs->setModel( lvDiscs->model() );
-	cfvDiscs->setColumn( 0 );
-	cfvDiscs->setDisplayTextColumn( 2 );
-	lvImport->initialize( mDriver, window->cache() );
-	lvImport->setViewMode( properties.viewMode() );
-	lvImport->setViewIconType( properties.viewIconType() );
-	
-	QPalette cfvPal = cfvDiscs->palette();
-	cfvPal.setColor( QPalette::WindowText, QColor( 255, 255, 255 ) );
-	cfvDiscs->setPalette( cfvPal );
-	
-	QFont cfvFont = cfvDiscs->font();
-	cfvFont.setBold( true );
-	cfvFont.setPixelSize( 18 );
-	cfvDiscs->setFont( cfvFont );
-	
-	sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
-	
-	localeChanged();
-	
-	connect( lvDiscs->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
-	connect( lvImport->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
-	connect( cfvDiscs, SIGNAL( centerIndexChanged( const QModelIndex& ) ), this, SLOT( coverFlow_centerIndexChanged( const QModelIndex& ) ) );
-	connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
-	connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
+    Q_ASSERT( parent );
+    const UIMain* window = qobject_cast<UIMain*>( parent->window() );
+    const Properties properties( this );
+
+    setupUi( this );
+    setAcceptDrops( true );
+
+    mDriver = new QWBFS::Driver( this );
+
+    lvDiscs->initialize( mDriver, window->cache() );
+    lvDiscs->setViewMode( properties.viewMode() );
+    lvDiscs->setViewIconType( properties.viewIconType() );
+    cfvDiscs->setModel( lvDiscs->model() );
+    cfvDiscs->setColumn( 0 );
+    cfvDiscs->setDisplayTextColumn( 2 );
+    lvImport->initialize( mDriver, window->cache() );
+    lvImport->setViewMode( properties.viewMode() );
+    lvImport->setViewIconType( properties.viewIconType() );
+
+    QPalette cfvPal = cfvDiscs->palette();
+    cfvPal.setColor( QPalette::WindowText, QColor( 255, 255, 255 ) );
+    cfvDiscs->setPalette( cfvPal );
+
+    QFont cfvFont = cfvDiscs->font();
+    cfvFont.setBold( true );
+    cfvFont.setPixelSize( 18 );
+    cfvDiscs->setFont( cfvFont );
+
+    sViews->setSizes( QList<int>() << QWIDGETSIZE_MAX << fImport->minimumSizeHint().height() );
+
+    localeChanged();
+
+    connect( lvDiscs->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+    connect( lvImport->model(), SIGNAL( countChanged( int ) ), this, SLOT( models_countChanged() ) );
+    connect( cfvDiscs, SIGNAL( centerIndexChanged( const QModelIndex& ) ), this, SLOT( coverFlow_centerIndexChanged( const QModelIndex& ) ) );
+    connect( lvDiscs->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
+    connect( lvImport->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ), this, SLOT( views_selectionChanged() ) );
 }
 
 PartitionWidget::~PartitionWidget()
 {
-	mDriver->close();
+    mDriver->close();
 }
 
 bool PartitionWidget::event( QEvent* event )
 {
-	switch ( event->type() ) {
-		case QEvent::LocaleChange:
-			localeChanged();
-			break;
-		default:
-			break;
-	}
-	
-	return QWidget::event( event );
+    switch ( event->type() ) {
+        case QEvent::LocaleChange:
+            localeChanged();
+            break;
+        default:
+            break;
+    }
+
+    return QWidget::event( event );
 }
 
 const QWBFS::Driver* PartitionWidget::driver() const
 {
-	return mDriver;
+    return mDriver;
 }
 
 QWBFS::Model::DiscModel* PartitionWidget::discModel() const
 {
-	return lvDiscs->model();
+    return lvDiscs->model();
 }
 
 QWBFS::Model::DiscModel* PartitionWidget::importModel() const
 {
-	return lvImport->model();
+    return lvImport->model();
 }
 
 QToolButton* PartitionWidget::showHideImportViewButton() const
 {
-	return tbShowHideImportView;
+    return tbShowHideImportView;
 }
 
 QString PartitionWidget::currentPartition() const
 {
-	return cbPartitions->itemText( cbPartitions->currentIndex() );
+    return cbPartitions->itemText( cbPartitions->currentIndex() );
 }
 
 void PartitionWidget::setMainView( bool main )
 {
-	tbOpen->setVisible( main );
-	tbClose->setVisible( !main );
+    tbOpen->setVisible( main );
+    tbClose->setVisible( !main );
 }
 
 void PartitionWidget::setCurrentPartition( const QString& partition )
 {
-	if ( mDriver->partition() != partition || currentPartition() != partition ) {
-		mDriver->setPartition( partition );
-		cbPartitions->setCurrentIndex( cbPartitions->findText( partition ) );
-		tbLoad->click();
-	}
+    if ( mDriver->partition() != partition || currentPartition() != partition ) {
+        mDriver->setPartition( partition );
+        cbPartitions->setCurrentIndex( cbPartitions->findText( partition ) );
+        tbLoad->click();
+    }
 }
 
 void PartitionWidget::showError( const QString& error )
 {
-	mainWindow()->messageToolBar()->appendMessage( error );
+    mainWindow()->messageToolBar()->appendMessage( error );
 }
 
 void PartitionWidget::showError( int error )
 {
-	showError( QWBFS::Driver::errorToString( QWBFS::Driver::Error( error ) ) );
+    showError( QWBFS::Driver::errorToString( QWBFS::Driver::Error( error ) ) );
 }
 
 void PartitionWidget::dragEnterEvent( QDragEnterEvent* event )
 {
-	if ( mDriver->isOpen() && !findChildren<QWidget*>().contains( event->source() ) ) {
-		foreach ( const QString& mimeType, importModel()->mimeTypes() ) {
-			if ( event->mimeData()->hasFormat( mimeType ) ) {
-				event->setDropAction( Qt::CopyAction );
-				event->accept();
-				return;
-			}
-		}
-	}
+#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
+    if ( mDriver->isOpen() && !findChildren<QWidget*>().contains( qobject_cast<QWidget*>( event->source() ) ) ) {
+#else
+    if ( mDriver->isOpen() && !findChildren<QWidget*>().contains( event->source() ) ) {
+#endif
+        foreach ( const QString& mimeType, importModel()->mimeTypes() ) {
+            if ( event->mimeData()->hasFormat( mimeType ) ) {
+                event->setDropAction( Qt::CopyAction );
+                event->accept();
+                return;
+            }
+        }
+    }
 }
 
 void PartitionWidget::dropEvent( QDropEvent* event )
 {
-	if ( !fImport->isVisible() ) {
-		tbShowHideImportView->toggle();
-	}
-	
-	importModel()->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
-	event->acceptProposedAction();
+    if ( !fImport->isVisible() ) {
+        tbShowHideImportView->toggle();
+    }
+
+    importModel()->dropMimeData( event->mimeData(), event->proposedAction(), -1, -1, QModelIndex() );
+    event->acceptProposedAction();
 }
 
 UIMain* PartitionWidget::mainWindow() const
 {
-	return qobject_cast<UIMain*>( window() );
+    return qobject_cast<UIMain*>( window() );
 }
 
 void PartitionWidget::localeChanged()
 {
-	retranslateUi( this );
-	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( discModel()->rowCount() ).arg( importModel()->rowCount() ) );
+    retranslateUi( this );
+    lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( discModel()->rowCount() ).arg( importModel()->rowCount() ) );
 }
 
 void PartitionWidget::models_countChanged()
 {
-	QWBFS::Partition::Status status;
-	/*const int result = */mDriver->status( status );
-	
-	gStatus->setSize( status.size );
-	gStatus->setUsedSize( status.used );
-	gStatus->setFreeSize( status.free );
-	gStatus->setTemporarySize( importModel()->size() );
-	lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( discModel()->rowCount() ).arg( importModel()->rowCount() ) );
-	
-	/*if ( result != QWBFS::Driver::Ok ) {
-		showError( result );
-	}*/
+    QWBFS::Partition::Status status;
+    /*const int result = */mDriver->status( status );
+
+    gStatus->setSize( status.size );
+    gStatus->setUsedSize( status.used );
+    gStatus->setFreeSize( status.free );
+    gStatus->setTemporarySize( importModel()->size() );
+    lInformations->setText( tr( "%1 disc(s) on the partition - %2 disc(s) to import." ).arg( discModel()->rowCount() ).arg( importModel()->rowCount() ) );
+
+    /*if ( result != QWBFS::Driver::Ok ) {
+        showError( result );
+    }*/
 }
 
 void PartitionWidget::views_selectionChanged()
 {
-	const QItemSelectionModel* sm = qobject_cast<const QItemSelectionModel*>( sender() );
-	const QWBFS::Model::DiscModel* model = qobject_cast<const QWBFS::Model::DiscModel*>( sm->model() );
-	const QModelIndexList indexes = sm->selectedIndexes();
-	
-	emit coverRequested( indexes.isEmpty() ? QString::null : model->discId( indexes.last() ) );
+    const QItemSelectionModel* sm = qobject_cast<const QItemSelectionModel*>( sender() );
+    const QWBFS::Model::DiscModel* model = qobject_cast<const QWBFS::Model::DiscModel*>( sm->model() );
+    const QModelIndexList indexes = sm->selectedIndexes();
+
+    emit coverRequested( indexes.isEmpty() ? QString::null : model->discId( indexes.last() ) );
 }
 
 void PartitionWidget::coverFlow_centerIndexChanged( const QModelIndex& index )
 {
-	emit coverRequested( index.isValid() ? lvDiscs->model()->discId( index ) : QString::null );
+    emit coverRequested( index.isValid() ? lvDiscs->model()->discId( index ) : QString::null );
 }
 
 void PartitionWidget::progress_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	importModel()->updateDisc( disc );
+    importModel()->updateDisc( disc );
 }
 
 void PartitionWidget::progress_finished()
 {
-	PartitionComboBox::partitionModel()->update();
-	tbLoad->click();
+    PartitionComboBox::partitionModel()->update();
+    tbLoad->click();
 }
 
 void PartitionWidget::on_cbPartitions_currentIndexChanged( int index )
 {
-	if ( window()->isVisible() ) { // dirty hack because qcombobox automatically set the current index to the first item on model set and this can produce errors (partition is not wbfs)
-		setCurrentPartition( cbPartitions->itemText( index ) );
-	}
+    if ( window()->isVisible() ) { // dirty hack because qcombobox automatically set the current index to the first item on model set and this can produce errors (partition is not wbfs)
+        setCurrentPartition( cbPartitions->itemText( index ) );
+    }
 }
 
 void PartitionWidget::on_tbLoad_clicked()
 {
-	if ( !mDriver->open() && !mDriver->partition().isEmpty() ) {
-		showError( tr( "Can't open partition." ) );
-	}
-	
-	if ( discModel()->rowCount() == 0 ) {
-		models_countChanged();
-	}
-	else {
-		discModel()->clear();
-	}
-	
-	if ( mDriver->isOpen() ) {
-		QWBFS::Model::DiscList discs;
-		const int result = mDriver->discList( discs );
-		
-		if ( result == QWBFS::Driver::Ok ) {
-			discModel()->setDiscs( discs );
-			
-			if ( discModel()->rowCount() == 0 ) {
-				models_countChanged();
-			}
-		}
-		else {
-			showError( result );
-		}
-	}
+    if ( !mDriver->open() && !mDriver->partition().isEmpty() ) {
+        showError( tr( "Can't open partition." ) );
+    }
+
+    if ( discModel()->rowCount() == 0 ) {
+        models_countChanged();
+    }
+    else {
+        discModel()->clear();
+    }
+
+    if ( mDriver->isOpen() ) {
+        QWBFS::Model::DiscList discs;
+        const int result = mDriver->discList( discs );
+
+        if ( result == QWBFS::Driver::Ok ) {
+            discModel()->setDiscs( discs );
+
+            if ( discModel()->rowCount() == 0 ) {
+                models_countChanged();
+            }
+        }
+        else {
+            showError( result );
+        }
+    }
 }
 
 void PartitionWidget::on_tbFormat_clicked()
 {
-	const QString text = tr( "The partition '%1' will be formatted,\nall data will be erased permanently, are you sure?" ).arg( mDriver->partition() );
-	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
-	const QMessageBox::StandardButton button = QMessageBox::No;
-	
-	if ( QMessageBox::question( this, QString::null, text, buttons, button ) == button ) {
-		return;
-	}
-	
-	if ( mDriver->format() ) {
-		tbLoad->click();
-	}
-	else {
-		showError( tr( "Can't format partition." ) );
-	}
+    const QString text = tr( "The partition '%1' will be formatted,\nall data will be erased permanently, are you sure?" ).arg( mDriver->partition() );
+    const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
+    const QMessageBox::StandardButton button = QMessageBox::No;
+
+    if ( QMessageBox::question( this, QString::null, text, buttons, button ) == button ) {
+        return;
+    }
+
+    if ( mDriver->format() ) {
+        tbLoad->click();
+    }
+    else {
+        showError( tr( "Can't format partition." ) );
+    }
 }
 
 void PartitionWidget::on_tbOpen_clicked()
 {
-	emit openViewRequested();
+    emit openViewRequested();
 }
 
 void PartitionWidget::on_tbClose_clicked()
 {
-	emit closeViewRequested();
+    emit closeViewRequested();
 }
 
 void PartitionWidget::on_tbRemoveDiscs_clicked()
 {
-	const QModelIndexList indexes = lvDiscs->selectionModel()->selectedIndexes();
-	
-	const QString text = tr( "You are about to permanently delete %1 disc(s) on partition '%2', are you sure?" ).arg( indexes.count() ).arg( mDriver->partition() );
-	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
-	const QMessageBox::StandardButton button = QMessageBox::No;
-	
-	if ( indexes.isEmpty() || QMessageBox::question( this, QString::null, text, buttons, button ) == button ) {
-		return;
-	}
-	
-	int errors = 0;
-	
-	for ( int i = indexes.count() -1; i >= 0; i-- ) {
-		const QModelIndex& index = indexes[ i ];
-		const QString discId = discModel()->discId( index );
-		
-		if ( mDriver->removeDisc( discId ) == QWBFS::Driver::Ok ) {
-			discModel()->removeRow( index.row() );
-		}
-		else {
-			errors++;
-		}
-	}
-	
-	if ( errors > 0 ) {
-		showError( tr( "One or more discs have failed to be removed." ) );
-	}
+    const QModelIndexList indexes = lvDiscs->selectionModel()->selectedIndexes();
+
+    const QString text = tr( "You are about to permanently delete %1 disc(s) on partition '%2', are you sure?" ).arg( indexes.count() ).arg( mDriver->partition() );
+    const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::No;
+    const QMessageBox::StandardButton button = QMessageBox::No;
+
+    if ( indexes.isEmpty() || QMessageBox::question( this, QString::null, text, buttons, button ) == button ) {
+        return;
+    }
+
+    int errors = 0;
+
+    for ( int i = indexes.count() -1; i >= 0; i-- ) {
+        const QModelIndex& index = indexes[ i ];
+        const QString discId = discModel()->discId( index );
+
+        if ( mDriver->removeDisc( discId ) == QWBFS::Driver::Ok ) {
+            discModel()->removeRow( index.row() );
+        }
+        else {
+            errors++;
+        }
+    }
+
+    if ( errors > 0 ) {
+        showError( tr( "One or more discs have failed to be removed." ) );
+    }
 }
 
 void PartitionWidget::on_tbRenameDisc_clicked()
 {
-	const QModelIndex index = lvDiscs->selectionModel()->selectedIndexes().value( 0 );
-	const QWBFS::Model::Disc disc = discModel()->disc( index );
-	
-	if ( !index.isValid() ) {
-		return;
-	}
-	
-	const QString name = QInputDialog::getText( this, QString::null, tr( "Choose a new name for the disc" ), QLineEdit::Normal, disc.title );
-	
-	if ( name.isNull() ) {
-		return;
-	}
-	
-	if ( mDriver->renameDisc( disc.id, name ) == QWBFS::Driver::Ok ) {
-		discModel()->setData( index, name, Qt::DisplayRole );
-	}
-	else {
-		showError( tr( "Can't rename disc id #%1 (%2) to '%3'" ).arg( disc.id ).arg( disc.title ).arg( name ) );
-	}
+    const QModelIndex index = lvDiscs->selectionModel()->selectedIndexes().value( 0 );
+    const QWBFS::Model::Disc disc = discModel()->disc( index );
+
+    if ( !index.isValid() ) {
+        return;
+    }
+
+    const QString name = QInputDialog::getText( this, QString::null, tr( "Choose a new name for the disc" ), QLineEdit::Normal, disc.title );
+
+    if ( name.isNull() ) {
+        return;
+    }
+
+    if ( mDriver->renameDisc( disc.id, name ) == QWBFS::Driver::Ok ) {
+        discModel()->setData( index, name, Qt::DisplayRole );
+    }
+    else {
+        showError( tr( "Can't rename disc id #%1 (%2) to '%3'" ).arg( disc.id ).arg( disc.title ).arg( name ) );
+    }
 }
 
 void PartitionWidget::on_tbClearImport_clicked()
 {
-	importModel()->clear();
+    importModel()->clear();
 }
 
 void PartitionWidget::on_tbRemoveImport_clicked()
 {
-	importModel()->removeSelection( lvImport->selectionModel()->selection() );
+    importModel()->removeSelection( lvImport->selectionModel()->selection() );
 }
 
 void PartitionWidget::on_tbImport_clicked()
 {
-	if ( importModel()->rowCount() == 0 ) {
-		return;
-	}
-	
-	ProgressDialog* dlg = new ProgressDialog( this );
-	
-	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
-	connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
-	
-	WorkerThread::Work work;
-	work.task = WorkerThread::ImportWBFS;
-	work.discs = importModel()->discs();
-	work.target = mDriver->handle().partition();
-	work.window = dlg;
-	
-	dlg->setWork( work );
+    if ( importModel()->rowCount() == 0 ) {
+        return;
+    }
+
+    ProgressDialog* dlg = new ProgressDialog( this );
+
+    connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
+    connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
+
+    WorkerThread::Work work;
+    work.task = WorkerThread::ImportWBFS;
+    work.discs = importModel()->discs();
+    work.target = mDriver->handle().partition();
+    work.window = dlg;
+
+    dlg->setWork( work );
 }

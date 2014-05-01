@@ -7,27 +7,14 @@
 ##	Date      : 2010-04-04T11:04:05
 ##	License   : GPL2
 ##	Comment   : Creating using Monkey Studio RAD
-##	Home Page   : http://code.google.com/p/qwbfs
+##	Home Page   : https://github.com/pasnox/qwbfsmanager
 ##
 ###########################################################################################
-XUP.QT_VERSION = 7.7.0-lgpl
-XUP.OTHERS_PLATFORM_TARGET_RELEASE = bin/qwbfsmanager
-XUP.OTHERS_PLATFORM_TARGET_DEBUG = bin/qwbfs_debug
-XUP.OTHERS_PLATFORM_TARGET_DEFAULT = bin/qwbfsmanager
-XUP.WINDOWS_PLATFORM_TARGET_DEBUG = bin/qwbfsd.exe
-XUP.MAC_PLATFORM_TARGET_RELEASE = bin/QWBFSManager.app
 
 TEMPLATE = subdirs
 CONFIG *= ordered
 
 BUILD_PATH = build
-
-unix {
-    UNIX_RAM_DISK = /media/ramdisk
-    exists( $${UNIX_RAM_DISK} ) {
-        BUILD_PATH = $${UNIX_RAM_DISK}/$${TARGET}
-    }
-}
 
 include( shared.pri )
 
@@ -40,11 +27,11 @@ win32_crossbuild {
 fresh {
     !build_pass:message( "Using system fresh library." )
 } else {
-    exists( fresh/fresh.pro ) {
-        SUBDIRS *= fresh
+    exists( fresh.git/fresh.pro ) {
+        SUBDIRS *= fresh.git/fresh.pro
         !build_pass:message( "Using bundled fresh library." )
     } else {
-        !build_pass:error( "Fresh library not found - download from http://bettercodes.org/projects/fresh and uncompress in ROOT/fresh folder." )
+        !build_pass:error( "Fresh library not found - initialize the submodules using the init-repositories script." )
     }
 }
 
