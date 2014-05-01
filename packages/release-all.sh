@@ -282,8 +282,6 @@ deleteIfExists "$WIN_PACKAGE"
 deleteIfExists "$MAC_PACKAGE"
 # export the taggued version to release
 exportRepository "$1" "$FOLDER_NAME"
-
-exit
 # create tar.gz source
 createTarGz "$TAR_GZ_FILE" "$FOLDER_NAME"
 # create zip source
