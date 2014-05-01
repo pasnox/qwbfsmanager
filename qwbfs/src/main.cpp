@@ -89,7 +89,6 @@ public:
     }
 };
 
-
 class SplashScreen : public QSplashScreen
 {
     Q_OBJECT
@@ -128,11 +127,33 @@ protected:
     }
 };
 
+class Application : public QApplication
+{
+    Q_OBJECT
+
+public:
+    Application( int& argc, char** argv )
+        : QApplication( argc, argv )
+    {}
+
+    virtual bool notify( QObject* receiver, QEvent* e ) {
+        try {
+            return QApplication::notify( receiver, e );
+        }
+        catch ( ... ) {
+            qWarning( "%s: Try/Catch", Q_FUNC_INFO );
+            qWarning() << receiver << e << e->type();
+        }
+
+        return false;
+    }
+};
+
 int main( int argc, char** argv )
 {
-    QApplication app( argc, argv );
+    Application app( argc, argv );
 #if defined( Q_OS_MACX )
-    //app.setStyle( new IconSizeProxyStyle );
+    app.setStyle( new IconSizeProxyStyle );
 #endif
     app.setApplicationName( APPLICATION_NAME );
     app.setOrganizationName( APPLICATION_ORGANIZATION );
@@ -141,7 +162,7 @@ int main( int argc, char** argv )
 
     qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
     QPixmapCache::setCacheLimit( QPixmapCache::cacheLimit() *4 );
-    pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath() );
+    pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath().append( QString( "/%1-%2-%3" ).arg( APPLICATION_NAME ).arg( APPLICATION_VERSION ).arg( QT_VERSION_STR ) ) );
 
     Q_INIT_RESOURCE( fresh );
     Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
@@ -157,13 +178,10 @@ int main( int argc, char** argv )
 
     QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 
-    qWarning("ok");
-    //SplashScreen splash( pIconManager::pixmap( "splashscreen.png", ":/icons" ) );
+    SplashScreen splash( pIconManager::pixmap( "splashscreen.png", ":/icons" ) );
     UIMain w;
-qWarning("ok1");
-    //splash.handle( &w );
-    w.show();
-    qWarning("ok2");
+
+    splash.handle( &w );
     return app.exec();
 }
 

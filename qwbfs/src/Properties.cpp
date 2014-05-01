@@ -34,6 +34,7 @@
 **
 ****************************************************************************/
 #include "Properties.h"
+#include "main.h"
 #include "UIMain.h"
 
 #include <FreshCore/pSettings>
@@ -70,10 +71,10 @@
 #define SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS "partitionWidget/customPartitions"
 
 Properties::Properties( QObject* parent )
-	: QObject( parent )
+    : QObject( parent )
 {
-	mSettings = new pSettings( this );
-	//qWarning() << mSettings->fileName();
+    mSettings = new pSettings( this );
+    //qWarning() << mSettings->fileName();
 }
 
 Properties::~Properties()
@@ -82,257 +83,260 @@ Properties::~Properties()
 
 QString Properties::temporaryPath() const
 {
-	const QString path = QDir::tempPath()
-	.append(
-		QString( "/%1" ).arg( qApp->applicationName() )
-	);
-	
-	QDir().mkpath( path );
-	
-	return path;
+    const QString path = QDir::tempPath()
+        .append(
+                QString( "/%1-%2-%3" )
+                    .arg( APPLICATION_NAME )
+                    .arg( APPLICATION_VERSION )
+                    .arg( QT_VERSION_STR )
+    );
+
+    QDir().mkpath( path );
+
+    return path;
 }
 
 QString Properties::cacheWorkingPath() const
 {
-	return mSettings->value( SETTINGS_CACHE_WORKING_PATH, temporaryPath() ).toString();
+    return mSettings->value( SETTINGS_CACHE_WORKING_PATH, temporaryPath() ).toString();
 }
 
 void Properties::setCacheWorkingPath( const QString& path )
 {
-	mSettings->setValue( SETTINGS_CACHE_WORKING_PATH, path );
+    mSettings->setValue( SETTINGS_CACHE_WORKING_PATH, path );
 }
 
 qint64 Properties::cacheDiskSize() const
 {
-	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE ).value<qint64>();
+    return mSettings->value( SETTINGS_CACHE_DISK_SIZE, DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE ).value<qint64>();
 }
 
 void Properties::setCacheDiskSize( qint64 sizeByte )
 {
-	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeByte );
+    mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeByte );
 }
 
 bool Properties::cacheUseTemporaryPath() const
 {
-	return mSettings->value( SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH, false ).toBool();
+    return mSettings->value( SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH, false ).toBool();
 }
 
 void Properties::setCacheUseTemporaryPath( bool useTemporary )
 {
-	mSettings->setValue( SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH, useTemporary );
+    mSettings->setValue( SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH, useTemporary );
 }
 
 QNetworkProxy::ProxyType Properties::proxyType() const
 {
-	return QNetworkProxy::ProxyType( mSettings->value( SETTINGS_PROXY_TYPE, QNetworkProxy::NoProxy ).toInt() );
+    return QNetworkProxy::ProxyType( mSettings->value( SETTINGS_PROXY_TYPE, QNetworkProxy::NoProxy ).toInt() );
 }
 
 void Properties::setProxyType( QNetworkProxy::ProxyType type )
 {
-	mSettings->setValue( SETTINGS_PROXY_TYPE, type );
+    mSettings->setValue( SETTINGS_PROXY_TYPE, type );
 }
 
 QString Properties::proxyServer() const
 {
-	return mSettings->value( SETTINGS_PROXY_SERVER ).toString();
+    return mSettings->value( SETTINGS_PROXY_SERVER ).toString();
 }
 
 void Properties::setProxyServer( const QString& server )
 {
-	mSettings->setValue( SETTINGS_PROXY_SERVER, server );
+    mSettings->setValue( SETTINGS_PROXY_SERVER, server );
 }
 
 int Properties::proxyPort() const
 {
-	return mSettings->value( SETTINGS_PROXY_PORT, -1 ).toInt();
+    return mSettings->value( SETTINGS_PROXY_PORT, -1 ).toInt();
 }
 
 void Properties::setProxyPort( int port )
 {
-	mSettings->setValue( SETTINGS_PROXY_PORT, port );
+    mSettings->setValue( SETTINGS_PROXY_PORT, port );
 }
 
 QString Properties::proxyLogin() const
 {
-	return mSettings->value( SETTINGS_PROXY_LOGIN ).toString();
+    return mSettings->value( SETTINGS_PROXY_LOGIN ).toString();
 }
 
 void Properties::setProxyLogin( const QString& login )
 {
-	mSettings->setValue( SETTINGS_PROXY_LOGIN, login );
+    mSettings->setValue( SETTINGS_PROXY_LOGIN, login );
 }
 
 QString Properties::proxyPassword() const
 {
-	return decrypt( mSettings->value( SETTINGS_PROXY_PASSWORD ).toByteArray() );
+    return decrypt( mSettings->value( SETTINGS_PROXY_PASSWORD ).toByteArray() );
 }
 
 void Properties::setProxyPassword( const QString& password )
 {
-	mSettings->setValue( SETTINGS_PROXY_PASSWORD, crypt( password ) );
+    mSettings->setValue( SETTINGS_PROXY_PASSWORD, crypt( password ) );
 }
 
 QDateTime Properties::updateLastUpdated() const
 {
-	return mSettings->value( SETTINGS_UPDATE_LAST_UPDATED ).toDateTime();
+    return mSettings->value( SETTINGS_UPDATE_LAST_UPDATED ).toDateTime();
 }
 
 void Properties::setUpdateLastUpdated( const QDateTime& dateTime )
 {
-	mSettings->setValue( SETTINGS_UPDATE_LAST_UPDATED, dateTime );
+    mSettings->setValue( SETTINGS_UPDATE_LAST_UPDATED, dateTime );
 }
 
 QDateTime Properties::updateLastChecked() const
 {
-	return mSettings->value( SETTINGS_UPDATE_LAST_CHECKED ).toDateTime();
+    return mSettings->value( SETTINGS_UPDATE_LAST_CHECKED ).toDateTime();
 }
 
 void Properties::setUpdateLastChecked( const QDateTime& dateTime )
 {
-	mSettings->setValue( SETTINGS_UPDATE_LAST_CHECKED, dateTime );
+    mSettings->setValue( SETTINGS_UPDATE_LAST_CHECKED, dateTime );
 }
 
 QStringList Properties::translationsPaths() const
 {
-	QSet<QString> translationsPaths = mSettings->value( SETTINGS_TRANSLATIONS_PATHS ).toStringList().toSet();
-	
-	if ( translationsPaths.isEmpty() ) {
-		translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
-		
-#if defined( Q_OS_WIN )
-		// sources ones
-		translationsPaths << "qt/translations";
-		translationsPaths << "translations";
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
-#elif defined( Q_OS_MAC )
-		// sources ones
-		translationsPaths << "../Resources/qt/translations";
-		translationsPaths << "../Resources/translations";
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../fresh/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../../../fresh/translations" );
-#else
-		// sources ones
-		translationsPaths << "qt/translations";
-		translationsPaths << "translations";
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
-#endif
-	}
+    QSet<QString> translationsPaths = mSettings->value( SETTINGS_TRANSLATIONS_PATHS ).toStringList().toSet();
 
-	//qWarning() << translationsPaths;
-	
-	return translationsPaths.toList();
+    if ( translationsPaths.isEmpty() ) {
+        translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+
+#if defined( Q_OS_WIN )
+        // sources ones
+        translationsPaths << "qt/translations";
+        translationsPaths << "translations";
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
+#elif defined( Q_OS_MAC )
+        // sources ones
+        translationsPaths << "../Resources/qt/translations";
+        translationsPaths << "../Resources/translations";
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../fresh/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../../../fresh/translations" );
+#else
+        // sources ones
+        translationsPaths << "qt/translations";
+        translationsPaths << "translations";
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
+        translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
+#endif
+    }
+
+    //qWarning() << translationsPaths;
+
+    return translationsPaths.toList();
 }
 
 void Properties::setTranslationsPaths( const QStringList& translationsPaths )
 {
-	mSettings->setValue( SETTINGS_TRANSLATIONS_PATHS, translationsPaths );
+    mSettings->setValue( SETTINGS_TRANSLATIONS_PATHS, translationsPaths );
 }
 
 bool Properties::localeAccepted() const
 {
-	return mSettings->value( SETTINGS_LOCALE_ACCEPTED ).toBool();
+    return mSettings->value( SETTINGS_LOCALE_ACCEPTED ).toBool();
 }
 
 void Properties::setLocaleAccepted( bool accepted )
 {
-	mSettings->setValue( SETTINGS_LOCALE_ACCEPTED, accepted );
+    mSettings->setValue( SETTINGS_LOCALE_ACCEPTED, accepted );
 }
 
 QLocale Properties::locale() const
 {
-	return QLocale( mSettings->value( SETTINGS_LOCALE_CURRENT, QLocale::system().name() ).toString() );
+    return QLocale( mSettings->value( SETTINGS_LOCALE_CURRENT, QLocale::system().name() ).toString() );
 }
 
 void Properties::setLocale( const QLocale& locale )
 {
-	mSettings->setValue( SETTINGS_LOCALE_CURRENT, locale.name() );
+    mSettings->setValue( SETTINGS_LOCALE_CURRENT, locale.name() );
 }
 
 QListView::ViewMode Properties::viewMode() const
 {
-	return QListView::ViewMode( mSettings->value( SETTINGS_VIEW_MODE, QListView::IconMode ).toInt() );
+    return QListView::ViewMode( mSettings->value( SETTINGS_VIEW_MODE, QListView::IconMode ).toInt() );
 }
 
 void Properties::setViewMode( QListView::ViewMode mode )
 {
-	mSettings->setValue( SETTINGS_VIEW_MODE, mode );
+    mSettings->setValue( SETTINGS_VIEW_MODE, mode );
 }
 
 QWBFS::WiiTDB::Scan Properties::viewIconType() const
 {
-	return QWBFS::WiiTDB::Scan( mSettings->value( SETTINGS_VIEW_ICON_TYPE, QWBFS::WiiTDB::Cover ).toInt() );
+    return QWBFS::WiiTDB::Scan( mSettings->value( SETTINGS_VIEW_ICON_TYPE, QWBFS::WiiTDB::Cover ).toInt() );
 }
 
 void Properties::setViewIconType( QWBFS::WiiTDB::Scan scan )
 {
-	mSettings->setValue( SETTINGS_VIEW_ICON_TYPE, scan );
+    mSettings->setValue( SETTINGS_VIEW_ICON_TYPE, scan );
 }
 
 void Properties::restoreState( UIMain* window ) const
 {
-	const QRect geometry = mSettings->value( SETTINGS_WINDOW_GEOMETRY ).toRect();
-	const QByteArray state = mSettings->value( SETTINGS_WINDOW_STATE ).toByteArray();
-	
-	pGuiUtils::restoreGeometry( window, geometry );
-	window->restoreState( state );
+    const QRect geometry = mSettings->value( SETTINGS_WINDOW_GEOMETRY ).toRect();
+    const QByteArray state = mSettings->value( SETTINGS_WINDOW_STATE ).toByteArray();
+
+    pGuiUtils::restoreGeometry( window, geometry );
+    window->restoreState( state );
 }
 
 void Properties::saveState( UIMain* window )
 {
-	const QRect geometry = pGuiUtils::saveGeometry( window );
-	const QByteArray state = window->saveState();
-	
-	mSettings->setValue( SETTINGS_WINDOW_GEOMETRY, geometry );
-	mSettings->setValue( SETTINGS_WINDOW_STATE, state );
+    const QRect geometry = pGuiUtils::saveGeometry( window );
+    const QByteArray state = window->saveState();
+
+    mSettings->setValue( SETTINGS_WINDOW_GEOMETRY, geometry );
+    mSettings->setValue( SETTINGS_WINDOW_STATE, state );
 }
 
 QString Properties::selectedPath() const
 {
-	return mSettings->value( SETTINGS_WINDOW_SELECTED_PATH ).toString();
+    return mSettings->value( SETTINGS_WINDOW_SELECTED_PATH ).toString();
 }
 
 void Properties::setSelectedPath( const QString& path )
 {
-	mSettings->setValue( SETTINGS_WINDOW_SELECTED_PATH, path );
+    mSettings->setValue( SETTINGS_WINDOW_SELECTED_PATH, path );
 }
 
 QString Properties::selectedPartition() const
 {
-	return mSettings->value( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION ).toString();
+    return mSettings->value( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION ).toString();
 }
 
 void Properties::setSelectedPartition( const QString& partition )
 {
-	mSettings->setValue( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION, partition );
+    mSettings->setValue( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION, partition );
 }
 
 QStringList Properties::customPartitions() const
 {
-	return mSettings->value( SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS ).toStringList();
+    return mSettings->value( SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS ).toStringList();
 }
 
 void Properties::setCustomPartitions( const QStringList& partitions )
 {
-	mSettings->setValue( SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS, partitions );
+    mSettings->setValue( SETTINGS_PARTITION_WIDGET_CUSTOM_PARTITIONS, partitions );
 }
 
 QString Properties::decrypt( const QByteArray& data )
 {
-	return data.isEmpty() ? QString::null : QString::fromUtf8( qUncompress( QByteArray::fromBase64( data ) ) );
+    return data.isEmpty() ? QString::null : QString::fromUtf8( qUncompress( QByteArray::fromBase64( data ) ) );
 }
 
 QByteArray Properties::crypt( const QString& string )
 {
-	return string.isEmpty() ? QByteArray() : qCompress( string.toUtf8(), 9 ).toBase64();
+    return string.isEmpty() ? QByteArray() : qCompress( string.toUtf8(), 9 ).toBase64();
 }

@@ -73,7 +73,7 @@ QMAKE_TARGET_COMPANY = "QWBFS Team"
 QMAKE_TARGET_PRODUCT = "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION = "The Free, Fast and Powerful cross platform Wii Backup File System manager"
 greaterThan( QT_MAJOR_VERSION, 4 ) {
-    QMAKE_TARGET_COPYRIGHT = "(C) 2010 - 2014 Filipe Azevedo"
+    QMAKE_TARGET_COPYRIGHT = "© 2010 - 2014 Filipe Azevedo"
 } else {
     QMAKE_TARGET_COPYRIGHT = "\\251 2010 - 2014 Filipe Azevedo"
 }
@@ -83,14 +83,23 @@ PACKAGE_REPORT_BUG_URL = "https://github.com/pasnox/qwbfsmanager/issues"
 PACKAGE_DISCUSS_URL = "http://groups.google.com/group/qwbfs-discuss"
 PACKAGE_VERSION = 1.2.4
 isEqual( OS, "windows" ):SVN_REVISION = "N/C"
-else:SVN_REVISION = $$system( export LANG=C && [ -f /usr/bin/svnversion ] && svnversion $$PWD/.. )
+else:SVN_REVISION = $$system( export LANG=C && [ -f /usr/bin/git ] && git --git-dir="$$PWD/../.git" describe )
+isEmpty( SVN_REVISION ):SVN_REVISION = "N/C"
 
 !isEqual( OS, "windows" ):system( touch $$PWD/src/main.h )
 
-CONFIG( debug, debug|release ) {
-    PACKAGE_VERSION_STR = $${PACKAGE_VERSION} (svn$$SVN_REVISION debug)
+isEqual( SVN_REVISION, "N/C" ) {
+    CONFIG( debug, debug|release ) {
+        PACKAGE_VERSION_STR = $${PACKAGE_VERSION} (debug)
+    } else {
+        PACKAGE_VERSION_STR = $${PACKAGE_VERSION} (release)
+    }
 } else {
-    PACKAGE_VERSION_STR = $${PACKAGE_VERSION} (svn$$SVN_REVISION release)
+    CONFIG( debug, debug|release ) {
+        PACKAGE_VERSION_STR = $${PACKAGE_VERSION} ($$SVN_REVISION debug)
+    } else {
+        PACKAGE_VERSION_STR = $${PACKAGE_VERSION} ($$SVN_REVISION release)
+    }
 }
 
 # define variable for source code

@@ -40,59 +40,59 @@
 #include <QScrollBar>
 
 UIAbout::UIAbout( QWidget* parent )
-	: QDialog( parent )
+    : QDialog( parent )
 {
-	setAttribute( Qt::WA_DeleteOnClose );
-	setupUi( this );
+    setAttribute( Qt::WA_DeleteOnClose );
+    setupUi( this );
 #if !defined( Q_OS_MAC )
-	const QList<QWidget*> widgets = QList<QWidget*>()
-		<< lName
-		<< lVersion
-		<< lDescription
-		<< lCopyrights
-		<< lDomain
-		<< pteLicense
-		<< lWarning
-		<< lThirdParty
-		;
-	
-	foreach ( QWidget* widget, widgets ) {
-		QFont font = widget->font();
-		font.setPointSize( font.pointSize() -2 );
-		widget->setFont( font );
-	}
+    const QList<QWidget*> widgets = QList<QWidget*>()
+        << lName
+        << lVersion
+        << lDescription
+        << lCopyrights
+        << lDomain
+        << pteLicense
+        << lWarning
+        << lThirdParty
+        ;
+
+    foreach ( QWidget* widget, widgets ) {
+        QFont font = widget->font();
+        font.setPointSize( font.pointSize() -2 );
+        widget->setFont( font );
+    }
 #endif
-	
-	foreach ( QScrollBar* sb, twPages->findChildren<QScrollBar*>() ) {
-		sb->setAttribute( Qt::WA_MacMiniSize );
-	}
-	
-	lName->setText( APPLICATION_NAME );
-	lCopyrights->setText( APPLICATION_COPYRIGHTS );
-	lDomain->setText( QString( "<a href=\"https://%1\" style=\"text-decoration:none;\">http://%1</a>" ).arg( APPLICATION_DOMAIN ) );
-	localeChanged();
-	
-	QFile file( ":/files/GPL-2" );
-	file.open( QIODevice::ReadOnly );
-	pteLicense->setPlainText( QString::fromUtf8( file.readAll() ) );
+
+    foreach ( QScrollBar* sb, twPages->findChildren<QScrollBar*>() ) {
+        sb->setAttribute( Qt::WA_MacMiniSize );
+    }
+
+    lName->setText( APPLICATION_NAME );
+    lCopyrights->setText( APPLICATION_COPYRIGHTS );
+    lDomain->setText( QString( "<a href=\"https://%1\" style=\"text-decoration:none;\">https://%1</a>" ).arg( APPLICATION_DOMAIN ) );
+    localeChanged();
+
+    QFile file( ":/files/GPL-2" );
+    file.open( QIODevice::ReadOnly );
+    pteLicense->setPlainText( QString::fromUtf8( file.readAll() ) );
 }
 
 bool UIAbout::event( QEvent* event )
 {
-	switch ( event->type() ) {
-		case QEvent::LocaleChange:
-			localeChanged();
-			break;
-		default:
-			break;
-	}
-	
-	return QDialog::event( event );
+    switch ( event->type() ) {
+        case QEvent::LocaleChange:
+            localeChanged();
+            break;
+        default:
+            break;
+    }
+
+    return QDialog::event( event );
 }
 
 void UIAbout::localeChanged()
 {
-	retranslateUi( this );
-	lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
-	lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ).append( "." ) );
+    retranslateUi( this );
+    lVersion->setText( tr( "Version %1" ).arg( APPLICATION_VERSION_STR ) );
+    lDescription->setText( QObject::tr( APPLICATION_DESCRIPTION ).append( "." ) );
 }
