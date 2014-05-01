@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionComboBox.h
@@ -43,23 +43,23 @@ class QToolButton;
 
 class PartitionComboBox : public QComboBox
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	PartitionComboBox( QWidget* parent = 0 );
-	virtual ~PartitionComboBox();
-	
-	static pPartitionModel* partitionModel();
+    PartitionComboBox( QWidget* parent = 0 );
+    virtual ~PartitionComboBox();
+    
+    static pPartitionModel* partitionModel();
 
 protected slots:
-	void modelChanged();
-	void addPartition();
+    void modelChanged();
+    void addPartition();
 
 protected:
-	QToolButton* mButton;
-	
-	virtual bool event( QEvent* event );
-	virtual void paintEvent( QPaintEvent* event );
+    QToolButton* mButton;
+    
+    virtual bool event( QEvent* event );
+    virtual void paintEvent( QPaintEvent* event );
 };
 
 #endif // PARTITIONCOMBOBOX_H

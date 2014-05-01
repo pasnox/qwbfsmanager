@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionHandle.h
@@ -50,12 +50,12 @@ namespace Internal {
 class HandleData : public QSharedData
 {
 public:
-	HandleData( const QWBFS::Partition::Properties& properties = QWBFS::Partition::Properties() );
-	HandleData( const HandleData& other );
-	~HandleData();
-	
-	QWBFS::Partition::Properties properties;
-	wbfs_t* handle;
+    HandleData( const QWBFS::Partition::Properties& properties = QWBFS::Partition::Properties() );
+    HandleData( const HandleData& other );
+    ~HandleData();
+    
+    QWBFS::Partition::Properties properties;
+    wbfs_t* handle;
 };
 
 }; // Internal
@@ -63,20 +63,20 @@ public:
 class Handle
 {
 public:
-	Handle( const QWBFS::Partition::Properties& properties = QWBFS::Partition::Properties() );
-	Handle( const QString& partition );
-	~Handle();
-	
-	bool isValid() const;
-	wbfs_t* ptr() const;
-	
-	QWBFS::Partition::Properties properties() const;
-	
-	bool reset() const;
-	QString partition() const;
-	
+    Handle( const QWBFS::Partition::Properties& properties = QWBFS::Partition::Properties() );
+    Handle( const QString& partition );
+    ~Handle();
+    
+    bool isValid() const;
+    wbfs_t* ptr() const;
+    
+    QWBFS::Partition::Properties properties() const;
+    
+    bool reset() const;
+    QString partition() const;
+    
 protected:
-	QSharedDataPointer<Internal::HandleData> d;
+    QSharedDataPointer<Internal::HandleData> d;
 };
 
 }; // Partition

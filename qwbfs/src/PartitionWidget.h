@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionWidget.h
@@ -50,61 +50,61 @@ class DiscModel;
 
 class PartitionWidget : public QWidget, public Ui::PartitionWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	PartitionWidget( QWidget* parent = 0 );
-	virtual ~PartitionWidget();
-	
-	virtual bool event( QEvent* event );
-	
-	const QWBFS::Driver* driver() const;
-	QWBFS::Model::DiscModel* discModel() const;
-	QWBFS::Model::DiscModel* importModel() const;
-	QToolButton* showHideImportViewButton() const;
-	QString currentPartition() const;
-	
-	void setMainView( bool main );
+    PartitionWidget( QWidget* parent = 0 );
+    virtual ~PartitionWidget();
+    
+    virtual bool event( QEvent* event );
+    
+    const QWBFS::Driver* driver() const;
+    QWBFS::Model::DiscModel* discModel() const;
+    QWBFS::Model::DiscModel* importModel() const;
+    QToolButton* showHideImportViewButton() const;
+    QString currentPartition() const;
+    
+    void setMainView( bool main );
 
 public slots:
-	void setCurrentPartition( const QString& partition );
-	void showError( const QString& error );
-	void showError( int error );
+    void setCurrentPartition( const QString& partition );
+    void showError( const QString& error );
+    void showError( int error );
 
 protected:
-	QWBFS::Driver* mDriver;
-	
-	virtual void dragEnterEvent( QDragEnterEvent* event );
-	virtual void dropEvent( QDropEvent* event );
-	
-	UIMain* mainWindow() const;
-	void localeChanged();
+    QWBFS::Driver* mDriver;
+    
+    virtual void dragEnterEvent( QDragEnterEvent* event );
+    virtual void dropEvent( QDropEvent* event );
+    
+    UIMain* mainWindow() const;
+    void localeChanged();
 
 protected slots:
-	void models_countChanged();
-	void views_selectionChanged();
-	void coverFlow_centerIndexChanged( const QModelIndex& index );
-	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void progress_finished();
-	
-	void on_cbPartitions_currentIndexChanged( int index );
-	
-	void on_tbLoad_clicked();
-	void on_tbFormat_clicked();
-	void on_tbOpen_clicked();
-	void on_tbClose_clicked();
-	
-	void on_tbRemoveDiscs_clicked();
-	void on_tbRenameDisc_clicked();
-	
-	void on_tbClearImport_clicked();
-	void on_tbRemoveImport_clicked();
-	void on_tbImport_clicked();
+    void models_countChanged();
+    void views_selectionChanged();
+    void coverFlow_centerIndexChanged( const QModelIndex& index );
+    void progress_jobFinished( const QWBFS::Model::Disc& disc );
+    void progress_finished();
+    
+    void on_cbPartitions_currentIndexChanged( int index );
+    
+    void on_tbLoad_clicked();
+    void on_tbFormat_clicked();
+    void on_tbOpen_clicked();
+    void on_tbClose_clicked();
+    
+    void on_tbRemoveDiscs_clicked();
+    void on_tbRenameDisc_clicked();
+    
+    void on_tbClearImport_clicked();
+    void on_tbRemoveImport_clicked();
+    void on_tbImport_clicked();
 
 signals:
-	void openViewRequested();
-	void closeViewRequested();
-	void coverRequested( const QString& id );
+    void openViewRequested();
+    void closeViewRequested();
+    void coverRequested( const QString& id );
 };
 
 #endif // PARTITIONWIDGET_H

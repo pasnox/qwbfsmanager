@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : DiscModel.h
@@ -52,99 +52,99 @@ namespace Model {
 
 class DiscModel : public QAbstractItemModel
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	typedef QPair<int, int> PairIntInt;
-	
-	enum CustomRole {
-		ListModeSizeHintRole = Qt::UserRole,
-		IconModeSizeHintRole,
-		CoverFlowModeSizeHintRole
-	};
-	
-	DiscModel( ListView* parent = 0, QWBFS::Driver* driver = 0 );
-	virtual ~DiscModel();
-	
-	virtual int columnCount( const QModelIndex& parent = QModelIndex() ) const;
-	virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
-	virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
-	virtual QModelIndex parent( const QModelIndex& index ) const;
-	virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
-	
-	virtual bool hasChildren( const QModelIndex& parent = QModelIndex() ) const;
-	virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
-	virtual bool removeRows( int row, int count, const QModelIndex& parent = QModelIndex() );
-	virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
-	virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-	virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
-	
-	virtual Qt::DropActions supportedDropActions() const;
-	virtual bool dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent );
-	virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
-	virtual QStringList mimeTypes() const;
-	
-	QPixmap coverPixmap( const QString& id, const QSize& size, bool coverFlow = false ) const;
-	QPixmap statePixmap( int state, const QSize& size ) const;
-	
-	ListView* view() const;
-	
-	void insertDiscs( int index, const QWBFS::Model::DiscList& discs );
-	void addDiscs( const QWBFS::Model::DiscList& discs );
-	void setDiscs( const QWBFS::Model::DiscList& discs );
-	void setDisc( const QModelIndex& index, const QWBFS::Model::Disc& disc );
-	QWBFS::Model::DiscList discs() const;
-	QWBFS::Model::DiscList discs( const QModelIndexList& indexes );
-	QWBFS::Model::DiscList discs( const QItemSelection& selection );
-	QWBFS::Model::Disc disc( const QModelIndex& index ) const;
-	QModelIndex index( const QString& id ) const;
-	QModelIndex index( const QWBFS::Model::Disc& disc, int column = 0 ) const;
-	QString discId( const QModelIndex& index ) const;
-	void removeSelection( const QItemSelection& selection );
-	void updateDisc( const QWBFS::Model::Disc& disc );
-	qint64 size() const;
+    typedef QPair<int, int> PairIntInt;
+    
+    enum CustomRole {
+        ListModeSizeHintRole = Qt::UserRole,
+        IconModeSizeHintRole,
+        CoverFlowModeSizeHintRole
+    };
+    
+    DiscModel( ListView* parent = 0, QWBFS::Driver* driver = 0 );
+    virtual ~DiscModel();
+    
+    virtual int columnCount( const QModelIndex& parent = QModelIndex() ) const;
+    virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    virtual QModelIndex index( int row, int column, const QModelIndex& parent = QModelIndex() ) const;
+    virtual QModelIndex parent( const QModelIndex& index ) const;
+    virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
+    
+    virtual bool hasChildren( const QModelIndex& parent = QModelIndex() ) const;
+    virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
+    virtual bool removeRows( int row, int count, const QModelIndex& parent = QModelIndex() );
+    virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+    virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
+    
+    virtual Qt::DropActions supportedDropActions() const;
+    virtual bool dropMimeData( const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent );
+    virtual QMimeData* mimeData( const QModelIndexList& indexes ) const;
+    virtual QStringList mimeTypes() const;
+    
+    QPixmap coverPixmap( const QString& id, const QSize& size, bool coverFlow = false ) const;
+    QPixmap statePixmap( int state, const QSize& size ) const;
+    
+    ListView* view() const;
+    
+    void insertDiscs( int index, const QWBFS::Model::DiscList& discs );
+    void addDiscs( const QWBFS::Model::DiscList& discs );
+    void setDiscs( const QWBFS::Model::DiscList& discs );
+    void setDisc( const QModelIndex& index, const QWBFS::Model::Disc& disc );
+    QWBFS::Model::DiscList discs() const;
+    QWBFS::Model::DiscList discs( const QModelIndexList& indexes );
+    QWBFS::Model::DiscList discs( const QItemSelection& selection );
+    QWBFS::Model::Disc disc( const QModelIndex& index ) const;
+    QModelIndex index( const QString& id ) const;
+    QModelIndex index( const QWBFS::Model::Disc& disc, int column = 0 ) const;
+    QString discId( const QModelIndex& index ) const;
+    void removeSelection( const QItemSelection& selection );
+    void updateDisc( const QWBFS::Model::Disc& disc );
+    qint64 size() const;
 
 public slots:
-	void clear();
+    void clear();
 
 protected:
-	ListView* mListView;
-	Driver* mDriver;
-	QWBFS::Model::DiscList mDiscs;
-	QHash<QString, QPersistentModelIndex> mIndexes;
-	
-	static QStringList mMimeTypes;
+    ListView* mListView;
+    Driver* mDriver;
+    QWBFS::Model::DiscList mDiscs;
+    QHash<QString, QPersistentModelIndex> mIndexes;
+    
+    static QStringList mMimeTypes;
 
 signals:
-	void countChanged( int count );
+    void countChanged( int count );
 };
 
 struct SelectionRangePairLessThanSorter
 {
-	bool operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const;
+    bool operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const;
 };
 
 struct SelectionRangePairGreaterThanSorter
 {
-	bool operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const;
+    bool operator()( const DiscModel::PairIntInt& left, const DiscModel::PairIntInt& right ) const;
 };
 
 struct HashLessThanSorter
 {
-	HashLessThanSorter( int column );
-	
-	bool operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const;
+    HashLessThanSorter( int column );
+    
+    bool operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const;
 
-	int c;
+    int c;
 };
 
 struct HashGreaterThanSorter
 {
-	HashGreaterThanSorter( int column );
-	
-	bool operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const;
+    HashGreaterThanSorter( int column );
+    
+    bool operator()( const QWBFS::Model::Disc& left, const QWBFS::Model::Disc& right ) const;
 
-	int c;
+    int c;
 };
 
 }; // Models

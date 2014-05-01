@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : DiscDelegate.h
@@ -47,22 +47,22 @@ class DiscModel;
 
 class DiscDelegate : public QStyledItemDelegate
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	DiscDelegate( QWBFS::Model::DiscModel* parent, pNetworkAccessManager* cache );
-	virtual ~DiscDelegate();
-	
-	virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-	virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+    DiscDelegate( QWBFS::Model::DiscModel* parent, pNetworkAccessManager* cache );
+    virtual ~DiscDelegate();
+    
+    virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+    virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
 protected:
-	QWBFS::Model::DiscModel* mModel;
-	pNetworkAccessManager* mCache;
-	
-	void paintFrame( QPainter* painter, const QStyleOptionViewItemV4& option, bool pair = true ) const;
-	void paintList( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;
-	void paintIcon( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;
+    QWBFS::Model::DiscModel* mModel;
+    pNetworkAccessManager* mCache;
+    
+    void paintFrame( QPainter* painter, const QStyleOptionViewItemV4& option, bool pair = true ) const;
+    void paintList( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;
+    void paintIcon( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;
 };
 
 }; // Model

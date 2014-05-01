@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionDiscHandle.h
@@ -48,31 +48,31 @@ namespace Internal {
 class DiscHandleData : public QSharedData
 {
 public:
-	DiscHandleData( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle(), const QString& discId = QString::null );
-	DiscHandleData( const DiscHandleData& other );
-	~DiscHandleData();
-	
-	wbfs_disc_t* handle;
-	QString discId;
-	int index;
+    DiscHandleData( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle(), const QString& discId = QString::null );
+    DiscHandleData( const DiscHandleData& other );
+    ~DiscHandleData();
+    
+    wbfs_disc_t* handle;
+    QString discId;
+    int index;
 };
 
 }; // Internal
 
 struct DiscHandle
 {
-	DiscHandle( const QWBFS::Partition::Handle& handle, const QString& discId );
-	~DiscHandle();
-	
-	bool isValid() const;
-	wbfs_disc_t* ptr() const;
-	
-	QString discId() const;
-	int index() const;
-	QString isoName() const;
-	
+    DiscHandle( const QWBFS::Partition::Handle& handle, const QString& discId );
+    ~DiscHandle();
+    
+    bool isValid() const;
+    wbfs_disc_t* ptr() const;
+    
+    QString discId() const;
+    int index() const;
+    QString isoName() const;
+    
 protected:
-	QSharedDataPointer<Internal::DiscHandleData> d;
+    QSharedDataPointer<Internal::DiscHandleData> d;
 };
 
 }; // Partition

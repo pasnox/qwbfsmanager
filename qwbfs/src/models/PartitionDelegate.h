@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : Fresh Library
 ** FileName  : PartitionDelegate.h
@@ -25,7 +25,7 @@
 ****************************************************************************/
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionDelegate.h
@@ -62,9 +62,9 @@
 #define PARTITIONDELEGATE_H
 
 /*!
-	\file PartitionDelegate.h
-	\brief A delegate for drawing the representation of a pPartition.
-	\author Filipe Azevedo aka Nox P\@sNox <pasnox@gmail.com>
+    \file PartitionDelegate.h
+    \brief A delegate for drawing the representation of a pPartition.
+    \author Filipe Azevedo aka Nox P\@sNox <pasnox@gmail.com>
 */
 
 #include <QStyledItemDelegate>
@@ -72,37 +72,37 @@
 class pPartitionModel;
 
 /*!
-	\ingroup Gui
-	\class PartitionDelegate
-	\brief A delegate for drawing the representation of a pPartition.
+    \ingroup Gui
+    \class PartitionDelegate
+    \brief A delegate for drawing the representation of a pPartition.
 */
 class PartitionDelegate : public QStyledItemDelegate
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	/*!
-		Create a instance of the delegate having \a parent as parent and model.
-	*/
-	PartitionDelegate( pPartitionModel* parent );
-	/*!
-		Destroys the instance of the delegate.
-	*/
-	virtual ~PartitionDelegate();
-	/*!
-		Reimplemented.
-	*/
-	virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-	/*!
-		Reimplemented.
-	*/
-	virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+    /*!
+        Create a instance of the delegate having \a parent as parent and model.
+    */
+    PartitionDelegate( pPartitionModel* parent );
+    /*!
+        Destroys the instance of the delegate.
+    */
+    virtual ~PartitionDelegate();
+    /*!
+        Reimplemented.
+    */
+    virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+    /*!
+        Reimplemented.
+    */
+    virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
 protected:
-	pPartitionModel* mModel;
-	QStyle* mStyle;
-	
-	void paintFrame( QPainter* painter, const QStyleOption* option, bool pair = true ) const;
+    pPartitionModel* mModel;
+    QStyle* mStyle;
+    
+    void paintFrame( QPainter* painter, const QStyleOption* option, bool pair = true ) const;
 };
 
 #endif // PARTITIONDELEGATE_H

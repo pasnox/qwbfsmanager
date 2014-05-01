@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : Disc.h
@@ -47,38 +47,38 @@ typedef QList<struct Disc> DiscList;
 
 struct Disc
 {
-	Disc( const QDomElement& element = QDomElement() );
-	Disc( const QString& filePath );
-	
-	bool operator==( const Disc& other ) const;
-	
-	bool isValid() const;
-	bool hasError() const;
-	QString baseName( const QString& invalidChars = QString::null ) const;
-	
-	void addToDocument( QDomDocument& document ) const;
-	void readFromElement( const QDomElement& element );
-	
-	static QString cleanupGameTitle( const QString& title, const QString& invalidChars );
-	
-	static QDomDocument toDocument( const DiscList& discs );
-	static DiscList fromDocument( const QDomDocument& document );
-	
-	static QByteArray toByteArray( const DiscList& discs );
-	static DiscList fromByteArray( const QByteArray& data );
-	
-	QString id;
-	QString title;
-	quint32 size;
-	QString origin;
-	int region;
-	int state;
-	int error;
+    Disc( const QDomElement& element = QDomElement() );
+    Disc( const QString& filePath );
+    
+    bool operator==( const Disc& other ) const;
+    
+    bool isValid() const;
+    bool hasError() const;
+    QString baseName( const QString& invalidChars = QString::null ) const;
+    
+    void addToDocument( QDomDocument& document ) const;
+    void readFromElement( const QDomElement& element );
+    
+    static QString cleanupGameTitle( const QString& title, const QString& invalidChars );
+    
+    static QDomDocument toDocument( const DiscList& discs );
+    static DiscList fromDocument( const QDomDocument& document );
+    
+    static QByteArray toByteArray( const DiscList& discs );
+    static DiscList fromByteArray( const QByteArray& data );
+    
+    QString id;
+    QString title;
+    quint32 size;
+    QString origin;
+    int region;
+    int state;
+    int error;
 };
 
 inline uint qHash( const Disc& disc )
 {
-	return qHash( QString( "%1 - %2" ).arg( disc.id ).arg( disc.origin ) );
+    return qHash( QString( "%1 - %2" ).arg( disc.id ).arg( disc.origin ) );
 }
 
 }; // Model

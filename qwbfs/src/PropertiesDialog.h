@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PropertiesDialog.h
@@ -42,27 +42,27 @@ class Properties;
 
 class PropertiesDialog : public QDialog, public Ui::PropertiesDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	PropertiesDialog( QWidget* parent = 0 );
-	virtual ~PropertiesDialog();
-	
-	virtual bool event( QEvent* event );
+    PropertiesDialog( QWidget* parent = 0 );
+    virtual ~PropertiesDialog();
+    
+    virtual bool event( QEvent* event );
 
 protected:
-	Properties* mProperties;
-	
-	void localeChanged();
+    Properties* mProperties;
+    
+    void localeChanged();
 
 protected slots:
-	void on_tbChangeLocale_clicked();
-	void on_tbCachePath_clicked();
-	void on_cbProxyType_currentIndexChanged( int index );
-	virtual void accept();
+    void on_tbChangeLocale_clicked();
+    void on_tbCachePath_clicked();
+    void on_cbProxyType_currentIndexChanged( int index );
+    virtual void accept();
 
 signals:
-	void propertiesChanged();
+    void propertiesChanged();
 };
 
 #endif // PROPERTIESDIALOG_H

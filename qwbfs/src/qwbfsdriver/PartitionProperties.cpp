@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionProperties.cpp
@@ -39,6 +39,6 @@ using namespace QWBFS::Partition;
 
 Properties::Properties( const QString& _partition )
 {
-	reset = false;
-	partition = _partition;
+    reset = false;
+    partition = _partition;
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : ProgressDialog.cpp
@@ -41,178 +41,178 @@
 #include <QDebug>
 
 ProgressDialog::ProgressDialog( QWidget* parent )
-	: QDialog( parent )
+    : QDialog( parent )
 {
-	setupUi( this );
-	setAttribute( Qt::WA_DeleteOnClose );
-	cbDetails->setChecked( false );
-	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( false );
-	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
-	
-	mThread = new WorkerThread( this );
-	doConnections();
-	localeChanged();
+    setupUi( this );
+    setAttribute( Qt::WA_DeleteOnClose );
+    cbDetails->setChecked( false );
+    dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( false );
+    dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
+    
+    mThread = new WorkerThread( this );
+    doConnections();
+    localeChanged();
 }
 
 ProgressDialog::~ProgressDialog()
 {
-	//qWarning() << Q_FUNC_INFO;
+    //qWarning() << Q_FUNC_INFO;
 }
 
 bool ProgressDialog::event( QEvent* event )
 {
-	switch ( event->type() ) {
-		case QEvent::LocaleChange:
-			localeChanged();
-			break;
-		default:
-			break;
-	}
-	
-	return QDialog::event( event );
+    switch ( event->type() ) {
+        case QEvent::LocaleChange:
+            localeChanged();
+            break;
+        default:
+            break;
+    }
+    
+    return QDialog::event( event );
 }
 
 void ProgressDialog::setWork( const WorkerThread::Work& work )
 {
-	open();
-	
-	if ( !mThread->setWork( work ) ) {
-		deleteLater();
-	}
+    open();
+    
+    if ( !mThread->setWork( work ) ) {
+        deleteLater();
+    }
 }
 
 void ProgressDialog::done( int r )
 {
-	if ( mThread->isRunning() ) {
-		return;
-	}
-	
-	QDialog::done( r );
+    if ( mThread->isRunning() ) {
+        return;
+    }
+    
+    QDialog::done( r );
 }
 
 void ProgressDialog::closeEvent( QCloseEvent* event )
 {
-	if ( mThread->isRunning() ) {
-		event->ignore();
-		return;
-	}
-	
-	QDialog::closeEvent( event );
+    if ( mThread->isRunning() ) {
+        event->ignore();
+        return;
+    }
+    
+    QDialog::closeEvent( event );
 }
 
 void ProgressDialog::localeChanged()
 {
-	retranslateUi( this );
+    retranslateUi( this );
 }
 
 void ProgressDialog::doConnections()
 {
-	connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
-	connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
-	connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
-	connect( mThread, SIGNAL( message( const QString& ) ), this, SLOT( thread_message( const QString& ) ) );
-	connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
-	connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
-	connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
-	connect( mThread, SIGNAL( globalProgressChanged( int, int ) ), this, SLOT( thread_globalProgressChanged( int, int ) ) );
-	connect( mThread, SIGNAL( canceled() ), this, SLOT( thread_canceled() ) );
-	connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
+    connect( dbbButtons->button( QDialogButtonBox::Ok ), SIGNAL( clicked() ), this, SLOT( close() ) );
+    connect( dbbButtons->button( QDialogButtonBox::Cancel ), SIGNAL( clicked() ), mThread, SLOT( stop() ) );
+    connect( mThread, SIGNAL( started() ), this, SLOT( thread_started() ) );
+    connect( mThread, SIGNAL( message( const QString& ) ), this, SLOT( thread_message( const QString& ) ) );
+    connect( mThread, SIGNAL( log( const QString& ) ), this, SLOT( thread_log( const QString& ) ) );
+    connect( mThread, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( thread_jobFinished( const QWBFS::Model::Disc& ) ) );
+    connect( mThread, SIGNAL( currentProgressChanged( int, int, const QTime& ) ), this, SLOT( thread_currentProgressChanged( int, int, const QTime& ) ) );
+    connect( mThread, SIGNAL( globalProgressChanged( int, int ) ), this, SLOT( thread_globalProgressChanged( int, int ) ) );
+    connect( mThread, SIGNAL( canceled() ), this, SLOT( thread_canceled() ) );
+    connect( mThread, SIGNAL( finished() ), this, SLOT( thread_finished() ) );
 }
 
 void ProgressDialog::thread_started()
 {
-	mElapsed.restart();
-	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( true );
+    mElapsed.restart();
+    dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( true );
 }
 
 void ProgressDialog::thread_message( const QString& text )
 {
-	lCurrentInformations->setText( text );
-	pteErrors->appendPlainText( text );
+    lCurrentInformations->setText( text );
+    pteErrors->appendPlainText( text );
 }
 
 void ProgressDialog::thread_log( const QString& text )
 {
-	pteErrors->appendPlainText( text );
-	
-	if ( !cbDetails->isChecked() ) {
-		cbDetails->toggle();
-	}
+    pteErrors->appendPlainText( text );
+    
+    if ( !cbDetails->isChecked() ) {
+        cbDetails->toggle();
+    }
 }
 
 void ProgressDialog::thread_jobFinished( const QWBFS::Model::Disc& disc )
 {
-	const QString text = QString( "%1 '%2': %3 (%4)" )
-		.arg( WorkerThread::taskToLabel( mThread->task() ) )
-		.arg( disc.baseName() )
-		.arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) )
-		.arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
-	
-	pteErrors->appendPlainText( text );
-	
-	if ( !cbDetails->isChecked() && disc.hasError() ) {
-		cbDetails->toggle();
-	}
-	
-	emit jobFinished( disc );
+    const QString text = QString( "%1 '%2': %3 (%4)" )
+        .arg( WorkerThread::taskToLabel( mThread->task() ) )
+        .arg( disc.baseName() )
+        .arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) )
+        .arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
+    
+    pteErrors->appendPlainText( text );
+    
+    if ( !cbDetails->isChecked() && disc.hasError() ) {
+        cbDetails->toggle();
+    }
+    
+    emit jobFinished( disc );
 }
 
 void ProgressDialog::thread_currentProgressChanged( int value, int maximum, const QTime& remaining )
 {
-	pbCurrent->setMaximum( maximum );
-	pbCurrent->setValue( value );
-	lCurrentRemaining->setText( tr( "Time remaining: %1" ).arg( remaining.toString() ) );
+    pbCurrent->setMaximum( maximum );
+    pbCurrent->setValue( value );
+    lCurrentRemaining->setText( tr( "Time remaining: %1" ).arg( remaining.toString() ) );
 }
 
 void ProgressDialog::thread_globalProgressChanged( int value, int maximum )
 {
-	pbGlobal->setMaximum( maximum );
-	pbGlobal->setValue( value );
+    pbGlobal->setMaximum( maximum );
+    pbGlobal->setValue( value );
 }
 
 void ProgressDialog::thread_canceled()
 {
-	lGlobalInformations->setText( tr( "Cancel requested, the process will stop after the current operation." ) );
+    lGlobalInformations->setText( tr( "Cancel requested, the process will stop after the current operation." ) );
 }
 
 void ProgressDialog::thread_finished()
 {
-	QTime time( 0, 0, 0, 0 );
-	time = time.addMSecs( mElapsed.elapsed() );
-	
-	lCurrentInformations->setText( "Tasks finished." );
-	lCurrentRemaining->clear();
-	lGlobalInformations->setText( tr( "The thread finished in %1" ).arg( time.toString() ) );
-	dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( true );
-	dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
-	
-	emit finished();
+    QTime time( 0, 0, 0, 0 );
+    time = time.addMSecs( mElapsed.elapsed() );
+    
+    lCurrentInformations->setText( "Tasks finished." );
+    lCurrentRemaining->clear();
+    lGlobalInformations->setText( tr( "The thread finished in %1" ).arg( time.toString() ) );
+    dbbButtons->button( QDialogButtonBox::Ok )->setEnabled( true );
+    dbbButtons->button( QDialogButtonBox::Cancel )->setEnabled( false );
+    
+    emit finished();
 }
 
 void ProgressDialog::on_cbDetails_toggled()
 {
-	QTimer::singleShot( 0, this, SLOT( updateSpace() ) );
+    QTimer::singleShot( 0, this, SLOT( updateSpace() ) );
 }
 
 void ProgressDialog::updateSpace()
 {
-	QWidget* widget = parentWidget();
-	QRect rect = geometry();
-	
-	if ( !widget ) {
-		widget = QApplication::desktop();
-	}
-	
-	widget = widget->window();
-	
-	if ( !cbDetails->isChecked() ) {
-		rect.setHeight( minimumSizeHint().height() );
-	}
-	
-	rect.moveCenter( widget->mapToGlobal( widget->rect().center() ) );
+    QWidget* widget = parentWidget();
+    QRect rect = geometry();
+    
+    if ( !widget ) {
+        widget = QApplication::desktop();
+    }
+    
+    widget = widget->window();
+    
+    if ( !cbDetails->isChecked() ) {
+        rect.setHeight( minimumSizeHint().height() );
+    }
+    
+    rect.moveCenter( widget->mapToGlobal( widget->rect().center() ) );
 #if defined( Q_OS_MAC )
-	rect.moveTop( widget->mapToGlobal( widget->rect().topLeft() ).y() );
+    rect.moveTop( widget->mapToGlobal( widget->rect().topLeft() ).y() );
 #endif
-	resize( rect.size() );
-	move( rect.topLeft() );
+    resize( rect.size() );
+    move( rect.topLeft() );
 }

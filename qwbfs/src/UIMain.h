@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : UIMain.h
@@ -47,68 +47,68 @@ class pUpdateChecker;
 
 namespace QWBFS {
 namespace Model {
-	class DiscModel;
+    class DiscModel;
 }; // Model
 }; // QWBFS
 
 class UIMain : public QMainWindow, public Ui::UIMain
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	UIMain( QWidget* parent = 0 );
-	virtual ~UIMain();
-	
-	virtual bool event( QEvent* event );
-	
-	pNetworkAccessManager* cache() const;
-	pQueuedMessageToolBar* messageToolBar() const;
+    UIMain( QWidget* parent = 0 );
+    virtual ~UIMain();
+    
+    virtual bool event( QEvent* event );
+    
+    pNetworkAccessManager* cache() const;
+    pQueuedMessageToolBar* messageToolBar() const;
 
 protected:
 #if defined( Q_OS_MAC )
-	QMenuBar* mMenuBar;
+    QMenuBar* mMenuBar;
 #endif
-	QMenu* mActions;
-	pPaypalButton* mDonationWidget;
-	QFileSystemModel* mFoldersModel;
-	QFileSystemModel* mFilesModel;
-	pNetworkAccessManager* mCache;
-	QString mLastDiscId;
-	pUpdateChecker* mUpdateChecker;
-	
-	virtual void showEvent( QShowEvent* event );
-	virtual void closeEvent( QCloseEvent* event );
-	virtual bool eventFilter( QObject* object, QEvent* event );
-	
-	void connectView( PartitionWidget* widget );
+    QMenu* mActions;
+    pPaypalButton* mDonationWidget;
+    QFileSystemModel* mFoldersModel;
+    QFileSystemModel* mFilesModel;
+    pNetworkAccessManager* mCache;
+    QString mLastDiscId;
+    pUpdateChecker* mUpdateChecker;
+    
+    virtual void showEvent( QShowEvent* event );
+    virtual void closeEvent( QCloseEvent* event );
+    virtual bool eventFilter( QObject* object, QEvent* event );
+    
+    void connectView( PartitionWidget* widget );
 
 protected slots:
-	void localeChanged();
-	void loadProperties( bool firstInit = true );
-	void saveProperties();
-	void changeLocaleRequested();
-	void propertiesChanged();
-	void openViewRequested();
-	void closeViewRequested();
-	void coverRequested( const QString& id );
-	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void networkAccessManager_finished( QNetworkReply* reply );
-	void networkAccessManager_cached( const QUrl& url );
-	void networkAccessManager_error( const QUrl& url, const QString& message );
-	void networkAccessManager_cacheCleared();
-	void on_aReloadPartitions_triggered();
-	void on_aQuit_triggered();
-	void on_aAbout_triggered();
-	void on_aProperties_triggered();
-	void on_aConvertToWBFSFiles_triggered();
-	void on_aConvertToISOFiles_triggered();
-	void on_aRenameDiscsInFolder_triggered();
-	void on_tvFolders_activated( const QModelIndex& index );
-	void on_tbReloadDrives_clicked();
-	void on_cbDrives_currentIndexChanged( const QString& text );
-	void on_tbClearExport_clicked();
-	void on_tbRemoveExport_clicked();
-	void on_tbExport_clicked();
+    void localeChanged();
+    void loadProperties( bool firstInit = true );
+    void saveProperties();
+    void changeLocaleRequested();
+    void propertiesChanged();
+    void openViewRequested();
+    void closeViewRequested();
+    void coverRequested( const QString& id );
+    void progress_jobFinished( const QWBFS::Model::Disc& disc );
+    void networkAccessManager_finished( QNetworkReply* reply );
+    void networkAccessManager_cached( const QUrl& url );
+    void networkAccessManager_error( const QUrl& url, const QString& message );
+    void networkAccessManager_cacheCleared();
+    void on_aReloadPartitions_triggered();
+    void on_aQuit_triggered();
+    void on_aAbout_triggered();
+    void on_aProperties_triggered();
+    void on_aConvertToWBFSFiles_triggered();
+    void on_aConvertToISOFiles_triggered();
+    void on_aRenameDiscsInFolder_triggered();
+    void on_tvFolders_activated( const QModelIndex& index );
+    void on_tbReloadDrives_clicked();
+    void on_cbDrives_currentIndexChanged( const QString& text );
+    void on_tbClearExport_clicked();
+    void on_tbRemoveExport_clicked();
+    void on_tbExport_clicked();
 };
 
 #endif // UIMAIN_H

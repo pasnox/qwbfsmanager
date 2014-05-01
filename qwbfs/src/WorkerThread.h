@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : WorkerThread.h
@@ -48,78 +48,78 @@ class QWidget;
 
 class WorkerThread : public QThread
 {
-	Q_OBJECT
-	
-	enum BasicTask {
-		Export = 0x1,
-		Import = 0x2,
-		Convert = 0x4,
-		Rename = 0x8,
-		ISO = 0x1000,
-		WBFS = 0x2000,
-		Indirect = 0x4000
-	};
-	
+    Q_OBJECT
+    
+    enum BasicTask {
+        Export = 0x1,
+        Import = 0x2,
+        Convert = 0x4,
+        Rename = 0x8,
+        ISO = 0x1000,
+        WBFS = 0x2000,
+        Indirect = 0x4000
+    };
+    
 public:
-	enum Task {
-		ExportISO = Export | ISO,
-		ExportWBFS = Export | WBFS,
-		ImportISO = Import | ISO,
-		ImportWBFS = Import | WBFS,
-		ConvertISO = Convert | ISO,
-		ConvertWBFS = Convert | WBFS,
-		RenameAll = Rename | WBFS | ISO
-	};
-	
-	struct Work
-	{
-		Work()
-		{
-			invalidChars = "/\\:|<>?*\"'";
-		}
-		
-		WorkerThread::Task task;
-		QWBFS::Model::DiscList discs;
-		QString target;
-		QString pattern;
-		QString invalidChars;
-		QWidget* window;
-	};
-	
-	WorkerThread( QObject* parent = 0 );
-	virtual ~WorkerThread();
-	
-	WorkerThread::Task task() const;
-	
-	bool setWork( const WorkerThread::Work& work );
-	
-	static QString taskToWindowTitle( WorkerThread::Task task, bool indirect = false );
-	static QString taskToLabel( WorkerThread::Task task, bool indirect = false );
+    enum Task {
+        ExportISO = Export | ISO,
+        ExportWBFS = Export | WBFS,
+        ImportISO = Import | ISO,
+        ImportWBFS = Import | WBFS,
+        ConvertISO = Convert | ISO,
+        ConvertWBFS = Convert | WBFS,
+        RenameAll = Rename | WBFS | ISO
+    };
+    
+    struct Work
+    {
+        Work()
+        {
+            invalidChars = "/\\:|<>?*\"'";
+        }
+        
+        WorkerThread::Task task;
+        QWBFS::Model::DiscList discs;
+        QString target;
+        QString pattern;
+        QString invalidChars;
+        QWidget* window;
+    };
+    
+    WorkerThread( QObject* parent = 0 );
+    virtual ~WorkerThread();
+    
+    WorkerThread::Task task() const;
+    
+    bool setWork( const WorkerThread::Work& work );
+    
+    static QString taskToWindowTitle( WorkerThread::Task task, bool indirect = false );
+    static QString taskToLabel( WorkerThread::Task task, bool indirect = false );
 
 public slots:
-	void stop();
+    void stop();
 
 protected:
-	QMutex mMutex;
-	bool mStop;
-	WorkerThread::Work mWork;
-	
-	virtual void run();
-	
-	void connectDriver( QWBFS::Driver* driver );
-	void renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern, const QString& invalidChars );
-	void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS, const QString& invalidChars );
-	void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& invalidChars );
-	void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& invalidChars );
-	void wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS, const QString& invalidChars );
+    QMutex mMutex;
+    bool mStop;
+    WorkerThread::Work mWork;
+    
+    virtual void run();
+    
+    void connectDriver( QWBFS::Driver* driver );
+    void renameDisc( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& pattern, const QString& invalidChars );
+    void isoToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS, const QString& invalidChars );
+    void wbfsToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& invalidChars );
+    void isoToISO( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, const QString& invalidChars );
+    void wbfsToWBFS( WorkerThread::Task task, QWBFS::Model::Disc& source, const QString& target, bool trimWBFS, const QString& invalidChars );
 
 signals:
-	void currentProgressChanged( int value, int maximum, const QTime& remaining );
-	void globalProgressChanged( int value, int maximum );
-	void jobFinished( const QWBFS::Model::Disc& disc );
-	void message( const QString& text );
-	void log( const QString& text );
-	void canceled();
+    void currentProgressChanged( int value, int maximum, const QTime& remaining );
+    void globalProgressChanged( int value, int maximum );
+    void jobFinished( const QWBFS::Model::Disc& disc );
+    void message( const QString& text );
+    void log( const QString& text );
+    void canceled();
 };
 
 #endif // WORKERTHREAD_H

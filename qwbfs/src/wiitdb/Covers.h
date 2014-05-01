@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : Covers.h
@@ -46,22 +46,22 @@ class pNetworkAccessManager;
 
 namespace QWBFS {
 namespace WiiTDB {
-	enum Scan {
-		CoverInvalid,
-		CoverFull,
-		CoverHQ,
-		Cover,
-		Cover3D,
-		CoverDisc,
-		CoverDiscCustom
-	};
-	
-	QUrl checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAccessManager* cache );
-	
-	QUrl coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local = QString::null );
-	QPixmap coverBoxPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
-	QPixmap coverDiscPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
-	WiiTDB::Scan urlCover( const QUrl& url );
+    enum Scan {
+        CoverInvalid,
+        CoverFull,
+        CoverHQ,
+        Cover,
+        Cover3D,
+        CoverDisc,
+        CoverDiscCustom
+    };
+    
+    QUrl checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAccessManager* cache );
+    
+    QUrl coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local = QString::null );
+    QPixmap coverBoxPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
+    QPixmap coverDiscPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
+    WiiTDB::Scan urlCover( const QUrl& url );
 }; // WiiTDB
 }; // QWBDFS
 

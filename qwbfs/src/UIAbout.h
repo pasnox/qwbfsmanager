@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : UIAbout.h
@@ -40,15 +40,15 @@
 
 class UIAbout : public QDialog, public Ui::UIAbout
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	UIAbout( QWidget* parent = 0 );
-	
-	virtual bool event( QEvent* event );
+    UIAbout( QWidget* parent = 0 );
+    
+    virtual bool event( QEvent* event );
 
 protected:
-	void localeChanged();
+    void localeChanged();
 };
 
 #endif // UIABOUT_H

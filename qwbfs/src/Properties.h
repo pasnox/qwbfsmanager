@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : Properties.h
@@ -49,76 +49,76 @@ class UIMain;
 
 class Properties : public QObject
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	Properties( QObject* parent = 0 );
-	virtual ~Properties();
-	
-	QString temporaryPath() const;
-	
-	QString cacheWorkingPath() const;
-	void setCacheWorkingPath( const QString& path );
-	
-	qint64 cacheDiskSize() const;
-	void setCacheDiskSize( qint64 sizeByte );
-	
-	bool cacheUseTemporaryPath() const;
-	void setCacheUseTemporaryPath( bool useTemporary );
-	
-	QNetworkProxy::ProxyType proxyType() const;
-	void setProxyType( QNetworkProxy::ProxyType type );
-	
-	QString proxyServer() const;
-	void setProxyServer( const QString& server );
-	
-	int proxyPort() const;
-	void setProxyPort( int port );
-	
-	QString proxyLogin() const;
-	void setProxyLogin( const QString& login );
-	
-	QString proxyPassword() const;
-	void setProxyPassword( const QString& password );
-	
-	QDateTime updateLastUpdated() const;
-	void setUpdateLastUpdated( const QDateTime& dateTime );
-	
-	QDateTime updateLastChecked() const;
-	void setUpdateLastChecked( const QDateTime& dateTime );
-	
-	QStringList translationsPaths() const;
-	void setTranslationsPaths( const QStringList& translationsPaths );
-	
-	bool localeAccepted() const;
-	void setLocaleAccepted( bool accepted );
-	
-	QLocale locale() const;
-	void setLocale( const QLocale& locale );
-	
-	QListView::ViewMode viewMode() const;
-	void setViewMode( QListView::ViewMode mode );
-	
-	QWBFS::WiiTDB::Scan viewIconType() const;
-	void setViewIconType( QWBFS::WiiTDB::Scan scan );
-	
-	void restoreState( UIMain* window ) const;
-	void saveState( UIMain* window );
-	
-	QString selectedPath() const;
-	void setSelectedPath( const QString& path );
-	
-	QString selectedPartition() const;
-	void setSelectedPartition( const QString& partition );
-	
-	QStringList customPartitions() const;
-	void setCustomPartitions( const QStringList& partitions );
-	
-	static QString decrypt( const QByteArray& data );
-	static QByteArray crypt( const QString& string );
+    Properties( QObject* parent = 0 );
+    virtual ~Properties();
+    
+    QString temporaryPath() const;
+    
+    QString cacheWorkingPath() const;
+    void setCacheWorkingPath( const QString& path );
+    
+    qint64 cacheDiskSize() const;
+    void setCacheDiskSize( qint64 sizeByte );
+    
+    bool cacheUseTemporaryPath() const;
+    void setCacheUseTemporaryPath( bool useTemporary );
+    
+    QNetworkProxy::ProxyType proxyType() const;
+    void setProxyType( QNetworkProxy::ProxyType type );
+    
+    QString proxyServer() const;
+    void setProxyServer( const QString& server );
+    
+    int proxyPort() const;
+    void setProxyPort( int port );
+    
+    QString proxyLogin() const;
+    void setProxyLogin( const QString& login );
+    
+    QString proxyPassword() const;
+    void setProxyPassword( const QString& password );
+    
+    QDateTime updateLastUpdated() const;
+    void setUpdateLastUpdated( const QDateTime& dateTime );
+    
+    QDateTime updateLastChecked() const;
+    void setUpdateLastChecked( const QDateTime& dateTime );
+    
+    QStringList translationsPaths() const;
+    void setTranslationsPaths( const QStringList& translationsPaths );
+    
+    bool localeAccepted() const;
+    void setLocaleAccepted( bool accepted );
+    
+    QLocale locale() const;
+    void setLocale( const QLocale& locale );
+    
+    QListView::ViewMode viewMode() const;
+    void setViewMode( QListView::ViewMode mode );
+    
+    QWBFS::WiiTDB::Scan viewIconType() const;
+    void setViewIconType( QWBFS::WiiTDB::Scan scan );
+    
+    void restoreState( UIMain* window ) const;
+    void saveState( UIMain* window );
+    
+    QString selectedPath() const;
+    void setSelectedPath( const QString& path );
+    
+    QString selectedPartition() const;
+    void setSelectedPartition( const QString& partition );
+    
+    QStringList customPartitions() const;
+    void setCustomPartitions( const QStringList& partitions );
+    
+    static QString decrypt( const QByteArray& data );
+    static QByteArray crypt( const QString& string );
 
 protected:
-	QSettings* mSettings;
+    QSettings* mSettings;
 };
 
 #endif // PROPERTIES_H

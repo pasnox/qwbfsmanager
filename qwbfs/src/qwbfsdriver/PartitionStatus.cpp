@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionStatus.cpp
@@ -39,8 +39,8 @@ using namespace QWBFS::Partition;
 
 Status::Status( const QWBFS::Partition::Handle& handle )
 {
-	blocks = handle.isValid() ? (qint32)wbfs_count_usedblocks( handle.ptr() ) : -1;
-	size = Q_INT64_C( handle.isValid() ? (double)handle.ptr()->n_wbfs_sec *handle.ptr()->wbfs_sec_sz : -1 );
-	used = Q_INT64_C( handle.isValid() ? (double)( handle.ptr()->n_wbfs_sec -blocks ) *handle.ptr()->wbfs_sec_sz : -1 );
-	free = Q_INT64_C( handle.isValid() ? (double)(blocks) *handle.ptr()->wbfs_sec_sz : -1 );
+    blocks = handle.isValid() ? (qint32)wbfs_count_usedblocks( handle.ptr() ) : -1;
+    size = Q_INT64_C( handle.isValid() ? (double)handle.ptr()->n_wbfs_sec *handle.ptr()->wbfs_sec_sz : -1 );
+    used = Q_INT64_C( handle.isValid() ? (double)( handle.ptr()->n_wbfs_sec -blocks ) *handle.ptr()->wbfs_sec_sz : -1 );
+    free = Q_INT64_C( handle.isValid() ? (double)(blocks) *handle.ptr()->wbfs_sec_sz : -1 );
 }

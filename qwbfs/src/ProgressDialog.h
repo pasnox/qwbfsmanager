@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : ProgressDialog.h
@@ -44,42 +44,42 @@
 
 class ProgressDialog : public QDialog, public Ui::ProgressDialog
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	ProgressDialog( QWidget* parent = 0 );
-	virtual ~ProgressDialog();
-	
-	virtual bool event( QEvent* event );
-	
-	void setWork( const WorkerThread::Work& work );
+    ProgressDialog( QWidget* parent = 0 );
+    virtual ~ProgressDialog();
+    
+    virtual bool event( QEvent* event );
+    
+    void setWork( const WorkerThread::Work& work );
 
 public slots:
-	virtual void done( int r );
+    virtual void done( int r );
 
 protected:
-	WorkerThread* mThread;
-	QTime mElapsed;
-	
-	void closeEvent( QCloseEvent* event );
-	void localeChanged();
-	void doConnections();
+    WorkerThread* mThread;
+    QTime mElapsed;
+    
+    void closeEvent( QCloseEvent* event );
+    void localeChanged();
+    void doConnections();
 
 protected slots:
-	void thread_started();
-	void thread_message( const QString& text );
-	void thread_log( const QString& text );
-	void thread_jobFinished( const QWBFS::Model::Disc& disc );
-	void thread_currentProgressChanged( int value, int maximum, const QTime& remaining );
-	void thread_globalProgressChanged( int value, int maximum );
-	void thread_canceled();
-	void thread_finished();
-	void on_cbDetails_toggled();
-	void updateSpace();
+    void thread_started();
+    void thread_message( const QString& text );
+    void thread_log( const QString& text );
+    void thread_jobFinished( const QWBFS::Model::Disc& disc );
+    void thread_currentProgressChanged( int value, int maximum, const QTime& remaining );
+    void thread_globalProgressChanged( int value, int maximum );
+    void thread_canceled();
+    void thread_finished();
+    void on_cbDetails_toggled();
+    void updateSpace();
 
 signals:
-	void jobFinished( const QWBFS::Model::Disc& disc );
-	void finished();
+    void jobFinished( const QWBFS::Model::Disc& disc );
+    void finished();
 };
 
 #endif // PROGRESSDIALOG_H

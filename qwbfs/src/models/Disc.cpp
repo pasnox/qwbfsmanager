@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : Disc.cpp
@@ -46,131 +46,131 @@ using namespace QWBFS::Model;
 
 Disc::Disc( const QDomElement& element )
 {
-	readFromElement( element );
+    readFromElement( element );
 }
 
 Disc::Disc( const QString& filePath )
 {
-	readFromElement( QDomElement() );
-	
-	switch ( QWBFS::Driver::fileType( filePath ) ) {
-		case QWBFS::Driver::WBFSFile:
-			QWBFS::Driver::wbfsFileInfo( filePath, *this );
-			break;
-		case QWBFS::Driver::ISOFile:
-			operator=( Driver::isoDiscInfo( filePath ) );
-			break;
-		case QWBFS::Driver::WBFSPartitionFile:
-		case QWBFS::Driver::UnknownFile:
-			Q_ASSERT( 0 );
-			break;
-	}
+    readFromElement( QDomElement() );
+    
+    switch ( QWBFS::Driver::fileType( filePath ) ) {
+        case QWBFS::Driver::WBFSFile:
+            QWBFS::Driver::wbfsFileInfo( filePath, *this );
+            break;
+        case QWBFS::Driver::ISOFile:
+            operator=( Driver::isoDiscInfo( filePath ) );
+            break;
+        case QWBFS::Driver::WBFSPartitionFile:
+        case QWBFS::Driver::UnknownFile:
+            Q_ASSERT( 0 );
+            break;
+    }
 }
 
 bool Disc::operator==( const Disc& other ) const
 {
-	return id == other.id &&
-		title == other.title &&
-		size == other.size &&
-		origin == other.origin &&
-		region == other.region /*&&
-		state == other.state &&
-		error == other.error*/;
+    return id == other.id &&
+        title == other.title &&
+        size == other.size &&
+        origin == other.origin &&
+        region == other.region /*&&
+        state == other.state &&
+        error == other.error*/;
 }
 
 bool Disc::isValid() const
 {
-	return !id.isEmpty() && !title.isEmpty();
+    return !id.isEmpty() && !title.isEmpty();
 }
 
 bool Disc::hasError() const
 {
-	return error != QWBFS::Driver::Ok;
+    return error != QWBFS::Driver::Ok;
 }
 
 QString Disc::baseName( const QString& invalidChars ) const
 {
-	return isValid() ? QString( "%1 [%2]" ).arg( cleanupGameTitle( title, invalidChars ) ).arg( id ) : QString::null;
+    return isValid() ? QString( "%1 [%2]" ).arg( cleanupGameTitle( title, invalidChars ) ).arg( id ) : QString::null;
 }
 
 void Disc::addToDocument( QDomDocument& document ) const
 {
-	QDomElement element = document.createElement( "disc" );
-	element.setAttribute( "id", id );
-	element.setAttribute( "title", title );
-	element.setAttribute( "size", size );
-	element.setAttribute( "origin", origin );
-	element.setAttribute( "region", region );
-	element.setAttribute( "state", state );
-	element.setAttribute( "error", error );
-	document.documentElement().appendChild( element );
+    QDomElement element = document.createElement( "disc" );
+    element.setAttribute( "id", id );
+    element.setAttribute( "title", title );
+    element.setAttribute( "size", size );
+    element.setAttribute( "origin", origin );
+    element.setAttribute( "region", region );
+    element.setAttribute( "state", state );
+    element.setAttribute( "error", error );
+    document.documentElement().appendChild( element );
 }
 
 void Disc::readFromElement( const QDomElement& element )
 {
-	id = element.attribute( "id", QString::null );
-	title = element.attribute( "title", QString::null );
-	size = element.attribute( "size", QString::number( 0 ) ).toUInt();
-	origin = element.attribute( "origin", QString::null );
-	region = element.attribute( "region", 0 ).toInt();
-	state = element.attribute( "state", QString::number( QWBFS::Driver::None ) ).toInt();
-	error = element.attribute( "error", QString::number( QWBFS::Driver::Ok ) ).toInt();
+    id = element.attribute( "id", QString::null );
+    title = element.attribute( "title", QString::null );
+    size = element.attribute( "size", QString::number( 0 ) ).toUInt();
+    origin = element.attribute( "origin", QString::null );
+    region = element.attribute( "region", 0 ).toInt();
+    state = element.attribute( "state", QString::number( QWBFS::Driver::None ) ).toInt();
+    error = element.attribute( "error", QString::number( QWBFS::Driver::Ok ) ).toInt();
 }
 
 QString Disc::cleanupGameTitle( const QString& _title, const QString& invalidChars )
 {
-	QString title = pCoreUtils::toTitleCase( _title );
-	
-	foreach ( const QChar& c, invalidChars ) {
-		QString r;
-		
-		/*switch ( c.toAscii() ) {
-			case '\'':
-				r = " ";
-				break;
-			case ':':
-				r = "-";
-		}*/
-		
-		title.replace( c, r );
-	}
-	
-	return title;
+    QString title = pCoreUtils::toTitleCase( _title );
+    
+    foreach ( const QChar& c, invalidChars ) {
+        QString r;
+        
+        /*switch ( c.toAscii() ) {
+            case '\'':
+                r = " ";
+                break;
+            case ':':
+                r = "-";
+        }*/
+        
+        title.replace( c, r );
+    }
+    
+    return title;
 }
 
 QDomDocument Disc::toDocument( const DiscList& discs )
-{	
-	QDomDocument document( WBFS_DISC_XML_NAME );
-	document.appendChild( document.createElement( "discs" ) );
-	
-	foreach ( const Disc& disc, discs ) {
-		disc.addToDocument( document );
-	}
-	
-	return document;
+{   
+    QDomDocument document( WBFS_DISC_XML_NAME );
+    document.appendChild( document.createElement( "discs" ) );
+    
+    foreach ( const Disc& disc, discs ) {
+        disc.addToDocument( document );
+    }
+    
+    return document;
 }
 
 DiscList Disc::fromDocument( const QDomDocument& document )
 {
-	DiscList discs;
-	
-	const QDomNodeList nodes = document.documentElement().childNodes();
-	
-	for ( int i = 0; i < nodes.count(); i++ ) {
-		discs << Disc( nodes.at( i ).toElement() );
-	}
-	
-	return discs;
+    DiscList discs;
+    
+    const QDomNodeList nodes = document.documentElement().childNodes();
+    
+    for ( int i = 0; i < nodes.count(); i++ ) {
+        discs << Disc( nodes.at( i ).toElement() );
+    }
+    
+    return discs;
 }
 
 QByteArray Disc::toByteArray( const DiscList& discs )
 {
-	return toDocument( discs ).toString().toUtf8();
+    return toDocument( discs ).toString().toUtf8();
 }
 
 DiscList Disc::fromByteArray( const QByteArray& data )
 {
-	QDomDocument document( WBFS_DISC_XML_NAME );
-	document.setContent( data );
-	return fromDocument( document );
+    QDomDocument document( WBFS_DISC_XML_NAME );
+    document.setContent( data );
+    return fromDocument( document );
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
+**      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
 ** FileName  : PartitionStatus.h
@@ -43,12 +43,12 @@ namespace Partition {
 
 struct Status
 {
-	Status( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle() );
-	
-	qint32 blocks;
-	qint64 size;
-	qint64 used;
-	qint64 free;
+    Status( const QWBFS::Partition::Handle& handle = QWBFS::Partition::Handle() );
+    
+    qint32 blocks;
+    qint64 size;
+    qint64 used;
+    qint64 free;
 };
 
 }; // Partition
