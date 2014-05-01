@@ -2,7 +2,7 @@
 QWBFS Manager provides a cross platform Qt 4 GUI for working with hard disk drives that have been formatted to the WBFS file system.
 This is a cross platform 32/64bits (Windows, OS X, Linux/Unix like) alternative to [WBFS Manager](http://wbfsmanager.codeplex.com/).
 
-[Downloads](https://github.com/pasnox/qwbfsmanager/releases) - [Downloads Feed](http://to-be-changed)
+[Downloads](https://github.com/pasnox/qwbfsmanager/releases) - [Forum](http://groups.google.com/group/qwbfs-discuss) - [Downloads Feed](http://to-be-changed)
 
 # Features
   * Partitions combobox widget presenting their name, file system and size for a better and easy access to your drives. (1.2.0)
