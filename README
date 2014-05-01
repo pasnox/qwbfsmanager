@@ -59,7 +59,6 @@ On some paltform, the make tool can be named gmake, nmake or mingw32-make
 The "make install" command is not mandatory for Windows platform
 You can change the prefix at your convenience
 
-
 License
 =======
 
