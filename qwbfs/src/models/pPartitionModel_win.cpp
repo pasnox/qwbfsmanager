@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 **      Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
-** Authors   : Filipe AZEVEDO aka Nox P@sNox <pasnox@gmail.com>
+** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : Fresh Library
 ** FileName  : pPartitionModel_win.cpp
 ** Date      : 2011-02-20T00:41:35
