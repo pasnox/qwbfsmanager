@@ -1,4 +1,4 @@
-/log/
-/qwbfsmanager-*-src/
+/log*
+/qwbfsmanager-*-src*
 /qwbfsmanager-*-*.*
-*qwbfsmanager-*.exe
+/*qwbfsmanager-*.exe*
