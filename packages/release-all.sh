@@ -17,10 +17,6 @@ fi
 
 VERSION=`echo "$VERSION" | cut -d'v' -f2`
 
-echo $VERSION
-echo $VERSION_STR
-echo $SVN_REVISION
-
 BASE_NAME=qwbfsmanager-$VERSION_STR
 FOLDER_NAME=$BASE_NAME-src
 TAR_GZ_FILE=$FOLDER_NAME.tar.gz
