@@ -13,8 +13,13 @@ fi
 
 if [ -z "$VERSION" ]; then
     VERSION=`echo "$SVN_REVISION" | cut -d'-' -f1`
-    VERSION=`echo "$VERSION" | cut -d'v' -f2`
 fi
+
+VERSION=`echo "$VERSION" | cut -d'v' -f2`
+
+echo $VERSION
+echo $VERSION_STR
+echo $SVN_REVISION
 
 BASE_NAME=qwbfsmanager-$VERSION_STR
 FOLDER_NAME=$BASE_NAME-src
