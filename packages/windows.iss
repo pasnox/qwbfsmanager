@@ -2,9 +2,9 @@
 
 [CustomMessages]
 QWBFS_NAME=QWBFS Manager
-QWBFS_COPYRIGHTS=2010-2012 Filipe AZEVEDO
-QWBFS_URL=http://code.google.com/p/qwbfs/
-QWBFS_ISSUES_URL=http://code.google.com/p/qwbfs/issues/list
+QWBFS_COPYRIGHTS=2010-2014 Filipe Azevedo
+QWBFS_URL=https://github.com/pasnox/qwbfsmanager
+QWBFS_ISSUES_URL=https://github.com/pasnox/qwbfsmanager/issues
 
 #define QWBFS_VERSION GetEnv("VERSION")
 #define QWBFS_VERSION_STR GetEnv("VERSION_STR")
@@ -50,7 +50,7 @@ UseAbsolutePaths=false
 
 [Files]
 ; Fresh framework related
-Source: ..\fresh\translations\*.qm; DestDir: {app}\translations; Flags: promptifolder
+Source: ..\fresh.git\translations\*.qm; DestDir: {app}\translations; Flags: promptifolder
 ; QWBFS Manager related files
 Source: qwbfsmanager.exe; DestDir: {app}; Flags: promptifolder
 Source: ..\packages\qt_windows.conf; DestDir: {app}; DestName: qt.conf; Flags: promptifolder
@@ -81,7 +81,7 @@ Name: {group}\Home Page; Filename: {app}\Home Page.url; WorkingDir: {app}
 Name: {group}\Tracker; Filename: {app}\Tracker.url; WorkingDir: {app}
 
 [INI]
-Filename: {app}\Home Page.url; Section: InternetShortcut; Key: URL; String: {cm:QWBFS_URL}; Flags: createkeyifdoesntexist uninsdeleteentry uninsdeletesectionifempty; Components: 
+Filename: {app}\Home Page.url; Section: InternetShortcut; Key: URL; String: {cm:QWBFS_URL}; Flags: createkeyifdoesntexist uninsdeleteentry uninsdeletesectionifempty; Components:
 Filename: {app}\Tracker.url; Section: InternetShortcut; Key: URL; String: {cm:QWBFS_ISSUES_URL}; Flags: createkeyifdoesntexist uninsdeleteentry uninsdeletesectionifempty
 
 [UninstallDelete]

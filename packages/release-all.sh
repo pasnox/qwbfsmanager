@@ -18,6 +18,7 @@ fi
 if [ -z "$VERSION" ]; then
     VERSION=`echo "$SVN_REVISION" | cut -d'-' -f1`
     VERSION_STR="git-$VERSION"
+    VERSION=`echo "$VERSION" | cut -d'v' -f2`
 fi
 
 BASE_NAME=qwbfsmanager-$VERSION_STR
@@ -86,11 +87,13 @@ exportRepository()
 
     startCommand "rsync -a .. \"$2\" --exclude \"$2\" --exclude '*.pro.user*' > /dev/null 2>&1"
 
+    startCommand "cd \"$2\""
     if [ '!' -z "$1" ]; then
-        startCommand "cd \"$2\""
         startCommand "git clean -f -x && git reset --hard && git checkout \"$1\" > /dev/null 2>&1"
-        startCommand "cd \"$CUR_PATH\""
+    else
+        startCommand "git clean -f -X > /dev/null 2>&1"
     fi
+    startCommand "cd \"$CUR_PATH\""
 
     startCommand "rm -fr \"$2/.git\""
 }
