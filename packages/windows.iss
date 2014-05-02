@@ -8,16 +8,16 @@ QWBFS_ISSUES_URL=https://github.com/pasnox/qwbfsmanager/issues
 
 #define QWBFS_VERSION GetEnv("VERSION")
 #define QWBFS_VERSION_STR GetEnv("VERSION_STR")
-#define QWBFS_SETUP_NAME "setup-qwbfsmanager-" +QWBFS_VERSION_STR +"-win32"
+#define QWBFS_SETUP_NAME "qwbfsmanager-" +QWBFS_VERSION_STR +"-win32"
 #define QT_PATH "Z:\" +GetEnv("CROSS_WIN32_QT_PATH")
 #define DLLS_PATH "Z:\" +GetEnv("DLLS_PATH")
 
 [Setup]
 SourceDir=..\bin
-OutputDir=..\packages\releases
+OutputDir=..\packages
 OutputBaseFilename={#QWBFS_SETUP_NAME}
 VersionInfoVersion={#QWBFS_VERSION}
-VersionInfoCompany=Filipe AZEVEDO
+VersionInfoCompany=Filipe Azevedo
 VersionInfoDescription=Free, Fast and Powerfull cross platform Wii Backup File System Manager
 VersionInfoTextVersion={#QWBFS_VERSION}
 VersionInfoCopyright={cm:QWBFS_COPYRIGHTS}

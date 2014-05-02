@@ -1,11 +1,5 @@
 #!/bin/sh
 
-# get tag commit
-# git rev-list -1 v1.2.4
-
-# get tag version string
-# git describe --all --long v1.0.0
-
 VERSION=$1
 OS=`uname -s`
 
@@ -13,11 +7,12 @@ SVN_REVISION=`export LANG=C && [ -f /usr/bin/git ] && git --git-dir=../.git desc
 
 if [ '!' -z "$VERSION" ]; then
     VERSION_STR=$VERSION
+else
+    VERSION_STR=$SVN_REVISION
 fi
 
 if [ -z "$VERSION" ]; then
     VERSION=`echo "$SVN_REVISION" | cut -d'-' -f1`
-    VERSION_STR="git-$VERSION"
     VERSION=`echo "$VERSION" | cut -d'v' -f2`
 fi
 
@@ -25,7 +20,7 @@ BASE_NAME=qwbfsmanager-$VERSION_STR
 FOLDER_NAME=$BASE_NAME-src
 TAR_GZ_FILE=$FOLDER_NAME.tar.gz
 ZIP_FILE=$FOLDER_NAME.zip
-WIN_SETUP=setup-$BASE_NAME-win32.exe
+WIN_SETUP=$BASE_NAME-win32.exe
 WIN_FOLDER=$BASE_NAME-win32
 WIN_PACKAGE=$WIN_FOLDER.zip
 MAC_PACKAGE=$BASE_NAME.dmg
@@ -85,13 +80,13 @@ exportRepository()
     startCommand "git submodule update --init --recursive > /dev/null 2>&1"
     startCommand "cd \"$CUR_PATH\""
 
-    startCommand "rsync -a .. \"$2\" --exclude \"$2\" --exclude '*.pro.user*' > /dev/null 2>&1"
+    startCommand "rsync -a .. \"$2\" --exclude \"$2\" > /dev/null 2>&1"
 
     startCommand "cd \"$2\""
     if [ '!' -z "$1" ]; then
-        startCommand "git clean -f -x && git reset --hard && git checkout \"$1\" > /dev/null 2>&1"
+        startCommand "git clean -f -q -x -d && git reset -q --hard && git checkout -q \"$1\" > /dev/null 2>&1"
     else
-        startCommand "git clean -f -X > /dev/null 2>&1"
+        startCommand "git clean -f -X -q -d > /dev/null 2>&1"
     fi
     startCommand "cd \"$CUR_PATH\""
 
@@ -176,8 +171,8 @@ crossBuild()
         startCommand "make distclean > /dev/null 2>&1" 0
         startCommand "cd \"$CUR_PATH\""
 
-        if [ -f "$FOLDER_NAME/packages/releases/$WIN_SETUP" ]; then
-            startCommand "mv \"$FOLDER_NAME/packages/releases/$WIN_SETUP\" \".\""
+        if [ -f "$FOLDER_NAME/packages/$WIN_SETUP" ]; then
+            startCommand "mv \"$FOLDER_NAME/packages/$WIN_SETUP\" \".\""
         fi
     fi
 }
