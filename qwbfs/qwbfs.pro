@@ -82,8 +82,8 @@ PACKAGE_DOWNLOADS_FEED = "http://to-be-changed"
 PACKAGE_REPORT_BUG_URL = "https://github.com/pasnox/qwbfsmanager/issues"
 PACKAGE_DISCUSS_URL = "http://groups.google.com/group/qwbfs-discuss"
 PACKAGE_VERSION = 1.2.4
-isEqual( OS, "windows" ):SVN_REVISION = "N/C"
-else:SVN_REVISION = $$system( export LANG=C && [ -f /usr/bin/git ] && git --git-dir="$$PWD/../.git" describe )
+!isEqual( OS, "windows" ):exists( "$$PWD/../.git" ):SVN_REVISION = $$system( export LANG=C && [ -f /usr/bin/git ] && git --git-dir="$$PWD/../.git" describe )
+isEmpty( SVN_REVISION ):SVN_REVISION = $(SVN_REVISION)
 isEmpty( SVN_REVISION ):SVN_REVISION = "N/C"
 
 !isEqual( OS, "windows" ):system( touch $$PWD/src/main.h )
