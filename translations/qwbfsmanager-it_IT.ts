@@ -78,7 +78,7 @@
     <message>
         <location filename="../qwbfs/src/PartitionWidget.ui" line="218"/>
         <source>List</source>
-        <translation type="unfinished"></translation>
+        <translation>Lista</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionWidget.ui" line="256"/>
@@ -187,7 +187,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="44"/>
         <source>Application locale</source>
-        <translation>Lingua</translation>
+        <translation>Lingua Applicazione</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="63"/>
@@ -197,7 +197,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="94"/>
         <source>View Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo Vista</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PropertiesDialog.ui" line="110"/>
@@ -348,7 +348,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/main.cpp" line="105"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
-        <translation>Il gestore per il Wii Backup File System, multi-piattaforma, libero, veloce e potente</translation>
+        <translation>Libero, Veloce e Potente Il gestore multi-piattaforma per il Wii Backup File System</translation>
     </message>
 </context>
 <context>
@@ -558,7 +558,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="20"/>
         <source>About...</source>
-        <translation>Informazioni...</translation>
+        <translation>Approposito...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="162"/>
@@ -583,7 +583,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/UIAbout.ui" line="326"/>
         <source>3rd Party</source>
-        <translation type="unfinished"></translation>
+        <translation>Terze Parti</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIAbout.cpp" line="82"/>
@@ -616,7 +616,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="159"/>
         <source>Clear the list</source>
-        <translation>Cancella l&apos;elenco</translation>
+        <translation>Cancella la lista</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="179"/>
@@ -656,7 +656,7 @@ tutti i dati verranno cancellati definitivamente, sei sicuro?</translation>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="391"/>
         <source>About...</source>
-        <translation>Informazioni...</translation>
+        <translation>Approposito...</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/UIMain.ui" line="403"/>
@@ -850,12 +850,12 @@ Dovrai impostare a mano il percoso corretto per le partizioni montate.</translat
         <location filename="../qwbfs/src/models/pPartition.cpp" line="87"/>
         <location filename="../qwbfs/src/models/pPartition.cpp" line="479"/>
         <source>Unknown FS</source>
-        <translation type="unfinished"></translation>
+        <translation>FS Sconosciuto</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartition.cpp" line="218"/>
         <source>Unknown Vendor/Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Prodotto/Modello Sconosciuto</translation>
     </message>
 </context>
 <context>
@@ -863,37 +863,37 @@ Dovrai impostare a mano il percoso corretto per le partizioni montate.</translat
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="119"/>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Etichetta</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="121"/>
         <source>Path</source>
-        <translation type="unfinished">Percorso</translation>
+        <translation>Percorso</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="123"/>
         <source>File System</source>
-        <translation type="unfinished">File System</translation>
+        <translation>File System</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="125"/>
         <source>Mount Points</source>
-        <translation type="unfinished"></translation>
+        <translation>Punti di Montaggio</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="127"/>
         <source>Vendor</source>
-        <translation type="unfinished"></translation>
+        <translation>Produttore</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="129"/>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modello</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="131"/>
         <source>File System Id</source>
-        <translation type="unfinished"></translation>
+        <translation>File System Id</translation>
     </message>
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="133"/>
@@ -918,7 +918,7 @@ Dovrai impostare a mano il percoso corretto per le partizioni montate.</translat
     <message>
         <location filename="../qwbfs/src/models/pPartitionModel.cpp" line="141"/>
         <source>Last Check</source>
-        <translation type="unfinished"></translation>
+        <translation>Ultimo Controllo</translation>
     </message>
 </context>
 </TS>
