@@ -5,6 +5,7 @@ This is a cross platform 32/64bits (Windows, OS X, Linux/Unix like) alternative 
 [Downloads](https://github.com/pasnox/qwbfsmanager/releases) - [Forum](http://groups.google.com/group/qwbfs-discuss) - [Downloads Feed](http://to-be-changed)
 
 # Features
+  * Build with Qt4 and/or Qt5 (1.2.5)
   * Partitions combobox widget presenting their name, file system and size for a better and easy access to your drives. (1.2.0)
   * Game sorting by id, title, size and region. (1.2.0)
   * New ListView widget providing enhanced list and icon mode. (1.2.0)
@@ -26,6 +27,7 @@ This is a cross platform 32/64bits (Windows, OS X, Linux/Unix like) alternative 
     * es_ES by Frannoe (Ubuntu Cosillas) (frannoe@gmail.com) (1.2.0)
     * ca_ES by Frannoe (Ubuntu Cosillas) (frannoe@gmail.com) (1.2.0)
     * it_IT by Federico Pietta (Darkmagister, f.pietta@gmail.com) (1.2.0)
+    * it_IT update by kimotori (kimotori, https://github.com/kimotori) (1.2.5)
     * ru_RU, sl_SI, pl_PL, zh_CN, he_IL, da_DK, sk_SK, ja_JP, uk_UA, cs_CZ, ar_SA, zh_TW, de_DE, pt_PT, sv_SE open for translation. (1.1.0)
   * ~~Homebrew Channel entry creation.~~
   * Direct & Indirect Drive-To-Drive transferring and cloning. (1.0.0)
