@@ -30,4 +30,7 @@ win32 {
     *-g++*:LIBS *= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/MinGW
     *-msvc*:LIBS    *= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/VC
     INCLUDEPATH *= $${OPENSSL_INSTALL_DIR}/include
+} else:mac {
+    # Mac Brew openssl
+    INCLUDEPATH *= /usr/local/Cellar/openssl/1.0.2f/include
 }
