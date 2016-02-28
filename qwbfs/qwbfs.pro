@@ -78,9 +78,9 @@ QMAKE_TARGET_COMPANY = "QWBFS Team"
 QMAKE_TARGET_PRODUCT = "QWBFS Manager"
 QMAKE_TARGET_DESCRIPTION = "The Free, Fast and Powerful cross platform Wii Backup File System manager"
 greaterThan( QT_MAJOR_VERSION, 4 ) {
-    QMAKE_TARGET_COPYRIGHT = "© 2010 - 2014 Filipe Azevedo"
+    QMAKE_TARGET_COPYRIGHT = "© 2010 - 2016 Filipe Azevedo"
 } else {
-    QMAKE_TARGET_COPYRIGHT = "\\251 2010 - 2014 Filipe Azevedo"
+    QMAKE_TARGET_COPYRIGHT = "\\251 2010 - 2016 Filipe Azevedo"
 }
 PACKAGE_DOMAIN = "github.com/pasnox/qwbfsmanager"
 PACKAGE_DOWNLOADS_FEED = "http://to-be-changed"
