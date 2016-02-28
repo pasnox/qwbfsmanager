@@ -34,6 +34,7 @@
 **
 ****************************************************************************/
 #include "Gauge.h"
+#include "Utils.h"
 
 #include <FreshCore/pCoreUtils>
 
@@ -45,7 +46,7 @@
 Gauge::Gauge( QWidget* parent )
     : QWidget( parent )
 {
-    setStyle( QStyleFactory::create( "plastique" ) );
+    setStyle( Utils::neutralStyle() );
 
     mSize = 0;
     mUsedSize = 0;

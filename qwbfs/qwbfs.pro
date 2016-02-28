@@ -161,6 +161,7 @@ FORMS *= src/UIMain.ui \
     src/PropertiesDialog.ui
 
 HEADERS *= src/main.h \
+    src/Utils.h \
     src/UIMain.h \
     src/Gauge.h \
     src/PartitionWidget.h \
@@ -187,6 +188,7 @@ HEADERS *= src/main.h \
     src/models/pPartition.h
 
 SOURCES *= src/main.cpp \
+    src/Utils.cpp \
     src/UIMain.cpp \
     src/Gauge.cpp \
     src/PartitionWidget.cpp \

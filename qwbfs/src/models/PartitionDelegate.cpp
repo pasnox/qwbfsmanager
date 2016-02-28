@@ -59,6 +59,7 @@
 **
 ****************************************************************************/
 #include "PartitionDelegate.h"
+#include "Utils.h"
 #include "models/pPartitionModel.h"
 #include "qwbfsdriver/Driver.h"
 
@@ -76,7 +77,7 @@ PartitionDelegate::PartitionDelegate( pPartitionModel* parent )
 {
     Q_ASSERT( parent );
     mModel = parent;
-    mStyle = QStyleFactory::create( "plastique" );
+    mStyle = Utils::neutralStyle();
 }
 
 PartitionDelegate::~PartitionDelegate()
