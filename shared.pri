@@ -14,8 +14,11 @@
 !contains( TEMPLATE, subdirs ) {
     win32:!isEqual( $$lower( $$QMAKE_HOST.os ), "windows" ):CONFIG  *= win32_crossbuild
 
+    isEmpty(build_mode):build_mode = release
     CONFIG  -= debug_and_release release debug warn_off warn_on x86 ppc
-    CONFIG  *= release warn_on
+    CONFIG  *= $$build_mode warn_on
+
+    message("The whole application will be built in $$build_mode")
 
     CONFIG(debug, debug|release) {
         #Debug

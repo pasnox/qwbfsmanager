@@ -59,9 +59,14 @@ fresh {
         LIBS *= -L$$OUT_PWD/$$FRESH_PATH/build
 
         QT *= xml network
-        #!macx:qtAddLibrary( fresh )
-        !macx:LIBS *= -lfresh
-        macx:LIBS *= -lfresh
+        CONFIG( debug, debug|release ) {
+            # Debug
+            macx:LIBS *= -lfresh_debug
+            else:LIBS *= -lfreshd
+        } else {
+            # Release
+            LIBS *= -lfresh
+        }
     } else {
         !build_pass:error( "Fresh library not found - initialize the submodules using the init-repositories script." )
     }
