@@ -69,25 +69,25 @@ QUrl WiiTDB::checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAcc
 
 QUrl WiiTDB::coverUrl( WiiTDB::Scan scan, const QString& id, const QString& local )
 {
-    Q_ASSERT( !id.isEmpty() );
-    
-    const QString language = local.isNull() ? QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() ) : local;
-    
-    switch ( scan ) {
-        case WiiTDB::CoverHQ:
-            return QUrl( QString( "%3/wiitdb/artwork/coverfullHQ/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-        case WiiTDB::Cover:
-            return QUrl( QString( "%3/wiitdb/artwork/cover/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-        case WiiTDB::Cover3D:
-            return QUrl( QString( "%3/wiitdb/artwork/coverfull3D/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-        case WiiTDB::CoverDisc:
-            return QUrl( QString( "%3/wiitdb/artwork/disc/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-        case WiiTDB::CoverDiscCustom:
-            return QUrl( QString( "%3/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-        case WiiTDB::CoverFull:
-            return QUrl( QString( "%3/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
-        case WiiTDB::CoverInvalid:
-            break;
+    if ( !id.isEmpty() ) {
+        const QString language = local.isNull() ? QWBFS::Driver::regionToLanguageString( id.at( 3 ).unicode() ) : local;
+
+        switch ( scan ) {
+            case WiiTDB::CoverHQ:
+                return QUrl( QString( "%3/wiitdb/artwork/coverfullHQ/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
+            case WiiTDB::Cover:
+                return QUrl( QString( "%3/wiitdb/artwork/cover/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
+            case WiiTDB::Cover3D:
+                return QUrl( QString( "%3/wiitdb/artwork/coverfull3D/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
+            case WiiTDB::CoverDisc:
+                return QUrl( QString( "%3/wiitdb/artwork/disc/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
+            case WiiTDB::CoverDiscCustom:
+                return QUrl( QString( "%3/wiitdb/artwork/disccustom/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
+            case WiiTDB::CoverFull:
+                return QUrl( QString( "%3/wiitdb/artwork/coverfull/%1/%2.png" ).arg( language ).arg( id ).arg( WIITDB_DOMAIN ) );
+            case WiiTDB::CoverInvalid:
+                break;
+        }
     }
     
     return QUrl();
