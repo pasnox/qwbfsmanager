@@ -61,7 +61,7 @@ fresh {
         QT *= xml network
         CONFIG( debug, debug|release ) {
             # Debug
-            macx:LIBS *= -lfresh_debug
+            unix:LIBS *= -lfresh_debug
             else:LIBS *= -lfreshd
         } else {
             # Release
