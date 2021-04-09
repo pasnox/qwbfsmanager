@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+    qwfs:
+        container_name: wqfs
+        build: .
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+            - ./isos:/isos
+        environment:
+            - QT_X11_NO_MITSHM=1
+            - DISPLAY=${LOCAL_IP}:0
+        devices:
+            - "/dev/sdb1:/dev/sdb1"
+        command: qwbfsmanager
+
