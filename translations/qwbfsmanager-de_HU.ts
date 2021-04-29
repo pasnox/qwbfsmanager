@@ -6,7 +6,7 @@
     <message>
         <location filename="../qwbfs/src/Gauge.cpp" line="137"/>
         <source>Usage %1 (%2%) / %3 - Free %4 (%5%)</source>
-        <translation type="unfinished"></translation>
+        <translation type="Használata"></translation>
     </message>
 </context>
 <context>
@@ -14,12 +14,12 @@
     <message>
         <location filename="../qwbfs/src/PartitionComboBox.cpp" line="62"/>
         <source>Add a partition</source>
-        <translation type="unfinished"></translation>
+        <translation type="Új partíció"></translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionComboBox.cpp" line="104"/>
         <source>Enter a partition path</source>
-        <translation type="unfinished"></translation>
+        <translation type="Adjon meg egy partíciót utat"></translation>
     </message>
     <message>
         <location filename="../qwbfs/src/PartitionComboBox.cpp" line="122"/>
